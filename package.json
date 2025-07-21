@@ -1,0 +1,38 @@
+{
+  "name": "unified-repo-analyzer",
+  "version": "0.1.0",
+  "description": "A comprehensive tool for analyzing code repositories, generating executive summaries and technical breakdowns",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "dev:backend": "npm run dev -w packages/backend",
+    "dev:frontend": "npm run dev -w packages/frontend",
+    "dev:cli": "npm run dev -w packages/cli",
+    "build": "npm run build -ws",
+    "test": "npm run test -ws",
+    "lint": "npm run lint -ws",
+    "format": "npm run format -ws"
+  },
+  "keywords": [
+    "repository",
+    "analysis",
+    "code",
+    "summary",
+    "llm",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  }
+}
