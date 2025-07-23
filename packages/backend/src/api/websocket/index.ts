@@ -23,6 +23,12 @@ export const initializeWebSocketHandlers = (io: Server): void => {
       socket.join(`analysis:${analysisId}`);
     });
 
+    // Handle client registration for batch analysis
+    socket.on('register-batch', (batchId: string) => {
+      console.log(`Client ${socket.id} registered for batch ${batchId}`);
+      socket.join(`batch:${batchId}`);
+    });
+
     // Handle client disconnection
     socket.on('disconnect', () => {
       console.log(`Client disconnected: ${socket.id}`);
@@ -50,4 +56,26 @@ export const sendAnalysisProgress = (io: Server, analysisId: string, progress: a
  */
 export const sendAnalysisComplete = (io: Server, analysisId: string, result: any): void => {
   io.to(`analysis:${analysisId}`).emit('analysis-complete', result);
+};
+
+/**
+ * Send batch analysis progress update
+ *
+ * @param io - Socket.IO server instance
+ * @param batchId - Batch ID
+ * @param progress - Progress data
+ */
+export const sendBatchProgress = (io: Server, batchId: string, progress: any): void => {
+  io.to(`batch:${batchId}`).emit('batch-analysis-progress', progress);
+};
+
+/**
+ * Send batch analysis completion notification
+ *
+ * @param io - Socket.IO server instance
+ * @param batchId - Batch ID
+ * @param result - Batch result
+ */
+export const sendBatchComplete = (io: Server, batchId: string, result: any): void => {
+  io.to(`batch:${batchId}`).emit('batch-analysis-complete', result);
 };

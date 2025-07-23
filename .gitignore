@@ -113,6 +113,94 @@ Thumbs.db
 docker-compose.override.yml
 
 # Kiro Files
-.kiro\specs\unified-repo-analyzer\design.md
-.kiro\specs\unified-repo-analyzer\requirements.md
-.kiro\specs\unified-repo-analyzer\tasks.md
+.kiro/
+.kiro/specs/
+.kiro/specs/unified-repo-analyzer/design.md
+.kiro/specs/unified-repo-analyzer/requirements.md
+.kiro/specs/unified-repo-analyzer/tasks.md
+
+# Development documents
+docs/development/
+docs/private/
+notes/
+todo.md
+scratch/
+temp/
+
+# API Keys and secrets
+secrets/
+*.key
+*.token
+config/local.*
+config/production.*
+config/staging.*
+
+# Build artifacts
+*.tsbuildinfo
+dist/
+build/
+lib/
+out/
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+.env.local
+.env.*.local
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Local env files
+.env*.local
+
+# Vercel
+.vercel
+
+# Turborepo
+.turbo
+
+# Build outputs
+.next/
+.nuxt/
+.output/
+.svelte-kit/

@@ -1,6 +1,6 @@
 {
   "name": "unified-repo-analyzer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A comprehensive tool for analyzing code repositories, generating executive summaries and technical breakdowns",
   "private": true,
   "workspaces": [
@@ -14,7 +14,9 @@
     "build": "npm run build -ws",
     "test": "npm run test -ws",
     "lint": "npm run lint -ws",
-    "format": "npm run format -ws"
+    "format": "npm run format -ws",
+    "clean": "npm run clean -ws",
+    "prepare": "npm run build"
   },
   "keywords": [
     "repository",
@@ -22,10 +24,27 @@
     "code",
     "summary",
     "llm",
-    "ai"
+    "ai",
+    "monorepo",
+    "typescript",
+    "nodejs",
+    "cli",
+    "web"
   ],
-  "author": "",
+  "author": "Unified Repository Analyzer Contributors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/unified-repo-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/unified-repo-analyzer/issues"
+  },
+  "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

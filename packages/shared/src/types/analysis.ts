@@ -95,6 +95,14 @@ export interface BatchAnalysisResult {
   };
   createdAt: Date;
   processingTime: number;
+  status?: {
+    total: number;
+    completed: number;
+    failed: number;
+    inProgress: number;
+    pending: number;
+    progress: number;
+  };
 }
 
 export interface SearchQuery {

@@ -74,33 +74,262 @@ export class AnalysisEngine {
     options: AnalysisOptions
   ): Promise<BatchAnalysisResult> {
     const startTime = Date.now();
-
-    // Analyze each repository
-    const analysisPromises = repoPaths.map((repoPath) =>
-      this.analyzeRepository(repoPath, options).catch((error) => {
-        console.error(`Error analyzing repository ${repoPath}:`, error);
-        return null;
-      })
-    );
-
-    // Wait for all analyses to complete
-    const analysisResults = await Promise.all(analysisPromises);
-
-    // Filter out failed analyses
-    const repositories = analysisResults.filter(Boolean) as RepositoryAnalysis[];
-
-    // Calculate processing time
-    const processingTime = Date.now() - startTime;
+    const batchId = uuidv4();
 
     // Create batch analysis result
     const batchResult: BatchAnalysisResult = {
-      id: uuidv4(),
-      repositories,
+      id: batchId,
+      repositories: [],
       createdAt: new Date(),
-      processingTime,
+      processingTime: 0,
+      status: {
+        total: repoPaths.length,
+        completed: 0,
+        failed: 0,
+        inProgress: 0,
+        pending: repoPaths.length,
+        progress: 0,
+      },
     };
 
+    // Process repositories sequentially to avoid overwhelming the system
+    for (let i = 0; i < repoPaths.length; i++) {
+      const repoPath = repoPaths[i];
+
+      // Update status
+      batchResult.status.pending--;
+      batchResult.status.inProgress++;
+      batchResult.status.progress = Math.round(
+        ((batchResult.status.completed + batchResult.status.failed) / batchResult.status.total) *
+          100
+      );
+
+      try {
+        // Analyze repository
+        const analysis = await this.analyzeRepository(repoPath, options);
+
+        // Add to results
+        batchResult.repositories.push(analysis);
+
+        // Update status
+        batchResult.status.completed++;
+        batchResult.status.inProgress--;
+      } catch (error) {
+        console.error(`Error analyzing repository ${repoPath}:`, error);
+
+        // Update status
+        batchResult.status.failed++;
+        batchResult.status.inProgress--;
+      }
+
+      // Update progress
+      batchResult.status.progress = Math.round(
+        ((batchResult.status.completed + batchResult.status.failed) / batchResult.status.total) *
+          100
+      );
+    }
+
+    // Generate combined insights if multiple repositories were analyzed successfully
+    if (batchResult.repositories.length > 1) {
+      batchResult.combinedInsights = await this.generateCombinedInsights(batchResult.repositories);
+    }
+
+    // Calculate processing time
+    batchResult.processingTime = Date.now() - startTime;
+
     return batchResult;
+  }
+
+  /**
+   * Analyzes multiple repositories using a queue system for concurrency control
+   *
+   * @param repoPaths - Paths to repositories
+   * @param options - Analysis options
+   * @param concurrency - Maximum number of concurrent analyses
+   * @param progressCallback - Callback for progress updates
+   * @returns Promise resolving to batch analysis result
+   */
+  public async analyzeMultipleRepositoriesWithQueue(
+    repoPaths: string[],
+    options: AnalysisOptions,
+    concurrency: number = 2,
+    progressCallback?: (progress: any) => void
+  ): Promise<BatchAnalysisResult> {
+    const startTime = Date.now();
+    const batchId = uuidv4();
+
+    // Import TaskQueue
+    const { TaskQueue, QueueEvent } = require('../utils/queue');
+
+    // Create queue for processing repositories
+    const queue = new TaskQueue(
+      async (repoPath: string) => this.analyzeRepository(repoPath, options),
+      { concurrency }
+    );
+
+    // Create batch analysis result
+    const batchResult: BatchAnalysisResult = {
+      id: batchId,
+      repositories: [],
+      createdAt: new Date(),
+      processingTime: 0,
+      status: {
+        total: repoPaths.length,
+        completed: 0,
+        failed: 0,
+        inProgress: 0,
+        pending: repoPaths.length,
+        progress: 0,
+      },
+    };
+
+    // Set up progress tracking
+    queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
+      // Update batch status
+      batchResult.status = {
+        total: progress.total,
+        completed: progress.completed,
+        failed: progress.failed,
+        inProgress: progress.running,
+        pending: progress.pending,
+        progress: progress.progress,
+      };
+
+      // Call progress callback if provided
+      if (progressCallback) {
+        progressCallback({
+          batchId,
+          status: batchResult.status,
+          currentRepository: Array.from(queue.getAllTasks())
+            .filter((task) => task.status === 'running')
+            .map((task) => task.data),
+        });
+      }
+    });
+
+    // Set up completion handlers
+    queue.on(QueueEvent.TASK_COMPLETED, (task) => {
+      if (task.result) {
+        batchResult.repositories.push(task.result);
+      }
+    });
+
+    // Add all repositories to the queue
+    for (const repoPath of repoPaths) {
+      queue.addTask(uuidv4(), repoPath);
+    }
+
+    // Wait for all tasks to complete
+    await new Promise<void>((resolve) => {
+      queue.on(QueueEvent.QUEUE_DRAINED, resolve);
+    });
+
+    // Generate combined insights if multiple repositories were analyzed successfully
+    if (batchResult.repositories.length > 1) {
+      batchResult.combinedInsights = await this.generateCombinedInsights(batchResult.repositories);
+    }
+
+    // Calculate processing time
+    batchResult.processingTime = Date.now() - startTime;
+
+    return batchResult;
+  }
+
+  /**
+   * Generates combined insights for multiple repositories
+   *
+   * @param repositories - Repository analyses
+   * @returns Combined insights
+   */
+  private async generateCombinedInsights(repositories: RepositoryAnalysis[]): Promise<{
+    commonalities: string[];
+    differences: string[];
+    integrationOpportunities: string[];
+  }> {
+    // Find common languages
+    const languageSets = repositories.map((repo) => new Set(repo.languages));
+    const commonLanguages = Array.from(
+      languageSets.reduce((common, languages) => {
+        return new Set([...common].filter((lang) => languages.has(lang)));
+      }, languageSets[0] || new Set())
+    );
+
+    // Find common frameworks
+    const frameworkSets = repositories.map((repo) => new Set(repo.frameworks));
+    const commonFrameworks = Array.from(
+      frameworkSets.reduce((common, frameworks) => {
+        return new Set([...common].filter((framework) => frameworks.has(framework)));
+      }, frameworkSets[0] || new Set())
+    );
+
+    // Find unique languages per repository
+    const uniqueLanguages = repositories.map((repo) => {
+      return {
+        name: repo.name,
+        languages: repo.languages.filter((lang) => !commonLanguages.includes(lang)),
+      };
+    });
+
+    // Find unique frameworks per repository
+    const uniqueFrameworks = repositories.map((repo) => {
+      return {
+        name: repo.name,
+        frameworks: repo.frameworks.filter((framework) => !commonFrameworks.includes(framework)),
+      };
+    });
+
+    // Generate commonalities
+    const commonalities: string[] = [
+      commonLanguages.length > 0
+        ? `All repositories use the following languages: ${commonLanguages.join(', ')}`
+        : 'No common languages found across all repositories',
+      commonFrameworks.length > 0
+        ? `All repositories use the following frameworks: ${commonFrameworks.join(', ')}`
+        : 'No common frameworks found across all repositories',
+    ];
+
+    // Generate differences
+    const differences: string[] = [];
+    uniqueLanguages.forEach((repo) => {
+      if (repo.languages.length > 0) {
+        differences.push(`${repo.name} uniquely uses: ${repo.languages.join(', ')}`);
+      }
+    });
+    uniqueFrameworks.forEach((repo) => {
+      if (repo.frameworks.length > 0) {
+        differences.push(`${repo.name} uniquely uses frameworks: ${repo.frameworks.join(', ')}`);
+      }
+    });
+
+    // Generate integration opportunities
+    const integrationOpportunities: string[] = [];
+
+    // Check for complementary technologies
+    if (commonLanguages.length > 0 || commonFrameworks.length > 0) {
+      integrationOpportunities.push(
+        'Repositories share common technologies which could facilitate integration'
+      );
+    }
+
+    // Check for frontend/backend pairs
+    const hasFrontend = repositories.some((repo) =>
+      repo.frameworks.some((f) => ['react', 'vue', 'angular', 'svelte'].includes(f.toLowerCase()))
+    );
+    const hasBackend = repositories.some((repo) =>
+      repo.frameworks.some((f) =>
+        ['express', 'nest', 'django', 'flask', 'spring'].includes(f.toLowerCase())
+      )
+    );
+
+    if (hasFrontend && hasBackend) {
+      integrationOpportunities.push('Potential for frontend-backend integration detected');
+    }
+
+    return {
+      commonalities,
+      differences,
+      integrationOpportunities,
+    };
   }
 
   /**
@@ -114,22 +343,11 @@ export class AnalysisEngine {
     analysis: RepositoryAnalysis,
     format: OutputFormat
   ): Promise<string> {
-    // This is a placeholder for future LLM integration
-    // For now, we'll just return a simple summary
+    // Import export service
+    const exportService = require('../services/export.service').default;
 
-    switch (format) {
-      case 'json':
-        return JSON.stringify(analysis, null, 2);
-
-      case 'markdown':
-        return this.generateMarkdownSynopsis(analysis);
-
-      case 'html':
-        return this.generateHtmlSynopsis(analysis);
-
-      default:
-        throw new Error(`Unsupported output format: ${format}`);
-    }
+    // Use export service to generate content
+    return exportService.exportAnalysis(analysis, format);
   }
 
   /**
@@ -233,116 +451,7 @@ export class AnalysisEngine {
     };
   }
 
-  /**
-   * Generates a Markdown synopsis of the repository analysis
-   *
-   * @param analysis - Repository analysis
-   * @returns Markdown formatted synopsis
-   */
-  private generateMarkdownSynopsis(analysis: RepositoryAnalysis): string {
-    return `# ${analysis.name} Repository Analysis
-
-## Overview
-
-- **Language:** ${analysis.language}
-- **Languages:** ${analysis.languages.join(', ')}
-- **Frameworks:** ${analysis.frameworks.join(', ') || 'None detected'}
-- **Files:** ${analysis.fileCount}
-- **Directories:** ${analysis.directoryCount}
-- **Total Size:** ${(analysis.totalSize / 1024).toFixed(2)} KB
-
-## Code Structure
-
-- **Functions:** ${analysis.codeAnalysis.functionCount}
-- **Classes:** ${analysis.codeAnalysis.classCount}
-- **Imports:** ${analysis.codeAnalysis.importCount}
-
-## Key Files
-
-${analysis.structure.keyFiles
-  .slice(0, 10)
-  .map((file) => `- **${file.path}** (${file.language}, ${file.lineCount} lines)`)
-  .join('\n')}
-
-## Directory Structure
-
-\`\`\`
-${analysis.structure.tree}
-\`\`\`
-
-## Analysis Metadata
-
-- **Analysis Mode:** ${analysis.metadata.analysisMode}
-- **Processing Time:** ${analysis.metadata.processingTime} ms
-- **Token Usage:** ${analysis.metadata.tokenUsage?.total || 'N/A'}
-`;
-  }
-
-  /**
-   * Generates an HTML synopsis of the repository analysis
-   *
-   * @param analysis - Repository analysis
-   * @returns HTML formatted synopsis
-   */
-  private generateHtmlSynopsis(analysis: RepositoryAnalysis): string {
-    // Convert Markdown to HTML
-    const markdown = this.generateMarkdownSynopsis(analysis);
-
-    // Simple HTML wrapper
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <title>${analysis.name} Repository Analysis</title>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1 { color: #333; }
-    h2 { color: #444; margin-top: 20px; }
-    pre { background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow: auto; }
-    code { font-family: monospace; }
-  </style>
-</head>
-<body>
-  <h1>${analysis.name} Repository Analysis</h1>
-  
-  <h2>Overview</h2>
-  <ul>
-    <li><strong>Language:</strong> ${analysis.language}</li>
-    <li><strong>Languages:</strong> ${analysis.languages.join(', ')}</li>
-    <li><strong>Frameworks:</strong> ${analysis.frameworks.join(', ') || 'None detected'}</li>
-    <li><strong>Files:</strong> ${analysis.fileCount}</li>
-    <li><strong>Directories:</strong> ${analysis.directoryCount}</li>
-    <li><strong>Total Size:</strong> ${(analysis.totalSize / 1024).toFixed(2)} KB</li>
-  </ul>
-  
-  <h2>Code Structure</h2>
-  <ul>
-    <li><strong>Functions:</strong> ${analysis.codeAnalysis.functionCount}</li>
-    <li><strong>Classes:</strong> ${analysis.codeAnalysis.classCount}</li>
-    <li><strong>Imports:</strong> ${analysis.codeAnalysis.importCount}</li>
-  </ul>
-  
-  <h2>Key Files</h2>
-  <ul>
-    ${analysis.structure.keyFiles
-      .slice(0, 10)
-      .map(
-        (file) =>
-          `<li><strong>${file.path}</strong> (${file.language}, ${file.lineCount} lines)</li>`
-      )
-      .join('\n')}
-  </ul>
-  
-  <h2>Directory Structure</h2>
-  <pre><code>${analysis.structure.tree}</code></pre>
-  
-  <h2>Analysis Metadata</h2>
-  <ul>
-    <li><strong>Analysis Mode:</strong> ${analysis.metadata.analysisMode}</li>
-    <li><strong>Processing Time:</strong> ${analysis.metadata.processingTime} ms</li>
-    <li><strong>Token Usage:</strong> ${analysis.metadata.tokenUsage?.total || 'N/A'}</li>
-  </ul>
-</body>
-</html>`;
+  // Export functionality has been moved to the export service
   }
 
   /**

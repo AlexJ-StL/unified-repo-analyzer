@@ -75,6 +75,29 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     // Clear progress interval
     clearInterval(progressInterval);
 
+    // Generate exports if requested in options
+    if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
+      // Import export service
+      const exportService = require('../../services/export.service').default;
+
+      // Generate exports for each requested format
+      const exports = {};
+      for (const format of analysisOptions.outputFormats) {
+        try {
+          const content = await exportService.exportAnalysis(analysis, format);
+          exports[format] = {
+            format,
+            size: Buffer.byteLength(content, 'utf8'),
+          };
+        } catch (exportError) {
+          console.error(`Error generating ${format} export:`, exportError);
+        }
+      }
+
+      // Add exports to the response
+      analysis.exports = exports;
+    }
+
     // Return analysis result
     res.status(200).json(analysis);
   } catch (error) {
@@ -115,32 +138,85 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
     // Generate unique client ID for progress tracking
     const clientId = (req.headers['x-client-id'] as string) || 'anonymous';
 
-    // Set up progress tracking
+    // Generate unique batch ID
+    const batchId = req.body.batchId || `batch-${Date.now()}`;
+
+    // Set up initial progress tracker
     const progressTracker = {
+      batchId,
       total: paths.length,
-      processed: 0,
-      currentRepository: '',
+      completed: 0,
+      failed: 0,
+      inProgress: 0,
+      pending: paths.length,
+      progress: 0,
       status: 'initializing',
+      currentRepositories: [],
     };
 
-    // Start progress updates
-    const progressInterval = setInterval(() => {
-      io.to(clientId).emit('batch-analysis-progress', progressTracker);
-    }, 1000);
-
-    // Update progress tracker with batch analysis
-    progressTracker.status = 'analyzing';
-
-    // Analyze repositories
-    const batchResult = await analysisEngine.analyzeMultipleRepositories(paths, analysisOptions);
-
-    // Update progress tracker with completion
-    progressTracker.processed = progressTracker.total;
-    progressTracker.status = 'completed';
+    // Send initial progress update
     io.to(clientId).emit('batch-analysis-progress', progressTracker);
 
-    // Clear progress interval
-    clearInterval(progressInterval);
+    // Update progress tracker with batch analysis starting
+    progressTracker.status = 'analyzing';
+    io.to(clientId).emit('batch-analysis-progress', progressTracker);
+
+    // Determine concurrency based on request or default to 2
+    const concurrency = req.body.concurrency || 2;
+
+    // Analyze repositories with queue and progress tracking
+    const batchResult = await analysisEngine.analyzeMultipleRepositoriesWithQueue(
+      paths,
+      analysisOptions,
+      concurrency,
+      (progress) => {
+        // Update progress tracker
+        progressTracker.completed = progress.status.completed;
+        progressTracker.failed = progress.status.failed;
+        progressTracker.inProgress = progress.status.inProgress;
+        progressTracker.pending = progress.status.pending;
+        progressTracker.progress = progress.status.progress;
+        progressTracker.currentRepositories = progress.currentRepository || [];
+
+        // Send progress update
+        io.to(clientId).emit('batch-analysis-progress', progressTracker);
+      }
+    );
+
+    // Update progress tracker with completion
+    progressTracker.status = 'completed';
+    progressTracker.completed = batchResult.repositories.length;
+    progressTracker.failed = paths.length - batchResult.repositories.length;
+    progressTracker.inProgress = 0;
+    progressTracker.pending = 0;
+    progressTracker.progress = 100;
+    progressTracker.currentRepositories = [];
+
+    // Send final progress update
+    io.to(clientId).emit('batch-analysis-progress', progressTracker);
+
+    // Generate exports if requested in options
+    if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
+      // Import export service
+      const exportService = require('../../services/export.service').default;
+
+      // Generate exports for each requested format
+      const exports = {};
+      for (const format of analysisOptions.outputFormats) {
+        try {
+          const content = await exportService.exportBatchAnalysis(batchResult, format);
+          exports[format] = {
+            format,
+            size: Buffer.byteLength(content, 'utf8'),
+          };
+        } catch (exportError) {
+          console.error(`Error generating ${format} export:`, exportError);
+        }
+      }
+
+      // Add exports to the response
+      batchResult.exports = exports;
+    }
 
     // Return batch analysis result
     res.status(200).json(batchResult);
