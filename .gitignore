@@ -75,6 +75,7 @@ Thumbs.db
 .npm/
 
 # IDE specific
+.vscode
 .vscode/settings.json
 .vscode/tasks.json
 .vscode/launch.json
