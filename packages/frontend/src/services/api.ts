@@ -133,7 +133,7 @@ export const apiService = {
   },
 };
 
-// Error handling helper
+// Enhanced error handling with retry and recovery
 export const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
@@ -156,6 +156,131 @@ export const handleApiError = (error: unknown): string => {
 
   // For non-axios errors
   return error instanceof Error ? error.message : 'An unknown error occurred';
+};
+
+// Enhanced API service with error handling and retry logic
+export const createApiService = (onError?: (error: any) => void) => {
+  const handleError = (error: any) => {
+    if (onError) {
+      onError(error);
+    }
+    throw error;
+  };
+
+  return {
+    // Repository analysis with error handling
+    analyzeRepository: async (path: string, options: any) => {
+      try {
+        return await api.post('/analyze', { path, options });
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Batch analysis with error handling
+    analyzeBatch: async (paths: string[], options: any) => {
+      try {
+        return await api.post('/analyze/batch', { paths, options });
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Get repositories with error handling
+    getRepositories: async () => {
+      try {
+        return await api.get('/repositories');
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Search repositories with error handling
+    searchRepositories: async (query: string, filters: any) => {
+      try {
+        return await api.get('/repositories/search', { params: { query, ...filters } });
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Get analysis results with error handling
+    getAnalysis: async (id: string) => {
+      try {
+        return await api.get(`/analysis/${id}`);
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Export analysis with error handling
+    exportAnalysis: async (analysis: any, format: string, download = false) => {
+      try {
+        return await api.post(
+          '/export',
+          { analysis, format },
+          {
+            responseType: download ? 'blob' : 'json',
+            params: { download: download.toString() },
+          }
+        );
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Export batch analysis with error handling
+    exportBatchAnalysis: async (batchAnalysis: any, format: string, download = false) => {
+      try {
+        return await api.post(
+          '/export/batch',
+          { batchAnalysis, format },
+          {
+            responseType: download ? 'blob' : 'json',
+            params: { download: download.toString() },
+          }
+        );
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Download export file with error handling
+    downloadExport: async (exportId: string) => {
+      try {
+        return await api.get(`/export/download/${exportId}`, { responseType: 'blob' });
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Get export history with error handling
+    getExportHistory: async () => {
+      try {
+        return await api.get('/export/history');
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Delete export with error handling
+    deleteExport: async (exportId: string) => {
+      try {
+        return await api.delete(`/export/${exportId}`);
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+
+    // Cancel analysis with error handling
+    cancelAnalysis: async (id: string) => {
+      try {
+        return await api.post(`/analysis/${id}/cancel`);
+      } catch (error) {
+        return handleError(error);
+      }
+    },
+  };
 };
 
 export default api;
