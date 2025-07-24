@@ -452,7 +452,6 @@ export class AnalysisEngine {
   }
 
   // Export functionality has been moved to the export service
-  }
 
   /**
    * Searches repositories based on query criteria

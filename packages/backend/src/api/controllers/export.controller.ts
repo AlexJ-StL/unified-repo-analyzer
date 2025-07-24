@@ -14,9 +14,24 @@ import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);
+const readdir = promisify(fs.readdir);
+const unlink = promisify(fs.unlink);
 
 // Temporary directory for exports
 const EXPORT_DIR = path.join(process.cwd(), 'exports');
+
+// In-memory export metadata store (in production, use a database)
+interface ExportMetadata {
+  id: string;
+  format: OutputFormat;
+  filename: string;
+  createdAt: Date;
+  size: number;
+  analysisName?: string;
+  type: 'single' | 'batch';
+}
+
+const exportMetadata = new Map<string, ExportMetadata>();
 
 // Ensure export directory exists
 (async () => {
@@ -26,6 +41,32 @@ const EXPORT_DIR = path.join(process.cwd(), 'exports');
     await mkdir(EXPORT_DIR, { recursive: true });
   }
 })();
+
+// Clean up old exports (older than 24 hours)
+const cleanupOldExports = async () => {
+  try {
+    const files = await readdir(EXPORT_DIR);
+    const now = Date.now();
+    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+
+    for (const file of files) {
+      const filePath = path.join(EXPORT_DIR, file);
+      const stats = await stat(filePath);
+
+      if (now - stats.mtime.getTime() > maxAge) {
+        await unlink(filePath);
+        // Remove from metadata store
+        const exportId = path.parse(file).name;
+        exportMetadata.delete(exportId);
+      }
+    }
+  } catch (error) {
+    console.error('Error cleaning up old exports:', error);
+  }
+};
+
+// Run cleanup every hour
+setInterval(cleanupOldExports, 60 * 60 * 1000);
 
 /**
  * Export a repository analysis
@@ -76,13 +117,26 @@ export const exportAnalysis = async (req: Request, res: Response): Promise<void>
 
     await exportService.saveToFile(content, exportPath);
 
+    const size = Buffer.byteLength(content, 'utf8');
+
+    // Store export metadata
+    exportMetadata.set(exportId, {
+      id: exportId,
+      format: format as OutputFormat,
+      filename,
+      createdAt: new Date(),
+      size,
+      analysisName: analysis.name,
+      type: 'single',
+    });
+
     // Return export information
     res.status(200).json({
       exportId,
       format,
       filename,
       downloadUrl: `/api/export/download/${exportId}`,
-      size: Buffer.byteLength(content, 'utf8'),
+      size,
     });
   } catch (error) {
     console.error('Error exporting analysis:', error);
@@ -139,13 +193,26 @@ export const exportBatchAnalysis = async (req: Request, res: Response): Promise<
 
     await exportService.saveToFile(content, exportPath);
 
+    const size = Buffer.byteLength(content, 'utf8');
+
+    // Store export metadata
+    exportMetadata.set(exportId, {
+      id: exportId,
+      format: format as OutputFormat,
+      filename,
+      createdAt: new Date(),
+      size,
+      analysisName: `Batch Analysis (${batchAnalysis.repositories.length} repos)`,
+      type: 'batch',
+    });
+
     // Return export information
     res.status(200).json({
       exportId,
       format,
       filename,
       downloadUrl: `/api/export/download/${exportId}`,
-      size: Buffer.byteLength(content, 'utf8'),
+      size,
     });
   } catch (error) {
     console.error('Error exporting batch analysis:', error);
@@ -239,15 +306,75 @@ function getContentType(format: OutputFormat): string {
 }
 
 /**
- * Get format from export ID (placeholder implementation)
- * In a real implementation, this would look up the format from a database
+ * Get format from export ID using metadata store
  *
  * @param exportId - Export ID
  * @returns Output format or undefined if not found
  */
 function getFormatFromExportId(exportId: string): OutputFormat | undefined {
-  // This is a placeholder implementation
-  // In a real implementation, this would look up the format from a database
-  // For now, we'll just return JSON as the default
-  return 'json';
+  const metadata = exportMetadata.get(exportId);
+  return metadata?.format;
 }
+
+/**
+ * Get export history
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const getExportHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const history = Array.from(exportMetadata.values())
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, 50); // Return last 50 exports
+
+    res.status(200).json(history);
+  } catch (error) {
+    console.error('Error getting export history:', error);
+    res.status(500).json({
+      error: 'Failed to get export history',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+/**
+ * Delete an export file
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const deleteExport = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { exportId } = req.params;
+
+    // Check if export exists
+    const metadata = exportMetadata.get(exportId);
+    if (!metadata) {
+      res.status(404).json({ error: 'Export not found' });
+      return;
+    }
+
+    // Delete the file
+    const filename = `${exportId}.${getFileExtension(metadata.format)}`;
+    const exportPath = path.join(EXPORT_DIR, filename);
+
+    try {
+      await unlink(exportPath);
+    } catch (error) {
+      // File might not exist, but we'll still remove from metadata
+      console.warn(`Export file not found: ${exportPath}`);
+    }
+
+    // Remove from metadata store
+    exportMetadata.delete(exportId);
+
+    res.status(200).json({ message: 'Export deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting export:', error);
+    res.status(500).json({
+      error: 'Failed to delete export',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};

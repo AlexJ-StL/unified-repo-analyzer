@@ -50,4 +50,20 @@ router.get(
   exportController.downloadExport
 );
 
+/**
+ * GET /api/export/history
+ * Get export history
+ */
+router.get('/history', exportController.getExportHistory);
+
+/**
+ * DELETE /api/export/:exportId
+ * Delete an export file
+ */
+router.delete(
+  '/:exportId',
+  [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
+  exportController.deleteExport
+);
+
 export default router;

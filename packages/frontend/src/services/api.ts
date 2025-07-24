@@ -89,8 +89,42 @@ export const apiService = {
   },
 
   // Export analysis
-  exportAnalysis: (id: string, format: string) => {
-    return api.post('/export', { id, format }, { responseType: 'blob' });
+  exportAnalysis: (analysis: any, format: string, download = false) => {
+    return api.post(
+      '/export',
+      { analysis, format },
+      {
+        responseType: download ? 'blob' : 'json',
+        params: { download: download.toString() },
+      }
+    );
+  },
+
+  // Export batch analysis
+  exportBatchAnalysis: (batchAnalysis: any, format: string, download = false) => {
+    return api.post(
+      '/export/batch',
+      { batchAnalysis, format },
+      {
+        responseType: download ? 'blob' : 'json',
+        params: { download: download.toString() },
+      }
+    );
+  },
+
+  // Download export file
+  downloadExport: (exportId: string) => {
+    return api.get(`/export/download/${exportId}`, { responseType: 'blob' });
+  },
+
+  // Get export history
+  getExportHistory: () => {
+    return api.get('/export/history');
+  },
+
+  // Delete export
+  deleteExport: (exportId: string) => {
+    return api.delete(`/export/${exportId}`);
   },
 
   // Cancel analysis
