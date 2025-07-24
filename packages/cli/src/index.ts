@@ -1,6 +1,12 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { executeAnalyze } from './commands';
+import {
+  executeAnalyze,
+  executeBatch,
+  executeSearch,
+  executeExport,
+  executeIndex,
+} from './commands';
 import { handleError, config } from './utils';
 
 // Create CLI program
@@ -40,11 +46,21 @@ program
   .argument('<path>', 'Base path containing repositories')
   .option('-o, --output <format>', 'Output format (json, markdown, html)', 'json')
   .option('-m, --mode <mode>', 'Analysis mode (quick, standard, comprehensive)', 'standard')
+  .option('--max-files <number>', 'Maximum number of files to analyze')
+  .option('--max-lines <number>', 'Maximum lines per file to analyze')
+  .option('--llm <boolean>', 'Include LLM analysis', (value) => value === 'true')
+  .option('--provider <name>', 'LLM provider to use')
+  .option('--tree <boolean>', 'Include directory tree in output', (value) => value === 'true')
+  .option('--output-dir <path>', 'Directory to save output files')
+  .option('--depth <number>', 'Maximum depth to search for repositories', '1')
+  .option('--filter <string>', 'Filter repositories by name')
+  .option('--combined', 'Generate combined analysis report', false)
   .action((path, options) => {
-    console.log(chalk.blue(`Batch analyzing repositories in ${path}`));
-    console.log(chalk.gray(`Output format: ${options.output}`));
-    console.log(chalk.gray(`Analysis mode: ${options.mode}`));
-    console.log(chalk.yellow('This feature will be implemented in a future update.'));
+    try {
+      executeBatch(path, options);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
 // Add search command
@@ -52,9 +68,49 @@ program
   .command('search')
   .description('Search indexed repositories')
   .argument('<query>', 'Search query')
-  .action((query) => {
-    console.log(chalk.blue(`Searching repositories for "${query}"`));
-    console.log(chalk.yellow('This feature will be implemented in a future update.'));
+  .option('--language <name>', 'Filter by programming language')
+  .option('--framework <name>', 'Filter by framework')
+  .option('--file-type <ext>', 'Filter by file type')
+  .option('--limit <number>', 'Maximum number of results')
+  .option('--sort <method>', 'Sort method (relevance, date, size)', 'relevance')
+  .option('--json', 'Output results as JSON', false)
+  .action((query, options) => {
+    try {
+      executeSearch(query, options);
+    } catch (error) {
+      handleError(error);
+    }
+  });
+
+// Add export command
+program
+  .command('export')
+  .description('Export analysis results')
+  .argument('<analysis-id>', 'ID of the analysis to export')
+  .option('-f, --format <format>', 'Export format (json, markdown, html)', 'json')
+  .option('--output-dir <path>', 'Directory to save output files')
+  .option('--filename <name>', 'Custom filename for the export')
+  .action((analysisId, options) => {
+    try {
+      executeExport(analysisId, options);
+    } catch (error) {
+      handleError(error);
+    }
+  });
+
+// Add index command
+program
+  .command('index')
+  .description('Manage repository index')
+  .option('--rebuild', 'Rebuild the entire index')
+  .option('--update', 'Update the index with new repositories')
+  .option('--path <path>', 'Path to scan for repositories when updating')
+  .action((options) => {
+    try {
+      executeIndex(options);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
 // Add config command
@@ -64,6 +120,8 @@ program
   .option('--show', 'Show current configuration')
   .option('--set <key=value>', 'Set configuration value')
   .option('--reset', 'Reset configuration to defaults')
+  .option('--profile <name>', 'Set active configuration profile')
+  .option('--create-profile <name>', 'Create a new configuration profile')
   .action((options) => {
     try {
       if (options.show) {
@@ -89,8 +147,105 @@ program
       } else if (options.reset) {
         config.clear();
         console.log(chalk.green('Configuration reset to defaults'));
+      } else if (options.profile) {
+        const profiles = (config.get('profiles') as Record<string, any>) || {};
+        const profileName = options.profile;
+
+        if (!profiles[profileName]) {
+          console.error(chalk.red(`Profile '${profileName}' does not exist`));
+          return;
+        }
+
+        config.set('activeProfile', profileName);
+        console.log(chalk.green(`Activated profile: ${profileName}`));
+      } else if (options.createProfile) {
+        const profileName = options.createProfile;
+        const profiles = (config.get('profiles') as Record<string, any>) || {};
+
+        if (profiles[profileName]) {
+          console.error(chalk.red(`Profile '${profileName}' already exists`));
+          return;
+        }
+
+        // Create new profile with current settings
+        const currentSettings = {
+          apiUrl: config.get('apiUrl'),
+          defaultOptions: config.get('defaultOptions'),
+          outputDir: config.get('outputDir'),
+        };
+
+        profiles[profileName] = currentSettings;
+        config.set('profiles', profiles);
+        config.set('activeProfile', profileName);
+
+        console.log(chalk.green(`Created and activated profile: ${profileName}`));
       } else {
-        console.log(chalk.yellow('No action specified. Use --show, --set, or --reset'));
+        console.log(
+          chalk.yellow(
+            'No action specified. Use --show, --set, --reset, --profile, or --create-profile'
+          )
+        );
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  });
+
+// Add profile command for managing configuration profiles
+program
+  .command('profile')
+  .description('Manage configuration profiles')
+  .option('--list', 'List available profiles')
+  .option('--show <name>', 'Show profile details')
+  .option('--delete <name>', 'Delete a profile')
+  .option('--export <name>', 'Export profile to file')
+  .option('--import <path>', 'Import profile from file')
+  .action((options) => {
+    try {
+      const profiles = (config.get('profiles') as Record<string, any>) || {};
+      const activeProfile = config.get('activeProfile') as string;
+
+      if (options.list) {
+        console.log(chalk.blue('Available Profiles:'));
+        Object.keys(profiles).forEach((name) => {
+          const marker = name === activeProfile ? '* ' : '  ';
+          console.log(`${marker}${name}`);
+        });
+
+        if (Object.keys(profiles).length === 0) {
+          console.log(chalk.yellow('No profiles found'));
+        }
+      } else if (options.show) {
+        const profileName = options.show;
+        if (!profiles[profileName]) {
+          console.error(chalk.red(`Profile '${profileName}' does not exist`));
+          return;
+        }
+
+        console.log(chalk.blue(`Profile: ${profileName}`));
+        console.log(JSON.stringify(profiles[profileName], null, 2));
+      } else if (options.delete) {
+        const profileName = options.delete;
+        if (!profiles[profileName]) {
+          console.error(chalk.red(`Profile '${profileName}' does not exist`));
+          return;
+        }
+
+        // Remove profile
+        const updatedProfiles = { ...profiles };
+        delete updatedProfiles[profileName];
+        config.set('profiles', updatedProfiles);
+
+        // Reset active profile if deleting the active one
+        if (activeProfile === profileName) {
+          config.delete('activeProfile');
+        }
+
+        console.log(chalk.green(`Deleted profile: ${profileName}`));
+      } else {
+        console.log(
+          chalk.yellow('No action specified. Use --list, --show, --delete, --export, or --import')
+        );
       }
     } catch (error) {
       handleError(error);

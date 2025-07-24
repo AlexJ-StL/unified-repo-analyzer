@@ -3,6 +3,7 @@ import {
   AnalysisOptions,
   RepositoryAnalysis,
   BatchAnalysisResult,
+  SearchResult,
 } from '@unified-repo-analyzer/shared';
 import config from './config';
 import { CLIError, ErrorType } from './error-handler';
@@ -146,14 +147,103 @@ export class ApiClient {
   /**
    * Search repositories
    */
-  async searchRepositories(query: string): Promise<any> {
+  async searchRepositories(queryString: string): Promise<SearchResult[]> {
     try {
-      const response = await request(
-        `${this.baseUrl}/repositories/search?q=${encodeURIComponent(query)}`,
-        {
-          method: 'GET',
-        }
+      const response = await request(`${this.baseUrl}/repositories/search?${queryString}`, {
+        method: 'GET',
+      });
+
+      if (response.statusCode >= 400) {
+        const body = await response.body.json();
+        throw new CLIError(
+          body.message || `API error: ${response.statusCode}`,
+          response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
+        );
+      }
+
+      return (await response.body.json()) as SearchResult[];
+    } catch (error) {
+      if (error instanceof CLIError) {
+        throw error;
+      }
+
+      throw new CLIError(
+        `Failed to search repositories: ${(error as Error).message}`,
+        ErrorType.NETWORK
       );
+    }
+  }
+
+  /**
+   * Rebuild the repository index
+   */
+  async rebuildIndex(): Promise<void> {
+    try {
+      const response = await request(`${this.baseUrl}/index/rebuild`, {
+        method: 'POST',
+      });
+
+      if (response.statusCode >= 400) {
+        const body = await response.body.json();
+        throw new CLIError(
+          body.message || `API error: ${response.statusCode}`,
+          response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
+        );
+      }
+    } catch (error) {
+      if (error instanceof CLIError) {
+        throw error;
+      }
+
+      throw new CLIError(`Failed to rebuild index: ${(error as Error).message}`, ErrorType.NETWORK);
+    }
+  }
+
+  /**
+   * Update the repository index
+   */
+  async updateIndex(path?: string): Promise<void> {
+    try {
+      const response = await request(`${this.baseUrl}/index/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          path,
+        }),
+      });
+
+      if (response.statusCode >= 400) {
+        const body = await response.body.json();
+        throw new CLIError(
+          body.message || `API error: ${response.statusCode}`,
+          response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
+        );
+      }
+    } catch (error) {
+      if (error instanceof CLIError) {
+        throw error;
+      }
+
+      throw new CLIError(`Failed to update index: ${(error as Error).message}`, ErrorType.NETWORK);
+    }
+  }
+
+  /**
+   * Get index status
+   */
+  async getIndexStatus(): Promise<{
+    totalRepositories: number;
+    lastUpdated: string;
+    languages: string[];
+    frameworks: string[];
+    tags: string[];
+  }> {
+    try {
+      const response = await request(`${this.baseUrl}/index/status`, {
+        method: 'GET',
+      });
 
       if (response.statusCode >= 400) {
         const body = await response.body.json();
@@ -170,7 +260,7 @@ export class ApiClient {
       }
 
       throw new CLIError(
-        `Failed to search repositories: ${(error as Error).message}`,
+        `Failed to get index status: ${(error as Error).message}`,
         ErrorType.NETWORK
       );
     }
