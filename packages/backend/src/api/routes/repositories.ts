@@ -49,4 +49,22 @@ router.get('/:id/similar', repositoriesController.getSimilarRepositories);
  */
 router.post('/combinations', repositoriesController.suggestCombinations);
 
+/**
+ * GET /api/repositories/relationships/graph
+ * Get relationship graph for visualization
+ */
+router.get('/relationships/graph', repositoriesController.getRelationshipGraph);
+
+/**
+ * POST /api/repositories/relationships/opportunities
+ * Analyze integration opportunities
+ */
+router.post('/relationships/opportunities', repositoriesController.getIntegrationOpportunities);
+
+/**
+ * GET /api/repositories/relationships/insights
+ * Get relationship insights and statistics
+ */
+router.get('/relationships/insights', repositoriesController.getRelationshipInsights);
+
 export default router;

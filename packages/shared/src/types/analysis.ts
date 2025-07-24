@@ -132,3 +132,61 @@ export interface CombinationSuggestion {
   rationale: string;
   integrationPoints: string[];
 }
+
+export interface RelationshipGraph {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  clusters: GraphCluster[];
+}
+
+export interface GraphNode {
+  id: string;
+  name: string;
+  type: 'frontend' | 'backend' | 'mobile' | 'library' | 'tool' | 'application';
+  size: number;
+  complexity: number;
+  languages: string[];
+  frameworks: string[];
+  x?: number;
+  y?: number;
+}
+
+export interface GraphEdge {
+  source: string;
+  target: string;
+  type: 'similar' | 'complementary' | 'dependency' | 'fork';
+  strength: number;
+  reason: string;
+}
+
+export interface GraphCluster {
+  id: string;
+  name: string;
+  repositories: string[];
+  theme: string;
+  color: string;
+}
+
+export interface IntegrationOpportunity {
+  id: string;
+  repositories: string[];
+  type: 'full-stack' | 'microservices' | 'library-ecosystem' | 'mobile-backend' | 'tool-chain';
+  title: string;
+  description: string;
+  benefits: string[];
+  challenges: string[];
+  implementationSteps: string[];
+  estimatedEffort: 'low' | 'medium' | 'high';
+  priority: number;
+}
+
+export interface RelationshipInsights {
+  totalRepositories: number;
+  totalRelationships: number;
+  strongRelationships: number;
+  clusters: number;
+  topLanguages: { language: string; count: number }[];
+  topFrameworks: { framework: string; count: number }[];
+  architecturalPatterns: { pattern: string; count: number }[];
+  integrationOpportunities: IntegrationOpportunity[];
+}

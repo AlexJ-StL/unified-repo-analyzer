@@ -389,64 +389,395 @@ export class IndexSystem {
       return repo;
     });
 
-    // For now, we'll just suggest combinations based on language compatibility
     const suggestions: CombinationSuggestion[] = [];
 
-    // Check for frontend-backend combinations
-    const frontendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
-    );
+    // Generate all possible combinations (pairs, triplets, etc.)
+    for (let size = 2; size <= Math.min(repositories.length, 4); size++) {
+      const combinations = this.generateCombinations(repositories, size);
 
-    const backendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw) =>
-        ['express', 'nest', 'django', 'flask', 'spring'].includes(fw.toLowerCase())
-      )
-    );
-
-    // Suggest frontend-backend combinations
-    for (const frontend of frontendRepos) {
-      for (const backend of backendRepos) {
-        if (frontend.id !== backend.id) {
-          suggestions.push({
-            repositories: [frontend.id, backend.id],
-            compatibility: 0.8,
-            rationale: `Frontend (${frontend.name}) and backend (${backend.name}) could be integrated into a full-stack application.`,
-            integrationPoints: [
-              'API integration between frontend and backend',
-              'Shared data models and validation',
-              'Authentication and authorization flow',
-            ],
-          });
+      for (const combination of combinations) {
+        const suggestion = await this.analyzeCombination(combination);
+        if (suggestion.compatibility > 0.3) {
+          // Only include viable combinations
+          suggestions.push(suggestion);
         }
       }
     }
 
-    // Check for complementary libraries
-    // This is a simplified example - real implementation would be more sophisticated
+    // Sort by compatibility score (descending)
+    suggestions.sort((a, b) => b.compatibility - a.compatibility);
+
+    // Limit to top 10 suggestions to avoid overwhelming the user
+    return suggestions.slice(0, 10);
+  }
+
+  /**
+   * Generates all combinations of repositories of a given size
+   */
+  private generateCombinations<T>(items: T[], size: number): T[][] {
+    if (size === 1) return items.map((item) => [item]);
+    if (size > items.length) return [];
+
+    const combinations: T[][] = [];
+
+    for (let i = 0; i <= items.length - size; i++) {
+      const head = items[i];
+      const tailCombinations = this.generateCombinations(items.slice(i + 1), size - 1);
+
+      for (const tailCombination of tailCombinations) {
+        combinations.push([head, ...tailCombination]);
+      }
+    }
+
+    return combinations;
+  }
+
+  /**
+   * Analyzes a combination of repositories for compatibility
+   */
+  private async analyzeCombination(
+    repositories: IndexedRepository[]
+  ): Promise<CombinationSuggestion> {
+    const repoIds = repositories.map((repo) => repo.id);
+    let totalCompatibility = 0;
+    let rationale: string[] = [];
+    let integrationPoints: string[] = [];
+
+    // Analyze pairwise compatibility
+    const pairwiseScores: number[] = [];
     for (let i = 0; i < repositories.length; i++) {
       for (let j = i + 1; j < repositories.length; j++) {
-        const repoA = repositories[i];
-        const repoB = repositories[j];
-
-        // Check for complementary languages
-        const sharedLanguages = repoA.languages.filter((lang) => repoB.languages.includes(lang));
-
-        if (sharedLanguages.length > 0) {
-          suggestions.push({
-            repositories: [repoA.id, repoB.id],
-            compatibility: 0.6 + sharedLanguages.length * 0.1,
-            rationale: `Repositories share ${sharedLanguages.length} languages: ${sharedLanguages.join(', ')}`,
-            integrationPoints: [
-              'Shared code libraries and utilities',
-              'Common build and test infrastructure',
-              'Unified deployment pipeline',
-            ],
-          });
-        }
+        const similarity = this.calculateSimilarity(repositories[i], repositories[j]);
+        pairwiseScores.push(similarity.score);
       }
     }
 
-    return suggestions;
+    // Calculate average pairwise compatibility
+    const avgPairwiseCompatibility =
+      pairwiseScores.length > 0
+        ? pairwiseScores.reduce((sum, score) => sum + score, 0) / pairwiseScores.length
+        : 0;
+
+    totalCompatibility = avgPairwiseCompatibility;
+
+    // Analyze architectural patterns
+    const architecturalAnalysis = this.analyzeArchitecturalCompatibility(repositories);
+    totalCompatibility += architecturalAnalysis.score * 0.3;
+    rationale.push(...architecturalAnalysis.rationale);
+    integrationPoints.push(...architecturalAnalysis.integrationPoints);
+
+    // Analyze technology stack synergy
+    const techStackAnalysis = this.analyzeTechStackSynergy(repositories);
+    totalCompatibility += techStackAnalysis.score * 0.2;
+    rationale.push(...techStackAnalysis.rationale);
+    integrationPoints.push(...techStackAnalysis.integrationPoints);
+
+    // Analyze complementary functionality
+    const functionalityAnalysis = this.analyzeFunctionalityComplementarity(repositories);
+    totalCompatibility += functionalityAnalysis.score * 0.3;
+    rationale.push(...functionalityAnalysis.rationale);
+    integrationPoints.push(...functionalityAnalysis.integrationPoints);
+
+    // Analyze development workflow compatibility
+    const workflowAnalysis = this.analyzeWorkflowCompatibility(repositories);
+    totalCompatibility += workflowAnalysis.score * 0.2;
+    rationale.push(...workflowAnalysis.rationale);
+    integrationPoints.push(...workflowAnalysis.integrationPoints);
+
+    // Normalize compatibility score
+    totalCompatibility = Math.min(totalCompatibility, 1.0);
+
+    return {
+      repositories: repoIds,
+      compatibility: totalCompatibility,
+      rationale: rationale.join('. '),
+      integrationPoints: [...new Set(integrationPoints)], // Remove duplicates
+    };
+  }
+
+  /**
+   * Analyzes architectural compatibility between repositories
+   */
+  private analyzeArchitecturalCompatibility(repositories: IndexedRepository[]): {
+    score: number;
+    rationale: string[];
+    integrationPoints: string[];
+  } {
+    const rationale: string[] = [];
+    const integrationPoints: string[] = [];
+    let score = 0;
+
+    // Check for full-stack combinations
+    const frontendRepos = repositories.filter((repo) => this.isFrontendRepo(repo));
+    const backendRepos = repositories.filter((repo) => this.isBackendRepo(repo));
+    const mobileRepos = repositories.filter((repo) => this.isMobileRepo(repo));
+
+    if (frontendRepos.length > 0 && backendRepos.length > 0) {
+      score += 0.8;
+      rationale.push('Full-stack application potential with frontend and backend components');
+      integrationPoints.push('REST API integration');
+      integrationPoints.push('Shared authentication system');
+      integrationPoints.push('Common data models');
+    }
+
+    if (mobileRepos.length > 0 && backendRepos.length > 0) {
+      score += 0.7;
+      rationale.push('Mobile application with backend services');
+      integrationPoints.push('Mobile API endpoints');
+      integrationPoints.push('Push notification system');
+      integrationPoints.push('Mobile-optimized data synchronization');
+    }
+
+    // Check for microservices architecture
+    const serviceRepos = repositories.filter(
+      (repo) =>
+        repo.tags.some((tag) => tag.toLowerCase().includes('service')) ||
+        repo.name.toLowerCase().includes('service')
+    );
+
+    if (serviceRepos.length >= 2) {
+      score += 0.6;
+      rationale.push('Microservices architecture with multiple service components');
+      integrationPoints.push('Service mesh integration');
+      integrationPoints.push('Inter-service communication');
+      integrationPoints.push('Distributed logging and monitoring');
+    }
+
+    // Check for library ecosystem
+    const libraryRepos = repositories.filter((repo) => this.isLibraryRepo(repo));
+    const applicationRepos = repositories.filter((repo) => this.isApplicationRepo(repo));
+
+    if (libraryRepos.length > 0 && applicationRepos.length > 0) {
+      score += 0.5;
+      rationale.push('Library and application combination for modular architecture');
+      integrationPoints.push('Package dependency management');
+      integrationPoints.push('Shared utility functions');
+      integrationPoints.push('Common configuration patterns');
+    }
+
+    return { score: Math.min(score, 1.0), rationale, integrationPoints };
+  }
+
+  /**
+   * Analyzes technology stack synergy
+   */
+  private analyzeTechStackSynergy(repositories: IndexedRepository[]): {
+    score: number;
+    rationale: string[];
+    integrationPoints: string[];
+  } {
+    const rationale: string[] = [];
+    const integrationPoints: string[] = [];
+    let score = 0;
+
+    // Collect all languages and frameworks
+    const allLanguages = [...new Set(repositories.flatMap((repo) => repo.languages))];
+    const allFrameworks = [...new Set(repositories.flatMap((repo) => repo.frameworks))];
+
+    // Check for ecosystem coherence
+    const ecosystemScores = {
+      javascript: 0,
+      python: 0,
+      java: 0,
+      dotnet: 0,
+    };
+
+    // JavaScript ecosystem
+    if (allLanguages.some((lang) => ['javascript', 'typescript'].includes(lang.toLowerCase()))) {
+      ecosystemScores.javascript += 0.3;
+      if (allFrameworks.some((fw) => ['node.js', 'express', 'nest'].includes(fw.toLowerCase()))) {
+        ecosystemScores.javascript += 0.2;
+      }
+      if (allFrameworks.some((fw) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))) {
+        ecosystemScores.javascript += 0.2;
+      }
+    }
+
+    // Python ecosystem
+    if (allLanguages.includes('python')) {
+      ecosystemScores.python += 0.3;
+      if (allFrameworks.some((fw) => ['django', 'flask', 'fastapi'].includes(fw.toLowerCase()))) {
+        ecosystemScores.python += 0.3;
+      }
+    }
+
+    // Find the strongest ecosystem
+    const strongestEcosystem = Object.entries(ecosystemScores).reduce(
+      (max, [ecosystem, score]) => (score > max.score ? { ecosystem, score } : max),
+      { ecosystem: '', score: 0 }
+    );
+
+    if (strongestEcosystem.score > 0.5) {
+      score += strongestEcosystem.score;
+      rationale.push(`Strong ${strongestEcosystem.ecosystem} ecosystem coherence`);
+      integrationPoints.push('Shared development tools and practices');
+      integrationPoints.push('Common package management');
+      integrationPoints.push('Unified build and deployment pipeline');
+    }
+
+    // Check for complementary technologies
+    const complementaryPairs = [
+      { frontend: ['react', 'vue', 'angular'], backend: ['express', 'nest', 'django', 'flask'] },
+      { database: ['mongodb', 'postgresql', 'mysql'], backend: ['express', 'django', 'spring'] },
+      { mobile: ['react-native', 'flutter'], backend: ['express', 'django', 'spring'] },
+    ];
+
+    for (const pair of complementaryPairs) {
+      const hasFrontend =
+        pair.frontend && allFrameworks.some((fw) => pair.frontend.includes(fw.toLowerCase()));
+      const hasBackend =
+        pair.backend && allFrameworks.some((fw) => pair.backend.includes(fw.toLowerCase()));
+
+      if (hasFrontend && hasBackend) {
+        score += 0.3;
+        rationale.push('Complementary technology stack detected');
+        integrationPoints.push('Technology-specific integration patterns');
+      }
+    }
+
+    return { score: Math.min(score, 1.0), rationale, integrationPoints };
+  }
+
+  /**
+   * Analyzes functionality complementarity
+   */
+  private analyzeFunctionalityComplementarity(repositories: IndexedRepository[]): {
+    score: number;
+    rationale: string[];
+    integrationPoints: string[];
+  } {
+    const rationale: string[] = [];
+    const integrationPoints: string[] = [];
+    let score = 0;
+
+    // Analyze repository purposes based on names and summaries
+    const purposes = repositories.map((repo) => this.inferRepositoryPurpose(repo));
+
+    // Check for complementary purposes
+    const complementaryPurposes = [
+      ['frontend', 'backend'],
+      ['api', 'client'],
+      ['library', 'application'],
+      ['service', 'gateway'],
+      ['database', 'api'],
+      ['auth', 'application'],
+      ['monitoring', 'application'],
+    ];
+
+    for (const [purposeA, purposeB] of complementaryPurposes) {
+      const hasA = purposes.some((purpose) => purpose.includes(purposeA));
+      const hasB = purposes.some((purpose) => purpose.includes(purposeB));
+
+      if (hasA && hasB) {
+        score += 0.4;
+        rationale.push(`Complementary functionality: ${purposeA} and ${purposeB}`);
+        integrationPoints.push(`${purposeA}-${purposeB} integration layer`);
+      }
+    }
+
+    // Check for functional diversity (good for comprehensive systems)
+    const uniquePurposes = [...new Set(purposes.flat())];
+    if (uniquePurposes.length >= repositories.length) {
+      score += 0.2;
+      rationale.push('Diverse functionality provides comprehensive system coverage');
+      integrationPoints.push('Unified system architecture');
+    }
+
+    return { score: Math.min(score, 1.0), rationale, integrationPoints };
+  }
+
+  /**
+   * Analyzes development workflow compatibility
+   */
+  private analyzeWorkflowCompatibility(repositories: IndexedRepository[]): {
+    score: number;
+    rationale: string[];
+    integrationPoints: string[];
+  } {
+    const rationale: string[] = [];
+    const integrationPoints: string[] = [];
+    let score = 0;
+
+    // Check for similar complexity levels (easier to maintain together)
+    const complexities = repositories.map((repo) => repo.complexity);
+    const avgComplexity = complexities.reduce((sum, c) => sum + c, 0) / complexities.length;
+    const complexityVariance =
+      complexities.reduce((sum, c) => sum + Math.pow(c - avgComplexity, 2), 0) /
+      complexities.length;
+
+    if (complexityVariance < 100) {
+      // Low variance in complexity
+      score += 0.3;
+      rationale.push('Similar complexity levels facilitate unified development workflow');
+      integrationPoints.push('Shared development standards');
+      integrationPoints.push('Common code review processes');
+    }
+
+    // Check for similar sizes (easier to manage together)
+    const sizes = repositories.map((repo) => repo.size);
+    const sizeRatios = sizes.map((size) => size / Math.max(...sizes));
+    const avgSizeRatio = sizeRatios.reduce((sum, ratio) => sum + ratio, 0) / sizeRatios.length;
+
+    if (avgSizeRatio > 0.3) {
+      // Repositories are relatively similar in size
+      score += 0.2;
+      rationale.push('Similar project sizes enable consistent development practices');
+      integrationPoints.push('Unified project structure');
+      integrationPoints.push('Common tooling and scripts');
+    }
+
+    return { score: Math.min(score, 1.0), rationale, integrationPoints };
+  }
+
+  /**
+   * Infers the purpose of a repository based on its characteristics
+   */
+  private inferRepositoryPurpose(repo: IndexedRepository): string[] {
+    const purposes: string[] = [];
+
+    // Analyze name
+    const name = repo.name.toLowerCase();
+    const nameKeywords = {
+      frontend: ['frontend', 'client', 'ui', 'web', 'app'],
+      backend: ['backend', 'server', 'api', 'service'],
+      database: ['db', 'database', 'storage', 'data'],
+      auth: ['auth', 'authentication', 'login', 'oauth'],
+      monitoring: ['monitor', 'logging', 'metrics', 'analytics'],
+      testing: ['test', 'testing', 'spec', 'e2e'],
+      deployment: ['deploy', 'ci', 'cd', 'build'],
+      library: ['lib', 'library', 'util', 'helper'],
+      mobile: ['mobile', 'ios', 'android', 'native'],
+    };
+
+    for (const [purpose, keywords] of Object.entries(nameKeywords)) {
+      if (keywords.some((keyword) => name.includes(keyword))) {
+        purposes.push(purpose);
+      }
+    }
+
+    // Analyze frameworks
+    if (repo.frameworks.some((fw) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))) {
+      purposes.push('frontend');
+    }
+    if (
+      repo.frameworks.some((fw) =>
+        ['express', 'nest', 'django', 'flask'].includes(fw.toLowerCase())
+      )
+    ) {
+      purposes.push('backend');
+    }
+    if (
+      repo.frameworks.some((fw) => ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase()))
+    ) {
+      purposes.push('mobile');
+    }
+
+    // Analyze languages
+    if (repo.languages.some((lang) => ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase()))) {
+      purposes.push('mobile');
+    }
+
+    return purposes.length > 0 ? purposes : ['application'];
   }
 
   /**
@@ -591,7 +922,7 @@ export class IndexSystem {
   }
 
   /**
-   * Calculates similarity between two repositories
+   * Calculates similarity between two repositories using advanced algorithms
    *
    * @param repoA - First repository
    * @param repoB - Second repository
@@ -604,100 +935,438 @@ export class IndexSystem {
     let score = 0;
     let reasons: string[] = [];
 
-    // Check language similarity
+    // Advanced language similarity with weighted scoring
+    const languageSimilarity = this.calculateLanguageSimilarity(repoA, repoB);
+    score += languageSimilarity.score * 0.25;
+    if (languageSimilarity.reasons.length > 0) {
+      reasons.push(...languageSimilarity.reasons);
+    }
+
+    // Framework compatibility analysis
+    const frameworkCompatibility = this.calculateFrameworkCompatibility(repoA, repoB);
+    score += frameworkCompatibility.score * 0.25;
+    if (frameworkCompatibility.reasons.length > 0) {
+      reasons.push(...frameworkCompatibility.reasons);
+    }
+
+    // Architectural pattern similarity
+    const architecturalSimilarity = this.calculateArchitecturalSimilarity(repoA, repoB);
+    score += architecturalSimilarity.score * 0.15;
+    if (architecturalSimilarity.reasons.length > 0) {
+      reasons.push(...architecturalSimilarity.reasons);
+    }
+
+    // Technology stack compatibility
+    const techStackCompatibility = this.calculateTechStackCompatibility(repoA, repoB);
+    score += techStackCompatibility.score * 0.15;
+    if (techStackCompatibility.reasons.length > 0) {
+      reasons.push(...techStackCompatibility.reasons);
+    }
+
+    // Project structure similarity
+    const structureSimilarity = this.calculateStructureSimilarity(repoA, repoB);
+    score += structureSimilarity.score * 0.1;
+    if (structureSimilarity.reasons.length > 0) {
+      reasons.push(...structureSimilarity.reasons);
+    }
+
+    // Name and semantic similarity
+    const semanticSimilarity = this.calculateSemanticSimilarity(repoA, repoB);
+    score += semanticSimilarity.score * 0.1;
+    if (semanticSimilarity.reasons.length > 0) {
+      reasons.push(...semanticSimilarity.reasons);
+    }
+
+    // Determine relationship type using enhanced logic
+    const relationshipType = this.determineRelationshipType(repoA, repoB, score, reasons);
+
+    return {
+      score: Math.min(score, 1.0), // Cap at 1.0
+      type: relationshipType.type,
+      reason: reasons.join('. '),
+    };
+  }
+
+  /**
+   * Calculates language similarity with weighted scoring
+   */
+  private calculateLanguageSimilarity(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Language weights based on popularity and ecosystem compatibility
+    const languageWeights: { [key: string]: number } = {
+      javascript: 1.0,
+      typescript: 1.0,
+      python: 0.9,
+      java: 0.8,
+      'c#': 0.8,
+      go: 0.7,
+      rust: 0.7,
+      php: 0.6,
+      ruby: 0.6,
+      swift: 0.5,
+      kotlin: 0.5,
+    };
+
     const sharedLanguages = repoA.languages.filter((lang) => repoB.languages.includes(lang));
 
     if (sharedLanguages.length > 0) {
-      const languageScore =
-        sharedLanguages.length / Math.max(repoA.languages.length, repoB.languages.length);
-      score += languageScore * 0.3; // Languages contribute 30% to similarity
+      // Calculate weighted similarity
+      const weightedSharedScore = sharedLanguages.reduce((sum, lang) => {
+        return sum + (languageWeights[lang.toLowerCase()] || 0.3);
+      }, 0);
+
+      const maxPossibleWeight = Math.max(
+        repoA.languages.reduce(
+          (sum, lang) => sum + (languageWeights[lang.toLowerCase()] || 0.3),
+          0
+        ),
+        repoB.languages.reduce((sum, lang) => sum + (languageWeights[lang.toLowerCase()] || 0.3), 0)
+      );
+
+      score = weightedSharedScore / maxPossibleWeight;
       reasons.push(`Shares ${sharedLanguages.length} languages: ${sharedLanguages.join(', ')}`);
+
+      // Bonus for high-compatibility language pairs
+      if (sharedLanguages.includes('javascript') && sharedLanguages.includes('typescript')) {
+        score += 0.1;
+        reasons.push('JavaScript/TypeScript ecosystem compatibility');
+      }
     }
 
-    // Check framework similarity
+    // Check for complementary language pairs
+    const complementaryPairs = [
+      ['javascript', 'python'],
+      ['typescript', 'python'],
+      ['javascript', 'java'],
+      ['python', 'go'],
+      ['javascript', 'php'],
+    ];
+
+    for (const [langA, langB] of complementaryPairs) {
+      if (
+        (repoA.languages.some((l) => l.toLowerCase() === langA) &&
+          repoB.languages.some((l) => l.toLowerCase() === langB)) ||
+        (repoA.languages.some((l) => l.toLowerCase() === langB) &&
+          repoB.languages.some((l) => l.toLowerCase() === langA))
+      ) {
+        score += 0.2;
+        reasons.push(`Complementary language pair: ${langA}/${langB}`);
+      }
+    }
+
+    return { score: Math.min(score, 1.0), reasons };
+  }
+
+  /**
+   * Calculates framework compatibility
+   */
+  private calculateFrameworkCompatibility(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Framework compatibility matrix
+    const compatibilityMatrix: { [key: string]: string[] } = {
+      react: ['express', 'nest', 'next.js', 'gatsby', 'node.js'],
+      vue: ['express', 'nuxt', 'node.js'],
+      angular: ['nest', 'express', 'node.js'],
+      express: ['react', 'vue', 'angular', 'node.js'],
+      nest: ['react', 'angular', 'node.js'],
+      django: ['react', 'vue', 'angular'],
+      flask: ['react', 'vue', 'angular'],
+      spring: ['react', 'vue', 'angular'],
+      rails: ['react', 'vue', 'angular'],
+    };
+
     const sharedFrameworks = repoA.frameworks.filter((fw) => repoB.frameworks.includes(fw));
 
     if (sharedFrameworks.length > 0) {
       const frameworkScore =
         sharedFrameworks.length / Math.max(repoA.frameworks.length, repoB.frameworks.length);
-      score += frameworkScore * 0.25; // Frameworks contribute 25% to similarity
+      score += frameworkScore;
       reasons.push(`Shares ${sharedFrameworks.length} frameworks: ${sharedFrameworks.join(', ')}`);
     }
 
-    // Check tag similarity
-    const sharedTags = repoA.tags.filter((tag) => repoB.tags.includes(tag));
-
-    if (sharedTags.length > 0) {
-      const tagScore = sharedTags.length / Math.max(repoA.tags.length, repoB.tags.length);
-      score += tagScore * 0.15; // Tags contribute 15% to similarity
-      reasons.push(`Shares ${sharedTags.length} tags: ${sharedTags.join(', ')}`);
+    // Check for compatible framework pairs
+    for (const frameworkA of repoA.frameworks) {
+      const compatibleFrameworks = compatibilityMatrix[frameworkA.toLowerCase()] || [];
+      for (const frameworkB of repoB.frameworks) {
+        if (compatibleFrameworks.includes(frameworkB.toLowerCase())) {
+          score += 0.3;
+          reasons.push(`Compatible frameworks: ${frameworkA} ↔ ${frameworkB}`);
+        }
+      }
     }
 
-    // Check name similarity (potential fork)
-    if (
-      repoA.name.toLowerCase().includes(repoB.name.toLowerCase()) ||
-      repoB.name.toLowerCase().includes(repoA.name.toLowerCase())
-    ) {
-      score += 0.1; // Name similarity contributes 10%
-      reasons.push('Similar repository names');
+    return { score: Math.min(score, 1.0), reasons };
+  }
+
+  /**
+   * Calculates architectural pattern similarity
+   */
+  private calculateArchitecturalSimilarity(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Extract architectural patterns from tags and frameworks
+    const getArchitecturalPatterns = (repo: IndexedRepository): string[] => {
+      const patterns: string[] = [];
+
+      // Infer patterns from frameworks
+      if (repo.frameworks.some((f) => ['react', 'vue', 'angular'].includes(f.toLowerCase()))) {
+        patterns.push('spa', 'component-based');
+      }
+      if (
+        repo.frameworks.some((f) =>
+          ['express', 'nest', 'django', 'flask'].includes(f.toLowerCase())
+        )
+      ) {
+        patterns.push('rest-api', 'mvc');
+      }
+      if (repo.frameworks.some((f) => ['next.js', 'nuxt', 'gatsby'].includes(f.toLowerCase()))) {
+        patterns.push('ssr', 'static-generation');
+      }
+
+      // Infer from tags
+      const microserviceIndicators = ['microservice', 'api', 'service'];
+      if (
+        repo.tags.some((tag) =>
+          microserviceIndicators.some((indicator) => tag.toLowerCase().includes(indicator))
+        )
+      ) {
+        patterns.push('microservices');
+      }
+
+      return patterns;
+    };
+
+    const patternsA = getArchitecturalPatterns(repoA);
+    const patternsB = getArchitecturalPatterns(repoB);
+
+    const sharedPatterns = patternsA.filter((pattern) => patternsB.includes(pattern));
+
+    if (sharedPatterns.length > 0) {
+      score = sharedPatterns.length / Math.max(patternsA.length, patternsB.length, 1);
+      reasons.push(`Shared architectural patterns: ${sharedPatterns.join(', ')}`);
     }
 
-    // Check size similarity
+    return { score, reasons };
+  }
+
+  /**
+   * Calculates technology stack compatibility
+   */
+  private calculateTechStackCompatibility(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Technology ecosystem compatibility
+    const ecosystems = {
+      javascript: ['node.js', 'npm', 'webpack', 'babel', 'jest'],
+      python: ['pip', 'django', 'flask', 'pytest', 'virtualenv'],
+      java: ['maven', 'gradle', 'spring', 'junit'],
+      dotnet: ['nuget', 'asp.net', 'entity-framework'],
+    };
+
+    // Check for ecosystem alignment
+    for (const [ecosystem, technologies] of Object.entries(ecosystems)) {
+      const repoAInEcosystem =
+        repoA.languages.some((lang) => lang.toLowerCase().includes(ecosystem)) ||
+        repoA.frameworks.some((fw) => technologies.some((tech) => fw.toLowerCase().includes(tech)));
+      const repoBInEcosystem =
+        repoB.languages.some((lang) => lang.toLowerCase().includes(ecosystem)) ||
+        repoB.frameworks.some((fw) => technologies.some((tech) => fw.toLowerCase().includes(tech)));
+
+      if (repoAInEcosystem && repoBInEcosystem) {
+        score += 0.4;
+        reasons.push(`Both repositories use ${ecosystem} ecosystem`);
+      }
+    }
+
+    return { score: Math.min(score, 1.0), reasons };
+  }
+
+  /**
+   * Calculates project structure similarity
+   */
+  private calculateStructureSimilarity(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Size similarity
     const sizeRatio = Math.min(repoA.size, repoB.size) / Math.max(repoA.size, repoB.size);
-    if (sizeRatio > 0.7) {
-      score += sizeRatio * 0.1; // Size similarity contributes up to 10%
-      reasons.push('Similar repository sizes');
+    if (sizeRatio > 0.5) {
+      score += sizeRatio * 0.5;
+      reasons.push(`Similar project sizes (${Math.round(sizeRatio * 100)}% similarity)`);
     }
 
-    // Check complexity similarity
+    // Complexity similarity
     const complexityRatio =
       Math.min(repoA.complexity, repoB.complexity) / Math.max(repoA.complexity, repoB.complexity);
-    if (complexityRatio > 0.7) {
-      score += complexityRatio * 0.1; // Complexity similarity contributes up to 10%
-      reasons.push('Similar complexity profiles');
+    if (complexityRatio > 0.5) {
+      score += complexityRatio * 0.5;
+      reasons.push(`Similar complexity levels (${Math.round(complexityRatio * 100)}% similarity)`);
     }
 
-    // Determine relationship type
-    let type: 'similar' | 'complementary' | 'dependency' | 'fork' = 'similar';
+    return { score, reasons };
+  }
 
-    // Check for potential fork
+  /**
+   * Calculates semantic similarity based on names and descriptions
+   */
+  private calculateSemanticSimilarity(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): { score: number; reasons: string[] } {
+    const reasons: string[] = [];
+    let score = 0;
+
+    // Name similarity (potential fork or related project)
+    const nameA = repoA.name.toLowerCase();
+    const nameB = repoB.name.toLowerCase();
+
+    if (nameA.includes(nameB) || nameB.includes(nameA)) {
+      score += 0.6;
+      reasons.push('Similar repository names suggest related projects');
+    } else {
+      // Check for common words in names
+      const wordsA = nameA.split(/[-_\s]+/);
+      const wordsB = nameB.split(/[-_\s]+/);
+      const commonWords = wordsA.filter((word) => wordsB.includes(word) && word.length > 2);
+
+      if (commonWords.length > 0) {
+        score += Math.min(commonWords.length * 0.2, 0.4);
+        reasons.push(`Common name elements: ${commonWords.join(', ')}`);
+      }
+    }
+
+    // Summary/description similarity
+    const summaryA = repoA.summary.toLowerCase();
+    const summaryB = repoB.summary.toLowerCase();
+
+    // Simple keyword matching
+    const keywordsA = summaryA.split(/\s+/).filter((word) => word.length > 3);
+    const keywordsB = summaryB.split(/\s+/).filter((word) => word.length > 3);
+    const commonKeywords = keywordsA.filter((word) => keywordsB.includes(word));
+
+    if (commonKeywords.length > 0) {
+      const keywordSimilarity =
+        commonKeywords.length / Math.max(keywordsA.length, keywordsB.length);
+      score += keywordSimilarity * 0.3;
+      reasons.push(`Similar descriptions (${commonKeywords.length} common keywords)`);
+    }
+
+    return { score, reasons };
+  }
+
+  /**
+   * Determines the relationship type based on analysis
+   */
+  private determineRelationshipType(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository,
+    score: number,
+    reasons: string[]
+  ): { type: 'similar' | 'complementary' | 'dependency' | 'fork' } {
+    // Check for potential fork (high name similarity + high overall similarity)
+    const nameA = repoA.name.toLowerCase();
+    const nameB = repoB.name.toLowerCase();
+
+    if (score > 0.8 && (nameA.includes(nameB) || nameB.includes(nameA))) {
+      return { type: 'fork' };
+    }
+
+    // Check for complementary repositories (frontend-backend, library-app pairs)
+    if (this.areComplementaryRepositories(repoA, repoB)) {
+      return { type: 'complementary' };
+    }
+
+    // Check for dependency relationship
+    if (this.isDependencyRelationship(repoA, repoB)) {
+      return { type: 'dependency' };
+    }
+
+    // Default to similar for high scores, complementary for moderate scores
+    if (score > 0.6) {
+      return { type: 'similar' };
+    } else if (score > 0.3) {
+      return { type: 'complementary' };
+    }
+
+    return { type: 'similar' };
+  }
+
+  /**
+   * Checks if two repositories are complementary
+   */
+  private areComplementaryRepositories(
+    repoA: IndexedRepository,
+    repoB: IndexedRepository
+  ): boolean {
+    // Frontend-Backend complementarity
     if (
-      (score > 0.8 && repoA.name.toLowerCase().includes(repoB.name.toLowerCase())) ||
-      repoB.name.toLowerCase().includes(repoA.name.toLowerCase())
+      (this.isFrontendRepo(repoA) && this.isBackendRepo(repoB)) ||
+      (this.isBackendRepo(repoA) && this.isFrontendRepo(repoB))
     ) {
-      type = 'fork';
-    }
-    // Check for complementary repositories (frontend-backend pairs)
-    else if (
-      (this.isBackendRepo(repoA) && this.isFrontendRepo(repoB)) ||
-      (this.isFrontendRepo(repoA) && this.isBackendRepo(repoB))
-    ) {
-      type = 'complementary';
-      score = Math.max(score, 0.6); // Boost score for complementary repos
-      reasons.push('Frontend-Backend complementary pair');
-    }
-    // Check for potential dependency relationship
-    else if (
-      (this.isLibraryRepo(repoA) && !this.isLibraryRepo(repoB)) ||
-      (this.isLibraryRepo(repoB) && !this.isLibraryRepo(repoA))
-    ) {
-      type = 'dependency';
-      reasons.push('Library-Application potential dependency');
-    }
-    // Default to similar for high scores
-    else if (score > 0.6) {
-      type = 'similar';
-    }
-    // Lower scores with shared languages are complementary
-    else if (sharedLanguages.length > 0) {
-      type = 'complementary';
+      return true;
     }
 
-    return {
-      score,
-      type,
-      reason: reasons.join('. '),
-    };
+    // Library-Application complementarity
+    if (
+      (this.isLibraryRepo(repoA) && this.isApplicationRepo(repoB)) ||
+      (this.isApplicationRepo(repoA) && this.isLibraryRepo(repoB))
+    ) {
+      return true;
+    }
+
+    // Mobile-Backend complementarity
+    if (
+      (this.isMobileRepo(repoA) && this.isBackendRepo(repoB)) ||
+      (this.isBackendRepo(repoA) && this.isMobileRepo(repoB))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks if there's a dependency relationship
+   */
+  private isDependencyRelationship(repoA: IndexedRepository, repoB: IndexedRepository): boolean {
+    // Library to application dependency
+    if (this.isLibraryRepo(repoA) && !this.isLibraryRepo(repoB)) {
+      return true;
+    }
+    if (this.isLibraryRepo(repoB) && !this.isLibraryRepo(repoA)) {
+      return true;
+    }
+
+    // Tool/utility to project dependency
+    if (this.isToolRepo(repoA) && !this.isToolRepo(repoB)) {
+      return true;
+    }
+    if (this.isToolRepo(repoB) && !this.isToolRepo(repoA)) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -734,8 +1403,28 @@ export class IndexSystem {
    */
   private isLibraryRepo(repo: IndexedRepository): boolean {
     // Check for common library indicators in name
-    const libraryKeywords = ['lib', 'library', 'sdk', 'toolkit', 'util', 'helper', 'common'];
+    const libraryKeywords = [
+      'lib',
+      'library',
+      'sdk',
+      'toolkit',
+      'util',
+      'helper',
+      'common',
+      'core',
+      'shared',
+    ];
     if (libraryKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
+      return true;
+    }
+
+    // Check for library indicators in tags
+    const libraryTags = repo.tags.filter((tag) =>
+      ['library', 'package', 'module', 'component', 'utility'].some((indicator) =>
+        tag.toLowerCase().includes(indicator)
+      )
+    );
+    if (libraryTags.length > 0) {
       return true;
     }
 
@@ -744,12 +1433,110 @@ export class IndexSystem {
       return true;
     }
 
+    // Check for package.json with library-like structure
+    const hasLibraryFrameworks = repo.frameworks.some((fw) =>
+      ['npm', 'yarn', 'webpack', 'rollup', 'babel'].includes(fw.toLowerCase())
+    );
+    if (hasLibraryFrameworks && repo.size < 5000000) {
+      return true;
+    }
+
     return false;
   }
-}
+
+  /**
+   * Determines if a repository is likely an application
+   *
+   * @param repo - Repository to check
+   * @returns True if repository is likely an application
+   */
+  private isApplicationRepo(repo: IndexedRepository): boolean {
+    // Check for application indicators in name
+    const appKeywords = ['app', 'application', 'client', 'server', 'service', 'platform', 'system'];
+    if (appKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
+      return true;
+    }
+
+    // Applications typically have more files and moderate complexity
+    if (repo.size > 1000000 && repo.complexity < 80) {
+      return true;
+    }
+
+    // Check for application frameworks
+    const appFrameworks = ['express', 'nest', 'django', 'flask', 'spring', 'rails', 'laravel'];
+    if (repo.frameworks.some((fw) => appFrameworks.includes(fw.toLowerCase()))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Determines if a repository is likely a mobile application
+   *
+   * @param repo - Repository to check
+   * @returns True if repository is likely a mobile application
+   */
+  private isMobileRepo(repo: IndexedRepository): boolean {
+    // Check for mobile indicators in name
+    const mobileKeywords = ['mobile', 'ios', 'android', 'app', 'native'];
+    if (mobileKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
+      return true;
+    }
+
+    // Check for mobile languages
+    const mobileLanguages = ['swift', 'kotlin', 'java', 'dart', 'objective-c'];
+    if (repo.languages.some((lang) => mobileLanguages.includes(lang.toLowerCase()))) {
+      return true;
+    }
+
+    // Check for mobile frameworks
+    const mobileFrameworks = ['react-native', 'flutter', 'ionic', 'xamarin', 'cordova'];
+    if (
+      repo.frameworks.some((fw) =>
+        mobileFrameworks.some((mobileFw) => fw.toLowerCase().includes(mobileFw))
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Determines if a repository is likely a tool or utility
+   *
+   * @param repo - Repository to check
+   * @returns True if repository is likely a tool
+   */
+  private isToolRepo(repo: IndexedRepository): boolean {
+    // Check for tool indicators in name
+    const toolKeywords = ['tool', 'cli', 'script', 'automation', 'build', 'deploy', 'test', 'lint'];
+    if (toolKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
+      return true;
+    }
+
+    // Check for tool indicators in tags
+    const toolTags = repo.tags.filter((tag) =>
+      ['tool', 'cli', 'automation', 'build', 'deployment'].some((indicator) =>
+        tag.toLowerCase().includes(indicator)
+      )
+    );
+    if (toolTags.length > 0) {
+      return true;
+    }
+
+    // Tools are typically smaller and focused
+    if (repo.size < 500000 && repo.complexity < 30) {
+      return true;
+    }
+
+    return false;
+  }
+
   /**
    * Adds a tag to a repository
-   * 
+   *
    * @param repoId - Repository ID to tag
    * @param tagName - Tag name to add
    * @param category - Optional tag category
@@ -757,23 +1544,23 @@ export class IndexSystem {
    * @returns Promise resolving when tag is added
    */
   public async addRepositoryTag(
-    repoId: string, 
-    tagName: string, 
-    category?: string, 
+    repoId: string,
+    tagName: string,
+    category?: string,
     color?: string
   ): Promise<void> {
     // Find repository in index
     const repoIndex = this.index.repositories.findIndex((repo) => repo.id === repoId);
-    
+
     if (repoIndex < 0) {
       throw new Error(`Repository with ID ${repoId} not found in index`);
     }
-    
+
     // Check if tag already exists in repository
     if (!this.index.repositories[repoIndex].tags.includes(tagName)) {
       this.index.repositories[repoIndex].tags.push(tagName);
     }
-    
+
     // Check if tag exists in global tags
     let tagExists = false;
     for (const tag of this.index.tags) {
@@ -782,7 +1569,7 @@ export class IndexSystem {
         break;
       }
     }
-    
+
     // Add tag to global tags if it doesn't exist
     if (!tagExists) {
       this.index.tags.push({
@@ -792,17 +1579,17 @@ export class IndexSystem {
         color,
       });
     }
-    
+
     // Update index timestamp
     this.index.lastUpdated = new Date();
-    
+
     // Save index to disk
     await this.saveIndex();
   }
-  
+
   /**
    * Removes a tag from a repository
-   * 
+   *
    * @param repoId - Repository ID to remove tag from
    * @param tagName - Tag name to remove
    * @returns Promise resolving when tag is removed
@@ -810,34 +1597,35 @@ export class IndexSystem {
   public async removeRepositoryTag(repoId: string, tagName: string): Promise<void> {
     // Find repository in index
     const repoIndex = this.index.repositories.findIndex((repo) => repo.id === repoId);
-    
+
     if (repoIndex < 0) {
       throw new Error(`Repository with ID ${repoId} not found in index`);
     }
-    
+
     // Remove tag from repository
-    this.index.repositories[repoIndex].tags = 
-      this.index.repositories[repoIndex].tags.filter((tag) => tag !== tagName);
-    
+    this.index.repositories[repoIndex].tags = this.index.repositories[repoIndex].tags.filter(
+      (tag) => tag !== tagName
+    );
+
     // Update index timestamp
     this.index.lastUpdated = new Date();
-    
+
     // Save index to disk
     await this.saveIndex();
   }
-  
+
   /**
    * Gets all available tags in the index
-   * 
+   *
    * @returns Array of all tags
    */
   public getTags(): Tag[] {
     return this.index.tags;
   }
-  
+
   /**
    * Adds a new global tag
-   * 
+   *
    * @param name - Tag name
    * @param category - Optional tag category
    * @param color - Optional tag color
@@ -846,11 +1634,11 @@ export class IndexSystem {
   public async addTag(name: string, category?: string, color?: string): Promise<Tag> {
     // Check if tag already exists
     const existingTag = this.index.tags.find((tag) => tag.name === name);
-    
+
     if (existingTag) {
       return existingTag;
     }
-    
+
     // Create new tag
     const newTag: Tag = {
       id: uuidv4(),
@@ -858,44 +1646,45 @@ export class IndexSystem {
       category,
       color,
     };
-    
+
     // Add to tags list
     this.index.tags.push(newTag);
-    
+
     // Update index timestamp
     this.index.lastUpdated = new Date();
-    
+
     // Save index to disk
     await this.saveIndex();
-    
+
     return newTag;
   }
-  
+
   /**
    * Removes a global tag and from all repositories
-   * 
+   *
    * @param tagId - Tag ID to remove
    * @returns Promise resolving when tag is removed
    */
   public async removeTag(tagId: string): Promise<void> {
     // Find tag
     const tag = this.index.tags.find((t) => t.id === tagId);
-    
+
     if (!tag) {
       throw new Error(`Tag with ID ${tagId} not found`);
     }
-    
+
     // Remove tag from all repositories
     for (const repo of this.index.repositories) {
       repo.tags = repo.tags.filter((t) => t !== tag.name);
     }
-    
+
     // Remove tag from global list
     this.index.tags = this.index.tags.filter((t) => t.id !== tagId);
-    
+
     // Update index timestamp
     this.index.lastUpdated = new Date();
-    
+
     // Save index to disk
     await this.saveIndex();
   }
+}

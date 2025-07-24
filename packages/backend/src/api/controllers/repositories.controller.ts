@@ -197,3 +197,108 @@ export const suggestCombinations = async (req: Request, res: Response): Promise<
     });
   }
 };
+
+/**
+ * Get relationship graph for visualization
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const getRelationshipGraph = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { repositoryIds } = req.query;
+
+    // Parse repository IDs if provided
+    let repoIds: string[] | undefined;
+    if (repositoryIds) {
+      repoIds = Array.isArray(repositoryIds)
+        ? repositoryIds.map((id) => String(id))
+        : [String(repositoryIds)];
+    }
+
+    // Import and create relationship service
+    const { RelationshipService } = await import('../../services/relationship.service');
+    const relationshipService = new RelationshipService();
+
+    // Generate relationship graph
+    const graph = await relationshipService.generateRelationshipGraph(repoIds);
+
+    // Return graph data
+    res.status(200).json(graph);
+  } catch (error) {
+    console.error('Error generating relationship graph:', error);
+    res.status(500).json({
+      error: 'Failed to generate relationship graph',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+/**
+ * Analyze integration opportunities
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const getIntegrationOpportunities = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { repositoryIds } = req.body;
+
+    if (!repositoryIds || !Array.isArray(repositoryIds)) {
+      res.status(400).json({ error: 'Repository IDs are required as an array' });
+      return;
+    }
+
+    // Import and create relationship service
+    const { RelationshipService } = await import('../../services/relationship.service');
+    const relationshipService = new RelationshipService();
+
+    // Analyze integration opportunities
+    const opportunities = await relationshipService.analyzeIntegrationOpportunities(repositoryIds);
+
+    // Return opportunities
+    res.status(200).json(opportunities);
+  } catch (error) {
+    console.error('Error analyzing integration opportunities:', error);
+    res.status(500).json({
+      error: 'Failed to analyze integration opportunities',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+/**
+ * Get relationship insights and statistics
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const getRelationshipInsights = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { repositoryIds } = req.query;
+
+    // Parse repository IDs if provided
+    let repoIds: string[] | undefined;
+    if (repositoryIds) {
+      repoIds = Array.isArray(repositoryIds)
+        ? repositoryIds.map((id) => String(id))
+        : [String(repositoryIds)];
+    }
+
+    // Import and create relationship service
+    const { RelationshipService } = await import('../../services/relationship.service');
+    const relationshipService = new RelationshipService();
+
+    // Generate relationship insights
+    const insights = await relationshipService.generateRelationshipInsights(repoIds);
+
+    // Return insights
+    res.status(200).json(insights);
+  } catch (error) {
+    console.error('Error generating relationship insights:', error);
+    res.status(500).json({
+      error: 'Failed to generate relationship insights',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
