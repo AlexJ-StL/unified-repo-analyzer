@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { performanceService } from './performance.service';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -12,6 +13,9 @@ const api = axios.create({
 // Request interceptor for API calls
 api.interceptors.request.use(
   (config) => {
+    // Add performance timing
+    config.metadata = { startTime: performance.now() };
+
     // You can add auth tokens here if needed
     return config;
   },
@@ -23,10 +27,37 @@ api.interceptors.request.use(
 // Response interceptor for API calls
 api.interceptors.response.use(
   (response) => {
+    // Record API performance metrics
+    const config = response.config as any;
+    if (config.metadata?.startTime) {
+      const duration = performance.now() - config.metadata.startTime;
+      const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
+
+      performanceService.recordApiCall(
+        endpoint,
+        config.method?.toUpperCase() || 'GET',
+        duration,
+        response.status
+      );
+    }
+
     return response;
   },
   (error: AxiosError) => {
-    const { response } = error;
+    const { response, config } = error;
+
+    // Record API performance metrics for errors
+    if ((config as any)?.metadata?.startTime) {
+      const duration = performance.now() - (config as any).metadata.startTime;
+      const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
+
+      performanceService.recordApiCall(
+        endpoint,
+        config.method?.toUpperCase() || 'GET',
+        duration,
+        response?.status || 0
+      );
+    }
 
     // Handle specific error codes
     if (response) {

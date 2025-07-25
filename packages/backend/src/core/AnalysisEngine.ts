@@ -29,6 +29,9 @@ import { detectLanguage } from '../utils/languageDetection';
 import { readFileWithErrorHandling, FileSystemError } from '../utils/fileSystem';
 import { analyzeCodeStructure } from './codeStructureAnalyzer';
 import { countTokens, sampleText } from './tokenAnalyzer';
+import { cacheService } from '../services/cache.service';
+import { deduplicationService } from '../services/deduplication.service';
+import { metricsService } from '../services/metrics.service';
 
 const stat = promisify(fs.stat);
 
@@ -47,19 +50,58 @@ export class AnalysisEngine {
     repoPath: string,
     options: AnalysisOptions
   ): Promise<RepositoryAnalysis> {
-    // Convert analysis options to discovery options
-    const discoveryOptions = analysisOptionsToDiscoveryOptions(options);
+    const timer = metricsService.createTimer('analysis.duration', { mode: options.mode });
 
-    // Discover repository structure
-    const analysis = await discoverRepository(repoPath, discoveryOptions);
+    return deduplicationService.deduplicateAnalysis(repoPath, options, async () => {
+      // Check cache first
+      const cached = await cacheService.getCachedAnalysis(repoPath, options);
+      if (cached) {
+        timer();
+        metricsService.recordAnalysis(
+          repoPath,
+          options.mode,
+          0, // No processing time for cached results
+          cached.fileCount,
+          cached.totalSize,
+          true, // Cache hit
+          false // Not deduplicated (this is the original request)
+        );
+        return cached;
+      }
 
-    // Update analysis mode
-    analysis.metadata.analysisMode = options.mode;
+      const startTime = Date.now();
 
-    // Process files for code structure analysis
-    await this.processFilesForAnalysis(analysis, options);
+      // Convert analysis options to discovery options
+      const discoveryOptions = analysisOptionsToDiscoveryOptions(options);
 
-    return analysis;
+      // Discover repository structure
+      const analysis = await discoverRepository(repoPath, discoveryOptions);
+
+      // Update analysis mode
+      analysis.metadata.analysisMode = options.mode;
+
+      // Process files for code structure analysis
+      await this.processFilesForAnalysis(analysis, options);
+
+      const processingTime = Date.now() - startTime;
+      analysis.metadata.processingTime = processingTime;
+
+      // Cache the result
+      await cacheService.setCachedAnalysis(repoPath, options, analysis);
+
+      timer();
+      metricsService.recordAnalysis(
+        repoPath,
+        options.mode,
+        processingTime,
+        analysis.fileCount,
+        analysis.totalSize,
+        false, // Not a cache hit
+        false // Not deduplicated (this is the original request)
+      );
+
+      return analysis;
+    });
   }
 
   /**
@@ -155,84 +197,104 @@ export class AnalysisEngine {
     concurrency: number = 2,
     progressCallback?: (progress: any) => void
   ): Promise<BatchAnalysisResult> {
-    const startTime = Date.now();
-    const batchId = uuidv4();
+    const timer = metricsService.createTimer('batch.analysis.duration', {
+      mode: options.mode,
+      repositoryCount: repoPaths.length.toString(),
+    });
 
-    // Import TaskQueue
-    const { TaskQueue, QueueEvent } = require('../utils/queue');
+    return deduplicationService.deduplicateBatch(repoPaths, options, async () => {
+      // Check cache first
+      const cached = await cacheService.getCachedBatchAnalysis(repoPaths, options);
+      if (cached) {
+        timer();
+        return cached;
+      }
 
-    // Create queue for processing repositories
-    const queue = new TaskQueue(
-      async (repoPath: string) => this.analyzeRepository(repoPath, options),
-      { concurrency }
-    );
+      const startTime = Date.now();
+      const batchId = uuidv4();
 
-    // Create batch analysis result
-    const batchResult: BatchAnalysisResult = {
-      id: batchId,
-      repositories: [],
-      createdAt: new Date(),
-      processingTime: 0,
-      status: {
-        total: repoPaths.length,
-        completed: 0,
-        failed: 0,
-        inProgress: 0,
-        pending: repoPaths.length,
-        progress: 0,
-      },
-    };
+      // Import TaskQueue
+      const { TaskQueue, QueueEvent } = require('../utils/queue');
 
-    // Set up progress tracking
-    queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
-      // Update batch status
-      batchResult.status = {
-        total: progress.total,
-        completed: progress.completed,
-        failed: progress.failed,
-        inProgress: progress.running,
-        pending: progress.pending,
-        progress: progress.progress,
+      // Create queue for processing repositories
+      const queue = new TaskQueue(
+        async (repoPath: string) => this.analyzeRepository(repoPath, options),
+        { concurrency }
+      );
+
+      // Create batch analysis result
+      const batchResult: BatchAnalysisResult = {
+        id: batchId,
+        repositories: [],
+        createdAt: new Date(),
+        processingTime: 0,
+        status: {
+          total: repoPaths.length,
+          completed: 0,
+          failed: 0,
+          inProgress: 0,
+          pending: repoPaths.length,
+          progress: 0,
+        },
       };
 
-      // Call progress callback if provided
-      if (progressCallback) {
-        progressCallback({
-          batchId,
-          status: batchResult.status,
-          currentRepository: Array.from(queue.getAllTasks())
-            .filter((task) => task.status === 'running')
-            .map((task) => task.data),
-        });
+      // Set up progress tracking
+      queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
+        // Update batch status
+        batchResult.status = {
+          total: progress.total,
+          completed: progress.completed,
+          failed: progress.failed,
+          inProgress: progress.running,
+          pending: progress.pending,
+          progress: progress.progress,
+        };
+
+        // Call progress callback if provided
+        if (progressCallback) {
+          progressCallback({
+            batchId,
+            status: batchResult.status,
+            currentRepository: Array.from(queue.getAllTasks())
+              .filter((task) => task.status === 'running')
+              .map((task) => task.data),
+          });
+        }
+      });
+
+      // Set up completion handlers
+      queue.on(QueueEvent.TASK_COMPLETED, (task) => {
+        if (task.result) {
+          batchResult.repositories.push(task.result);
+        }
+      });
+
+      // Add all repositories to the queue
+      for (const repoPath of repoPaths) {
+        queue.addTask(uuidv4(), repoPath);
       }
-    });
 
-    // Set up completion handlers
-    queue.on(QueueEvent.TASK_COMPLETED, (task) => {
-      if (task.result) {
-        batchResult.repositories.push(task.result);
+      // Wait for all tasks to complete
+      await new Promise<void>((resolve) => {
+        queue.on(QueueEvent.QUEUE_DRAINED, resolve);
+      });
+
+      // Generate combined insights if multiple repositories were analyzed successfully
+      if (batchResult.repositories.length > 1) {
+        batchResult.combinedInsights = await this.generateCombinedInsights(
+          batchResult.repositories
+        );
       }
+
+      // Calculate processing time
+      batchResult.processingTime = Date.now() - startTime;
+
+      // Cache the result
+      await cacheService.setCachedBatchAnalysis(repoPaths, options, batchResult);
+
+      timer();
+      return batchResult;
     });
-
-    // Add all repositories to the queue
-    for (const repoPath of repoPaths) {
-      queue.addTask(uuidv4(), repoPath);
-    }
-
-    // Wait for all tasks to complete
-    await new Promise<void>((resolve) => {
-      queue.on(QueueEvent.QUEUE_DRAINED, resolve);
-    });
-
-    // Generate combined insights if multiple repositories were analyzed successfully
-    if (batchResult.repositories.length > 1) {
-      batchResult.combinedInsights = await this.generateCombinedInsights(batchResult.repositories);
-    }
-
-    // Calculate processing time
-    batchResult.processingTime = Date.now() - startTime;
-
-    return batchResult;
   }
 
   /**

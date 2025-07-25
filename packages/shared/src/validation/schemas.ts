@@ -232,3 +232,133 @@ export const projectInfoSchema = z.object({
   readme: z.string().nullable().optional(),
   fileAnalysis: z.array(fileAnalysisSchema),
 });
+
+// Configuration related schemas
+export const generalPreferencesSchema = z.object({
+  defaultWorkspace: z.string().optional(),
+  autoSave: z.boolean(),
+  autoIndex: z.boolean(),
+  enableNotifications: z.boolean(),
+  theme: z.enum(['light', 'dark', 'system']),
+  language: z.string(),
+});
+
+export const analysisPreferencesSchema = z.object({
+  defaultMode: z.enum(['quick', 'standard', 'comprehensive']),
+  maxFiles: z.number().int().positive(),
+  maxLinesPerFile: z.number().int().positive(),
+  includeLLMAnalysis: z.boolean(),
+  includeTree: z.boolean(),
+  ignorePatterns: z.array(z.string()),
+  maxFileSize: z.number().int().positive(),
+  cacheDirectory: z.string(),
+  cacheTTL: z.number().int().positive(),
+});
+
+export const providerConfigurationSchema = z.object({
+  name: z.string(),
+  apiKey: z.string().optional(),
+  model: z.string().optional(),
+  maxTokens: z.number().int().positive(),
+  temperature: z.number().min(0).max(1),
+  enabled: z.boolean(),
+  customEndpoint: z.string().url().optional(),
+});
+
+export const llmProviderPreferencesSchema = z.object({
+  defaultProvider: z.string(),
+  providers: z.record(z.string(), providerConfigurationSchema),
+});
+
+export const exportPreferencesSchema = z.object({
+  defaultFormat: z.enum(['json', 'markdown', 'html']),
+  outputDirectory: z.string(),
+  includeMetadata: z.boolean(),
+  compressLargeFiles: z.boolean(),
+  customTemplates: z.record(z.string(), z.string()),
+});
+
+export const uiPreferencesSchema = z.object({
+  compactMode: z.boolean(),
+  showAdvancedOptions: z.boolean(),
+  defaultView: z.enum(['grid', 'list']),
+  itemsPerPage: z.number().int().positive(),
+  enableAnimations: z.boolean(),
+});
+
+export const userPreferencesSchema = z.object({
+  general: generalPreferencesSchema,
+  analysis: analysisPreferencesSchema,
+  llmProvider: llmProviderPreferencesSchema,
+  export: exportPreferencesSchema,
+  ui: uiPreferencesSchema,
+});
+
+export const analysisModePresetSchema = z.object({
+  name: z.enum(['quick', 'standard', 'comprehensive']),
+  displayName: z.string(),
+  description: z.string(),
+  maxFiles: z.number().int().positive(),
+  maxLinesPerFile: z.number().int().positive(),
+  includeLLMAnalysis: z.boolean(),
+  includeTree: z.boolean(),
+  estimatedTime: z.string(),
+  recommended: z.boolean(),
+});
+
+export const workspaceConfigurationSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  path: z.string(),
+  preferences: userPreferencesSchema.partial(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const projectConfigurationSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  path: z.string(),
+  workspaceId: z.string().uuid().optional(),
+  preferences: userPreferencesSchema.partial(),
+  customIgnorePatterns: z.array(z.string()).optional(),
+  customAnalysisOptions: analysisPreferencesSchema.partial().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const configurationProfileSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  preferences: userPreferencesSchema,
+  isDefault: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const configurationErrorSchema = z.object({
+  field: z.string(),
+  message: z.string(),
+  code: z.string(),
+});
+
+export const configurationWarningSchema = z.object({
+  field: z.string(),
+  message: z.string(),
+  suggestion: z.string().optional(),
+});
+
+export const configurationValidationResultSchema = z.object({
+  isValid: z.boolean(),
+  errors: z.array(configurationErrorSchema),
+  warnings: z.array(configurationWarningSchema),
+});
+
+export const configurationBackupSchema = z.object({
+  id: z.string().uuid(),
+  timestamp: z.date(),
+  version: z.string(),
+  preferences: userPreferencesSchema,
+  reason: z.enum(['manual', 'auto', 'migration']),
+});
