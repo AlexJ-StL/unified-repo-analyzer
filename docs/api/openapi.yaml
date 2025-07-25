@@ -1,0 +1,993 @@
+openapi: 3.0.3
+info:
+  title: Unified Repository Analyzer API
+  description: |
+    A comprehensive API for analyzing code repositories, generating insights, and managing repository indexes.
+
+    This API provides endpoints for:
+    - Single and batch repository analysis
+    - Repository indexing and search
+    - Export functionality in multiple formats
+    - Real-time progress tracking via WebSocket
+
+    ## Authentication
+    Currently, the API does not require authentication for local usage.
+
+    ## Rate Limiting
+    The API implements rate limiting to prevent abuse:
+    - Analysis endpoints: 10 requests per minute per IP
+    - Search endpoints: 60 requests per minute per IP
+    - Export endpoints: 30 requests per minute per IP
+
+  version: 1.0.0
+  contact:
+    name: Unified Repository Analyzer
+    url: https://github.com/unified-repo-analyzer
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3001/api
+    description: Development server
+  - url: https://api.unified-repo-analyzer.com/api
+    description: Production server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API server
+      operationId: getHealth
+      tags:
+        - System
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'healthy'
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: '1.0.0'
+
+  /analyze:
+    post:
+      summary: Analyze a single repository
+      description: |
+        Analyzes a single repository and returns analysis results including:
+        - Language detection and framework identification
+        - Code structure analysis
+        - Dependency analysis
+        - File importance scoring
+        - Optional LLM-generated insights
+      operationId: analyzeRepository
+      tags:
+        - Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisRequest'
+            examples:
+              basic:
+                summary: Basic analysis
+                value:
+                  path: '/path/to/repository'
+                  options:
+                    mode: 'standard'
+                    includeLLMAnalysis: false
+              comprehensive:
+                summary: Comprehensive analysis with LLM
+                value:
+                  path: '/path/to/repository'
+                  options:
+                    mode: 'comprehensive'
+                    includeLLMAnalysis: true
+                    llmProvider: 'claude'
+                    includeTree: true
+      responses:
+        '200':
+          description: Analysis started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysisId:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for tracking the analysis
+                  status:
+                    type: string
+                    enum: [started]
+                  estimatedDuration:
+                    type: integer
+                    description: Estimated completion time in milliseconds
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Repository path not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /analyze/batch:
+    post:
+      summary: Analyze multiple repositories in batch
+      description: |
+        Analyzes multiple repositories concurrently and returns a batch ID for tracking progress.
+        Supports partial failures where some repositories may fail while others succeed.
+      operationId: analyzeBatch
+      tags:
+        - Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchAnalysisRequest'
+      responses:
+        '200':
+          description: Batch analysis started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batchId:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [started]
+                  totalRepositories:
+                    type: integer
+                  estimatedDuration:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /analysis/{analysisId}:
+    get:
+      summary: Get analysis results
+      description: Retrieves the results of a repository analysis by ID
+      operationId: getAnalysis
+      tags:
+        - Analysis
+      parameters:
+        - name: analysisId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The analysis ID returned from the analyze endpoint
+      responses:
+        '200':
+          description: Analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /batch/{batchId}:
+    get:
+      summary: Get batch analysis results
+      description: Retrieves the results of a batch analysis by ID
+      operationId: getBatchAnalysis
+      tags:
+        - Analysis
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Batch analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchAnalysisResult'
+        '404':
+          description: Batch analysis not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /repositories:
+    get:
+      summary: List all indexed repositories
+      description: Returns a list of all repositories that have been analyzed and indexed
+      operationId: getRepositories
+      tags:
+        - Repository Index
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Maximum number of repositories to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of repositories to skip
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [name, lastAnalyzed, size, complexity]
+            default: lastAnalyzed
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of indexed repositories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  repositories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IndexedRepository'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /repositories/search:
+    get:
+      summary: Search repositories
+      description: Search indexed repositories by various criteria
+      operationId: searchRepositories
+      tags:
+        - Repository Index
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: General search query
+        - name: languages
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Filter by programming languages
+        - name: frameworks
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Filter by frameworks
+        - name: keywords
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Filter by keywords
+        - name: minSize
+          in: query
+          schema:
+            type: integer
+          description: Minimum repository size in bytes
+        - name: maxSize
+          in: query
+          schema:
+            type: integer
+          description: Maximum repository size in bytes
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter repositories analyzed after this date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter repositories analyzed before this date
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SearchResult'
+                  total:
+                    type: integer
+                  query:
+                    type: object
+                    description: The search query that was executed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /repositories/{repositoryId}/similar:
+    get:
+      summary: Find similar repositories
+      description: Find repositories similar to the specified repository
+      operationId: findSimilarRepositories
+      tags:
+        - Repository Index
+      parameters:
+        - name: repositoryId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+      responses:
+        '200':
+          description: Similar repositories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepositoryMatch'
+        '404':
+          description: Repository not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /repositories/combinations:
+    post:
+      summary: Suggest repository combinations
+      description: Analyze potential combinations and synergies between repositories
+      operationId: suggestCombinations
+      tags:
+        - Repository Index
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                repositoryIds:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 2
+                  maxItems: 10
+      responses:
+        '200':
+          description: Combination suggestions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CombinationSuggestion'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /export:
+    post:
+      summary: Export analysis results
+      description: Export analysis results in various formats (JSON, Markdown, HTML)
+      operationId: exportAnalysis
+      tags:
+        - Export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '200':
+          description: Exported data
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Analysis data in JSON format
+            text/markdown:
+              schema:
+                type: string
+                description: Analysis report in Markdown format
+            text/html:
+              schema:
+                type: string
+                description: Analysis report in HTML format
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Analysis not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    AnalysisRequest:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+          description: Absolute path to the repository
+          example: '/home/user/projects/my-repo'
+        options:
+          $ref: '#/components/schemas/AnalysisOptions'
+
+    AnalysisOptions:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [quick, standard, comprehensive]
+          default: standard
+          description: Analysis depth level
+        maxFiles:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          default: 1000
+          description: Maximum number of files to analyze
+        maxLinesPerFile:
+          type: integer
+          minimum: 10
+          maximum: 50000
+          default: 5000
+          description: Maximum lines to read per file
+        includeLLMAnalysis:
+          type: boolean
+          default: false
+          description: Whether to include LLM-generated insights
+        llmProvider:
+          type: string
+          enum: [claude, gemini, openai]
+          description: LLM provider to use for analysis
+        outputFormats:
+          type: array
+          items:
+            type: string
+            enum: [json, markdown, html]
+          default: [json]
+        includeTree:
+          type: boolean
+          default: true
+          description: Whether to include directory tree in results
+
+    BatchAnalysisRequest:
+      type: object
+      required:
+        - paths
+      properties:
+        paths:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 100
+          description: Array of repository paths to analyze
+        options:
+          $ref: '#/components/schemas/AnalysisOptions'
+
+    AnalysisResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+        result:
+          $ref: '#/components/schemas/RepositoryAnalysis'
+        error:
+          type: string
+          description: Error message if status is failed
+        progress:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              minimum: 0
+              maximum: 100
+            currentStep:
+              type: string
+            estimatedTimeRemaining:
+              type: integer
+
+    RepositoryAnalysis:
+      type: object
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        language:
+          type: string
+          description: Primary programming language
+        languages:
+          type: array
+          items:
+            type: string
+        frameworks:
+          type: array
+          items:
+            type: string
+        fileCount:
+          type: integer
+        directoryCount:
+          type: integer
+        totalSize:
+          type: integer
+          description: Total size in bytes
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        structure:
+          $ref: '#/components/schemas/RepositoryStructure'
+        codeAnalysis:
+          $ref: '#/components/schemas/CodeAnalysis'
+        dependencies:
+          $ref: '#/components/schemas/Dependencies'
+        insights:
+          $ref: '#/components/schemas/Insights'
+        metadata:
+          $ref: '#/components/schemas/AnalysisMetadata'
+
+    RepositoryStructure:
+      type: object
+      properties:
+        directories:
+          type: array
+          items:
+            $ref: '#/components/schemas/DirectoryInfo'
+        keyFiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfo'
+        tree:
+          type: string
+          description: Directory tree representation
+
+    DirectoryInfo:
+      type: object
+      properties:
+        path:
+          type: string
+        fileCount:
+          type: integer
+        size:
+          type: integer
+
+    FileInfo:
+      type: object
+      properties:
+        path:
+          type: string
+        language:
+          type: string
+        size:
+          type: integer
+        lineCount:
+          type: integer
+        tokenCount:
+          type: integer
+        importance:
+          type: number
+          minimum: 0
+          maximum: 1
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionInfo'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassInfo'
+        description:
+          type: string
+        useCase:
+          type: string
+
+    FunctionInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        lineNumber:
+          type: integer
+        complexity:
+          type: integer
+        parameters:
+          type: array
+          items:
+            type: string
+
+    ClassInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        lineNumber:
+          type: integer
+        methods:
+          type: array
+          items:
+            type: string
+        properties:
+          type: array
+          items:
+            type: string
+
+    CodeAnalysis:
+      type: object
+      properties:
+        functionCount:
+          type: integer
+        classCount:
+          type: integer
+        importCount:
+          type: integer
+        complexity:
+          $ref: '#/components/schemas/ComplexityMetrics'
+        patterns:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArchitecturalPattern'
+
+    ComplexityMetrics:
+      type: object
+      properties:
+        cyclomaticComplexity:
+          type: number
+        maintainabilityIndex:
+          type: number
+        technicalDebt:
+          type: string
+        codeQuality:
+          type: string
+          enum: [excellent, good, fair, poor]
+
+    ArchitecturalPattern:
+      type: object
+      properties:
+        name:
+          type: string
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        description:
+          type: string
+
+    Dependencies:
+      type: object
+      properties:
+        production:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dependency'
+        development:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dependency'
+        frameworks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Framework'
+
+    Dependency:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        type:
+          type: string
+          enum: [production, development, peer, optional]
+
+    Framework:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    Insights:
+      type: object
+      properties:
+        executiveSummary:
+          type: string
+        technicalBreakdown:
+          type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+        potentialIssues:
+          type: array
+          items:
+            type: string
+
+    AnalysisMetadata:
+      type: object
+      properties:
+        analysisMode:
+          type: string
+          enum: [quick, standard, comprehensive]
+        llmProvider:
+          type: string
+        processingTime:
+          type: integer
+          description: Processing time in milliseconds
+        tokenUsage:
+          $ref: '#/components/schemas/TokenUsage'
+
+    TokenUsage:
+      type: object
+      properties:
+        inputTokens:
+          type: integer
+        outputTokens:
+          type: integer
+        totalTokens:
+          type: integer
+
+    BatchAnalysisResult:
+      type: object
+      properties:
+        batchId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisResult'
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            completed:
+              type: integer
+            failed:
+              type: integer
+            processingTime:
+              type: integer
+
+    IndexedRepository:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        frameworks:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+        lastAnalyzed:
+          type: string
+          format: date-time
+        size:
+          type: integer
+        complexity:
+          type: number
+
+    SearchResult:
+      allOf:
+        - $ref: '#/components/schemas/IndexedRepository'
+        - type: object
+          properties:
+            score:
+              type: number
+              description: Relevance score
+            highlights:
+              type: object
+              description: Highlighted matching text
+
+    RepositoryMatch:
+      type: object
+      properties:
+        repository:
+          $ref: '#/components/schemas/IndexedRepository'
+        similarity:
+          type: number
+          minimum: 0
+          maximum: 1
+        reasons:
+          type: array
+          items:
+            type: string
+
+    CombinationSuggestion:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndexedRepository'
+        type:
+          type: string
+          enum: [merge, integration, shared-library, microservice]
+        compatibility:
+          type: number
+          minimum: 0
+          maximum: 1
+        benefits:
+          type: array
+          items:
+            type: string
+        challenges:
+          type: array
+          items:
+            type: string
+        implementation:
+          type: string
+
+    ExportRequest:
+      type: object
+      required:
+        - analysisId
+        - format
+      properties:
+        analysisId:
+          type: string
+          format: uuid
+        format:
+          type: string
+          enum: [json, markdown, html]
+        options:
+          type: object
+          properties:
+            includeMetadata:
+              type: boolean
+              default: true
+            includeTree:
+              type: boolean
+              default: true
+            template:
+              type: string
+              description: Custom template name for HTML/Markdown export
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'Bad Request'
+            message: 'Invalid request parameters'
+            code: 'INVALID_PARAMS'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'Internal Server Error'
+            message: 'An unexpected error occurred'
+            code: 'INTERNAL_ERROR'
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (future implementation)
+
+tags:
+  - name: System
+    description: System health and status endpoints
+  - name: Analysis
+    description: Repository analysis operations
+  - name: Repository Index
+    description: Repository indexing and search operations
+  - name: Export
+    description: Export and sharing functionality
