@@ -6,11 +6,15 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "ts-node --watch --transpile-only src/index.ts",
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
+    "build:prod": "NODE_ENV=production npm run build",
     "start": "node dist/index.js",
+    "start:prod": "NODE_ENV=production node dist/index.js",
     "test": "jest",
+    "test:prod": "NODE_ENV=production jest --coverage",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "clean": "rimraf dist"
   },
   "keywords": [
     "repository",

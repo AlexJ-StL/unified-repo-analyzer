@@ -12,11 +12,17 @@
     "dev:frontend": "npm run dev -w packages/frontend",
     "dev:cli": "npm run dev -w packages/cli",
     "build": "npm run build -ws",
+    "build:prod": "NODE_ENV=production npm run build -ws",
     "test": "npm run test -ws",
     "lint": "npm run lint -ws",
     "format": "npm run format -ws",
     "clean": "npm run clean -ws",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "deploy:prod": "npm run build:prod && npm run docker:build && npm run docker:up"
   },
   "keywords": [
     "repository",

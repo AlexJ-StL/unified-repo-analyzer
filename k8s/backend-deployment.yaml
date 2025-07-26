@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repo-analyzer-backend
+  namespace: repo-analyzer
+  labels:
+    app: repo-analyzer-backend
+    component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: repo-analyzer-backend
+  template:
+    metadata:
+      labels:
+        app: repo-analyzer-backend
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: repo-analyzer-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
+            - containerPort: 9090
+              name: metrics
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: repo-analyzer-config
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: repo-analyzer-config
+                  key: PORT
+            - name: CORS_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: repo-analyzer-config
+                  key: CORS_ORIGIN
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: JWT_SECRET
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: SESSION_SECRET
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: ENCRYPTION_KEY
+            - name: CLAUDE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: CLAUDE_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: GEMINI_API_KEY
+            - name: OPENROUTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: repo-analyzer-secrets
+                  key: OPENROUTER_API_KEY
+          envFrom:
+            - configMapRef:
+                name: repo-analyzer-config
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '2Gi'
+              cpu: '1000m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: data-volume
+              mountPath: /app/data
+            - name: logs-volume
+              mountPath: /app/logs
+            - name: backups-volume
+              mountPath: /app/backups
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: repo-analyzer-data-pvc
+        - name: logs-volume
+          persistentVolumeClaim:
+            claimName: repo-analyzer-logs-pvc
+        - name: backups-volume
+          persistentVolumeClaim:
+            claimName: repo-analyzer-backups-pvc
+      restartPolicy: Always

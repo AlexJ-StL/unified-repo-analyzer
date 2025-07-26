@@ -8,6 +8,7 @@ import repositoriesRoutes from './repositories';
 import exportRoutes from './export';
 import metricsRoutes from './metrics';
 import configRoutes from './config.routes';
+import backupRoutes from './backup.routes';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use('/repositories', repositoriesRoutes);
 router.use('/export', exportRoutes);
 router.use('/metrics', metricsRoutes);
 router.use('/config', configRoutes);
+router.use('/backup', backupRoutes);
 
 export default router;

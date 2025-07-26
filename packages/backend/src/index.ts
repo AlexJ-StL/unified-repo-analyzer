@@ -2,9 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+
+// Import configuration and environment
+import { env, validateProductionConfig } from './config/environment';
 
 // Import core modules
 import * as core from './core';
@@ -18,44 +20,88 @@ import { initializeWebSocketHandlers } from './api/websocket';
 // Import error middleware
 import { notFound, errorHandler } from './api/middleware/error.middleware';
 
-// Import performance monitoring
+// Import services
 import { metricsService } from './services/metrics.service';
-
-// Import configuration service
+import { healthService } from './services/health.service';
+import { backupService } from './services/backup.service';
+import logger, { requestLogger } from './services/logger.service';
 import { configurationService } from './services/config.service';
 
-// Load environment variables
-dotenv.config();
+// Validate production configuration
+try {
+  validateProductionConfig();
+} catch (error) {
+  logger.error('Configuration validation failed', {
+    error: error instanceof Error ? error.message : 'Unknown error',
+  });
+  process.exit(1);
+}
 
 // Initialize express app
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: env.CORS_ORIGIN,
     methods: ['GET', 'POST'],
   },
 });
 
-// Middleware
-app.use(helmet());
-app.use(cors());
+// Security middleware
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+  })
+);
+
+app.use(
+  cors({
+    origin: env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
+
+// Body parsing middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(morgan('dev'));
+
+// Logging middleware
+app.use(requestLogger);
 
 // Performance monitoring middleware
 app.use(metricsService.requestMiddleware());
 
 // Basic route
 app.get('/', (req, res) => {
-  res.json({ message: 'Unified Repository Analyzer API' });
+  res.json({
+    message: 'Unified Repository Analyzer API',
+    version: process.env.npm_package_version || '1.0.0',
+    environment: env.NODE_ENV,
+  });
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
+// Health check endpoints
+app.get('/health', healthService.healthCheckHandler);
+app.get('/health/ready', healthService.readinessHandler);
+app.get('/health/live', healthService.livenessHandler);
+
+// Metrics endpoints
+if (env.ENABLE_METRICS) {
+  app.get('/metrics', metricsService.metricsHandler);
+  app.get('/metrics/prometheus', metricsService.prometheusHandler);
+}
 
 // API routes
 app.use('/api', apiRoutes);
@@ -70,10 +116,35 @@ initializeWebSocketHandlers(io);
 // Initialize configuration service
 configurationService.initialize().catch(console.error);
 
+// Graceful shutdown handling
+const gracefulShutdown = (signal: string) => {
+  logger.info(`Received ${signal}, starting graceful shutdown`);
+
+  // Cleanup services
+  backupService.destroy();
+
+  httpServer.close(() => {
+    logger.info('HTTP server closed');
+    process.exit(0);
+  });
+
+  // Force close after 30 seconds
+  setTimeout(() => {
+    logger.error('Forced shutdown after timeout');
+    process.exit(1);
+  }, 30000);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 // Start server
-const PORT = process.env.PORT || 3000;
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+httpServer.listen(env.PORT, () => {
+  logger.info(`Server running on port ${env.PORT}`, {
+    environment: env.NODE_ENV,
+    version: process.env.npm_package_version || '1.0.0',
+    pid: process.pid,
+  });
 });
 
 export { app, httpServer, io, core };
