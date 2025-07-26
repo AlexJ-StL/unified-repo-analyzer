@@ -29,6 +29,7 @@ import { detectLanguage } from '../utils/languageDetection';
 import { readFileWithErrorHandling, FileSystemError } from '../utils/fileSystem';
 import { analyzeCodeStructure } from './codeStructureAnalyzer';
 import { countTokens, sampleText } from './tokenAnalyzer';
+import { AdvancedAnalyzer } from './advancedAnalyzer';
 import { cacheService } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
@@ -39,6 +40,11 @@ const stat = promisify(fs.stat);
  * Core Analysis Engine for repository processing
  */
 export class AnalysisEngine {
+  private advancedAnalyzer: AdvancedAnalyzer;
+
+  constructor() {
+    this.advancedAnalyzer = new AdvancedAnalyzer();
+  }
   /**
    * Analyzes a single repository
    *
@@ -82,6 +88,32 @@ export class AnalysisEngine {
 
       // Process files for code structure analysis
       await this.processFilesForAnalysis(analysis, options);
+
+      // Perform advanced analysis if in comprehensive mode
+      if (options.mode === 'comprehensive') {
+        const advancedResults = await this.advancedAnalyzer.analyzeRepository(analysis);
+
+        // Update analysis with advanced results
+        analysis.codeAnalysis.complexity =
+          advancedResults.codeQuality.overallScore > 0
+            ? analysis.codeAnalysis.complexity
+            : analysis.codeAnalysis.complexity;
+
+        // Store advanced results in insights
+        analysis.insights.recommendations.push(...advancedResults.security.recommendations);
+        analysis.insights.recommendations.push(...advancedResults.architecture.recommendations);
+
+        // Add security and quality information to potential issues
+        const securityIssues = advancedResults.security.vulnerabilities
+          .filter((v) => v.severity === 'high' || v.severity === 'critical')
+          .map((v) => `Security: ${v.description}`);
+        analysis.insights.potentialIssues.push(...securityIssues);
+
+        const qualityIssues = advancedResults.codeQuality.technicalDebt
+          .filter((d) => d.severity === 'high')
+          .map((d) => `Quality: ${d.description}`);
+        analysis.insights.potentialIssues.push(...qualityIssues);
+      }
 
       const processingTime = Date.now() - startTime;
       analysis.metadata.processingTime = processingTime;
