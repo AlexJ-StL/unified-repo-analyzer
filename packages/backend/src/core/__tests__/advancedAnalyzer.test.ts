@@ -24,7 +24,7 @@ jest.mock('fs', () => ({
   },
 }));
 
-const mockReadFile = require('../../utils/fileSystem').readFileWithErrorHandling;
+const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem');
 
 describe('AdvancedAnalyzer', () => {
   let analyzer: AdvancedAnalyzer;

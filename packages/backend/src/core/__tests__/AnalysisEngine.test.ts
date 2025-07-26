@@ -149,7 +149,9 @@ describe('Analysis Engine', () => {
     });
 
     test('should handle errors in individual repositories', async () => {
-      const mockDiscoverRepository = require('../../utils/repositoryDiscovery').discoverRepository;
+      const { discoverRepository: mockDiscoverRepository } = await import(
+        '../../utils/repositoryDiscovery'
+      );
 
       // Make the second repository analysis fail
       mockDiscoverRepository

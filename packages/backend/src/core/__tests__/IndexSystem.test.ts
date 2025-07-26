@@ -19,7 +19,7 @@ describe('IndexSystem', () => {
   afterEach(() => {
     // Clean up temporary index file
     try {
-      const fs = require('fs');
+      const fs = await import('fs');
       if (fs.existsSync(tempIndexPath)) {
         fs.unlinkSync(tempIndexPath);
       }

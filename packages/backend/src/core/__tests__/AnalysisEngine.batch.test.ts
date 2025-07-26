@@ -109,7 +109,7 @@ describe('AnalysisEngine - Batch Processing', () => {
 
   test('should handle errors in repository analysis', async () => {
     // Mock discoverRepository to fail for the second repository
-    const discoverRepository = require('../../utils/repositoryDiscovery').discoverRepository;
+    const { discoverRepository } = await import('../../utils/repositoryDiscovery');
     discoverRepository.mockImplementationOnce(async (repoPath) => {
       return {
         id: `repo-${repoPath.replace(/\//g, '-')}`,
@@ -225,7 +225,7 @@ describe('AnalysisEngine - Batch Processing', () => {
 
   test('should generate combined insights for multiple repositories', async () => {
     // Mock repositories with different languages and frameworks
-    const discoverRepository = require('../../utils/repositoryDiscovery').discoverRepository;
+    const { discoverRepository } = await import('../../utils/repositoryDiscovery');
     discoverRepository.mockImplementationOnce(async (repoPath) => {
       return {
         id: `repo-${repoPath.replace(/\//g, '-')}`,

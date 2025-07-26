@@ -246,7 +246,7 @@ export class AnalysisEngine {
       const batchId = uuidv4();
 
       // Import TaskQueue
-      const { TaskQueue, QueueEvent } = require('../utils/queue');
+      const { TaskQueue, QueueEvent } = await import('../utils/queue');
 
       // Create queue for processing repositories
       const queue = new TaskQueue(
@@ -438,7 +438,7 @@ export class AnalysisEngine {
     format: OutputFormat
   ): Promise<string> {
     // Import export service
-    const exportService = require('../services/export.service').default;
+    const { default: exportService } = await import('../services/export.service');
 
     // Use export service to generate content
     return exportService.exportAnalysis(analysis, format);
@@ -468,7 +468,7 @@ export class AnalysisEngine {
   private getIndexSystem(): any {
     // This is a placeholder that will be replaced with proper dependency injection
     // For now, we'll just import the IndexSystem directly
-    const { IndexSystem } = require('./IndexSystem');
+    const { IndexSystem } = await import('./IndexSystem');
 
     // Create a new instance if needed
     if (!this._indexSystem) {

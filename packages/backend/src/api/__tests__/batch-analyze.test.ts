@@ -137,7 +137,7 @@ describe('Batch Analysis API', () => {
     );
 
     // Import routes
-    const analyzeRoutes = require('../routes/analyze').default;
+    const { default: analyzeRoutes } = await import('../routes/analyze');
     app.use('/api/analyze', analyzeRoutes);
   });
 

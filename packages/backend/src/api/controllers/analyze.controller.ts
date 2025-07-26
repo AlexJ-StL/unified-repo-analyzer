@@ -78,7 +78,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     // Generate exports if requested in options
     if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
       // Import export service
-      const exportService = require('../../services/export.service').default;
+      const { default: exportService } = await import('../../services/export.service');
 
       // Generate exports for each requested format
       const exports = {};
@@ -198,7 +198,7 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
     // Generate exports if requested in options
     if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
       // Import export service
-      const exportService = require('../../services/export.service').default;
+      const { default: exportService } = await import('../../services/export.service');
 
       // Generate exports for each requested format
       const exports = {};

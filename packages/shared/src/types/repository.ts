@@ -39,7 +39,7 @@ export interface DirectoryInfo {
 export interface Dependency {
   name: string;
   version: string;
-  type: "production" | "development";
+  type: 'production' | 'development';
   description?: string;
 }
 
@@ -52,7 +52,7 @@ export interface Framework {
 export interface RepositoryRelationship {
   sourceId: string;
   targetId: string;
-  type: "similar" | "complementary" | "dependency" | "fork";
+  type: 'similar' | 'complementary' | 'dependency' | 'fork';
   strength: number;
   reason: string;
 }

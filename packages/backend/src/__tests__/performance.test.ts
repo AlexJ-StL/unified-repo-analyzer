@@ -153,7 +153,7 @@ describe('Performance Tests', () => {
 
     it('should respect TTL settings', async () => {
       // Create cache service with short TTL for testing
-      const { EnhancedCacheService } = require('../services/cache.service');
+      const { EnhancedCacheService } = await import('../services/cache.service');
       const shortTtlCache = new EnhancedCacheService({
         ttl: 100, // 100ms TTL
       });
@@ -292,7 +292,8 @@ describe('Performance Tests', () => {
       const durationWithoutMetrics = performance.now() - startWithoutMetrics;
 
       // Re-enable metrics
-      const newMetricsService = new (require('../services/metrics.service').MetricsService)();
+      const { MetricsService } = await import('../services/metrics.service');
+      const newMetricsService = new MetricsService();
 
       // Measure performance with metrics
       const startWithMetrics = performance.now();

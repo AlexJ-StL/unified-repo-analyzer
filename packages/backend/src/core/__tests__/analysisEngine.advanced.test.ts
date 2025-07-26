@@ -37,10 +37,11 @@ jest.mock('../../services/metrics.service', () => ({
   },
 }));
 
-const mockReadFile = require('../../utils/fileSystem').readFileWithErrorHandling;
-const mockDiscoverRepository = require('../../utils/repositoryDiscovery').discoverRepository;
-const mockAnalysisOptionsToDiscoveryOptions =
-  require('../../utils/repositoryDiscovery').analysisOptionsToDiscoveryOptions;
+const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem');
+const {
+  discoverRepository: mockDiscoverRepository,
+  analysisOptionsToDiscoveryOptions: mockAnalysisOptionsToDiscoveryOptions,
+} = await import('../../utils/repositoryDiscovery');
 
 describe('AnalysisEngine Advanced Features Integration', () => {
   let engine: AnalysisEngine;

@@ -76,7 +76,8 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const { filename } = req.params;
-      const backupPath = require('path').join(process.env.BACKUP_DIR || './backups', filename);
+      const path = await import('path');
+      const backupPath = path.join(process.env.BACKUP_DIR || './backups', filename);
 
       await backupService.restoreBackup(backupPath);
 
