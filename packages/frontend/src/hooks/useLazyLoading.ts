@@ -2,9 +2,9 @@
  * Hook for lazy loading large result sets with performance optimizations
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-interface LazyLoadingOptions<T> {
+interface LazyLoadingOptions {
   pageSize: number;
   initialLoad?: boolean;
   threshold?: number; // Distance from bottom to trigger load
@@ -25,7 +25,7 @@ interface LazyLoadingResult<T> {
  */
 export function useLazyLoading<T>(
   loadFunction: (page: number, pageSize: number) => Promise<{ items: T[]; hasMore: boolean }>,
-  options: LazyLoadingOptions<T>
+  options: LazyLoadingOptions
 ): LazyLoadingResult<T> {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ export function useLazyLoading<T>(
  */
 export function useInfiniteScroll<T>(
   loadFunction: (page: number, pageSize: number) => Promise<{ items: T[]; hasMore: boolean }>,
-  options: LazyLoadingOptions<T> & { containerRef?: React.RefObject<HTMLElement> }
+  options: LazyLoadingOptions & { containerRef?: React.RefObject<HTMLElement> }
 ): LazyLoadingResult<T> & { scrollRef: React.RefObject<HTMLDivElement> } {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { threshold = 200, containerRef } = options;

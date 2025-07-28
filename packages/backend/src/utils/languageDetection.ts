@@ -399,7 +399,7 @@ export async function detectLanguage(filePath: string, content?: string): Promis
   if (!content) {
     try {
       content = await readFile(filePath, 'utf8');
-    } catch (error) {
+    } catch {
       // If we can't read the file, return Unknown
       return 'Unknown';
     }
@@ -427,7 +427,6 @@ export async function detectFrameworks(
   packageJsonPath?: string
 ): Promise<{ name: string; confidence: number }[]> {
   const frameworks = new Map<string, number>();
-  const fileBasenames = files.map((f) => path.basename(f));
 
   // Check for framework-specific files
   for (const lang of LANGUAGES) {
@@ -476,7 +475,7 @@ export async function detectFrameworks(
           }
         }
       }
-    } catch (error) {
+    } catch {
       // Ignore package.json errors
     }
   }

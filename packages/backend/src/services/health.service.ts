@@ -74,7 +74,7 @@ class HealthService {
     // Disk space check
     this.registerCheck('disk', async () => {
       try {
-        const stats = await fs.promises.stat(env.DATA_DIR);
+        await fs.promises.stat(env.DATA_DIR);
         // This is a simplified check - in production, you'd want to check actual disk space
         return { status: 'healthy' as const };
       } catch (error) {

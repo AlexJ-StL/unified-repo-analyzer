@@ -72,7 +72,7 @@ export class PerformanceService {
       for (const entryType of entryTypes) {
         try {
           this.observer.observe({ entryTypes: [entryType] });
-        } catch (e) {
+        } catch {
           // Some entry types might not be supported
           console.debug(`Performance entry type ${entryType} not supported`);
         }

@@ -34,7 +34,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ analysis }) => {
       { id: 'repo', name: analysis.name, type: 'repository', group: 0 },
 
       // Production dependencies
-      ...analysis.dependencies.production.map((dep, i) => ({
+      ...analysis.dependencies.production.map((dep) => ({
         id: `prod-${dep.name}`,
         name: dep.name,
         type: 'production' as const,
@@ -42,7 +42,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ analysis }) => {
       })),
 
       // Development dependencies
-      ...analysis.dependencies.development.map((dep, i) => ({
+      ...analysis.dependencies.development.map((dep) => ({
         id: `dev-${dep.name}`,
         name: dep.name,
         type: 'development' as const,
@@ -50,7 +50,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ analysis }) => {
       })),
 
       // Frameworks
-      ...analysis.dependencies.frameworks.map((framework, i) => ({
+      ...analysis.dependencies.frameworks.map((framework) => ({
         id: `framework-${framework.name}`,
         name: framework.name,
         type: 'framework' as const,

@@ -38,7 +38,7 @@ const WorkspaceManager: React.FC = () => {
       setIsCreating(false);
       setFormData({ name: '', path: '' });
       showToast('Workspace created successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to create workspace', 'error');
     }
   };
@@ -57,7 +57,7 @@ const WorkspaceManager: React.FC = () => {
       setEditingId(null);
       setFormData({ name: '', path: '' });
       showToast('Workspace updated successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update workspace', 'error');
     }
   };
@@ -67,7 +67,7 @@ const WorkspaceManager: React.FC = () => {
       try {
         await deleteWorkspace(id);
         showToast('Workspace deleted successfully', 'success');
-      } catch (error) {
+      } catch {
         showToast('Failed to delete workspace', 'error');
       }
     }

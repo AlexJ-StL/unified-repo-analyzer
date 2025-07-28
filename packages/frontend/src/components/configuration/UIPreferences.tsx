@@ -14,7 +14,7 @@ const UIPreferences: React.FC = () => {
     try {
       await updatePreferenceSection('ui', updates);
       showToast('UI preferences updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update preferences', 'error');
     }
   };

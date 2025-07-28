@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { apiService, handleApiError, createApiService } from '../services/api';
+import { apiService, handleApiError } from '../services/api';
 import { useErrorHandler } from './useErrorHandler';
 import { useRetry } from './useRetry';
 import { useToast } from './useToast';
-import { parseError, shouldShowRetryButton } from '../utils/errorHandling';
+import { parseError } from '../utils/errorHandling';
 
 interface UseApiState<T> {
   data: T | null;
@@ -84,7 +84,7 @@ export function useApi<T = any>(
         return data;
       } catch (error) {
         const errorMessage = handleApiError(error);
-        const errorInfo = parseError(error);
+        parseError(error);
 
         setState((prev) => ({
           ...prev,

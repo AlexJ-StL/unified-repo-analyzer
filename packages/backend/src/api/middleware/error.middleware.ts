@@ -54,7 +54,7 @@ export const errorHandler = (
   err: Error | ApiError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   const isDevelopment = process.env.NODE_ENV === 'development';
 

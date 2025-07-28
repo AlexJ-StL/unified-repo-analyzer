@@ -253,7 +253,7 @@ program
   });
 
 // Only parse if this is the main module (not imported for tests)
-if (require.main === module) {
+if (process.argv[1] && process.argv[1].endsWith('index.js')) {
   program.parse();
 }
 

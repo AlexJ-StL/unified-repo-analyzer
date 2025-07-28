@@ -4,7 +4,7 @@
 
 import { performance } from 'perf_hooks';
 import { AnalysisEngine } from '../core/AnalysisEngine';
-import { cacheService, analysisCache } from '../services/cache.service';
+import { analysisCache } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
 import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';

@@ -32,7 +32,6 @@ function classNames(...classes: string[]) {
 const ConfigurationManager: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const {
-    preferences,
     isLoading,
     error,
     loadPreferences,
@@ -98,7 +97,7 @@ const ConfigurationManager: React.FC = () => {
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">
             <Tab.List className="flex flex-col space-y-1 bg-white dark:bg-gray-800 rounded-lg shadow p-2">
-              {tabs.map((tab, index) => (
+              {tabs.map((tab) => (
                 <Tab
                   key={tab.name}
                   className={({ selected }) =>

@@ -1,11 +1,6 @@
 import { useCallback } from 'react';
 import { useToast } from './useToast';
-import {
-  parseError,
-  getRecoverySuggestions,
-  shouldShowRetryButton,
-  getErrorTitle,
-} from '../utils/errorHandling';
+import { parseError, getRecoverySuggestions, getErrorTitle } from '../utils/errorHandling';
 
 interface UseErrorHandlerOptions {
   showToast?: boolean;

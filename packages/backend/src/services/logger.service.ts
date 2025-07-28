@@ -34,7 +34,7 @@ const logFormat = winston.format.combine(
 const consoleFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.simple(),
-  winston.format.printf(({ timestamp, level, message, stack }) => {
+  winston.format.printf(({ level, message, stack }) => {
     let log = `${level}: ${message}`;
     if (stack) {
       log += `\n${stack}`;

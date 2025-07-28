@@ -11,7 +11,7 @@ import {
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import { readFileWithErrorHandling } from '../utils/fileSystem';
-import { analyzeCodeStructure } from './codeStructureAnalyzer';
+
 import { countTokens } from './tokenAnalyzer';
 
 /**
@@ -307,7 +307,7 @@ export class AdvancedAnalyzer {
 
     // Count duplicated lines
     let duplicatedLines = 0;
-    for (const [line, count] of lineCount) {
+    for (const [, count] of lineCount) {
       if (count > 1) {
         duplicatedLines += count - 1; // Don't count the original
       }

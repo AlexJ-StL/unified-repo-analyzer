@@ -32,7 +32,7 @@ const ConfigurationImportExport: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       showToast('Configuration exported successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to export configuration', 'error');
     } finally {
       setIsExporting(false);
@@ -50,7 +50,7 @@ const ConfigurationImportExport: React.FC = () => {
       await importConfiguration(importData);
       setImportData('');
       showToast('Configuration imported successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to import configuration', 'error');
     } finally {
       setIsImporting(false);
@@ -61,7 +61,7 @@ const ConfigurationImportExport: React.FC = () => {
     try {
       await createBackup();
       showToast('Backup created successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to create backup', 'error');
     }
   };

@@ -3,7 +3,7 @@
  */
 
 import { Router } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import { analyzeController } from '../controllers';
 
 const router = Router();

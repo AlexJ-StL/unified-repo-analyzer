@@ -40,7 +40,7 @@ export const fileSystemService = {
         params: { path, type: 'directory' },
       });
       return response.data;
-    } catch (error) {
+    } catch {
       return { valid: false, message: 'Failed to validate directory' };
     }
   },

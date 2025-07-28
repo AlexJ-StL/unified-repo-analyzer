@@ -3,12 +3,11 @@
  * Provides advanced relationship analysis and visualization data
  */
 
-import { IndexSystem, RepositoryMatch } from '../core/IndexSystem';
+import { IndexSystem } from '../core/IndexSystem';
 import {
   IndexedRepository,
   RepositoryRelationship,
 } from '@unified-repo-analyzer/shared/src/types/repository';
-import { CombinationSuggestion } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 export interface RelationshipGraph {
   nodes: GraphNode[];

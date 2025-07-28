@@ -3,7 +3,7 @@
  */
 
 import { Router } from 'express';
-import { query, param, validationResult } from 'express-validator';
+import { query } from 'express-validator';
 import { repositoriesController } from '../controllers';
 
 const router = Router();

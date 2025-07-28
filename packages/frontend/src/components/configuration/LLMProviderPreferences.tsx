@@ -18,7 +18,7 @@ const LLMProviderPreferences: React.FC = () => {
     try {
       await updatePreferenceSection('llmProvider', updates);
       showToast('LLM provider preferences updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update preferences', 'error');
     }
   };
@@ -88,7 +88,7 @@ const LLMProviderPreferences: React.FC = () => {
           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
         >
           {Object.entries(preferences.llmProvider.providers)
-            .filter(([_, provider]) => provider.enabled)
+            .filter(([, provider]) => provider.enabled)
             .map(([id, provider]) => (
               <option key={id} value={id}>
                 {provider.name}

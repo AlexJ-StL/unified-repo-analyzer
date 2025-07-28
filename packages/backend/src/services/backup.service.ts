@@ -1,13 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { createReadStream, createWriteStream } from 'fs';
-import { createGzip, createGunzip } from 'zlib';
-import { pipeline } from 'stream';
+
 import { promisify } from 'util';
 import { env } from '../config/environment';
 import logger from './logger.service';
-
-const pipelineAsync = promisify(pipeline);
 
 interface BackupMetadata {
   timestamp: Date;
@@ -62,7 +58,7 @@ class BackupService {
     }
   }
 
-  async createBackup(description?: string): Promise<string> {
+  async createBackup(): Promise<string> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const backupFilename = `backup-${timestamp}.tar.gz`;
     const backupPath = path.join(env.BACKUP_DIR, backupFilename);
@@ -71,7 +67,7 @@ class BackupService {
 
     try {
       // Create backup metadata
-      const metadata = await this.createBackupMetadata(description);
+      const metadata = await this.createBackupMetadata();
 
       // Create compressed backup
       await this.createCompressedBackup(backupPath, metadata);
@@ -91,7 +87,7 @@ class BackupService {
     }
   }
 
-  private async createBackupMetadata(description?: string): Promise<BackupMetadata> {
+  private async createBackupMetadata(): Promise<BackupMetadata> {
     const getDirectorySize = async (dirPath: string): Promise<number> => {
       if (!fs.existsSync(dirPath)) return 0;
 
@@ -208,7 +204,7 @@ class BackupService {
       const tar = await import('tar');
 
       // Create backup of current data before restoration
-      const currentBackupPath = await this.createBackup('Pre-restoration backup');
+      const currentBackupPath = await this.createBackup();
       logger.info('Current data backed up before restoration', { currentBackupPath });
 
       // Extract backup
@@ -286,8 +282,6 @@ class BackupService {
     const tar = await import('tar');
 
     return new Promise((resolve, reject) => {
-      const entries: any[] = [];
-
       tar
         .list({
           file: backupPath,

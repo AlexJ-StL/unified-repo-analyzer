@@ -2,13 +2,13 @@
  * Profile management component
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { PlusIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useToast } from '../../hooks/useToast';
 
 const ProfileManager: React.FC = () => {
-  const { profiles, loadProfiles, createProfile, applyProfile } = useSettingsStore();
+  const { profiles, loadProfiles, applyProfile } = useSettingsStore();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const ProfileManager: React.FC = () => {
     try {
       await applyProfile(profileId);
       showToast(`Profile "${profileName}" applied successfully`, 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to apply profile', 'error');
     }
   };

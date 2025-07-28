@@ -17,12 +17,7 @@ import {
   DEFAULT_ANALYSIS_MODE_PRESETS,
   AnalysisModePreset,
 } from '@unified-repo-analyzer/shared';
-import {
-  userPreferencesSchema,
-  workspaceConfigurationSchema,
-  projectConfigurationSchema,
-  configurationProfileSchema,
-} from '@unified-repo-analyzer/shared';
+import { userPreferencesSchema } from '@unified-repo-analyzer/shared';
 import { logger } from '../utils/logger';
 
 export class ConfigurationService {

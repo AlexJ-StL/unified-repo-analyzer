@@ -3,38 +3,27 @@
  */
 
 import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AnalysisOptions,
   RepositoryAnalysis,
   BatchAnalysisResult,
   OutputFormat,
-  TokenUsage,
   SearchQuery,
   SearchResult,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
-import {
-  FileInfo,
-  FunctionInfo,
-  ClassInfo,
-} from '@unified-repo-analyzer/shared/src/types/repository';
-import { IndexSystem, RepositoryMatch } from './IndexSystem';
+import { RepositoryMatch } from './IndexSystem';
 import {
   discoverRepository,
   analysisOptionsToDiscoveryOptions,
 } from '../utils/repositoryDiscovery';
-import { detectLanguage } from '../utils/languageDetection';
-import { readFileWithErrorHandling, FileSystemError } from '../utils/fileSystem';
+import { readFileWithErrorHandling } from '../utils/fileSystem';
 import { analyzeCodeStructure } from './codeStructureAnalyzer';
-import { countTokens, sampleText } from './tokenAnalyzer';
+import { countTokens } from './tokenAnalyzer';
 import { AdvancedAnalyzer } from './advancedAnalyzer';
 import { cacheService } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
-
-const stat = promisify(fs.stat);
 
 /**
  * Core Analysis Engine for repository processing
@@ -452,7 +441,7 @@ export class AnalysisEngine {
    */
   public async updateIndex(analysis: RepositoryAnalysis): Promise<void> {
     // Get the index system instance
-    const indexSystem = this.getIndexSystem();
+    const indexSystem = await this.getIndexSystem();
 
     // Add repository to index
     await indexSystem.addRepository(analysis);
@@ -465,7 +454,7 @@ export class AnalysisEngine {
    *
    * @returns IndexSystem instance
    */
-  private getIndexSystem(): any {
+  private async getIndexSystem(): Promise<any> {
     // This is a placeholder that will be replaced with proper dependency injection
     // For now, we'll just import the IndexSystem directly
     const { IndexSystem } = await import('./IndexSystem');
@@ -554,7 +543,7 @@ export class AnalysisEngine {
    * @returns Promise resolving to search results
    */
   public async searchRepositories(query: SearchQuery): Promise<SearchResult[]> {
-    const indexSystem = this.getIndexSystem();
+    const indexSystem = await this.getIndexSystem();
     return indexSystem.searchRepositories(query);
   }
 
@@ -565,7 +554,7 @@ export class AnalysisEngine {
    * @returns Promise resolving to repository matches
    */
   public async findSimilarRepositories(repoId: string): Promise<RepositoryMatch[]> {
-    const indexSystem = this.getIndexSystem();
+    const indexSystem = await this.getIndexSystem();
     return indexSystem.findSimilarRepositories(repoId);
   }
 
@@ -576,7 +565,7 @@ export class AnalysisEngine {
    * @returns Promise resolving to combination suggestions
    */
   public async suggestCombinations(repoIds: string[]): Promise<any[]> {
-    const indexSystem = this.getIndexSystem();
+    const indexSystem = await this.getIndexSystem();
     return indexSystem.suggestCombinations(repoIds);
   }
 }

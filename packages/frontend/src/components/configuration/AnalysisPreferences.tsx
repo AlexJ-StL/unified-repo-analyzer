@@ -15,7 +15,7 @@ const AnalysisPreferences: React.FC = () => {
     try {
       await updatePreferenceSection('analysis', updates);
       showToast('Analysis preferences updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update preferences', 'error');
     }
   };

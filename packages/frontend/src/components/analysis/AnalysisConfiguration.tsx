@@ -56,7 +56,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           }
         }
       } catch (error) {
-        const errorInfo = handleError(error, 'configuration initialization');
+        handleError(error, 'configuration initialization');
         setConfigError(error instanceof Error ? error : new Error('Configuration failed'));
 
         // Fallback to safe defaults

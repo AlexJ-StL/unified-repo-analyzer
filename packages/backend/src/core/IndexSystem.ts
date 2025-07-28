@@ -1282,7 +1282,7 @@ export class IndexSystem {
     repoA: IndexedRepository,
     repoB: IndexedRepository,
     score: number,
-    reasons: string[]
+    _reasons: string[]
   ): { type: 'similar' | 'complementary' | 'dependency' | 'fork' } {
     // Check for potential fork (high name similarity + high overall similarity)
     const nameA = repoA.name.toLowerCase();

@@ -16,7 +16,7 @@ const ExportPreferences: React.FC = () => {
     try {
       await updatePreferenceSection('export', updates);
       showToast('Export preferences updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update preferences', 'error');
     }
   };
@@ -26,7 +26,7 @@ const ExportPreferences: React.FC = () => {
       // In a real implementation, this would use the file system API
       // For now, we'll just show a placeholder
       showToast('Directory selection not implemented in demo', 'info');
-    } catch (error) {
+    } catch {
       showToast('Failed to select directory', 'error');
     }
   };

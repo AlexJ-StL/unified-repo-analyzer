@@ -4,7 +4,6 @@ import {
   RelationshipGraph,
   GraphNode,
   GraphEdge,
-  GraphCluster,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 interface RelationshipGraphProps {
@@ -24,7 +23,7 @@ const RelationshipGraphComponent: React.FC<RelationshipGraphProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [, setHoveredNode] = useState<string | null>(null);
 
   useEffect(() => {
     if (!svgRef.current || !data.nodes.length) return;
@@ -155,7 +154,7 @@ const RelationshipGraphComponent: React.FC<RelationshipGraphProps> = ({
 
         tooltip.style('left', event.pageX + 10 + 'px').style('top', event.pageY - 10 + 'px');
       })
-      .on('mouseout', function (event, d) {
+      .on('mouseout', function () {
         d3.select(this).attr('stroke-opacity', 0.6);
         d3.selectAll('.relationship-tooltip').remove();
       });
@@ -232,7 +231,7 @@ const RelationshipGraphComponent: React.FC<RelationshipGraphProps> = ({
 
         tooltip.style('left', event.pageX + 10 + 'px').style('top', event.pageY - 10 + 'px');
       })
-      .on('mouseout', (event, d) => {
+      .on('mouseout', () => {
         setHoveredNode(null);
         link.attr('stroke-opacity', 0.6);
         d3.selectAll('.node-tooltip').remove();

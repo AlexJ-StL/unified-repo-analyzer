@@ -15,7 +15,7 @@ import {
   FileSystemErrorType,
 } from './fileSystem';
 import { detectLanguage, detectFrameworks } from './languageDetection';
-import { calculateFileImportance, sortFilesByImportance } from './fileImportance';
+import { sortFilesByImportance } from './fileImportance';
 import { FileInfo, DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import {
   AnalysisOptions,
@@ -129,7 +129,7 @@ export async function discoverRepository(
     try {
       const fileStat = await stat(file);
       fileSizes.set(file, fileStat.size);
-    } catch (error) {
+    } catch {
       // Skip files with errors
       continue;
     }
@@ -159,7 +159,7 @@ export async function discoverRepository(
             const lines = content.split('\n').slice(0, maxLinesPerFile);
             content = lines.join('\n') + '\n... (truncated)';
           }
-        } catch (error) {
+        } catch {
           // Skip content reading errors
           lineCount = 0;
           content = '';
@@ -181,7 +181,7 @@ export async function discoverRepository(
       };
 
       return fileInfo;
-    } catch (error) {
+    } catch {
       // Skip files with errors
       return null;
     }

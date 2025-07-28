@@ -10,7 +10,6 @@ import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
 import { OutputFormat } from '@unified-repo-analyzer/shared/src/types/analysis';
 import exportService from '../../services/export.service';
-import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);
@@ -37,7 +36,7 @@ const exportMetadata = new Map<string, ExportMetadata>();
 (async () => {
   try {
     await stat(EXPORT_DIR);
-  } catch (error) {
+  } catch {
     await mkdir(EXPORT_DIR, { recursive: true });
   }
 })();
@@ -83,10 +82,7 @@ export const exportAnalysis = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const { analysisId, format } = req.body;
-
-    // Get analysis engine
-    const analysisEngine = new AnalysisEngine();
+    const { format } = req.body;
 
     // Get analysis from storage (this would be replaced with actual storage retrieval)
     // For now, we'll just return an error since we don't have storage implemented yet
@@ -246,7 +242,7 @@ export const downloadExport = async (req: Request, res: Response): Promise<void>
     // Check if file exists
     try {
       await stat(exportPath);
-    } catch (error) {
+    } catch {
       res.status(404).json({ error: 'Export file not found' });
       return;
     }
@@ -361,7 +357,7 @@ export const deleteExport = async (req: Request, res: Response): Promise<void> =
 
     try {
       await unlink(exportPath);
-    } catch (error) {
+    } catch {
       // File might not exist, but we'll still remove from metadata
       console.warn(`Export file not found: ${exportPath}`);
     }

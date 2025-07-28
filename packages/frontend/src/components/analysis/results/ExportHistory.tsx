@@ -60,16 +60,6 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
     }
   };
 
-  const addToHistory = (item: Omit<ExportHistoryItem, 'timestamp'>) => {
-    const newItem: ExportHistoryItem = {
-      ...item,
-      timestamp: new Date(),
-    };
-
-    const newHistory = [newItem, ...history.slice(0, 49)]; // Keep last 50 items
-    saveExportHistory(newHistory);
-  };
-
   const handleDownload = async (item: ExportHistoryItem) => {
     try {
       const response = await apiService.downloadExport(item.id);

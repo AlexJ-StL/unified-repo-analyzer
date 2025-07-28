@@ -335,7 +335,7 @@ export function calculateImportanceFactors(
   let typeScore = 0;
 
   // Check for important extensions
-  for (const [_, extensions] of Object.entries(IMPORTANT_EXTENSIONS)) {
+  for (const extensions of Object.values(IMPORTANT_EXTENSIONS)) {
     if (extensions.includes(extension)) {
       typeScore += 0.3;
       break;

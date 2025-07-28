@@ -3,7 +3,7 @@ import MainLayout from '../components/layout/MainLayout';
 import RepositorySelector from '../components/repository/RepositorySelector';
 import AnalysisConfiguration from '../components/analysis/AnalysisConfiguration';
 import { ProgressTracker, MobileProgressTracker, ResultsViewer } from '../components/analysis';
-import { useAnalysisStore, AnalysisOptions } from '../store/useAnalysisStore';
+import { useAnalysisStore } from '../store/useAnalysisStore';
 import { apiService, handleApiError } from '../services/api';
 import websocketService from '../services/websocket';
 
@@ -70,7 +70,7 @@ const AnalyzePage = () => {
     }
   };
 
-  const handleConfigChange = (updatedOptions: AnalysisOptions) => {
+  const handleConfigChange = () => {
     // This is handled by the store directly, but we can add additional validation here
     setIsValid(true);
     setError(null);

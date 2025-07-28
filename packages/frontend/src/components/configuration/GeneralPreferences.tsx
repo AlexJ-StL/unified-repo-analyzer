@@ -14,7 +14,7 @@ const GeneralPreferences: React.FC = () => {
     try {
       await updatePreferenceSection('general', updates);
       showToast('General preferences updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update preferences', 'error');
     }
   };

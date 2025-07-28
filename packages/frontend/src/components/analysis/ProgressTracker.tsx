@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAnalysisStore, AnalysisProgress } from '../../store/useAnalysisStore';
+import { useAnalysisStore } from '../../store/useAnalysisStore';
 import websocketService from '../../services/websocket';
 import { apiService } from '../../services/api';
 
@@ -9,7 +9,7 @@ interface ProgressTrackerProps {
 }
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className = '' }) => {
-  const { progress, setProgress } = useAnalysisStore();
+  const { progress } = useAnalysisStore();
   const [logs, setLogs] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 

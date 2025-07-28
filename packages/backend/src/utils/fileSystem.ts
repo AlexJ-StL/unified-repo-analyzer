@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import ignore from 'ignore';
-import { FileInfo, DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 
 // Promisify fs functions
 const readdir = promisify(fs.readdir);
@@ -198,16 +198,8 @@ export async function traverseDirectory(
           }
         } catch (error) {
           let errorMessage = 'Unknown error';
-          let errorType = FileSystemErrorType.UNKNOWN;
-
           if (error instanceof Error) {
             errorMessage = error.message;
-
-            if ((error as NodeJS.ErrnoException).code === 'EACCES') {
-              errorType = FileSystemErrorType.PERMISSION_DENIED;
-            } else if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-              errorType = FileSystemErrorType.NOT_FOUND;
-            }
           }
 
           result.skippedFiles.push({
@@ -431,7 +423,6 @@ export function extractDirectoryInfo(
     if (!relativePath) continue; // Skip root directory
 
     const parentPath = path.dirname(dirPath);
-    const relativeParentPath = path.relative(basePath, parentPath);
 
     // Add directory to map
     dirMap.set(dirPath, {

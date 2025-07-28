@@ -9,7 +9,7 @@ interface RepositorySelectorProps {
 }
 
 const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, className = '' }) => {
-  const { repositoryPath, setRepositoryPath } = useAnalysisStore();
+  const { setRepositoryPath } = useAnalysisStore();
   const [currentPath, setCurrentPath] = useState<string>('');
   const [directoryItems, setDirectoryItems] = useState<DirectoryItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
