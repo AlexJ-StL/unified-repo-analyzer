@@ -5,6 +5,7 @@
 import crypto from 'crypto';
 import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { logger } from '../utils/logger';
+import type { NodeJS } from 'node';
 
 interface PendingRequest<T> {
   promise: Promise<T>;

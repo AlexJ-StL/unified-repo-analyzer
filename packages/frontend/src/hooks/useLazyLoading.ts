@@ -2,7 +2,7 @@
  * Hook for lazy loading large result sets with performance optimizations
  */
 
-import { useState, useEffect, useCallback, useRef, RefObject } from 'react';
+import React, { useState, useEffect, useCallback, useRef, RefObject } from 'react';
 
 interface LazyLoadingOptions {
   pageSize: number;

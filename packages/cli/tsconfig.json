@@ -2,7 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"], // If CLI might use any DOM types or isomorphic code
+    "types": ["node", "jest"], // ADD "node" and "jest" here
+    "allowJs": true // For bin/repo-analyzer.js and mock .js files
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.js",
+    "jest.config.js",
+    "bin/**/*.js"
+  ], // Include all relevant TS and JS files
+  "exclude": ["node_modules", "dist", "build"]
 }

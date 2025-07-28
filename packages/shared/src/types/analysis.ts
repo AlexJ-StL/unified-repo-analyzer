@@ -2,7 +2,7 @@
  * Analysis-related interfaces and types
  */
 
-import { DirectoryInfo, FileInfo, IndexedRepository } from './repository';
+import { DirectoryInfo, FileInfo, IndexedRepository, Dependency, Framework } from './repository';
 
 export type AnalysisMode = 'quick' | 'standard' | 'comprehensive';
 export type OutputFormat = 'json' | 'markdown' | 'html';
@@ -65,9 +65,9 @@ export interface RepositoryAnalysis {
   };
 
   dependencies: {
-    production: any[];
-    development: any[];
-    frameworks: any[];
+    production: Dependency[];
+    development: Dependency[];
+    frameworks: Framework[];
   };
 
   insights: {

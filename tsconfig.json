@@ -10,7 +10,9 @@
     "declaration": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "lib": ["ES2020", "dom"],
+    "types": ["node"]
   },
   "exclude": ["node_modules", "dist"]
 }

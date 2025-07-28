@@ -3,7 +3,6 @@
  */
 
 import { z } from 'zod';
-import { AnalysisMode, OutputFormat } from '../types/analysis';
 
 // Basic schemas
 export const functionInfoSchema = z.object({

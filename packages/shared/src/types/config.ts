@@ -128,7 +128,7 @@ export interface ConfigurationWarning {
 export interface ConfigurationMigration {
   fromVersion: string;
   toVersion: string;
-  migrate: (config: any) => UserPreferences;
+  migrate: (config: UserPreferences) => UserPreferences;
 }
 
 export interface ConfigurationBackup {

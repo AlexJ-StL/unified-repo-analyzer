@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2020", "ES2021", "ES2022", "ES2023", "DOM"]
+  },
+  "include": ["vite.config.ts", "vitest.config.ts", "cypress.config.ts"]
+}

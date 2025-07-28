@@ -2,14 +2,14 @@
  * Hook for performance optimization utilities
  */
 
-import { useCallback, useRef, useEffect, useMemo, useState } from 'react';
+import { useCallback, useRef, useEffect, useMemo, useState, DependencyList } from 'react';
 import { performanceService } from '../services/performance.service';
 
 /**
  * Hook for debouncing function calls
  */
 export function useDebounce<T extends (...args: any[]) => any>(callback: T, delay: number): T {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const debouncedCallback = useCallback(
     (...args: Parameters<T>) => {
@@ -40,7 +40,7 @@ export function useDebounce<T extends (...args: any[]) => any>(callback: T, dela
  */
 export function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
   const lastCallRef = useRef<number>(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const throttledCallback = useCallback(
     (...args: Parameters<T>) => {
@@ -82,13 +82,13 @@ export function useThrottle<T extends (...args: any[]) => any>(callback: T, dela
  */
 export function useMemoWithInvalidation<T>(
   factory: () => T,
-  deps: React.DependencyList,
+  deps: DependencyList,
   invalidateAfter?: number
 ): T {
   const cacheRef = useRef<{
     value: T;
     timestamp: number;
-    deps: React.DependencyList;
+    deps: DependencyList;
   }>();
 
   return useMemo(() => {
@@ -241,7 +241,7 @@ export function useBatchUpdates<T>(): {
 } {
   const [values, setValues] = useState<T[]>([]);
   const batchRef = useRef<T[]>([]);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const flush = useCallback(() => {
     if (batchRef.current.length > 0) {
