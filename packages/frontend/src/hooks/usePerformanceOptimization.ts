@@ -2,7 +2,7 @@
  * Hook for performance optimization utilities
  */
 
-import { useCallback, useRef, useEffect, useMemo } from 'react';
+import { useCallback, useRef, useEffect, useMemo, useState } from 'react';
 import { performanceService } from '../services/performance.service';
 
 /**
@@ -203,7 +203,7 @@ export function useOptimizedEventListener<K extends keyof WindowEventMap>(
   handler: (event: WindowEventMap[K]) => void,
   element: Window | Element | null = window,
   options: AddEventListenerOptions = {}
-) {
+): void {
   const savedHandler = useRef(handler);
 
   useEffect(() => {

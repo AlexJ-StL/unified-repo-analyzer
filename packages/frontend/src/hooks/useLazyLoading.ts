@@ -2,7 +2,7 @@
  * Hook for lazy loading large result sets with performance optimizations
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, RefObject } from 'react';
 
 interface LazyLoadingOptions {
   pageSize: number;
@@ -98,8 +98,8 @@ export function useLazyLoading<T>(
  */
 export function useInfiniteScroll<T>(
   loadFunction: (page: number, pageSize: number) => Promise<{ items: T[]; hasMore: boolean }>,
-  options: LazyLoadingOptions & { containerRef?: React.RefObject<HTMLElement> }
-): LazyLoadingResult<T> & { scrollRef: React.RefObject<HTMLDivElement> } {
+  options: LazyLoadingOptions & { containerRef?: RefObject<HTMLElement> }
+): LazyLoadingResult<T> & { scrollRef: RefObject<HTMLDivElement> } {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { threshold = 200, containerRef } = options;
 
