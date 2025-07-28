@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { AnalysisOptions, OutputFormat, BatchAnalysisResult } from '@unified-repo-analyzer/shared';
+import { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
 import {
   ApiClient,
   ProgressTracker,

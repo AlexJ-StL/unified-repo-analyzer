@@ -24,7 +24,7 @@ export function validateRepositoryPath(repoPath: string): string {
     // Check if directory is readable
     try {
       fs.accessSync(absolutePath, fs.constants.R_OK);
-    } catch (error) {
+    } catch (_error) {
       throw new CLIError(`Directory is not readable: ${repoPath}`, ErrorType.FILESYSTEM);
     }
 
