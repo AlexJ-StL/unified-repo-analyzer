@@ -4,6 +4,7 @@
   "description": "Backend API server for the Unified Repository Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "commonjs",
   "scripts": {
     "dev": "ts-node --watch --transpile-only src/index.ts",
     "build": "rimraf dist && tsc",

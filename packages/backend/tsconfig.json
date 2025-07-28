@@ -2,15 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "types": ["node"]
   },
-  "include": ["src/**/*", "src/types/**/*", "src/**/*.ts", "__tests__/**/*.ts", "jest.config.js"],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "target": "es2022", // Or whatever your target is
-  "module": "esnext", // Or whatever your module system is
-  "lib": ["es2022", "dom"], // Add "dom" if any backend files might touch browser types (e.g., for isomorphic code)
-  "types": ["node", "jest"], // ADD "node" and "jest" here
-  "allowJs": true, // Allow JS files for Jest configs, etc.
-  "exclude": ["node_modules", "dist", "build"]
+  "include": ["src/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules", "dist", "build", "**/*.test.js", "**/*.spec.js"]
 }

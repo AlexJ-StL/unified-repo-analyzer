@@ -49,6 +49,26 @@ export default [
   },
   {
     // Specific config for backend package
+    files: ['packages/backend/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        project: [path.resolve(__dirname, 'packages/backend/tsconfig.json')],
+        tsconfigRootDir: __dirname,
+      },
+      globals: {
+        ...globals.node,
+        ...globals.es2022,
+        NodeJS: 'readonly',
+        BufferEncoding: 'readonly',
+        Buffer: 'readonly',
+      },
+    },
+    rules: {
+      'no-undef': 'off', // Disable no-undef for backend files since TypeScript handles this
+    },
+  },
+  {
+    // Specific config for backend test files
     files: ['packages/backend/**/{__tests__}/**/*.{ts,tsx}', 'packages/backend/**/*.test.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
@@ -59,6 +79,9 @@ export default [
         ...globals.node,
         ...globals.jest,
         ...globals.es2022,
+        NodeJS: 'readonly',
+        BufferEncoding: 'readonly',
+        Buffer: 'readonly',
       },
     },
     rules: {

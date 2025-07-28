@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-
 import { promisify } from 'util';
 import { env } from '../config/environment';
 import logger from './logger.service';
