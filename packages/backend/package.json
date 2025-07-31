@@ -13,8 +13,8 @@
     "start:prod": "NODE_ENV=production node dist/index.js",
     "test": "jest",
     "test:prod": "NODE_ENV=production jest --coverage",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
     "clean": "rimraf dist"
   },
   "keywords": [

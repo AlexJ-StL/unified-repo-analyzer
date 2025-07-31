@@ -47,7 +47,7 @@ export const IMPORTANT_FILE_PATTERNS = {
     'babel.config.js',
     '.eslintrc',
     '.prettierrc',
-    'jest.config.js',
+    'jest.config.ts',
     'vite.config.js',
     'next.config.js',
     'nuxt.config.js',
