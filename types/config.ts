@@ -14,30 +14,96 @@ export interface TailwindConfig {
   plugins: any[];
 }
 
-export interface BiomeConfig {
-  $schema: string;
-  files: {
-    include: string[];
-    ignore: string[];
-  };
-  linter: {
-    enabled: boolean;
-    rules: Record<string, any>;
-  };
-  formatter: {
-    enabled: boolean;
-    indentStyle: "tab" | "space";
-    indentWidth: number;
-  };
-  javascript?: {
-    formatter: {
-      quoteStyle: "double" | "single";
-      trailingComma: "all" | "es5" | "none";
+export interface BiomeRuleConfig {
+  level?: "error" | "warn" | "info" | "off";
+  options?: Record<string, any>;
+}
+
+export interface BiomeRules {
+  recommended?: boolean;
+  suspicious?: Record<string, BiomeRuleConfig | string>;
+  style?: Record<string, BiomeRuleConfig | string>;
+  correctness?: Record<string, BiomeRuleConfig | string>;
+  complexity?: Record<string, BiomeRuleConfig | string>;
+  performance?: Record<string, BiomeRuleConfig | string>;
+  security?: Record<string, BiomeRuleConfig | string>;
+  nursery?: Record<string, BiomeRuleConfig | string>;
+}
+
+export interface BiomeFormatterConfig {
+  enabled: boolean;
+  formatWithErrors?: boolean;
+  indentStyle: "tab" | "space";
+  indentWidth: number;
+  lineEnding?: "lf" | "crlf" | "cr";
+  lineWidth?: number;
+  attributePosition?: "auto" | "multiline";
+}
+
+export interface BiomeJavaScriptFormatter {
+  quoteStyle: "double" | "single";
+  trailingCommas?: "all" | "es5" | "none";
+  semicolons?: "always" | "asNeeded";
+  arrowParentheses?: "always" | "asNeeded";
+  bracketSpacing?: boolean;
+  bracketSameLine?: boolean;
+  quoteProperties?: "asNeeded" | "preserve";
+  attributePosition?: "auto" | "multiline";
+}
+
+export interface BiomeTypeScriptFormatter {
+  quoteStyle: "double" | "single";
+  trailingCommas?: "all" | "es5" | "none";
+  semicolons?: "always" | "asNeeded";
+}
+
+export interface BiomeJsonFormatter {
+  enabled: boolean;
+  indentStyle: "tab" | "space";
+  indentWidth: number;
+  lineEnding: "lf" | "crlf" | "cr";
+  lineWidth: number;
+  trailingCommas: "none";
+}
+
+export interface BiomeAssistConfig {
+  actions?: {
+    source?: {
+      organizeImports?: "on" | "off";
     };
+  };
+}
+
+export interface BiomeOverride {
+  includes: string[];
+  linter?: {
+    enabled: boolean;
+    rules?: BiomeRules;
+  };
+  formatter?: {
+    enabled: boolean;
+  };
+}
+
+export interface BiomeConfig {
+  $schema?: string;
+  files?: {
+    includes?: string[];
+    excludes?: string[];
+    ignore?: string[];
+  };
+  linter?: {
+    enabled: boolean;
+    rules?: BiomeRules;
+  };
+  formatter?: BiomeFormatterConfig;
+  assist?: BiomeAssistConfig;
+  javascript?: {
+    formatter?: BiomeJavaScriptFormatter;
   };
   typescript?: {
-    formatter: {
-      quoteStyle: "double" | "single";
-    };
+    formatter?: BiomeTypeScriptFormatter;
   };
+  json?: BiomeJsonFormatter;
+  overrides?: BiomeOverride[];
 }
