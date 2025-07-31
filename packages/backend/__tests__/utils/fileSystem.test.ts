@@ -2,6 +2,7 @@
  * Tests for file system utilities
  */
 
+import { test, expect, describe, beforeEach, afterEach } from 'bun:test';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -57,7 +58,7 @@ describe('File System Utilities', () => {
   });
 
   describe('traverseDirectory', () => {
-    it('should traverse a directory and return files and directories', async () => {
+    test('should traverse a directory and return files and directories', async () => {
       const result = await traverseDirectory(testDir);
 
       // Check that we found the expected number of files and directories
@@ -75,7 +76,7 @@ describe('File System Utilities', () => {
       expect(fileNames).toContain('index.test.js');
     });
 
-    it('should respect maxDepth option', async () => {
+    test('should respect maxDepth option', async () => {
       const result = await traverseDirectory(testDir, { maxDepth: 1 });
 
       // Should only include files in the root directory
@@ -83,14 +84,14 @@ describe('File System Utilities', () => {
       expect(result.directories.length).toBe(4); // src, tests, node_modules, .git
     });
 
-    it('should respect maxFiles option', async () => {
+    test('should respect maxFiles option', async () => {
       const result = await traverseDirectory(testDir, { maxFiles: 2 });
 
       // Should only include the first 2 files found
       expect(result.files.length).toBe(2);
     });
 
-    it('should respect ignorePatterns option', async () => {
+    test('should respect ignorePatterns option', async () => {
       const result = await traverseDirectory(testDir, {
         ignorePatterns: ['node_modules/**', '.git/**', '*.md'],
       });
@@ -104,7 +105,7 @@ describe('File System Utilities', () => {
       expect(dirNames).not.toContain('.git');
     });
 
-    it('should respect fileFilter option', async () => {
+    test('should respect fileFilter option', async () => {
       const result = await traverseDirectory(testDir, {
         fileFilter: (filePath) => path.extname(filePath) === '.js',
       });
@@ -114,7 +115,7 @@ describe('File System Utilities', () => {
       expect(result.files.every((f) => path.extname(f) === '.js')).toBe(true);
     });
 
-    it('should throw FileSystemError for non-existent directory', async () => {
+    test('should throw FileSystemError for non-existent directory', async () => {
       const nonExistentDir = path.join(testDir, 'non-existent');
 
       await expect(traverseDirectory(nonExistentDir)).rejects.toThrow(FileSystemError);
@@ -123,7 +124,7 @@ describe('File System Utilities', () => {
       });
     });
 
-    it('should throw FileSystemError for invalid path', async () => {
+    test('should throw FileSystemError for invalid path', async () => {
       const filePath = path.join(testDir, 'package.json');
 
       await expect(traverseDirectory(filePath)).rejects.toThrow(FileSystemError);
@@ -134,14 +135,14 @@ describe('File System Utilities', () => {
   });
 
   describe('readFileWithErrorHandling', () => {
-    it('should read a file successfully', async () => {
+    test('should read a file successfully', async () => {
       const filePath = path.join(testDir, 'README.md');
       const content = await readFileWithErrorHandling(filePath);
 
       expect(content).toBe('# Test Repository');
     });
 
-    it('should throw FileSystemError for non-existent file', async () => {
+    test('should throw FileSystemError for non-existent file', async () => {
       const nonExistentFile = path.join(testDir, 'non-existent.txt');
 
       await expect(readFileWithErrorHandling(nonExistentFile)).rejects.toThrow(FileSystemError);
@@ -152,7 +153,7 @@ describe('File System Utilities', () => {
   });
 
   describe('getCommonIgnorePatterns', () => {
-    it('should return an array of common ignore patterns', () => {
+    test('should return an array of common ignore patterns', () => {
       const patterns = getCommonIgnorePatterns();
 
       expect(Array.isArray(patterns)).toBe(true);
@@ -163,7 +164,7 @@ describe('File System Utilities', () => {
   });
 
   describe('readGitignore', () => {
-    it('should read and parse .gitignore file', async () => {
+    test('should read and parse .gitignore file', async () => {
       const patterns = await readGitignore(testDir);
 
       expect(Array.isArray(patterns)).toBe(true);
@@ -172,7 +173,7 @@ describe('File System Utilities', () => {
       expect(patterns).toContain('.env');
     });
 
-    it('should return empty array if .gitignore does not exist', async () => {
+    test('should return empty array if .gitignore does not exist', async () => {
       const emptyDir = path.join(testDir, 'empty');
       await mkdir(emptyDir, { recursive: true });
 
@@ -184,7 +185,7 @@ describe('File System Utilities', () => {
   });
 
   describe('getCombinedIgnorePatterns', () => {
-    it('should combine gitignore patterns with common and custom patterns', async () => {
+    test('should combine gitignore patterns with common and custom patterns', async () => {
       const customPatterns = ['*.log', 'temp/'];
       const patterns = await getCombinedIgnorePatterns(testDir, customPatterns);
 
@@ -199,7 +200,7 @@ describe('File System Utilities', () => {
   });
 
   describe('extractDirectoryInfo', () => {
-    it('should extract directory information from traversal result', async () => {
+    test('should extract directory information from traversal result', async () => {
       const traversalResult = await traverseDirectory(testDir);
       const dirInfos = extractDirectoryInfo(traversalResult, testDir);
 

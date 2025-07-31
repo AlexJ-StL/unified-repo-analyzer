@@ -2,11 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./unified-repo-analyzer/src",
     "target": "ES2022",
     "lib": ["ES2022"],
     "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "build", "bin", "jest.config.js", "**/*.js"]
+  "exclude": ["node_modules", "dist", "build", "bin", "**/*.js"],
+  "include": ["src/**/*.ts", "jest.config.ts"]
 }

@@ -2,8 +2,8 @@
  * Tests for file importance scoring utilities
  */
 
+import { test, expect, describe } from 'bun:test';
 import path from 'path';
-import { describe, it, expect } from '@jest/globals';
 import {
   calculateFileImportance,
   calculateImportanceFactors,
@@ -16,7 +16,7 @@ describe('File Importance Utilities', () => {
   const mockRepoPath = '/mock/repo';
 
   describe('IMPORTANT_FILE_PATTERNS constant', () => {
-    it('should contain definitions for important file categories', () => {
+    test('should contain definitions for important file categories', () => {
       expect(IMPORTANT_FILE_PATTERNS).toBeDefined();
       expect(IMPORTANT_FILE_PATTERNS.config).toBeDefined();
       expect(IMPORTANT_FILE_PATTERNS.documentation).toBeDefined();
@@ -25,7 +25,7 @@ describe('File Importance Utilities', () => {
       expect(IMPORTANT_FILE_PATTERNS.core).toBeDefined();
     });
 
-    it('should have patterns defined for each category', () => {
+    test('should have patterns defined for each category', () => {
       expect(IMPORTANT_FILE_PATTERNS.config.length).toBeGreaterThan(0);
       expect(IMPORTANT_FILE_PATTERNS.documentation.length).toBeGreaterThan(0);
       expect(IMPORTANT_FILE_PATTERNS.entryPoint.length).toBeGreaterThan(0);
@@ -35,7 +35,7 @@ describe('File Importance Utilities', () => {
   });
 
   describe('IMPORTANT_EXTENSIONS constant', () => {
-    it('should contain definitions for important file extensions by language', () => {
+    test('should contain definitions for important file extensions by language', () => {
       expect(IMPORTANT_EXTENSIONS).toBeDefined();
       expect(IMPORTANT_EXTENSIONS.js).toBeDefined();
       expect(IMPORTANT_EXTENSIONS.python).toBeDefined();
@@ -43,7 +43,7 @@ describe('File Importance Utilities', () => {
       expect(IMPORTANT_EXTENSIONS.web).toBeDefined();
     });
 
-    it('should have extensions defined for each language category', () => {
+    test('should have extensions defined for each language category', () => {
       Object.values(IMPORTANT_EXTENSIONS).forEach((extensions) => {
         expect(extensions.length).toBeGreaterThan(0);
       });
@@ -51,7 +51,7 @@ describe('File Importance Utilities', () => {
   });
 
   describe('calculateImportanceFactors', () => {
-    it('should calculate importance factors for a file', () => {
+    test('should calculate importance factors for a file', () => {
       const filePath = path.join(mockRepoPath, 'package.json');
       const fileSize = 1024; // 1KB
 
@@ -65,7 +65,7 @@ describe('File Importance Utilities', () => {
       expect(factors.sizeScore).toBeDefined();
     });
 
-    it('should give higher name score to important configuration files', () => {
+    test('should give higher name score to important configuration files', () => {
       const configFilePath = path.join(mockRepoPath, 'package.json');
       const regularFilePath = path.join(mockRepoPath, 'some-file.js');
       const fileSize = 1024;
@@ -76,7 +76,7 @@ describe('File Importance Utilities', () => {
       expect(configFactors.nameScore).toBeGreaterThan(regularFactors.nameScore);
     });
 
-    it('should give higher name score to entry point files', () => {
+    test('should give higher name score to entry point files', () => {
       const entryFilePath = path.join(mockRepoPath, 'index.js');
       const regularFilePath = path.join(mockRepoPath, 'utils.js');
       const fileSize = 1024;
@@ -87,7 +87,7 @@ describe('File Importance Utilities', () => {
       expect(entryFactors.nameScore).toBeGreaterThan(regularFactors.nameScore);
     });
 
-    it('should give higher location score to files at the root', () => {
+    test('should give higher location score to files at the root', () => {
       const rootFilePath = path.join(mockRepoPath, 'config.js');
       const deepFilePath = path.join(mockRepoPath, 'src', 'utils', 'helpers', 'config.js');
       const fileSize = 1024;
@@ -98,7 +98,7 @@ describe('File Importance Utilities', () => {
       expect(rootFactors.locationScore).toBeGreaterThan(deepFactors.locationScore);
     });
 
-    it('should give higher location score to files in core directories', () => {
+    test('should give higher location score to files in core directories', () => {
       const coreFilePath = path.join(mockRepoPath, 'src', 'index.js');
       const nonCoreFilePath = path.join(mockRepoPath, 'temp', 'index.js');
       const fileSize = 1024;
@@ -109,7 +109,7 @@ describe('File Importance Utilities', () => {
       expect(coreFactors.locationScore).toBeGreaterThanOrEqual(nonCoreFactors.locationScore);
     });
 
-    it('should give optimal size score to medium-sized files', () => {
+    test('should give optimal size score to medium-sized files', () => {
       const tinyFilePath = path.join(mockRepoPath, 'tiny.js');
       const mediumFilePath = path.join(mockRepoPath, 'medium.js');
       const hugeFilePath = path.join(mockRepoPath, 'huge.js');
@@ -128,7 +128,7 @@ describe('File Importance Utilities', () => {
   });
 
   describe('calculateFileImportance', () => {
-    it('should calculate importance score between 0 and 1', () => {
+    test('should calculate importance score between 0 and 1', () => {
       const filePaths = [
         path.join(mockRepoPath, 'package.json'),
         path.join(mockRepoPath, 'README.md'),
@@ -146,7 +146,7 @@ describe('File Importance Utilities', () => {
       });
     });
 
-    it('should give higher scores to important files', () => {
+    test('should give higher scores to important files', () => {
       const importantFilePath = path.join(mockRepoPath, 'package.json');
       const lessImportantFilePath = path.join(mockRepoPath, 'dist', 'bundle.js');
       const fileSize = 1024;
@@ -163,7 +163,7 @@ describe('File Importance Utilities', () => {
   });
 
   describe('sortFilesByImportance', () => {
-    it('should sort files by importance score in descending order', () => {
+    test('should sort files by importance score in descending order', () => {
       const files = [
         path.join(mockRepoPath, 'package.json'),
         path.join(mockRepoPath, 'README.md'),
@@ -185,7 +185,7 @@ describe('File Importance Utilities', () => {
       }
     });
 
-    it('should handle empty file list', () => {
+    test('should handle empty file list', () => {
       const files: string[] = [];
       const fileSizes = new Map<string, number>();
 
@@ -194,7 +194,7 @@ describe('File Importance Utilities', () => {
       expect(sortedFiles).toEqual([]);
     });
 
-    it('should handle missing file sizes', () => {
+    test('should handle missing file sizes', () => {
       const files = [path.join(mockRepoPath, 'package.json'), path.join(mockRepoPath, 'README.md')];
 
       const fileSizes = new Map<string, number>();

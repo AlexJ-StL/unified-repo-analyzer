@@ -2,11 +2,12 @@
  * Tests for validation schemas
  */
 
+import { test, expect, describe } from 'bun:test';
 import * as schemas from '../../src/validation/schemas';
 
 describe('Validation Schemas', () => {
   describe('FileInfo Schema', () => {
-    it('should validate a valid FileInfo object', () => {
+    test('should validate a valid FileInfo object', () => {
       const validFileInfo = {
         path: 'src/index.ts',
         language: 'TypeScript',
@@ -38,7 +39,7 @@ describe('Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should reject an invalid FileInfo object', () => {
+    test('should reject an invalid FileInfo object', () => {
       const invalidFileInfo = {
         path: 'src/index.ts',
         language: 'TypeScript',
@@ -55,7 +56,7 @@ describe('Validation Schemas', () => {
   });
 
   describe('AnalysisOptions Schema', () => {
-    it('should validate a valid AnalysisOptions object', () => {
+    test('should validate a valid AnalysisOptions object', () => {
       const validOptions = {
         mode: 'standard',
         maxFiles: 100,
@@ -70,7 +71,7 @@ describe('Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should reject an invalid AnalysisOptions object', () => {
+    test('should reject an invalid AnalysisOptions object', () => {
       const invalidOptions = {
         mode: 'invalid-mode', // Invalid: not in enum
         maxFiles: 100,
@@ -87,7 +88,7 @@ describe('Validation Schemas', () => {
   });
 
   describe('RepositoryAnalysis Schema', () => {
-    it('should validate a valid RepositoryAnalysis object', () => {
+    test('should validate a valid RepositoryAnalysis object', () => {
       const validAnalysis = {
         id: '123e4567-e89b-12d3-a456-426614174000',
         path: '/path/to/repo',
@@ -173,7 +174,7 @@ describe('Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should reject an invalid RepositoryAnalysis object', () => {
+    test('should reject an invalid RepositoryAnalysis object', () => {
       const invalidAnalysis = {
         id: 'not-a-uuid', // Invalid: not a UUID
         path: '/path/to/repo',
@@ -196,7 +197,7 @@ describe('Validation Schemas', () => {
   });
 
   describe('SearchQuery Schema', () => {
-    it('should validate a valid SearchQuery object', () => {
+    test('should validate a valid SearchQuery object', () => {
       const validQuery = {
         languages: ['TypeScript', 'JavaScript'],
         frameworks: ['React', 'Express'],
@@ -212,7 +213,7 @@ describe('Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should validate a partial SearchQuery object', () => {
+    test('should validate a partial SearchQuery object', () => {
       const partialQuery = {
         languages: ['TypeScript'],
       };
@@ -223,7 +224,7 @@ describe('Validation Schemas', () => {
   });
 
   describe('RepositoryIndex Schema', () => {
-    it('should validate a valid RepositoryIndex object', () => {
+    test('should validate a valid RepositoryIndex object', () => {
       const validIndex = {
         repositories: [
           {

@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { test, expect, describe, beforeEach, mock } from 'bun:test';
 import path from 'path';
 import fs from 'fs';
 import { program } from '../index';
@@ -6,16 +6,19 @@ import { ApiClient } from '../utils/api-client';
 import { config } from '../utils';
 
 // Mock the API client
-jest.mock('../utils/api-client');
-const MockApiClient = ApiClient as jest.MockedClass<typeof ApiClient>;
+mock.module('../utils/api-client', () => ({
+  ApiClient: mock(() => ({
+    analyzeRepository: mock(() => Promise.resolve({})),
+  })),
+}));
 
 // Mock the progress tracker
-jest.mock('../utils/progress', () => ({
-  ProgressTracker: jest.fn().mockImplementation(() => ({
-    start: jest.fn(),
-    succeed: jest.fn(),
-    fail: jest.fn(),
-    update: jest.fn(),
+mock.module('../utils/progress', () => ({
+  ProgressTracker: mock(() => ({
+    start: mock(() => {}),
+    succeed: mock(() => {}),
+    fail: mock(() => {}),
+    update: mock(() => {}),
   })),
 }));
 
@@ -50,7 +53,7 @@ afterAll(() => {
 
 describe('CLI Integration Tests', () => {
   describe('analyze command', () => {
-    it('should call analyzeRepository with correct parameters', async () => {
+    test('should call analyzeRepository with correct parameters', async () => {
       // Mock API response
       const mockAnalyzeRepository = jest.fn().mockResolvedValue({
         id: 'test-id',
@@ -88,7 +91,7 @@ describe('CLI Integration Tests', () => {
   });
 
   describe('batch command', () => {
-    it('should call analyzeBatch with correct parameters', async () => {
+    test('should call analyzeBatch with correct parameters', async () => {
       // Mock API response
       const mockAnalyzeBatch = jest.fn().mockResolvedValue({
         id: 'batch-id',
@@ -133,7 +136,7 @@ describe('CLI Integration Tests', () => {
   });
 
   describe('search command', () => {
-    it('should call searchRepositories with correct parameters', async () => {
+    test('should call searchRepositories with correct parameters', async () => {
       // Mock API response
       const mockSearchRepositories = jest.fn().mockResolvedValue([
         {
@@ -177,7 +180,7 @@ describe('CLI Integration Tests', () => {
   });
 
   describe('export command', () => {
-    it('should call exportAnalysis with correct parameters', async () => {
+    test('should call exportAnalysis with correct parameters', async () => {
       // Mock API response
       const mockExportAnalysis = jest.fn().mockResolvedValue(Buffer.from('test data'));
 
@@ -192,7 +195,7 @@ describe('CLI Integration Tests', () => {
   });
 
   describe('index command', () => {
-    it('should call rebuildIndex when --rebuild flag is used', async () => {
+    test('should call rebuildIndex when --rebuild flag is used', async () => {
       // Mock API response
       const mockRebuildIndex = jest.fn().mockResolvedValue(undefined);
 
@@ -205,7 +208,7 @@ describe('CLI Integration Tests', () => {
       expect(mockRebuildIndex).toHaveBeenCalled();
     });
 
-    it('should call updateIndex when --update flag is used', async () => {
+    test('should call updateIndex when --update flag is used', async () => {
       // Mock API response
       const mockUpdateIndex = jest.fn().mockResolvedValue(undefined);
 
@@ -218,7 +221,7 @@ describe('CLI Integration Tests', () => {
       expect(mockUpdateIndex).toHaveBeenCalledWith('./repos');
     });
 
-    it('should call getIndexStatus when no flags are provided', async () => {
+    test('should call getIndexStatus when no flags are provided', async () => {
       // Mock API response
       const mockGetIndexStatus = jest.fn().mockResolvedValue({
         totalRepositories: 10,
@@ -239,7 +242,7 @@ describe('CLI Integration Tests', () => {
   });
 
   describe('config command', () => {
-    it('should update configuration when --set flag is used', async () => {
+    test('should update configuration when --set flag is used', async () => {
       // Spy on config.set
       const configSetSpy = jest.spyOn(config, 'set');
 
@@ -256,7 +259,7 @@ describe('CLI Integration Tests', () => {
       expect(configSetSpy).toHaveBeenCalledWith('apiUrl', 'http://localhost:4000/api');
     });
 
-    it('should create a new profile when --create-profile flag is used', async () => {
+    test('should create a new profile when --create-profile flag is used', async () => {
       // Mock config.get and config.set
       const configGetSpy = jest.spyOn(config, 'get').mockImplementation((key) => {
         if (key === 'profiles') return {};

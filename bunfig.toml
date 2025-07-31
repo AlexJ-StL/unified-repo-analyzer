@@ -1,0 +1,33 @@
+# Bun configuration file
+[install]
+# Use npm registry for package installation
+registry = "https://registry.npmjs.org"
+# Enable cache for faster installs
+cache = { dir = ".bun/cache" }
+# Automatically install peer dependencies
+auto = "auto"
+
+[run]
+# Use bun runtime for scripts
+bun = true
+# Default shell for script execution
+shell = "system"
+
+[test]
+# Use bun's built-in test runner
+preload = []
+# Coverage settings
+coverage = true
+
+[build]
+# TypeScript compilation settings
+target = "node"
+# Enable source maps for debugging
+sourcemap = "external"
+# Minify production builds
+minify = false
+
+# Workspace configuration
+[workspace]
+# Enable workspace support
+enabled = true

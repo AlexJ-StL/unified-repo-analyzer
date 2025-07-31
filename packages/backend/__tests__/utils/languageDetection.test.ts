@@ -2,6 +2,7 @@
  * Tests for language detection utilities
  */
 
+import { test, expect, describe, beforeEach, afterEach } from 'bun:test';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -54,7 +55,7 @@ describe('Language Detection Utilities', () => {
   });
 
   describe('LANGUAGES constant', () => {
-    it('should contain definitions for common languages', () => {
+    test('should contain definitions for common languages', () => {
       expect(LANGUAGES.length).toBeGreaterThan(0);
 
       // Check for some common languages
@@ -67,7 +68,7 @@ describe('Language Detection Utilities', () => {
       expect(languageNames).toContain('CSS');
     });
 
-    it('should have extensions defined for each language', () => {
+    test('should have extensions defined for each language', () => {
       for (const lang of LANGUAGES) {
         expect(lang.extensions).toBeDefined();
         expect(Array.isArray(lang.extensions)).toBe(true);
@@ -77,7 +78,7 @@ describe('Language Detection Utilities', () => {
   });
 
   describe('detectLanguageFromPath', () => {
-    it('should detect language based on file extension', () => {
+    test('should detect language based on file extension', () => {
       expect(detectLanguageFromPath('script.js')).toBe('JavaScript');
       expect(detectLanguageFromPath('component.tsx')).toBe('TypeScript');
       expect(detectLanguageFromPath('script.py')).toBe('Python');
@@ -87,27 +88,27 @@ describe('Language Detection Utilities', () => {
       expect(detectLanguageFromPath('README.md')).toBe('Markdown');
     });
 
-    it('should detect language based on filename', () => {
+    test('should detect language based on filename', () => {
       expect(detectLanguageFromPath('package.json')).toBe('JavaScript');
       expect(detectLanguageFromPath('tsconfig.json')).toBe('TypeScript');
       expect(detectLanguageFromPath('Dockerfile')).toBe('Unknown');
     });
 
-    it('should return "Unknown" for unrecognized files', () => {
+    test('should return "Unknown" for unrecognized files', () => {
       expect(detectLanguageFromPath('unknown.xyz')).toBe('Unknown');
       expect(detectLanguageFromPath('noextension')).toBe('Unknown');
     });
   });
 
   describe('detectLanguageFromShebang', () => {
-    it('should detect language based on shebang', () => {
+    test('should detect language based on shebang', () => {
       expect(detectLanguageFromShebang('#!/bin/bash\necho "Hello"')).toBe('Shell');
       expect(detectLanguageFromShebang('#!/usr/bin/env python\nprint("Hello")')).toBe('Python');
       expect(detectLanguageFromShebang('#!/usr/bin/env ruby\nputs "Hello"')).toBe('Ruby');
       expect(detectLanguageFromShebang('#!/usr/bin/env node\nconsole.log("Hello")')).toBe(null);
     });
 
-    it('should return null for content without shebang', () => {
+    test('should return null for content without shebang', () => {
       expect(detectLanguageFromShebang('console.log("Hello");')).toBe(null);
       expect(detectLanguageFromShebang('print("Hello")')).toBe(null);
       expect(detectLanguageFromShebang('')).toBe(null);
@@ -115,7 +116,7 @@ describe('Language Detection Utilities', () => {
   });
 
   describe('detectLanguage', () => {
-    it('should detect language from file path and content', async () => {
+    test('should detect language from file path and content', async () => {
       const jsFilePath = path.join(testDir, 'script.js');
       const pyFilePath = path.join(testDir, 'script.py');
       const shFilePath = path.join(testDir, 'script.sh');
@@ -125,7 +126,7 @@ describe('Language Detection Utilities', () => {
       expect(await detectLanguage(shFilePath)).toBe('Shell');
     });
 
-    it('should use provided content if available', async () => {
+    test('should use provided content if available', async () => {
       expect(await detectLanguage('unknown.file', '#!/bin/bash\necho "Hello"')).toBe('Shell');
       expect(await detectLanguage('unknown.file', '#!/usr/bin/env python\nprint("Hello")')).toBe(
         'Python'
@@ -133,7 +134,7 @@ describe('Language Detection Utilities', () => {
       expect(await detectLanguage('unknown.file', 'console.log("Hello");')).toBe('Unknown');
     });
 
-    it('should return "Unknown" for unrecognized files', async () => {
+    test('should return "Unknown" for unrecognized files', async () => {
       const unknownFilePath = path.join(testDir, 'unknown.xyz');
       await writeFile(unknownFilePath, 'Some content');
 
@@ -142,7 +143,7 @@ describe('Language Detection Utilities', () => {
   });
 
   describe('detectFrameworks', () => {
-    it('should detect frameworks based on file patterns', async () => {
+    test('should detect frameworks based on file patterns', async () => {
       // Create React-like project structure
       await mkdir(path.join(testDir, 'react-project'), { recursive: true });
       await writeFile(
@@ -169,7 +170,7 @@ describe('Language Detection Utilities', () => {
       expect(reactFrameworks[0].confidence).toBeGreaterThan(0.5);
     });
 
-    it('should detect frameworks based on dependencies', async () => {
+    test('should detect frameworks based on dependencies', async () => {
       const packageJsonPath = path.join(testDir, 'package.json');
       const frameworks = await detectFrameworks([packageJsonPath], packageJsonPath);
 
@@ -178,7 +179,7 @@ describe('Language Detection Utilities', () => {
       expect(frameworks[0].confidence).toBeGreaterThan(0);
     });
 
-    it('should return empty array for unrecognized projects', async () => {
+    test('should return empty array for unrecognized projects', async () => {
       // Create generic project with no framework
       await mkdir(path.join(testDir, 'generic-project'), { recursive: true });
       await writeFile(

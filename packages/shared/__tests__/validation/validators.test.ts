@@ -2,12 +2,13 @@
  * Tests for validation utility functions
  */
 
+import { test, expect, describe } from 'bun:test';
 import { z } from 'zod';
 import * as validators from '../../src/validation/validators';
 
 describe('Validation Utilities', () => {
   describe('validate function', () => {
-    it('should validate data against a schema', () => {
+    test('should validate data against a schema', () => {
       const schema = z.object({
         name: z.string(),
         age: z.number().int().positive(),
@@ -19,7 +20,7 @@ describe('Validation Utilities', () => {
       expect(validators.validate(schema, validData)).toEqual(validData);
     });
 
-    it('should throw an error for invalid data', () => {
+    test('should throw an error for invalid data', () => {
       const schema = z.object({
         name: z.string(),
         age: z.number().int().positive(),
@@ -32,7 +33,7 @@ describe('Validation Utilities', () => {
   });
 
   describe('validateSafe function', () => {
-    it('should return success and data for valid input', () => {
+    test('should return success and data for valid input', () => {
       const schema = z.object({
         name: z.string(),
         age: z.number().int().positive(),
@@ -46,7 +47,7 @@ describe('Validation Utilities', () => {
       expect(result.errors).toBeUndefined();
     });
 
-    it('should return failure and errors for invalid input', () => {
+    test('should return failure and errors for invalid input', () => {
       const schema = z.object({
         name: z.string(),
         age: z.number().int().positive(),
@@ -62,7 +63,7 @@ describe('Validation Utilities', () => {
   });
 
   describe('Specific validators', () => {
-    it('should validate repository analysis data', () => {
+    test('should validate repository analysis data', () => {
       const validAnalysis = {
         id: '123e4567-e89b-12d3-a456-426614174000',
         path: '/path/to/repo',
@@ -147,7 +148,7 @@ describe('Validation Utilities', () => {
       expect(() => validators.validateRepositoryAnalysis(validAnalysis)).not.toThrow();
     });
 
-    it('should validate file info data', () => {
+    test('should validate file info data', () => {
       const validFileInfo = {
         path: 'src/index.ts',
         language: 'TypeScript',
@@ -178,7 +179,7 @@ describe('Validation Utilities', () => {
       expect(() => validators.validateFileInfo(validFileInfo)).not.toThrow();
     });
 
-    it('should validate analysis options data', () => {
+    test('should validate analysis options data', () => {
       const validOptions = {
         mode: 'standard',
         maxFiles: 100,

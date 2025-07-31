@@ -1,0 +1,128 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "files": {
+    "includes": [
+<<<<<<< HEAD
+      "packages/**/*.{js,ts,tsx,jsx}",
+      "scripts/**/*.{js,ts}",
+      "tests/**/*.{js,ts,tsx}",
+      "*.{js,ts,tsx,jsx}"
+=======
+      "**/*.{js,ts,tsx,jsx}",
+      "**/packages/**/*.{js,ts,tsx,jsx}",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/coverage/**",
+      "!**/.next/**",
+      "!**/out/**",
+      "!**/.cache/**"
+>>>>>>> ef9d52cf (converting codebase to TS, Biome, and Bun in place of any JS, Node.js, ESLint, Prettier, NPM, or Jest)
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noConsole": { "level": "warn", "options": { "allow": ["log"] } }
+      },
+      "style": {
+        "noUselessElse": "error",
+        "useConst": "error",
+        "useTemplate": "error",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": {
+          "level": "warn",
+          "options": {
+<<<<<<< HEAD
+            "ignoreRestSiblings": true
+=======
+            "ignorePattern": "^_"
+>>>>>>> ef9d52cf (converting codebase to TS, Biome, and Bun in place of any JS, Node.js, ESLint, Prettier, NPM, or Jest)
+          }
+        }
+      },
+      "complexity": {
+        "noUselessFragments": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto"
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteProperties": "asNeeded",
+      "attributePosition": "auto"
+    }
+  },
+<<<<<<< HEAD
+=======
+  "typescript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always"
+    }
+  },
+>>>>>>> ef9d52cf (converting codebase to TS, Biome, and Bun in place of any JS, Node.js, ESLint, Prettier, NPM, or Jest)
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineEnding": "lf",
+      "lineWidth": 100,
+      "trailingCommas": "none"
+    }
+<<<<<<< HEAD
+  },
+  "overrides": [
+    {
+      "includes": [
+        "**/.bun/**",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/build/**",
+        "**/coverage/**",
+        "**/.next/**",
+        "**/out/**",
+        "**/.cache/**"
+      ],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    }
+  ]
+=======
+  }
+>>>>>>> ef9d52cf (converting codebase to TS, Biome, and Bun in place of any JS, Node.js, ESLint, Prettier, NPM, or Jest)
+}
