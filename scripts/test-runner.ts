@@ -1,16 +1,29 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 /**
  * Comprehensive test runner script
  * Orchestrates different types of tests and generates reports
  */
 
-const { spawn } = require('child_process');
-const { join } = require('path');
-const { writeFileSync, mkdirSync, existsSync } = require('fs');
-const { performance } = require('perf_hooks');
+import { spawn, type ChildProcess } from 'child_process';
+import { join } from 'path';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { performance } from 'perf_hooks';
+import type { TestResult, TestResults, TestEnvironment, TestReport } from '../types/config';
+
+// For module detection compatibility
+declare const require: any;
+declare const module: any;
+
+interface SpawnOptions {
+  stdio?: 'inherit' | 'pipe';
+  env?: NodeJS.ProcessEnv;
+}
 
 class TestRunner {
+  private results: TestResults;
+  private startTime: number;
+
   constructor() {
     this.results = {
       unit: null,
@@ -22,7 +35,7 @@ class TestRunner {
     this.startTime = performance.now();
   }
 
-  async run() {
+  async run(): Promise<void> {
     console.log('🚀 Starting comprehensive test suite...\n');
 
     try {
@@ -37,53 +50,56 @@ class TestRunner {
       console.log('\n✅ All tests completed successfully!');
       process.exit(0);
     } catch (error) {
-      console.error('\n❌ Test suite failed:', error.message);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('\n❌ Test suite failed:', errorMessage);
       process.exit(1);
     }
   }
 
-  async runUnitTests() {
+  private async runUnitTests(): Promise<void> {
     console.log('📋 Running unit tests...');
     const startTime = performance.now();
 
     try {
-      await this.runCommand('npm', ['run', 'test:unit', '--', '--coverage']);
+      await this.runCommand('bun', ['test', '--coverage']);
       const duration = performance.now() - startTime;
       this.results.unit = { status: 'passed', duration };
       console.log(`✅ Unit tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      this.results.unit = { status: 'failed', error: error.message };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.results.unit = { status: 'failed', error: errorMessage };
       throw new Error('Unit tests failed');
     }
   }
 
-  async runIntegrationTests() {
+  private async runIntegrationTests(): Promise<void> {
     console.log('🔗 Running integration tests...');
     const startTime = performance.now();
 
     try {
-      await this.runCommand('npm', ['run', 'test:integration']);
+      await this.runCommand('bun', ['run', 'test:integration']);
       const duration = performance.now() - startTime;
       this.results.integration = { status: 'passed', duration };
       console.log(`✅ Integration tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      this.results.integration = { status: 'failed', error: error.message };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.results.integration = { status: 'failed', error: errorMessage };
       throw new Error('Integration tests failed');
     }
   }
 
-  async runE2ETests() {
+  private async runE2ETests(): Promise<void> {
     console.log('🌐 Running end-to-end tests...');
     const startTime = performance.now();
 
     try {
       // Start servers in background
-      const backendProcess = spawn('npm', ['run', 'start:backend'], {
+      const backendProcess = spawn('bun', ['run', 'start:backend'], {
         stdio: 'pipe',
         env: { ...process.env, NODE_ENV: 'test' },
       });
 
-      const frontendProcess = spawn('npm', ['run', 'start:frontend'], {
+      const frontendProcess = spawn('bun', ['run', 'start:frontend'], {
         stdio: 'pipe',
         env: { ...process.env, NODE_ENV: 'test' },
       });
@@ -93,7 +109,7 @@ class TestRunner {
       await this.waitForServer('http://localhost:3000', 30000);
 
       try {
-        await this.runCommand('npm', ['run', 'test:e2e']);
+        await this.runCommand('bun', ['run', 'test:e2e']);
         const duration = performance.now() - startTime;
         this.results.e2e = { status: 'passed', duration };
         console.log(`✅ E2E tests passed (${Math.round(duration)}ms)\n`);
@@ -103,12 +119,13 @@ class TestRunner {
         frontendProcess.kill();
       }
     } catch (error) {
-      this.results.e2e = { status: 'failed', error: error.message };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.results.e2e = { status: 'failed', error: errorMessage };
       throw new Error('E2E tests failed');
     }
   }
 
-  async runPerformanceTests() {
+  private async runPerformanceTests(): Promise<void> {
     if (process.env.SKIP_PERFORMANCE_TESTS === 'true') {
       console.log('⏭️  Skipping performance tests\n');
       this.results.performance = { status: 'skipped' };
@@ -119,32 +136,34 @@ class TestRunner {
     const startTime = performance.now();
 
     try {
-      await this.runCommand('npm', ['run', 'test:performance']);
+      await this.runCommand('bun', ['run', 'test:performance']);
       const duration = performance.now() - startTime;
       this.results.performance = { status: 'passed', duration };
       console.log(`✅ Performance tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      this.results.performance = { status: 'failed', error: error.message };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.results.performance = { status: 'failed', error: errorMessage };
       // Performance tests are not critical for CI
-      console.log(`⚠️  Performance tests failed: ${error.message}\n`);
+      console.log(`⚠️  Performance tests failed: ${errorMessage}\n`);
     }
   }
 
-  async generateCoverageReport() {
+  private async generateCoverageReport(): Promise<void> {
     console.log('📊 Generating coverage report...');
 
     try {
-      await this.runCommand('npm', ['run', 'coverage:merge']);
-      await this.runCommand('npm', ['run', 'coverage:report']);
+      await this.runCommand('bun', ['run', 'coverage:merge']);
+      await this.runCommand('bun', ['run', 'coverage:report']);
       this.results.coverage = { status: 'generated' };
       console.log('✅ Coverage report generated\n');
     } catch (error) {
-      this.results.coverage = { status: 'failed', error: error.message };
-      console.log(`⚠️  Coverage report generation failed: ${error.message}\n`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.results.coverage = { status: 'failed', error: errorMessage };
+      console.log(`⚠️  Coverage report generation failed: ${errorMessage}\n`);
     }
   }
 
-  async generateSummaryReport() {
+  private async generateSummaryReport(): Promise<void> {
     const totalDuration = performance.now() - this.startTime;
     const reportDir = join(__dirname, '../test-results');
 
@@ -152,7 +171,7 @@ class TestRunner {
       mkdirSync(reportDir, { recursive: true });
     }
 
-    const report = {
+    const report: TestReport = {
       timestamp: new Date().toISOString(),
       totalDuration: Math.round(totalDuration),
       results: this.results,
@@ -175,7 +194,7 @@ class TestRunner {
     console.log(humanReport);
   }
 
-  generateHumanReport(report) {
+  private generateHumanReport(report: TestReport): string {
     const { results, totalDuration, environment } = report;
 
     let output = '='.repeat(60) + '\n';
@@ -222,9 +241,9 @@ class TestRunner {
     return output;
   }
 
-  async runCommand(command, args, options = {}) {
+  private async runCommand(command: string, args: string[], options: SpawnOptions = {}): Promise<void> {
     return new Promise((resolve, reject) => {
-      const child = spawn(command, args, {
+      const child: ChildProcess = spawn(command, args, {
         stdio: 'inherit',
         ...options,
       });
@@ -237,19 +256,26 @@ class TestRunner {
         }
       });
 
-      child.on('error', reject);
+      child.on('error', (error) => {
+        reject(error);
+      });
     });
   }
 
-  async waitForServer(url, timeout = 30000) {
-    const axios = require('axios');
+  private async waitForServer(url: string, timeout: number = 30000): Promise<void> {
     const startTime = Date.now();
 
     while (Date.now() - startTime < timeout) {
       try {
-        await axios.get(url, { timeout: 1000 });
-        return;
+        // Use fetch instead of axios for better Bun compatibility
+        const response = await fetch(url, { 
+          signal: AbortSignal.timeout(1000)
+        });
+        if (response.ok) {
+          return;
+        }
       } catch (error) {
+        // Server not ready yet, wait and retry
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
@@ -261,7 +287,10 @@ class TestRunner {
 // Run if called directly
 if (require.main === module) {
   const runner = new TestRunner();
-  runner.run().catch(console.error);
+  runner.run().catch((error) => {
+    console.error('Test runner failed:', error);
+    process.exit(1);
+  });
 }
 
-module.exports = TestRunner;
+export default TestRunner;

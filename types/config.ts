@@ -107,3 +107,34 @@ export interface BiomeConfig {
   json?: BiomeJsonFormatter;
   overrides?: BiomeOverride[];
 }
+
+/**
+ * Test runner type definitions
+ */
+export interface TestResult {
+  status: 'passed' | 'failed' | 'skipped' | 'generated' | 'unknown';
+  duration?: number;
+  error?: string;
+}
+
+export interface TestResults {
+  unit: TestResult | null;
+  integration: TestResult | null;
+  e2e: TestResult | null;
+  performance: TestResult | null;
+  coverage: TestResult | null;
+}
+
+export interface TestEnvironment {
+  nodeVersion: string;
+  platform: string;
+  arch: string;
+  ci: boolean;
+}
+
+export interface TestReport {
+  timestamp: string;
+  totalDuration: number;
+  results: TestResults;
+  environment: TestEnvironment;
+}
