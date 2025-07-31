@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist && bun build src/index.ts --outdir dist --target node --sourcemap",
     "lint": "biome lint .",
     "format": "biome format --write .",
-    "test": "bun test"
+    "test": "bun test",
+    "clean": "rimraf dist"
   },
   "keywords": [
     "repository",
