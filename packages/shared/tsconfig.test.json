@@ -7,7 +7,7 @@
   "include": [
     "src/**/*.ts", // Include regular source if tests depend on it
     "__tests__/**/*.ts", // Explicitly include test files
-    "jest.config.js" // Include Jest config if needed
+    "jest.config.ts" // Include Jest config if needed
   ],
   "exclude": ["node_modules", "dist", "build"]
 }
