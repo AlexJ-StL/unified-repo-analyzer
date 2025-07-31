@@ -8,22 +8,23 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev:backend & npm run dev:frontend",
-    "dev:backend": "npm run dev -w packages/backend",
-    "dev:frontend": "npm run dev -w packages/frontend",
-    "dev:cli": "npm run dev -w packages/cli",
-    "build": "npm run build -ws",
-    "build:prod": "NODE_ENV=production npm run build -ws",
-    "test": "npm run test -ws",
-    "lint": "npm run lint -ws",
-    "format": "npm run format -ws",
-    "clean": "npm run clean -ws",
-    "prepare": "npm run build",
+    "dev": "bun run dev:backend & bun run dev:frontend",
+    "dev:backend": "bun run dev --filter packages/backend",
+    "dev:frontend": "bun run dev --filter packages/frontend",
+    "dev:cli": "bun run dev --filter packages/cli",
+    "build": "bun run build --filter '*'",
+    "build:prod": "NODE_ENV=production bun run build --filter '*'",
+    "test": "bun test",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "clean": "bun run clean --filter '*'",
+    "prepare": "bun run build",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "deploy:prod": "npm run build:prod && npm run docker:build && npm run docker:up"
+    "deploy:prod": "bun run build:prod && bun run docker:build && bun run docker:up"
   },
   "keywords": [
     "repository",
@@ -50,17 +51,10 @@
   "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "bun": ">=1.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "@typescript-eslint/eslint-plugin": "^8.38.0",
-    "@typescript-eslint/parser": "^8.38.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.3",
-    "globals": "^16.3.0",
-    "prettier": "^3.6.2",
+    "@biomejs/biome": "2.0.6",
     "typescript": "^5.3.3"
   }
 }

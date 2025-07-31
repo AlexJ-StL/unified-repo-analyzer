@@ -1,45 +1,48 @@
 # Dependencies
-node_modules/
+**/node_modules/
 .pnp
 .pnp.js
 .pnpm-debug.log*
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.npm/
+**/.bun/
 
 # Build outputs
-dist/
-build/
-out/
-.next/
-.nuxt/
-.cache/
-*.tsbuildinfo
+**/dist/
+**/build/
+**/out/
+**/lib/
+**/*.tsbuildinfo
 
 # Testing
-coverage/
-.nyc_output/
+**/coverage/
+**/.nyc_output/
 *.lcov
 
 # Environment variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.*.local
+.env.*
+**/.env
+**/.env.*
 
 # Logs
-logs/
+**/logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+bun-debug.log*
 
 # Editor directories and files
-.idea/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
@@ -66,27 +69,6 @@ Thumbs.db
 *.rej
 *~
 
-# Package manager files
-.pnpm-store/
-.yarn/cache/
-.yarn/unplugged/
-.yarn/build-state.yml
-.yarn/install-state.gz
-.npm/
-
-# IDE specific
-.vscode
-.vscode/settings.json
-.vscode/tasks.json
-.vscode/launch.json
-.vscode/extensions.json
-*.code-workspace
-
-# Local development
-.local/
-.dev/
-.devcontainer/
-
 # Security
 *.pem
 *.key
@@ -100,25 +82,23 @@ Thumbs.db
 *.db
 
 # Cache
-.parcel-cache/
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-.cache/
+**/.cache/
+**/.parcel-cache/
+**/.rpt2_cache/
+**/.rts2_cache_cjs/
+**/.rts2_cache_es/
+**/.rts2_cache_umd/
 
-# Misc
+# Package archives
 *.tgz
 *.tar.gz
+
+# Docker
 .Dockerfile.dev
 docker-compose.override.yml
 
 # Kiro Files
 .kiro/
-.kiro/specs/
-.kiro/specs/unified-repo-analyzer/design.md
-.kiro/specs/unified-repo-analyzer/requirements.md
-.kiro/specs/unified-repo-analyzer/tasks.md
 
 # Development documents
 docs/development/
@@ -130,51 +110,19 @@ temp/
 
 # API Keys and secrets
 secrets/
-*.key
 *.token
 config/local.*
 config/production.*
 config/staging.*
 
-# Build artifacts
-*.tsbuildinfo
-dist/
-build/
-lib/
-out/
-
-# Coverage reports
-coverage/
-*.lcov
-.nyc_output/
-
 # Runtime data
-pids/
+**/pids/
 *.pid
 *.seed
 *.pid.lock
 
-# Optional npm cache directory
-.npm
-
 # Optional REPL history
 .node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-.env.test
-.env.production
-.env.local
-.env.*.local
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
 
 # Serverless directories
 .serverless/
@@ -188,20 +136,8 @@ pids/
 # TernJS port file
 .tern-port
 
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# Local env files
-.env*.local
-
 # Vercel
 .vercel
 
 # Turborepo
 .turbo
-
-# Build outputs
-.next/
-.nuxt/
-.output/
-.svelte-kit/
