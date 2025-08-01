@@ -1,65 +1,65 @@
 {
-  "name": "unified-repo-analyzer",
-  "version": "1.0.0",
-  "description": "A comprehensive tool for analyzing code repositories, generating executive summaries and technical breakdowns",
-  "private": true,
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "bun run dev:backend & bun run dev:frontend",
-    "dev:backend": "bun run --cwd packages/backend dev",
-    "dev:frontend": "bun run --cwd packages/frontend dev",
-    "dev:cli": "bun run --cwd packages/cli dev",
-    "build": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",
-    "build:backend": "bun run --cwd packages/backend build",
-    "build:frontend": "bun run --cwd packages/frontend build",
-    "build:cli": "bun run --cwd packages/cli build",
-    "build:shared": "bun run --cwd packages/shared build",
-    "build:prod": "NODE_ENV=production bun run build",
-    "test": "bun test",
-    "test:all": "bun run --cwd packages/backend test && bun run --cwd packages/frontend test && bun run --cwd packages/cli test && bun run --cwd packages/shared test",
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "check": "biome check .",
-    "clean": "bun run --cwd packages/backend clean && bun run --cwd packages/frontend clean",
-    "prepare": "bun run build",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "deploy:prod": "bun run build:prod && bun run docker:build && bun run docker:up"
-  },
-  "keywords": [
-    "repository",
-    "analysis",
-    "code",
-    "summary",
-    "llm",
-    "ai",
-    "monorepo",
-    "typescript",
-    "nodejs",
-    "cli",
-    "web"
-  ],
-  "author": "Unified Repository Analyzer Contributors",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/your-org/unified-repo-analyzer.git"
-  },
-  "bugs": {
-    "url": "https://github.com/your-org/unified-repo-analyzer/issues"
-  },
-  "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
-  "engines": {
-    "node": ">=18.0.0",
-    "bun": ">=1.0.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.0.6",
-    "typescript": "^5.3.3"
-  }
+	"name": "unified-repo-analyzer",
+	"version": "1.0.0",
+	"description": "A comprehensive tool for analyzing code repositories, generating executive summaries and technical breakdowns",
+	"private": true,
+	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "bun run dev:backend & bun run dev:frontend",
+		"dev:backend": "bun run --cwd packages/backend dev || npm run dev --workspace @unified-repo-analyzer/backend",
+		"dev:frontend": "bun run --cwd packages/frontend dev || npm run dev --workspace @unified-repo-analyzer/frontend",
+		"dev:cli": "bun run --cwd packages/cli dev || npm run dev --workspace @unified-repo-analyzer/cli",
+		"build": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",
+		"build:backend": "bun run --cwd packages/backend build || npm run build --workspace @unified-repo-analyzer/backend",
+		"build:frontend": "bun run --cwd packages/frontend build || npm run build --workspace @unified-repo-analyzer/frontend",
+		"build:cli": "bun run --cwd packages/cli build || npm run build --workspace @unified-repo-analyzer/cli",
+		"build:shared": "bun run --cwd packages/shared build || npm run build --workspace @unified-repo-analyzer/shared",
+		"build:prod": "set NODE_ENV=production&& bun run build || (set NODE_ENV=production&& npm run build)",
+		"test": "bun test || npm test",
+		"test:all": "bun run --cwd packages/backend test || npm run test --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend test || npm run test --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli test || npm run test --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared test || npm run test --workspace @unified-repo-analyzer/shared",
+		"lint": "biome lint .",
+		"format": "biome format --write .",
+		"check": "biome check .",
+		"clean": "bun run --cwd packages/backend clean || npm run clean --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend clean || npm run clean --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli clean || npm run clean --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared clean || npm run clean --workspace @unified-repo-analyzer/shared",
+		"prepare": "bun run build || npm run build",
+		"docker:build": "docker-compose build",
+		"docker:up": "docker-compose up -d",
+		"docker:down": "docker-compose down",
+		"docker:logs": "docker-compose logs -f",
+		"deploy:prod": "bun run build:prod && bun run docker:build && bun run docker:up"
+	},
+	"keywords": [
+		"repository",
+		"analysis",
+		"code",
+		"summary",
+		"llm",
+		"ai",
+		"monorepo",
+		"typescript",
+		"nodejs",
+		"cli",
+		"web"
+	],
+	"author": "Unified Repository Analyzer Contributors",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/your-org/unified-repo-analyzer.git"
+	},
+	"bugs": {
+		"url": "https://github.com/your-org/unified-repo-analyzer/issues"
+	},
+	"homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
+	"engines": {
+		"node": ">=18.0.0",
+		"bun": ">=1.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.6",
+		"typescript": "^5.3.3"
+	}
 }

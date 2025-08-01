@@ -27,7 +27,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
   if (analysis) {
     return (
       <div className={`print-report ${className}`}>
-        <style jsx>{`
+        <style>{`
           @media print {
             .print-report {
               font-family: 'Times New Roman', serif;
