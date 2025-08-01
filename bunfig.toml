@@ -13,7 +13,6 @@ bun = true
 
 [test]
 # Use bun's built-in test runner
-preload = []
 # Coverage settings
 coverage = true
 

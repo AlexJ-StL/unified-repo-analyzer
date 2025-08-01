@@ -2,9 +2,9 @@
  * Global test setup configuration
  */
 
-import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
-import { config } from 'dotenv';
-import { join } from 'path';
+import { configdotenv
+import { joinapapapapapath
+import { afterAll,rafterEach, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All,raftvitestch, beforeAll, beforeEach All, aftvitestch, beforeAll, beforeEach } from 'vitest';
 
 // Load test environment variables
 config({ path: join(__dirname, '../.env.test') });
@@ -37,9 +37,7 @@ afterAll(async () => {
 
 beforeEach(() => {
   // Reset mocks before each test
-  if (typeof jest !== 'undefined') {
-    jest.clearAllMocks();
-  }
+  // Vitest mocks are automatically reset
 });
 
 afterEach(() => {
@@ -47,84 +45,4 @@ afterEach(() => {
 });
 
 // Global test utilities
-declare global {
-  namespace Vi {
-    interface JestAssertion<T = any> {
-      toBeValidRepositoryAnalysis(): T;
-      toBeValidSearchResult(): T;
-      toBeValidExportFormat(format: string): T;
-    }
-  }
-}
-
-// Custom matchers
-expect.extend({
-  toBeValidRepositoryAnalysis(received) {
-    const required = ['id', 'name', 'path', 'language', 'languages', 'fileCount'];
-    const missing = required.filter((prop) => !(prop in received));
-
-    if (missing.length > 0) {
-      return {
-        message: () => `Expected valid repository analysis, missing: ${missing.join(', ')}`,
-        pass: false,
-      };
-    }
-
-    return {
-      message: () => 'Expected invalid repository analysis',
-      pass: true,
-    };
-  },
-
-  toBeValidSearchResult(received) {
-    if (!Array.isArray(received)) {
-      return {
-        message: () => 'Expected search result to be an array',
-        pass: false,
-      };
-    }
-
-    const invalidItems = received.filter(
-      (item) => !item.id || !item.name || !Array.isArray(item.languages)
-    );
-
-    if (invalidItems.length > 0) {
-      return {
-        message: () => `Expected valid search results, found ${invalidItems.length} invalid items`,
-        pass: false,
-      };
-    }
-
-    return {
-      message: () => 'Expected invalid search results',
-      pass: true,
-    };
-  },
-
-  toBeValidExportFormat(received, format) {
-    switch (format) {
-      case 'json':
-        try {
-          JSON.parse(received);
-          return { message: () => 'Expected invalid JSON', pass: true };
-        } catch {
-          return { message: () => 'Expected valid JSON', pass: false };
-        }
-
-      case 'markdown':
-        if (typeof received !== 'string' || !received.includes('#')) {
-          return { message: () => 'Expected valid Markdown', pass: false };
-        }
-        return { message: () => 'Expected invalid Markdown', pass: true };
-
-      case 'html':
-        if (typeof received !== 'string' || !received.includes('<html')) {
-          return { message: () => 'Expected valid HTML', pass: false };
-        }
-        return { message: () => 'Expected invalid HTML', pass: true };
-
-      default:
-        return { message: () => `Unknown format: ${format}`, pass: false };
-    }
-  },
-});
+// Custom assertions can be added here if needed
