@@ -1,14 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "target": "es2022",
-    "module": "esnext",
-    "lib": ["es2022", "dom"], // If shared might use any DOM types
-    "types": ["node", "jest"],
-    "allowJs": true // If any JS files are in shared (e.g., tests)
-  },
-  "include": ["src/**/*.ts", "__tests__/**/*.ts", "jest.config.ts"],
-  "exclude": ["node_modules", "dist", "build"]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"target": "ES2022",
+		"module": "ESNext",
+		"lib": ["ES2022"],
+		"types": ["node"],
+		"allowJs": false
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "dist", "build", "__tests__", "jest.config.ts"]
 }

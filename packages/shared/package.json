@@ -1,28 +1,29 @@
 {
-  "name": "@unified-repo-analyzer/shared",
-  "version": "0.1.0",
-  "description": "Shared types and utilities for the Unified Repository Analyzer",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "rimraf dist && bun build src/index.ts --outdir dist --target node --sourcemap",
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "test": "bun test",
-    "clean": "rimraf dist"
-  },
-  "keywords": [
-    "repository",
-    "analysis",
-    "types"
-  ],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^20.11.30",
-    "rimraf": "^5.0.5"
-  },
-  "dependencies": {
-    "zod": "^4.0.5"
-  }
+	"name": "@unified-repo-analyzer/shared",
+	"version": "0.1.0",
+	"description": "Shared types and utilities for the Unified Repository Analyzer",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "rimraf dist && tsc && bun build src/index.ts --outdir dist --target node --sourcemap",
+		"lint": "biome lint .",
+		"format": "biome format --write .",
+		"test": "bun test",
+		"clean": "rimraf dist"
+	},
+	"keywords": [
+		"repository",
+		"analysis",
+		"types"
+	],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^20.11.30",
+		"rimraf": "^5.0.5",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"zod": "^3.22.4"
+	}
 }
