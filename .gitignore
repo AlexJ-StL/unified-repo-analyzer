@@ -16,11 +16,16 @@
 **/out/
 **/lib/
 **/*.tsbuildinfo
+**/es/
+**/cjs/
+**/umd/
 
 # Testing
 **/coverage/
 **/.nyc_output/
 *.lcov
+**/test-results/
+**/.test-results/
 
 # Environment variables
 .env
@@ -42,6 +47,8 @@ bun-debug.log*
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 .idea/
 *.suo
 *.ntvs*
@@ -50,6 +57,8 @@ bun-debug.log*
 *.sw?
 *.tmp
 *.temp
+.vscode-test/
+.vscode-test-result/
 
 # OS files
 .DS_Store
@@ -68,6 +77,9 @@ Thumbs.db
 *.orig
 *.rej
 *~
+.npm/_logs/
+.eslintcache
+.stylelintcache
 
 # Security
 *.pem
@@ -75,11 +87,14 @@ Thumbs.db
 *.crt
 *.p12
 *.pfx
+*.p8
+*.jks
 
 # Database
 *.sqlite
 *.sqlite3
 *.db
+*.db-journal
 
 # Cache
 **/.cache/
@@ -88,14 +103,23 @@ Thumbs.db
 **/.rts2_cache_cjs/
 **/.rts2_cache_es/
 **/.rts2_cache_umd/
+**/.eslintcache
+**/.stylelintcache
+**/.vite/
+**/.next/
+**/.nuxt/
+**/.svelte-kit/
+**/.svelte/
 
 # Package archives
 *.tgz
 *.tar.gz
+*.zip
 
 # Docker
 .Dockerfile.dev
 docker-compose.override.yml
+.dockerignore
 
 # Kiro Files
 .kiro/
@@ -141,3 +165,98 @@ config/staging.*
 
 # Turborepo
 .turbo
+
+# TypeScript
+*.tsbuildinfo
+**/tsconfig.tsbuildinfo
+
+# Jest
+.jest/
+
+# Storybook
+**/.storybook/
+**/.out
+**/.storybook-out/
+
+# Playwright
+**/test-results/
+**/.playwright/
+**/playwright-report/
+
+# Cypress
+**/cypress/videos/
+**/cypress/screenshots/
+
+# Webpack
+**/.webpack/
+
+# Babel
+**/.babel/
+
+# Rollup
+**/.rollup.cache/
+
+# Vite
+**/.vite/
+
+# Svelte
+**/.svelte/
+**/.svelte-kit/
+
+# Vue
+**/.nuxt/
+**/.vuepress/
+**/dist-ssr/
+
+# Angular
+**/.angular/
+**/node_modules/.cache/
+
+# React
+**/.react-build-cache/
+
+# Next.js
+.next/
+out/
+
+# Nuxt
+.nuxt/
+.output/
+
+# SvelteKit
+.svelte-kit/
+build/
+
+# Astro
+.astro/
+dist/
+
+# Remix
+.remix/
+public/build/
+
+# Vite
+.vite/
+dist/
+
+# Parcel
+.cache/
+.parcel-cache/
+
+# Esbuild
+.esbuild/
+
+# SWC
+.swc/
+
+# Brotli
+.br/
+
+# Zopfli
+.zopfli/
+
+# Brotli compressed files
+*.br
+
+# Zopfli compressed files
+*.zopfli
