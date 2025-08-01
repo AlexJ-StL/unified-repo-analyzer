@@ -25,8 +25,8 @@ This is a monorepo containing the following packages:
 
 ### Prerequisites
 
-- Node.js 18+
-- npm 8+
+- Bun 1.0+ (recommended) or Node.js 18+
+- For Bun installation, visit: https://bun.sh/docs/installation
 
 ### Installation
 
@@ -34,13 +34,13 @@ This is a monorepo containing the following packages:
 2. Install dependencies:
 
 ```bash
-npm install
+bun install
 ```
 
 3. Build all packages:
 
 ```bash
-npm run build
+bun run build
 ```
 
 ### Development
@@ -48,20 +48,20 @@ npm run build
 Start the backend and frontend development servers:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Or start individual packages:
 
 ```bash
 # Backend
-npm run dev:backend
+bun run dev:backend
 
 # Frontend
-npm run dev:frontend
+bun run dev:frontend
 
 # CLI
-npm run dev:cli
+bun run dev:cli
 ```
 
 ### Usage
@@ -74,14 +74,57 @@ Open your browser and navigate to `http://localhost:3001`
 
 ```bash
 # Analyze a repository
-npx repo-analyzer analyze /path/to/repository
+bunx repo-analyzer analyze /path/to/repository
 
 # Batch analyze multiple repositories
-npx repo-analyzer batch /path/to/repositories
+bunx repo-analyzer batch /path/to/repositories
 
 # Search indexed repositories
-npx repo-analyzer search "query"
+bunx repo-analyzer search "query"
 ```
+
+### Development Workflow
+
+This project uses modern tooling for improved developer experience:
+
+#### Code Quality
+- **Linting & Formatting**: Uses [Biome](https://biomejs.dev/) for fast, unified linting and formatting
+- **Type Checking**: Full TypeScript support with native Bun execution
+- **Testing**: Bun's built-in test runner for fast test execution
+
+#### Available Scripts
+```bash
+# Development
+bun run dev                 # Start all development servers
+bun run dev:backend         # Start backend only
+bun run dev:frontend        # Start frontend only
+
+# Building
+bun run build               # Build all packages
+bun run build:prod          # Production build
+
+# Testing
+bun test                    # Run all tests
+bun run test:all            # Run tests for all packages
+
+# Code Quality
+bun run lint                # Lint all files
+bun run format              # Format all files
+bun run check               # Run both linting and formatting
+
+# Deployment
+bun run docker:build        # Build Docker images
+bun run docker:up           # Start with Docker Compose
+bun run deploy:prod         # Full production deployment
+```
+
+#### Configuration Files
+All configuration files are now in TypeScript for better type safety:
+- `bunfig.toml` - Bun runtime configuration
+- `biome.json` - Linting and formatting rules
+- `packages/*/tsconfig.json` - TypeScript configurations
+- `packages/frontend/tailwind.config.ts` - Tailwind CSS config
+- `packages/frontend/postcss.config.ts` - PostCSS config
 
 ## License
 

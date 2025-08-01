@@ -6,7 +6,7 @@ This document provides comprehensive instructions for deploying the Unified Repo
 
 ### Prerequisites
 - Docker and Docker Compose installed
-- Node.js 18+ (for local development)
+- Bun 1.0+ (recommended) or Node.js 18+ (for local development)
 - At least 2GB RAM and 10GB disk space
 
 ### 1. Clone and Configure
@@ -28,6 +28,10 @@ CLAUDE_API_KEY=your_claude_api_key
 
 ### 3. Deploy with Docker
 ```bash
+# Using Bun (recommended)
+bun run deploy:prod
+
+# Or using scripts
 # Linux/macOS
 ./scripts/deploy.sh
 
@@ -45,12 +49,22 @@ curl http://localhost/
 
 The application consists of:
 
-- **Backend API** (Node.js/Express) - Port 3000
+- **Backend API** (Bun/Express) - Port 3000
 - **Frontend Web App** (React/Nginx) - Port 80
 - **Persistent Storage** - Data, logs, backups
 - **Health Monitoring** - Built-in health checks
 - **Metrics Collection** - Performance monitoring
 - **Backup System** - Automated data backup
+
+### Development Toolchain
+
+The project uses modern tooling for improved performance and developer experience:
+
+- **Runtime**: Bun for native TypeScript execution and faster package management
+- **Code Quality**: Biome for unified linting and formatting (replaces ESLint + Prettier)
+- **Testing**: Bun's built-in test runner for faster test execution
+- **Configuration**: All config files migrated to TypeScript for better type safety
+- **Build System**: Bun's native bundler with TypeScript support
 
 ## Deployment Options
 
