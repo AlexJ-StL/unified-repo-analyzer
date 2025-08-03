@@ -4,7 +4,7 @@ import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useToast } from "../../hooks/useToast";
 import {
 	AnalysisOptions,
-	type useAnalysisStore,
+	useAnalysisStore,
 } from "../../store/useAnalysisStore";
 import { useSettingsStore } from "../../store/useSettingsStore";
 import { validateAnalysisOptions } from "../../utils/validators";
@@ -40,8 +40,8 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 				if (!options.mode) {
 					const defaultOptions = {
 						mode: preferences.analysis?.defaultMode || "standard",
-						llmProvider: settings.llmProvider?.defaultProvider || "claude",
-						outputFormats: [settings.general?.defaultExportFormat || "json"],
+						llmProvider: preferences.llmProvider?.defaultProvider || "claude",
+						outputFormats: ["json"],
 					};
 
 					// Validate default options before setting
@@ -91,7 +91,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
 		initializeConfiguration();
 	}, [
-		settings,
+		preferences,
 		options.mode,
 		setOptions,
 		onConfigChange,

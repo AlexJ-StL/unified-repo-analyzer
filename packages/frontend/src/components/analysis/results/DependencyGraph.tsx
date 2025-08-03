@@ -1,7 +1,7 @@
 import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared";
 import * as d3 from "d3";
 import type React from "react";
-import type { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface DependencyGraphProps {
 	analysis: RepositoryAnalysis;
@@ -134,7 +134,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ analysis }) => {
 					.drag<SVGGElement, Node>()
 					.on("start", dragstarted)
 					.on("drag", dragged)
-					.on("end", dragended),
+					.on("end", dragended) as any,
 			);
 
 		// Add circles to nodes

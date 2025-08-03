@@ -10,7 +10,7 @@
 		"dev": "bun --watch src/index.ts || npm run dev:node",
 		"dev:node": "ts-node src/index.ts",
 		"build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
-		"build:tsc": "tsc --project tsconfig.json && node -e \"console.log('tsc build completed')\"",
+		"build:tsc": "tsc --project tsconfig.json",
 		"start": "bun dist/index.js || node dist/index.js",
 		"test": "bun test || npm test --silent || echo \"No npm tests configured\"",
 		"lint": "biome lint .",
