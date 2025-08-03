@@ -1,0 +1,4 @@
+/**
+ * Frontend performance tests
+ */
+export {};
