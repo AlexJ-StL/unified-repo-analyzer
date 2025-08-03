@@ -1,33 +1,41 @@
-# Dependencies
+# Root-level ignores for monorepo
+# --------------------------------
+# Package managers / dependencies
 **/node_modules/
-.pnp
-.pnp.js
+.npm/
 .pnpm-debug.log*
 .yarn/cache/
 .yarn/unplugged/
 .yarn/build-state.yml
 .yarn/install-state.gz
-.npm/
+.pnp
+.pnp.js
 **/.bun/
 
-# Build outputs
+# Build artifacts (deduplicated)
 **/dist/
 **/build/
 **/out/
 **/lib/
-**/*.tsbuildinfo
 **/es/
 **/cjs/
 **/umd/
+*.tsbuildinfo
+**/tsconfig.tsbuildinfo
 
-# Testing
+# Coverage and test artifacts
 **/coverage/
 **/.nyc_output/
 *.lcov
 **/test-results/
 **/.test-results/
+.jest/
+**/.playwright/
+**/playwright-report/
+**/cypress/videos/
+**/cypress/screenshots/
 
-# Environment variables
+# Environment files
 .env
 .env.*
 **/.env
@@ -35,6 +43,7 @@
 
 # Logs
 **/logs/
+.npm/_logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -43,13 +52,15 @@ pnpm-debug.log*
 lerna-debug.log*
 bun-debug.log*
 
-# Editor directories and files
+# IDE / Editor
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 .idea/
+.vscode-test/
+.vscode-test-result/
 *.suo
 *.ntvs*
 *.njsproj
@@ -57,8 +68,6 @@ bun-debug.log*
 *.sw?
 *.tmp
 *.temp
-.vscode-test/
-.vscode-test-result/
 
 # OS files
 .DS_Store
@@ -69,7 +78,7 @@ bun-debug.log*
 ehthumbs.db
 Thumbs.db
 
-# Temporary files
+# Temporary / patches
 *.tmp
 *.temp
 *.bak
@@ -77,11 +86,8 @@ Thumbs.db
 *.orig
 *.rej
 *~
-.npm/_logs/
-.eslintcache
-.stylelintcache
 
-# Security
+# Security keys
 *.pem
 *.key
 *.crt
@@ -90,13 +96,13 @@ Thumbs.db
 *.p8
 *.jks
 
-# Database
+# Databases
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 
-# Cache
+# Caches (build and tooling)
 **/.cache/
 **/.parcel-cache/
 **/.rpt2_cache/
@@ -105,26 +111,81 @@ Thumbs.db
 **/.rts2_cache_umd/
 **/.eslintcache
 **/.stylelintcache
+.eslintcache
+.stylelintcache
 **/.vite/
+.vite/
 **/.next/
 **/.nuxt/
 **/.svelte-kit/
 **/.svelte/
+**/.webpack/
+**/.babel/
+**/.rollup.cache/
+**/.react-build-cache/
+**/node_modules/.cache/
+.esbuild/
+.swc/
+.cache/
+.parcel-cache/
 
 # Package archives
 *.tgz
 *.tar.gz
 *.zip
 
-# Docker
-.Dockerfile.dev
-docker-compose.override.yml
-.dockerignore
+# Platform / tooling
+.vercel
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.turbo
 
-# Kiro Files
-.kiro/
+# Frontend frameworks (project-local outputs)
+.next/
+out/
+.nuxt/
+.output/
+.svelte-kit/
+build/
+.astro/
+dist/
+.remix/
+public/build/
+**/dist-ssr/
+**/.vuepress/
 
-# Development documents
+# Compression outputs
+.br/
+.zopfli/
+*.br
+*.zopfli
+
+# Project-specific (monorepo packages)
+# ------------------------------------
+# Backend package (logs, exports, backups generated at runtime)
+packages/backend/logs/
+packages/backend/exports/
+packages/backend/backups/
+packages/backend/pids/
+packages/backend/src/scripts/*.local.*
+
+# Frontend (framework tools)
+packages/frontend/.vite/
+packages/frontend/.svelte-kit/
+packages/frontend/node_modules/.cache/
+packages/frontend/.react-build-cache/
+
+# CLI package local dev outputs
+packages/cli/coverage/
+packages/cli/.cache/
+
+# Shared package transpiled maps (already covered by dist/, but keep specifics)
+packages/shared/coverage/
+packages/shared/**/.tsbuildinfo
+
+# Repository-level docs and temp content
 docs/development/
 docs/private/
 notes/
@@ -132,131 +193,28 @@ todo.md
 scratch/
 temp/
 
-# API Keys and secrets
+# API keys and secrets
 secrets/
 *.token
 config/local.*
 config/production.*
 config/staging.*
 
-# Runtime data
-**/pids/
-*.pid
-*.seed
-*.pid.lock
+# Kiro Files
+.kiro/
 
-# Optional REPL history
-.node_repl_history
+# Docker / K8s
+# Keep .dockerignore and actual Dockerfiles tracked; ignore overlays and dev files
+.Dockerfile.dev
+docker-compose.override.yml
+# Kubernetes local manifests outputs (keep k8s/ source tracked)
+**/.kube/
+**/*.kubeconfig
 
-# Serverless directories
-.serverless/
+# Playwright explicit duplicates (ensure once at repo root)
+# Already included above, but pin common root dirs if used
+tests/e2e/test-results/
+tests/e2e/playwright-report/
 
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Vercel
-.vercel
-
-# Turborepo
-.turbo
-
-# TypeScript
-*.tsbuildinfo
-**/tsconfig.tsbuildinfo
-
-# Jest
-.jest/
-
-# Storybook
-**/.storybook/
-**/.out
-**/.storybook-out/
-
-# Playwright
-**/test-results/
-**/.playwright/
-**/playwright-report/
-
-# Cypress
-**/cypress/videos/
-**/cypress/screenshots/
-
-# Webpack
-**/.webpack/
-
-# Babel
-**/.babel/
-
-# Rollup
-**/.rollup.cache/
-
-# Vite
-**/.vite/
-
-# Svelte
-**/.svelte/
-**/.svelte-kit/
-
-# Vue
-**/.nuxt/
-**/.vuepress/
-**/dist-ssr/
-
-# Angular
-**/.angular/
-**/node_modules/.cache/
-
-# React
-**/.react-build-cache/
-
-# Next.js
-.next/
-out/
-
-# Nuxt
-.nuxt/
-.output/
-
-# SvelteKit
-.svelte-kit/
-build/
-
-# Astro
-.astro/
-dist/
-
-# Remix
-.remix/
-public/build/
-
-# Vite
-.vite/
-dist/
-
-# Parcel
-.cache/
-.parcel-cache/
-
-# Esbuild
-.esbuild/
-
-# SWC
-.swc/
-
-# Brotli
-.br/
-
-# Zopfli
-.zopfli/
-
-# Brotli compressed files
-*.br
-
-# Zopfli compressed files
-*.zopfli
+# Ignore local tool lock/state files occasionally generated
+**/.DS_Store

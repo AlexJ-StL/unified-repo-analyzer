@@ -1,0 +1,4 @@
+/**
+ * WebSocket integration tests
+ */
+export {};

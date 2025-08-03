@@ -17,7 +17,7 @@
 		"build:frontend": "bun run --cwd packages/frontend build || npm run build --workspace @unified-repo-analyzer/frontend",
 		"build:cli": "bun run --cwd packages/cli build || npm run build --workspace @unified-repo-analyzer/cli",
 		"build:shared": "bun run --cwd packages/shared build || npm run build --workspace @unified-repo-analyzer/shared",
-		"build:prod": "set NODE_ENV=production&& bun run build || (set NODE_ENV=production&& npm run build)",
+		"build:prod": "cross-env NODE_ENV=production bun run build || cross-env NODE_ENV=production npm run build",
 		"test": "bun test || npm test",
 		"test:all": "bun run --cwd packages/backend test || npm run test --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend test || npm run test --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli test || npm run test --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared test || npm run test --workspace @unified-repo-analyzer/shared",
 		"lint": "biome lint .",
@@ -60,6 +60,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.0.6",
+		"cross-env": "^7.0.3",
 		"typescript": "^5.3.3"
 	}
 }
