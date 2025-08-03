@@ -11,7 +11,7 @@ import {
 import type { WorkspaceConfiguration } from "@unified-repo-analyzer/shared";
 import type React from "react";
 import { useEffect, useState } from "react";
-import type { useToast } from "../../hooks/useToast";
+import { useToast } from "../../hooks/useToast";
 import { useSettingsStore } from "../../store/useSettingsStore";
 
 const WorkspaceManager: React.FC = () => {

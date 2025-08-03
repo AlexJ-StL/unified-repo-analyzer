@@ -3,7 +3,7 @@ import {
 	GraphEdge,
 	RelationshipGraph,
 } from "@unified-repo-analyzer/shared/src/types/analysis";
-import type * as d3 from "d3";
+import * as d3 from "d3";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -274,10 +274,10 @@ const RelationshipGraphComponent: React.FC<RelationshipGraphProps> = ({
 		// Update positions on simulation tick
 		simulation.on("tick", () => {
 			link
-				.attr("x1", (d) => (d.source as GraphNode).x || 0)
-				.attr("y1", (d) => (d.source as GraphNode).y || 0)
-				.attr("x2", (d) => (d.target as GraphNode).x || 0)
-				.attr("y2", (d) => (d.target as GraphNode).y || 0);
+				.attr("x1", (d) => (d.source as unknown as GraphNode).x || 0)
+				.attr("y1", (d) => (d.source as unknown as GraphNode).y || 0)
+				.attr("x2", (d) => (d.target as unknown as GraphNode).x || 0)
+				.attr("y2", (d) => (d.target as unknown as GraphNode).y || 0);
 
 			node.attr("transform", (d) => `translate(${d.x || 0},${d.y || 0})`);
 
