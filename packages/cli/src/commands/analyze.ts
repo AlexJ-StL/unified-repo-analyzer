@@ -1,13 +1,13 @@
-import path from 'path';
-import { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
+import path from 'node:path';
+import type { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
 import {
   ApiClient,
+  config,
+  ensureOutputDirectory,
+  handleError,
   ProgressTracker,
   validateRepositoryPath,
   writeResultsToFile,
-  ensureOutputDirectory,
-  handleError,
-  config,
 } from '../utils';
 
 interface AnalyzeCommandOptions {
@@ -93,5 +93,5 @@ function formatBytes(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }

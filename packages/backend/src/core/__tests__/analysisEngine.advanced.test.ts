@@ -2,10 +2,8 @@
  * Integration tests for AnalysisEngine with advanced features
  */
 
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import * as fs from 'fs';
-import * as path from 'path';
 
 // Mock dependencies
 jest.mock('../../utils/fileSystem', () => ({
@@ -26,7 +24,7 @@ jest.mock('../../services/cache.service', () => ({
 
 jest.mock('../../services/deduplication.service', () => ({
   deduplicationService: {
-    deduplicateAnalysis: jest.fn().mockImplementation((path, options, fn) => fn()),
+    deduplicateAnalysis: jest.fn().mockImplementation((_path, _options, fn) => fn()),
   },
 }));
 

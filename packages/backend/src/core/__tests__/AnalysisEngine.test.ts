@@ -2,10 +2,8 @@
  * Tests for Analysis Engine
  */
 
-import path from 'path';
-import fs from 'fs';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 // Mock dependencies
 jest.mock('../codeStructureAnalyzer', () => ({
@@ -87,7 +85,7 @@ jest.mock('../../utils/repositoryDiscovery', () => ({
 jest.mock('../../utils/fileSystem', () => ({
   readFileWithErrorHandling: jest.fn().mockResolvedValue('// Test file content'),
   FileSystemError: class FileSystemError extends Error {
-    constructor(message: string, type: string, path: string) {
+    constructor(message: string, _type: string, _path: string) {
       super(message);
     }
   },

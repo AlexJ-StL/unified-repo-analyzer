@@ -2,28 +2,28 @@
  * Core Analysis Engine for repository processing
  */
 
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import {
+import path from 'node:path';
+import type {
   AnalysisOptions,
-  RepositoryAnalysis,
   BatchAnalysisResult,
   OutputFormat,
+  RepositoryAnalysis,
   SearchQuery,
   SearchResult,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { RepositoryMatch } from './IndexSystem';
-import {
-  discoverRepository,
-  analysisOptionsToDiscoveryOptions,
-} from '../utils/repositoryDiscovery';
-import { readFileWithErrorHandling } from '../utils/fileSystem';
-import { analyzeCodeStructure } from './codeStructureAnalyzer';
-import { countTokens } from './tokenAnalyzer';
-import { AdvancedAnalyzer } from './advancedAnalyzer';
+import { v4 as uuidv4 } from 'uuid';
 import { cacheService } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
+import { readFileWithErrorHandling } from '../utils/fileSystem';
+import {
+  analysisOptionsToDiscoveryOptions,
+  discoverRepository,
+} from '../utils/repositoryDiscovery';
+import { AdvancedAnalyzer } from './advancedAnalyzer';
+import { analyzeCodeStructure } from './codeStructureAnalyzer';
+import type { RepositoryMatch } from './IndexSystem';
+import { countTokens } from './tokenAnalyzer';
 
 /**
  * Core Analysis Engine for repository processing
@@ -177,9 +177,7 @@ export class AnalysisEngine {
         // Update status
         batchResult.status.completed++;
         batchResult.status.inProgress--;
-      } catch (error) {
-        console.error(`Error analyzing repository ${repoPath}:`, error);
-
+      } catch (_error) {
         // Update status
         batchResult.status.failed++;
         batchResult.status.inProgress--;
@@ -215,7 +213,7 @@ export class AnalysisEngine {
   public async analyzeMultipleRepositoriesWithQueue(
     repoPaths: string[],
     options: AnalysisOptions,
-    concurrency: number = 2,
+    concurrency = 2,
     progressCallback?: (progress: any) => void
   ): Promise<BatchAnalysisResult> {
     const timer = metricsService.createTimer('batch.analysis.duration', {
@@ -479,7 +477,7 @@ export class AnalysisEngine {
    */
   private async processFilesForAnalysis(
     analysis: RepositoryAnalysis,
-    options: AnalysisOptions
+    _options: AnalysisOptions
   ): Promise<void> {
     // Initialize counters
     let totalFunctionCount = 0;
@@ -512,10 +510,7 @@ export class AnalysisEngine {
         totalFunctionCount += structureAnalysis.functions.length;
         totalClassCount += structureAnalysis.classes.length;
         totalImportCount += structureAnalysis.importCount;
-      } catch (error) {
-        // Skip files with errors
-        console.error(`Error processing file ${fileInfo.path}:`, error);
-      }
+      } catch (_error) {}
     });
 
     // Wait for all file processing to complete

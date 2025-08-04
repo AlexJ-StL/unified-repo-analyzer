@@ -2,10 +2,10 @@
  * Analysis controller
  */
 
-import { Request, Response } from 'express';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { io } from '../../index';
 
 // Default analysis options
@@ -89,9 +89,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
             format,
             size: Buffer.byteLength(content, 'utf8'),
           };
-        } catch (exportError) {
-          console.error(`Error generating ${format} export:`, exportError);
-        }
+        } catch (_exportError) {}
       }
 
       // Add exports to the response
@@ -101,7 +99,6 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     // Return analysis result
     res.status(200).json(analysis);
   } catch (error) {
-    console.error('Error analyzing repository:', error);
     res.status(500).json({
       error: 'Failed to analyze repository',
       message: error instanceof Error ? error.message : String(error),
@@ -209,9 +206,7 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
             format,
             size: Buffer.byteLength(content, 'utf8'),
           };
-        } catch (exportError) {
-          console.error(`Error generating ${format} export:`, exportError);
-        }
+        } catch (_exportError) {}
       }
 
       // Add exports to the response
@@ -221,7 +216,6 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
     // Return batch analysis result
     res.status(200).json(batchResult);
   } catch (error) {
-    console.error('Error analyzing repositories:', error);
     res.status(500).json({
       error: 'Failed to analyze repositories',
       message: error instanceof Error ? error.message : String(error),

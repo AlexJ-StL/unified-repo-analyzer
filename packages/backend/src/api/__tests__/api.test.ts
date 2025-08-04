@@ -3,11 +3,9 @@
  */
 
 import request from 'supertest';
-import { app } from '../../index';
-import path from 'path';
-import fs from 'fs';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
+import { app } from '../../index';
 
 // Mock the AnalysisEngine and IndexSystem
 jest.mock('../../core/AnalysisEngine');

@@ -2,8 +2,8 @@
  * Tests for the batch processing functionality in AnalysisEngine
  */
 
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 // Mock dependencies
 jest.mock('../../utils/repositoryDiscovery', () => ({
