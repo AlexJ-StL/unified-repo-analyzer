@@ -1,26 +1,42 @@
-import React from 'react';
-import Toast, { ToastData } from './Toast';
+import type React from "react";
+import { useEffect, useRef } from "react";
+import { useToast } from "../../hooks/useToast";
+import Toast from "./Toast";
 
-interface ToastContainerProps {
-  toasts: ToastData[];
-  onRemoveToast: (id: string) => void;
-}
+const ToastContainer: React.FC = () => {
+	const { toasts, removeToast } = useToast();
+	const containerRef = useRef<HTMLDivElement>(null);
 
-const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onRemoveToast }) => {
-  if (toasts.length === 0) return null;
+	useEffect(() => {
+		if (containerRef.current) {
+			containerRef.current.scrollTop = containerRef.current.scrollHeight;
+		}
+	}, []);
 
-  return (
-    <div
-      aria-live="assertive"
-      className="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end z-50"
-    >
-      <div className="w-full flex flex-col items-center space-y-4 sm:items-end">
-        {toasts.map((toast) => (
-          <Toast key={toast.id} toast={toast} onClose={onRemoveToast} />
-        ))}
-      </div>
-    </div>
-  );
+	if (toasts.length === 0) {
+		return null;
+	}
+
+	return (
+		<div
+			ref={containerRef}
+			className="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full"
+			aria-live="polite"
+			aria-atomic="false"
+		>
+			{toasts.map((toast) => (
+				<Toast
+					key={toast.id}
+					id={toast.id}
+					message={toast.message}
+					type={toast.type}
+					duration={toast.duration}
+					action={toast.action}
+					onClose={() => removeToast(toast.id)}
+				/>
+			))}
+		</div>
+	);
 };
 
 export default ToastContainer;
