@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
 import {
+  Cog6ToothIcon,
+  DocumentTextIcon,
   HomeIcon,
   MagnifyingGlassIcon,
   ServerIcon,
-  DocumentTextIcon,
-  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: HomeIcon },

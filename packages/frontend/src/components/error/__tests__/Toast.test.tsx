@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import Toast, { ToastData } from '../Toast';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import Toast, { type ToastData } from '../Toast';
 
 describe('Toast', () => {
   let mockOnClose: ReturnType<typeof vi.fn>;

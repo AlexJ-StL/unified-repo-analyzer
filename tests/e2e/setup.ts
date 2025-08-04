@@ -2,12 +2,12 @@
  * End-to-end test setup and utilities
  */
 
-import { spawn, ChildProcess } from 'child_process';
-import { promisify } from 'util';
-import { readFile, writeFile, mkdir, rm } from 'fs/promises';
-import { join } from 'path';
+import { type ChildProcess, spawn } from 'node:child_process';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
 import axios from 'axios';
-import { tmpdir } from 'os';
 
 const sleep = promisify(setTimeout);
 
@@ -28,7 +28,7 @@ export interface TestRepository {
 /**
  * Start the backend server for testing
  */
-export async function startTestServer(port: number = 3001): Promise<TestServer> {
+export async function startTestServer(port = 3001): Promise<TestServer> {
   const serverProcess = spawn('npm', ['run', 'dev'], {
     cwd: join(__dirname, '../../packages/backend'),
     env: { ...process.env, PORT: port.toString() },
@@ -43,7 +43,7 @@ export async function startTestServer(port: number = 3001): Promise<TestServer> 
     try {
       await axios.get(`${baseUrl}/api/health`);
       break;
-    } catch (error) {
+    } catch (_error) {
       retries--;
       if (retries === 0) {
         serverProcess.kill();
@@ -103,7 +103,7 @@ export async function createTestRepository(
 export async function waitForAnalysis(
   baseUrl: string,
   analysisId: string,
-  timeout: number = 30000
+  timeout = 30000
 ): Promise<any> {
   const startTime = Date.now();
 

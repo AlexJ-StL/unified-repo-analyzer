@@ -1,5 +1,5 @@
-import React from 'react';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface TechnicalBreakdownProps {
@@ -149,7 +149,7 @@ const TechnicalBreakdown: React.FC<TechnicalBreakdownProps> = ({ analysis }) => 
                         <div
                           className="bg-blue-600 h-2.5 rounded-full"
                           style={{ width: `${file.importance * 100}%` }}
-                        ></div>
+                        />
                       </div>
                       <span className="ml-2">{Math.round(file.importance * 100)}%</span>
                     </div>
