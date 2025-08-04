@@ -45,33 +45,19 @@ export function handleError(error: unknown): void {
 /**
  * Print a formatted error message
  */
-function printFormattedError(message: string, type: ErrorType = ErrorType.UNKNOWN): void {
-  const errorPrefix = chalk.red.bold('ERROR');
-  const typeText = type !== ErrorType.UNKNOWN ? chalk.yellow(`[${type}]`) : '';
-
-  console.error(`\n${errorPrefix} ${typeText} ${message}`);
+function printFormattedError(_message: string, type: ErrorType = ErrorType.UNKNOWN): void {
+  const _errorPrefix = chalk.red.bold('ERROR');
+  const _typeText = type !== ErrorType.UNKNOWN ? chalk.yellow(`[${type}]`) : '';
 
   // Add helpful suggestions based on error type
   switch (type) {
     case ErrorType.NETWORK:
-      console.error(
-        chalk.gray('Suggestion: Check your internet connection and API endpoint configuration.')
-      );
       break;
     case ErrorType.FILESYSTEM:
-      console.error(
-        chalk.gray('Suggestion: Verify the file path exists and you have proper permissions.')
-      );
       break;
     case ErrorType.VALIDATION:
-      console.error(
-        chalk.gray('Suggestion: Check your input parameters and configuration values.')
-      );
       break;
     case ErrorType.AUTHENTICATION:
-      console.error(
-        chalk.gray('Suggestion: Verify your API key or credentials are correctly configured.')
-      );
       break;
   }
 }

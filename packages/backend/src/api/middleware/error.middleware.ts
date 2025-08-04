@@ -2,7 +2,7 @@
  * Error handling middleware
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 /**
  * Error response interface
@@ -37,7 +37,7 @@ export class ApiError extends Error {
  * @param res - Express response
  * @param next - Express next function
  */
-export const notFound = (req: Request, res: Response, next: NextFunction): void => {
+export const notFound = (req: Request, _res: Response, next: NextFunction): void => {
   const error = new ApiError(404, `Not Found - ${req.originalUrl}`);
   next(error);
 };
@@ -52,7 +52,7 @@ export const notFound = (req: Request, res: Response, next: NextFunction): void 
  */
 export const errorHandler = (
   err: Error | ApiError,
-  req: Request,
+  _req: Request,
   res: Response,
   _next: NextFunction
 ): void => {
@@ -72,9 +72,6 @@ export const errorHandler = (
   if (err instanceof ApiError && err.errors) {
     error.errors = err.errors;
   }
-
-  // Log error
-  console.error(`[ERROR] ${req.method} ${req.path}:`, error);
 
   // Send error response
   res.status(error.status).json(error);

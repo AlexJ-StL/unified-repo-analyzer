@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import { vi } from 'vitest';
 import ExecutiveSummary from '../results/ExecutiveSummary';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 
 // Mock ReactMarkdown to avoid issues with markdown parsing in tests
 vi.mock('react-markdown', () => ({

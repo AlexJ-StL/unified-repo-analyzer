@@ -1,6 +1,6 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ErrorBoundary from '../ErrorBoundary';
 
 // Mock component that throws an error

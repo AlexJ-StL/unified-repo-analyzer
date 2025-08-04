@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import { describe, expect, it } from 'vitest';
 import {
-  parseError,
-  getRecoverySuggestions,
-  shouldShowRetryButton,
   getErrorTitle,
+  getRecoverySuggestions,
+  parseError,
+  shouldShowRetryButton,
 } from '../errorHandling';
 
 describe('errorHandling utils', () => {

@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import path from 'node:path';
 import dotenv from 'dotenv';
-import path from 'path';
+import { z } from 'zod';
 
 // Load environment-specific .env file
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
@@ -118,7 +118,6 @@ export const validateProductionConfig = (): void => {
   // Validate at least one LLM provider is configured
   const hasLLMProvider = env.CLAUDE_API_KEY || env.GEMINI_API_KEY || env.OPENROUTER_API_KEY;
   if (!hasLLMProvider) {
-    console.warn('Warning: No LLM provider API keys configured. Some features may not work.');
   }
 };
 

@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 
 export interface ErrorInfo {
   message: string;
@@ -177,7 +177,8 @@ const parseAxiosError = (error: AxiosError): ErrorInfo => {
           suggestions: ['Please try again or contact support if the problem persists'],
         };
     }
-  } else if (request) {
+  }
+  if (request) {
     // Network error
     return {
       message: 'Network error',
@@ -190,16 +191,15 @@ const parseAxiosError = (error: AxiosError): ErrorInfo => {
         'Try again in a few moments',
       ],
     };
-  } else {
-    // Request setup error
-    return {
-      message: message || 'Request failed',
-      code: 'REQUEST_ERROR',
-      recoverable: true,
-      userMessage: 'Failed to send request',
-      suggestions: ['Please try again'],
-    };
   }
+  // Request setup error
+  return {
+    message: message || 'Request failed',
+    code: 'REQUEST_ERROR',
+    recoverable: true,
+    userMessage: 'Failed to send request',
+    suggestions: ['Please try again'],
+  };
 };
 
 const parseStandardError = (error: Error): ErrorInfo => {

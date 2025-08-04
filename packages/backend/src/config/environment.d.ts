@@ -1,6 +1,7 @@
 import { z } from 'zod';
-declare const environmentSchema: z.ZodObject<{
-    NODE_ENV: z.ZodDefault<z.ZodEnum<["development", "production", "test"]>>;
+declare const environmentSchema: z.ZodObject<
+  {
+    NODE_ENV: z.ZodDefault<z.ZodEnum<['development', 'production', 'test']>>;
     PORT: z.ZodDefault<z.ZodNumber>;
     CORS_ORIGIN: z.ZodDefault<z.ZodString>;
     JWT_SECRET: z.ZodOptional<z.ZodString>;
@@ -23,7 +24,7 @@ declare const environmentSchema: z.ZodObject<{
     DEFAULT_LLM_PROVIDER: z.ZodDefault<z.ZodString>;
     LLM_TIMEOUT: z.ZodDefault<z.ZodNumber>;
     LLM_MAX_RETRIES: z.ZodDefault<z.ZodNumber>;
-    LOG_LEVEL: z.ZodDefault<z.ZodEnum<["error", "warn", "info", "debug"]>>;
+    LOG_LEVEL: z.ZodDefault<z.ZodEnum<['error', 'warn', 'info', 'debug']>>;
     ENABLE_METRICS: z.ZodDefault<z.ZodBoolean>;
     METRICS_PORT: z.ZodDefault<z.ZodNumber>;
     HEALTH_CHECK_TIMEOUT: z.ZodDefault<z.ZodNumber>;
@@ -32,8 +33,11 @@ declare const environmentSchema: z.ZodObject<{
     BACKUP_INTERVAL: z.ZodDefault<z.ZodNumber>;
     BACKUP_RETENTION_DAYS: z.ZodDefault<z.ZodNumber>;
     BACKUP_DIR: z.ZodDefault<z.ZodString>;
-}, "strip", z.ZodTypeAny, {
-    NODE_ENV: "test" | "development" | "production";
+  },
+  'strip',
+  z.ZodTypeAny,
+  {
+    NODE_ENV: 'test' | 'development' | 'production';
     BACKUP_DIR: string;
     PORT: number;
     CORS_ORIGIN: string;
@@ -51,7 +55,7 @@ declare const environmentSchema: z.ZodObject<{
     DEFAULT_LLM_PROVIDER: string;
     LLM_TIMEOUT: number;
     LLM_MAX_RETRIES: number;
-    LOG_LEVEL: "error" | "warn" | "info" | "debug";
+    LOG_LEVEL: 'error' | 'warn' | 'info' | 'debug';
     ENABLE_METRICS: boolean;
     METRICS_PORT: number;
     HEALTH_CHECK_TIMEOUT: number;
@@ -65,8 +69,9 @@ declare const environmentSchema: z.ZodObject<{
     CLAUDE_API_KEY?: string | undefined;
     GEMINI_API_KEY?: string | undefined;
     OPENROUTER_API_KEY?: string | undefined;
-}, {
-    NODE_ENV?: "test" | "development" | "production" | undefined;
+  },
+  {
+    NODE_ENV?: 'test' | 'development' | 'production' | undefined;
     BACKUP_DIR?: string | undefined;
     PORT?: number | undefined;
     CORS_ORIGIN?: string | undefined;
@@ -90,7 +95,7 @@ declare const environmentSchema: z.ZodObject<{
     DEFAULT_LLM_PROVIDER?: string | undefined;
     LLM_TIMEOUT?: number | undefined;
     LLM_MAX_RETRIES?: number | undefined;
-    LOG_LEVEL?: "error" | "warn" | "info" | "debug" | undefined;
+    LOG_LEVEL?: 'error' | 'warn' | 'info' | 'debug' | undefined;
     ENABLE_METRICS?: boolean | undefined;
     METRICS_PORT?: number | undefined;
     HEALTH_CHECK_TIMEOUT?: number | undefined;
@@ -98,40 +103,41 @@ declare const environmentSchema: z.ZodObject<{
     BACKUP_ENABLED?: boolean | undefined;
     BACKUP_INTERVAL?: number | undefined;
     BACKUP_RETENTION_DAYS?: number | undefined;
-}>;
+  }
+>;
 export declare const env: {
-    NODE_ENV: "test" | "development" | "production";
-    BACKUP_DIR: string;
-    PORT: number;
-    CORS_ORIGIN: string;
-    DATA_DIR: string;
-    CACHE_DIR: string;
-    INDEX_DIR: string;
-    LOG_DIR: string;
-    CACHE_TTL: number;
-    CACHE_MAX_SIZE: number;
-    RATE_LIMIT_WINDOW_MS: number;
-    RATE_LIMIT_MAX_REQUESTS: number;
-    MAX_FILE_SIZE: number;
-    MAX_FILES_PER_REPO: number;
-    MAX_ANALYSIS_TIME: number;
-    DEFAULT_LLM_PROVIDER: string;
-    LLM_TIMEOUT: number;
-    LLM_MAX_RETRIES: number;
-    LOG_LEVEL: "error" | "warn" | "info" | "debug";
-    ENABLE_METRICS: boolean;
-    METRICS_PORT: number;
-    HEALTH_CHECK_TIMEOUT: number;
-    HEALTH_CHECK_INTERVAL: number;
-    BACKUP_ENABLED: boolean;
-    BACKUP_INTERVAL: number;
-    BACKUP_RETENTION_DAYS: number;
-    JWT_SECRET?: string | undefined;
-    SESSION_SECRET?: string | undefined;
-    ENCRYPTION_KEY?: string | undefined;
-    CLAUDE_API_KEY?: string | undefined;
-    GEMINI_API_KEY?: string | undefined;
-    OPENROUTER_API_KEY?: string | undefined;
+  NODE_ENV: 'test' | 'development' | 'production';
+  BACKUP_DIR: string;
+  PORT: number;
+  CORS_ORIGIN: string;
+  DATA_DIR: string;
+  CACHE_DIR: string;
+  INDEX_DIR: string;
+  LOG_DIR: string;
+  CACHE_TTL: number;
+  CACHE_MAX_SIZE: number;
+  RATE_LIMIT_WINDOW_MS: number;
+  RATE_LIMIT_MAX_REQUESTS: number;
+  MAX_FILE_SIZE: number;
+  MAX_FILES_PER_REPO: number;
+  MAX_ANALYSIS_TIME: number;
+  DEFAULT_LLM_PROVIDER: string;
+  LLM_TIMEOUT: number;
+  LLM_MAX_RETRIES: number;
+  LOG_LEVEL: 'error' | 'warn' | 'info' | 'debug';
+  ENABLE_METRICS: boolean;
+  METRICS_PORT: number;
+  HEALTH_CHECK_TIMEOUT: number;
+  HEALTH_CHECK_INTERVAL: number;
+  BACKUP_ENABLED: boolean;
+  BACKUP_INTERVAL: number;
+  BACKUP_RETENTION_DAYS: number;
+  JWT_SECRET?: string | undefined;
+  SESSION_SECRET?: string | undefined;
+  ENCRYPTION_KEY?: string | undefined;
+  CLAUDE_API_KEY?: string | undefined;
+  GEMINI_API_KEY?: string | undefined;
+  OPENROUTER_API_KEY?: string | undefined;
 };
 export type Environment = z.infer<typeof environmentSchema>;
 export declare const isDevelopment: () => boolean;
