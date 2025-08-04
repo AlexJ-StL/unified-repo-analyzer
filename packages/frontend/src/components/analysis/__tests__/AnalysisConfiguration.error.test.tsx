@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import AnalysisConfiguration from '../AnalysisConfiguration';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import type React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ToastProvider } from '../../../hooks/useToast';
+import AnalysisConfiguration from '../AnalysisConfiguration';
 
 // Mock the stores
 const mockUseAnalysisStore = vi.fn();

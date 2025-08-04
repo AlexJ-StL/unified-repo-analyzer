@@ -2,16 +2,16 @@
  * End-to-end tests for repository analysis workflows
  */
 
-import { describe, test, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import axios from 'axios';
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import {
-  startTestServer,
   createTestRepository,
-  waitForAnalysis,
-  TEST_REPOSITORIES,
-  TestServer,
-  TestRepository,
   PerformanceMonitor,
+  startTestServer,
+  TEST_REPOSITORIES,
+  type TestRepository,
+  type TestServer,
+  waitForAnalysis,
 } from './setup';
 
 describe('Repository Analysis E2E Tests', () => {

@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { BrowserRouter } from 'react-router-dom';
+import { beforeEach, describe, expect, it } from 'vitest';
 import App from '../../App';
 import { ToastProvider } from '../../contexts/ToastContext';
 
@@ -41,7 +41,7 @@ describe('Accessibility Tests', () => {
 
       // Check for proper heading structure (h1 -> h2 -> h3, etc.)
       const headings = screen.getAllByRole('heading');
-      const headingLevels = headings.map((heading) => parseInt(heading.tagName.charAt(1)));
+      const headingLevels = headings.map((heading) => Number.parseInt(heading.tagName.charAt(1)));
 
       // Should start with h1
       expect(headingLevels[0]).toBe(1);
@@ -68,7 +68,7 @@ describe('Accessibility Tests', () => {
       textElements.forEach((element) => {
         const computedStyle = window.getComputedStyle(element);
         const color = computedStyle.color;
-        const backgroundColor = computedStyle.backgroundColor;
+        const _backgroundColor = computedStyle.backgroundColor;
 
         // Basic check that colors are defined
         expect(color).toBeTruthy();
@@ -145,7 +145,7 @@ describe('Accessibility Tests', () => {
     });
 
     it('should provide visible focus indicators', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup();
 
       render(
         <TestWrapper>
@@ -273,7 +273,7 @@ describe('Accessibility Tests', () => {
         expect(errorMessage).toBeInTheDocument();
 
         // Error should be associated with input
-        const inputId = pathInput.getAttribute('id');
+        const _inputId = pathInput.getAttribute('id');
         const describedBy = pathInput.getAttribute('aria-describedby');
 
         expect(describedBy).toContain(errorMessage.getAttribute('id'));
@@ -294,8 +294,10 @@ describe('Accessibility Tests', () => {
 
       buttons.forEach((button) => {
         const computedStyle = window.getComputedStyle(button);
-        const minHeight = parseInt(computedStyle.minHeight) || parseInt(computedStyle.height);
-        const minWidth = parseInt(computedStyle.minWidth) || parseInt(computedStyle.width);
+        const minHeight =
+          Number.parseInt(computedStyle.minHeight) || Number.parseInt(computedStyle.height);
+        const minWidth =
+          Number.parseInt(computedStyle.minWidth) || Number.parseInt(computedStyle.width);
 
         // WCAG recommends minimum 44px touch targets
         expect(minHeight).toBeGreaterThanOrEqual(44);

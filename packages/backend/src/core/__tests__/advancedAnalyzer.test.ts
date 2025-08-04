@@ -2,16 +2,8 @@
  * Tests for Advanced Analyzer
  */
 
-import {
-  AdvancedAnalyzer,
-  SecurityVulnerability,
-  FileQualityMetrics,
-  TechnicalDebt,
-} from '../advancedAnalyzer';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import * as fs from 'fs';
-import * as path from 'path';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { AdvancedAnalyzer } from '../advancedAnalyzer';
 
 // Mock file system operations
 jest.mock('../../utils/fileSystem', () => ({

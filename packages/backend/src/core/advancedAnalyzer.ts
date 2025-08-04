@@ -2,14 +2,14 @@
  * Advanced analysis features for code quality, security, and maintainability
  */
 
-import path from 'path';
-import fs from 'fs/promises';
-import {
-  RepositoryAnalysis,
-  ComplexityMetrics,
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import type {
   ArchitecturalPattern,
+  ComplexityMetrics,
+  RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import { readFileWithErrorHandling } from '../utils/fileSystem';
 
 import { countTokens } from './tokenAnalyzer';
@@ -154,9 +154,7 @@ export class AdvancedAnalyzer {
         // Detect technical debt
         const debt = await this.detectTechnicalDebt(fileInfo, content);
         technicalDebt.push(...debt);
-      } catch (error) {
-        console.error(`Error analyzing file ${fileInfo.path}:`, error);
-      }
+      } catch (_error) {}
     }
 
     // Calculate overall quality score
@@ -516,10 +514,10 @@ export class AdvancedAnalyzer {
     // Filter out invalid metrics
     const validMetrics = fileMetrics.filter(
       (m) =>
-        !isNaN(m.maintainabilityIndex) &&
-        !isNaN(m.cyclomaticComplexity) &&
-        isFinite(m.maintainabilityIndex) &&
-        isFinite(m.cyclomaticComplexity)
+        !Number.isNaN(m.maintainabilityIndex) &&
+        !Number.isNaN(m.cyclomaticComplexity) &&
+        Number.isFinite(m.maintainabilityIndex) &&
+        Number.isFinite(m.cyclomaticComplexity)
     );
 
     if (validMetrics.length === 0) return 0;
@@ -610,9 +608,7 @@ export class AdvancedAnalyzer {
 
         const fileVulns = await this.scanFileForVulnerabilities(fileInfo, content);
         vulnerabilities.push(...fileVulns);
-      } catch (error) {
-        console.error(`Error scanning file ${fileInfo.path} for vulnerabilities:`, error);
-      }
+      } catch (_error) {}
     }
 
     // Check package.json for vulnerable dependencies
@@ -640,7 +636,7 @@ export class AdvancedAnalyzer {
     content: string
   ): Promise<SecurityVulnerability[]> {
     const vulnerabilities: SecurityVulnerability[] = [];
-    const lines = content.split('\n');
+    const _lines = content.split('\n');
 
     // Common security patterns to detect
     const securityPatterns = {
@@ -684,7 +680,7 @@ export class AdvancedAnalyzer {
     };
 
     // Scan for each pattern type
-    for (const [category, patterns] of Object.entries(securityPatterns)) {
+    for (const [_category, patterns] of Object.entries(securityPatterns)) {
       for (const { pattern, type } of patterns) {
         let match;
         while ((match = pattern.exec(content)) !== null) {
@@ -762,9 +758,7 @@ export class AdvancedAnalyzer {
           }
         }
       }
-    } catch (error) {
-      console.error('Error scanning dependencies:', error);
-    }
+    } catch (_error) {}
 
     return vulnerabilities;
   }
@@ -1057,9 +1051,7 @@ export class AdvancedAnalyzer {
         if (observerMatches && observerMatches.length > 0) {
           observerCount += observerMatches.length;
         }
-      } catch (error) {
-        console.error(`Error analyzing patterns in ${fileInfo.path}:`, error);
-      }
+      } catch (_error) {}
     }
 
     // Add patterns based on detection counts
@@ -1194,8 +1186,7 @@ export class AdvancedAnalyzer {
           insights: this.generateTrendInsights(trends),
         };
       }
-    } catch (error) {
-      console.error('Error analyzing trends:', error);
+    } catch (_error) {
       // Trends are optional, so we don't fail the entire analysis
     }
   }
@@ -1203,7 +1194,7 @@ export class AdvancedAnalyzer {
   /**
    * Extracts trend data from git history
    */
-  private async extractTrendsFromGitHistory(repoPath: string): Promise<RepositoryTrend[]> {
+  private async extractTrendsFromGitHistory(_repoPath: string): Promise<RepositoryTrend[]> {
     // This is a simplified implementation
     // In practice, you would use git commands to analyze history
     const trends: RepositoryTrend[] = [];

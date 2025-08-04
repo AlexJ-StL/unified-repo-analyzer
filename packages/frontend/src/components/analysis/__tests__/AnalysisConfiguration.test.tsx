@@ -1,8 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import AnalysisConfiguration from '../AnalysisConfiguration';
-import { useAnalysisStore, AnalysisOptions } from '../../../store/useAnalysisStore';
+import { type AnalysisOptions, useAnalysisStore } from '../../../store/useAnalysisStore';
 import { useSettingsStore } from '../../../store/useSettingsStore';
+import AnalysisConfiguration from '../AnalysisConfiguration';
 
 // Mock the Zustand stores
 vi.mock('../../../store/useAnalysisStore');
