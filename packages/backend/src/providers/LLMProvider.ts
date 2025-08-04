@@ -2,10 +2,10 @@
  * Abstract base class for LLM providers
  */
 
-import {
-  ProviderConfig,
+import type {
   LLMResponse,
   ProjectInfo,
+  ProviderConfig,
 } from '@unified-repo-analyzer/shared/src/types/provider';
 
 /**

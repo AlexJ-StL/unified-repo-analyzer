@@ -5,30 +5,30 @@
  * Language information
  */
 export interface LanguageInfo {
-    /**
-     * Language name
-     */
+  /**
+   * Language name
+   */
+  name: string;
+  /**
+   * Associated file extensions
+   */
+  extensions: string[];
+  /**
+   * Associated filenames
+   */
+  filenames?: string[];
+  /**
+   * Associated shebang patterns
+   */
+  shebangs?: string[];
+  /**
+   * Associated frameworks
+   */
+  frameworks?: {
     name: string;
-    /**
-     * Associated file extensions
-     */
-    extensions: string[];
-    /**
-     * Associated filenames
-     */
-    filenames?: string[];
-    /**
-     * Associated shebang patterns
-     */
-    shebangs?: string[];
-    /**
-     * Associated frameworks
-     */
-    frameworks?: {
-        name: string;
-        files: string[];
-        dependencies?: string[];
-    }[];
+    files: string[];
+    dependencies?: string[];
+  }[];
 }
 /**
  * Common programming languages with their extensions and associated files
@@ -63,7 +63,12 @@ export declare function detectLanguage(filePath: string, content?: string): Prom
  * @param packageJsonPath - Optional path to package.json for Node.js projects
  * @returns Promise resolving to list of detected frameworks
  */
-export declare function detectFrameworks(files: string[], packageJsonPath?: string): Promise<{
+export declare function detectFrameworks(
+  files: string[],
+  packageJsonPath?: string
+): Promise<
+  {
     name: string;
     confidence: number;
-}[]>;
+  }[]
+>;

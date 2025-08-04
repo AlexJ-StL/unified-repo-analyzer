@@ -2,16 +2,16 @@
  * Tests for language detection utilities
  */
 
-import { test, expect, describe, beforeEach, afterEach } from 'bun:test';
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-import { promisify } from 'util';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { promisify } from 'node:util';
 import {
+  detectFrameworks,
+  detectLanguage,
   detectLanguageFromPath,
   detectLanguageFromShebang,
-  detectLanguage,
-  detectFrameworks,
   LANGUAGES,
 } from '../../src/utils/languageDetection';
 

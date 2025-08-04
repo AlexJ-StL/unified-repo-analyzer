@@ -2,12 +2,12 @@
  * Tests for LLMProvider base class
  */
 
-import { LLMProvider } from '../LLMProvider';
-import {
-  ProviderConfig,
+import type {
   LLMResponse,
   ProjectInfo,
+  ProviderConfig,
 } from '@unified-repo-analyzer/shared/src/types/provider';
+import { LLMProvider } from '../LLMProvider';
 
 // Concrete implementation for testing abstract class
 class TestProvider extends LLMProvider {

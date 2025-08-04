@@ -2,9 +2,9 @@
  * Language detection utilities for repository analysis
  */
 
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
 
 const readFile = promisify(fs.readFile);
 
@@ -340,7 +340,7 @@ export function detectLanguageFromPath(filePath: string): string {
 
   // First check by filename
   for (const lang of LANGUAGES) {
-    if (lang.filenames && lang.filenames.includes(basename)) {
+    if (lang.filenames?.includes(basename)) {
       return lang.name;
     }
   }
@@ -364,7 +364,7 @@ export function detectLanguageFromPath(filePath: string): string {
 export function detectLanguageFromShebang(content: string): string | null {
   const firstLine = content.split('\n')[0];
 
-  if (firstLine && firstLine.startsWith('#!')) {
+  if (firstLine?.startsWith('#!')) {
     const shebangLine = firstLine.substring(2).trim();
 
     for (const lang of LANGUAGES) {

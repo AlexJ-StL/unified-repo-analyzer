@@ -1,6 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import winston from 'winston';
-import path from 'path';
-import fs from 'fs';
 import { env } from '../config/environment';
 
 // Ensure log directory exists

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { env } from '../config/environment';
 import logger from './logger.service';
 
@@ -51,7 +51,7 @@ class MetricsService {
     repositoriesProcessed: 0,
   };
   private startTime: Date = new Date();
-  private activeConnections: number = 0;
+  private activeConnections = 0;
 
   constructor() {
     if (env.ENABLE_METRICS) {
@@ -132,7 +132,7 @@ class MetricsService {
     this.recordMetric('http_request_duration', responseTime, { method });
   }
 
-  recordAnalysisMetric(success: boolean, duration: number, repositoryCount: number = 1): void {
+  recordAnalysisMetric(success: boolean, duration: number, repositoryCount = 1): void {
     if (!env.ENABLE_METRICS) return;
 
     this.analysisMetrics.totalAnalyses++;
@@ -231,31 +231,31 @@ class MetricsService {
   }
 
   // Express handler for metrics endpoint
-  metricsHandler = (req: Request, res: Response): void => {
+  metricsHandler = (_req: Request, res: Response): void => {
     const metrics = this.getMetrics();
     res.json(metrics);
   };
 
   // Prometheus-style metrics endpoint
-  prometheusHandler = (req: Request, res: Response): void => {
+  prometheusHandler = (_req: Request, res: Response): void => {
     const metrics = this.getMetrics();
     let output = '';
 
     // Convert metrics to Prometheus format
-    output += `# HELP http_requests_total Total number of HTTP requests\n`;
-    output += `# TYPE http_requests_total counter\n`;
+    output += '# HELP http_requests_total Total number of HTTP requests\n';
+    output += '# TYPE http_requests_total counter\n';
     output += `http_requests_total ${metrics.requests.totalRequests}\n\n`;
 
-    output += `# HELP http_request_duration_seconds HTTP request duration in seconds\n`;
-    output += `# TYPE http_request_duration_seconds histogram\n`;
+    output += '# HELP http_request_duration_seconds HTTP request duration in seconds\n';
+    output += '# TYPE http_request_duration_seconds histogram\n';
     output += `http_request_duration_seconds ${metrics.requests.averageResponseTime / 1000}\n\n`;
 
-    output += `# HELP analysis_total Total number of repository analyses\n`;
-    output += `# TYPE analysis_total counter\n`;
+    output += '# HELP analysis_total Total number of repository analyses\n';
+    output += '# TYPE analysis_total counter\n';
     output += `analysis_total ${metrics.analysis.totalAnalyses}\n\n`;
 
-    output += `# HELP memory_usage_bytes Memory usage in bytes\n`;
-    output += `# TYPE memory_usage_bytes gauge\n`;
+    output += '# HELP memory_usage_bytes Memory usage in bytes\n';
+    output += '# TYPE memory_usage_bytes gauge\n';
     output += `memory_usage_bytes ${metrics.system.memoryUsage.heapUsed}\n\n`;
 
     res.set('Content-Type', 'text/plain');

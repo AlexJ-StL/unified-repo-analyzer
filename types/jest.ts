@@ -6,7 +6,7 @@ export interface JestConfig {
   preset?: string;
   testEnvironment?: 'node' | 'jsdom' | string;
   testMatch?: string[];
-  transform?: Record<string, [string, any?] | string>;
+  transform?: Record<string, [string, unknown?] | string>;
   moduleFileExtensions?: string[];
   collectCoverage?: boolean;
   collectCoverageFrom?: string[];

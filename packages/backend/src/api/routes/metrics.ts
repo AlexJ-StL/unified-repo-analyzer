@@ -3,9 +3,9 @@
  */
 
 import { Router } from 'express';
-import { metricsService } from '../../services/metrics.service';
 import { cacheService } from '../../services/cache.service';
 import { deduplicationService } from '../../services/deduplication.service';
+import { metricsService } from '../../services/metrics.service';
 
 const router = Router();
 
@@ -13,7 +13,7 @@ const router = Router();
  * GET /api/metrics
  * Get performance metrics and statistics
  */
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   try {
     const stats = metricsService.getStats();
     const cacheStats = cacheService.getStats();
@@ -26,7 +26,6 @@ router.get('/', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error getting metrics:', error);
     res.status(500).json({
       error: 'Failed to get metrics',
       message: error instanceof Error ? error.message : String(error),
@@ -38,7 +37,7 @@ router.get('/', (req, res) => {
  * GET /api/metrics/export
  * Export all metrics for external monitoring
  */
-router.get('/export', (req, res) => {
+router.get('/export', (_req, res) => {
   try {
     const metrics = metricsService.exportMetrics();
 
@@ -46,7 +45,6 @@ router.get('/export', (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename="metrics-export.json"');
     res.json(metrics);
   } catch (error) {
-    console.error('Error exporting metrics:', error);
     res.status(500).json({
       error: 'Failed to export metrics',
       message: error instanceof Error ? error.message : String(error),
@@ -68,8 +66,8 @@ router.get('/range', (req, res) => {
       });
     }
 
-    const startTime = parseInt(start as string);
-    const endTime = parseInt(end as string);
+    const startTime = Number.parseInt(start as string);
+    const endTime = Number.parseInt(end as string);
     const metricName = metric as string;
 
     const metrics = metricsService.getMetricsInRange(startTime, endTime, metricName);
@@ -88,7 +86,6 @@ router.get('/range', (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error getting metrics range:', error);
     res.status(500).json({
       error: 'Failed to get metrics range',
       message: error instanceof Error ? error.message : String(error),
@@ -100,7 +97,7 @@ router.get('/range', (req, res) => {
  * POST /api/metrics/clear
  * Clear all metrics
  */
-router.post('/clear', (req, res) => {
+router.post('/clear', (_req, res) => {
   try {
     metricsService.clear();
 
@@ -109,7 +106,6 @@ router.post('/clear', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error clearing metrics:', error);
     res.status(500).json({
       error: 'Failed to clear metrics',
       message: error instanceof Error ? error.message : String(error),
@@ -121,7 +117,7 @@ router.post('/clear', (req, res) => {
  * GET /api/metrics/cache
  * Get cache statistics and management
  */
-router.get('/cache', (req, res) => {
+router.get('/cache', (_req, res) => {
   try {
     const stats = cacheService.getStats();
 
@@ -130,7 +126,6 @@ router.get('/cache', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error getting cache stats:', error);
     res.status(500).json({
       error: 'Failed to get cache statistics',
       message: error instanceof Error ? error.message : String(error),
@@ -164,7 +159,6 @@ router.post('/cache/invalidate', (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error invalidating cache:', error);
     res.status(500).json({
       error: 'Failed to invalidate cache',
       message: error instanceof Error ? error.message : String(error),
@@ -176,7 +170,7 @@ router.post('/cache/invalidate', (req, res) => {
  * POST /api/metrics/cache/prune
  * Manually prune expired cache entries
  */
-router.post('/cache/prune', (req, res) => {
+router.post('/cache/prune', (_req, res) => {
   try {
     cacheService.prune();
 
@@ -185,7 +179,6 @@ router.post('/cache/prune', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error pruning cache:', error);
     res.status(500).json({
       error: 'Failed to prune cache',
       message: error instanceof Error ? error.message : String(error),
@@ -197,7 +190,7 @@ router.post('/cache/prune', (req, res) => {
  * GET /api/metrics/deduplication
  * Get request deduplication statistics
  */
-router.get('/deduplication', (req, res) => {
+router.get('/deduplication', (_req, res) => {
   try {
     const stats = deduplicationService.getStats();
 
@@ -206,7 +199,6 @@ router.get('/deduplication', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error getting deduplication stats:', error);
     res.status(500).json({
       error: 'Failed to get deduplication statistics',
       message: error instanceof Error ? error.message : String(error),
@@ -218,7 +210,7 @@ router.get('/deduplication', (req, res) => {
  * POST /api/metrics/deduplication/clear
  * Clear pending deduplication requests
  */
-router.post('/deduplication/clear', (req, res) => {
+router.post('/deduplication/clear', (_req, res) => {
   try {
     deduplicationService.clear();
 
@@ -227,7 +219,6 @@ router.post('/deduplication/clear', (req, res) => {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error clearing deduplication:', error);
     res.status(500).json({
       error: 'Failed to clear deduplication requests',
       message: error instanceof Error ? error.message : String(error),
