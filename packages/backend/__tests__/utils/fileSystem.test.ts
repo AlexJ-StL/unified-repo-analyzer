@@ -2,20 +2,20 @@
  * Tests for file system utilities
  */
 
-import { test, expect, describe, beforeEach, afterEach } from 'bun:test';
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-import { promisify } from 'util';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { promisify } from 'node:util';
 import {
-  traverseDirectory,
-  readFileWithErrorHandling,
-  getCommonIgnorePatterns,
-  readGitignore,
-  getCombinedIgnorePatterns,
   extractDirectoryInfo,
   FileSystemError,
   FileSystemErrorType,
+  getCombinedIgnorePatterns,
+  getCommonIgnorePatterns,
+  readFileWithErrorHandling,
+  readGitignore,
+  traverseDirectory,
 } from '../../src/utils/fileSystem';
 
 const mkdir = promisify(fs.mkdir);

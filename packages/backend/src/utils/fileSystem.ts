@@ -2,11 +2,11 @@
  * File system utilities for repository discovery and traversal
  */
 
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
+import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import ignore from 'ignore';
-import { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 
 // Promisify fs functions
 const readdir = promisify(fs.readdir);
@@ -122,19 +122,19 @@ export async function traverseDirectory(
         FileSystemErrorType.NOT_FOUND,
         normalizedPath
       );
-    } else if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+    }
+    if ((error as NodeJS.ErrnoException).code === 'EACCES') {
       throw new FileSystemError(
         `Permission denied: ${normalizedPath}`,
         FileSystemErrorType.PERMISSION_DENIED,
         normalizedPath
       );
-    } else {
-      throw new FileSystemError(
-        `Error accessing directory: ${normalizedPath}`,
-        FileSystemErrorType.UNKNOWN,
-        normalizedPath
-      );
     }
+    throw new FileSystemError(
+      `Error accessing directory: ${normalizedPath}`,
+      FileSystemErrorType.UNKNOWN,
+      normalizedPath
+    );
   }
 
   // Set up ignore filter if ignore patterns are provided
@@ -152,7 +152,7 @@ export async function traverseDirectory(
   async function traverse(
     currentPath: string,
     currentDepth: number,
-    relativePath: string = ''
+    relativePath = ''
   ): Promise<void> {
     // Check if we've reached the maximum number of files
     if (maxFiles > 0 && result.files.length >= maxFiles) {
@@ -172,7 +172,7 @@ export async function traverseDirectory(
         const entryRelativePath = path.join(relativePath, entry.name);
 
         // Skip if the path matches ignore patterns
-        if (ignoreFilter && ignoreFilter.ignores(entryRelativePath)) {
+        if (ignoreFilter?.ignores(entryRelativePath)) {
           continue;
         }
 
@@ -256,19 +256,19 @@ export async function readFileWithErrorHandling(
         FileSystemErrorType.NOT_FOUND,
         filePath
       );
-    } else if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+    }
+    if ((error as NodeJS.ErrnoException).code === 'EACCES') {
       throw new FileSystemError(
         `Permission denied: ${filePath}`,
         FileSystemErrorType.PERMISSION_DENIED,
         filePath
       );
-    } else {
-      throw new FileSystemError(
-        `Error reading file: ${filePath}`,
-        FileSystemErrorType.READ_ERROR,
-        filePath
-      );
     }
+    throw new FileSystemError(
+      `Error reading file: ${filePath}`,
+      FileSystemErrorType.READ_ERROR,
+      filePath
+    );
   }
 }
 
@@ -374,7 +374,7 @@ export async function readGitignore(repoPath: string): Promise<string[]> {
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#'));
-  } catch (error) {
+  } catch (_error) {
     // If .gitignore doesn't exist, return empty array
     return [];
   }

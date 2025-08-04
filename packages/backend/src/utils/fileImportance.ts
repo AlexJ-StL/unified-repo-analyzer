@@ -2,7 +2,7 @@
  * File importance scoring algorithm for repository analysis
  */
 
-import path from 'path';
+import path from 'node:path';
 import { detectLanguageFromPath } from './languageDetection';
 
 /**

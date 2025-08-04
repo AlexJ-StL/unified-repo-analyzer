@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { RepositoryAnalysis, FileInfo } from '@unified-repo-analyzer/shared';
+import type { FileInfo, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
 
 interface FileTreeViewerProps {
   analysis: RepositoryAnalysis;

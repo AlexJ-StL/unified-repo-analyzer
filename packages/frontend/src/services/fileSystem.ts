@@ -52,8 +52,7 @@ export const fileSystemService = {
     try {
       const response = await api.get('/filesystem/recent-repositories');
       return response.data.repositories;
-    } catch (error) {
-      console.error('Failed to get recent repositories', error);
+    } catch (_error) {
       return [];
     }
   },

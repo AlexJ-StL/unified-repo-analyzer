@@ -2,9 +2,9 @@
  * Tests for GeminiProvider
  */
 
+import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import axios from 'axios';
 import { GeminiProvider } from '../GeminiProvider';
-import { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 
 // Mock axios
 jest.mock('axios');

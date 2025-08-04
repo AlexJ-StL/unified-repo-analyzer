@@ -2,14 +2,14 @@
  * Tests for file importance scoring utilities
  */
 
-import { test, expect, describe } from 'bun:test';
-import path from 'path';
+import { describe, expect, test } from 'bun:test';
+import path from 'node:path';
 import {
   calculateFileImportance,
   calculateImportanceFactors,
-  sortFilesByImportance,
-  IMPORTANT_FILE_PATTERNS,
   IMPORTANT_EXTENSIONS,
+  IMPORTANT_FILE_PATTERNS,
+  sortFilesByImportance,
 } from '../../src/utils/fileImportance';
 
 describe('File Importance Utilities', () => {
