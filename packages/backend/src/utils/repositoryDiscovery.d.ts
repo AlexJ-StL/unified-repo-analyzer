@@ -1,31 +1,34 @@
 /**
  * Repository discovery and analysis utilities
  */
-import { AnalysisOptions, RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import {
+  AnalysisOptions,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared/src/types/analysis';
 /**
  * Repository discovery options
  */
 export interface RepositoryDiscoveryOptions {
-    /**
-     * Maximum number of files to process
-     */
-    maxFiles?: number;
-    /**
-     * Maximum number of lines per file
-     */
-    maxLinesPerFile?: number;
-    /**
-     * Custom ignore patterns
-     */
-    ignorePatterns?: string[];
-    /**
-     * Whether to include file content in the result
-     */
-    includeContent?: boolean;
-    /**
-     * Whether to include file tree in the result
-     */
-    includeTree?: boolean;
+  /**
+   * Maximum number of files to process
+   */
+  maxFiles?: number;
+  /**
+   * Maximum number of lines per file
+   */
+  maxLinesPerFile?: number;
+  /**
+   * Custom ignore patterns
+   */
+  ignorePatterns?: string[];
+  /**
+   * Whether to include file content in the result
+   */
+  includeContent?: boolean;
+  /**
+   * Whether to include file tree in the result
+   */
+  includeTree?: boolean;
 }
 /**
  * Discovers and analyzes a repository
@@ -34,7 +37,10 @@ export interface RepositoryDiscoveryOptions {
  * @param options - Discovery options
  * @returns Promise resolving to repository analysis
  */
-export declare function discoverRepository(repoPath: string, options?: RepositoryDiscoveryOptions): Promise<RepositoryAnalysis>;
+export declare function discoverRepository(
+  repoPath: string,
+  options?: RepositoryDiscoveryOptions
+): Promise<RepositoryAnalysis>;
 /**
  * Generates a simple file tree representation
  *
@@ -49,4 +55,6 @@ export declare function generateFileTree(basePath: string, files: string[]): str
  * @param options - Analysis options
  * @returns Repository discovery options
  */
-export declare function analysisOptionsToDiscoveryOptions(options: AnalysisOptions): RepositoryDiscoveryOptions;
+export declare function analysisOptionsToDiscoveryOptions(
+  options: AnalysisOptions
+): RepositoryDiscoveryOptions;

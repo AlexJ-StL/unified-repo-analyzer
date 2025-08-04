@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import RepositoryComparison from '../RepositoryComparison';
 import { apiService } from '../../../services/api';
+import RepositoryComparison from '../RepositoryComparison';
 
 // Mock the API service
 vi.mock('../../../services/api', () => ({

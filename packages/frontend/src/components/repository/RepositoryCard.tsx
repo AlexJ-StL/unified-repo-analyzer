@@ -1,5 +1,5 @@
-import React from 'react';
-import { Repository } from '../../store/useRepositoryStore';
+import type React from 'react';
+import type { Repository } from '../../store/useRepositoryStore';
 
 interface RepositoryCardProps {
   repository: Repository;
@@ -22,13 +22,14 @@ const RepositoryCard: React.FC<RepositoryCardProps> = ({
   const formatSize = (sizeInBytes: number) => {
     if (sizeInBytes < 1024) {
       return `${sizeInBytes} B`;
-    } else if (sizeInBytes < 1024 * 1024) {
-      return `${(sizeInBytes / 1024).toFixed(1)} KB`;
-    } else if (sizeInBytes < 1024 * 1024 * 1024) {
-      return `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB`;
-    } else {
-      return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
     }
+    if (sizeInBytes < 1024 * 1024) {
+      return `${(sizeInBytes / 1024).toFixed(1)} KB`;
+    }
+    if (sizeInBytes < 1024 * 1024 * 1024) {
+      return `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+    return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   };
 
   return (

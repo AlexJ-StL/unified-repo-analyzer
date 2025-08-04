@@ -2,25 +2,25 @@
  * Repository discovery and analysis utilities
  */
 
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
-import { v4 as uuidv4 } from 'uuid';
-import {
-  traverseDirectory,
-  TraversalOptions,
-  getCombinedIgnorePatterns,
-  extractDirectoryInfo,
-  FileSystemError,
-  FileSystemErrorType,
-} from './fileSystem';
-import { detectLanguage, detectFrameworks } from './languageDetection';
-import { sortFilesByImportance } from './fileImportance';
-import { FileInfo, DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import {
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
+import type {
   AnalysisOptions,
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import { v4 as uuidv4 } from 'uuid';
+import { sortFilesByImportance } from './fileImportance';
+import {
+  extractDirectoryInfo,
+  FileSystemError,
+  FileSystemErrorType,
+  getCombinedIgnorePatterns,
+  type TraversalOptions,
+  traverseDirectory,
+} from './fileSystem';
+import { detectFrameworks, detectLanguage } from './languageDetection';
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
@@ -94,19 +94,19 @@ export async function discoverRepository(
         FileSystemErrorType.NOT_FOUND,
         normalizedPath
       );
-    } else if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+    }
+    if ((error as NodeJS.ErrnoException).code === 'EACCES') {
       throw new FileSystemError(
         `Permission denied: ${normalizedPath}`,
         FileSystemErrorType.PERMISSION_DENIED,
         normalizedPath
       );
-    } else {
-      throw new FileSystemError(
-        `Error accessing repository: ${normalizedPath}`,
-        FileSystemErrorType.UNKNOWN,
-        normalizedPath
-      );
     }
+    throw new FileSystemError(
+      `Error accessing repository: ${normalizedPath}`,
+      FileSystemErrorType.UNKNOWN,
+      normalizedPath
+    );
   }
 
   // Get combined ignore patterns
@@ -129,10 +129,7 @@ export async function discoverRepository(
     try {
       const fileStat = await stat(file);
       fileSizes.set(file, fileStat.size);
-    } catch {
-      // Skip files with errors
-      continue;
-    }
+    } catch {}
   }
 
   // Sort files by importance
@@ -157,7 +154,7 @@ export async function discoverRepository(
           // Truncate content if needed
           if (maxLinesPerFile > 0 && lineCount > maxLinesPerFile) {
             const lines = content.split('\n').slice(0, maxLinesPerFile);
-            content = lines.join('\n') + '\n... (truncated)';
+            content = `${lines.join('\n')}\n... (truncated)`;
           }
         } catch {
           // Skip content reading errors
@@ -327,7 +324,7 @@ export function generateFileTree(basePath: string, files: string[]): string {
   // Generate tree string
   let result = '';
 
-  function printTree(dirPath: string, indent: string = '') {
+  function printTree(dirPath: string, indent = '') {
     const entries = tree.get(dirPath) || [];
 
     for (let i = 0; i < entries.length; i++) {

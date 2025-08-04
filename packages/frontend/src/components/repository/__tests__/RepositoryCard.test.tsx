@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
+import type { Repository } from '../../../store/useRepositoryStore';
 import RepositoryCard from '../RepositoryCard';
-import { Repository } from '../../../store/useRepositoryStore';
 
 describe('RepositoryCard', () => {
   const mockRepository: Repository = {

@@ -1,2 +1,2 @@
-declare const RepositoriesPage: () => import("react").JSX.Element;
+declare const RepositoriesPage: () => import('react').JSX.Element;
 export default RepositoriesPage;

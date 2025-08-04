@@ -2,11 +2,11 @@
  * Repositories controller
  */
 
-import { Request, Response } from 'express';
+import type { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
-import { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 /**
  * Get all indexed repositories
@@ -14,7 +14,7 @@ import { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
  * @param req - Express request
  * @param res - Express response
  */
-export const getAllRepositories = async (req: Request, res: Response): Promise<void> => {
+export const getAllRepositories = async (_req: Request, res: Response): Promise<void> => {
   try {
     // Create index system
     const indexSystem = new IndexSystem();
@@ -25,7 +25,6 @@ export const getAllRepositories = async (req: Request, res: Response): Promise<v
     // Return repositories
     res.status(200).json(index.repositories);
   } catch (error) {
-    console.error('Error getting repositories:', error);
     res.status(500).json({
       error: 'Failed to get repositories',
       message: error instanceof Error ? error.message : String(error),
@@ -58,7 +57,6 @@ export const getRepositoryById = async (req: Request, res: Response): Promise<vo
     // Return repository
     res.status(200).json(repository);
   } catch (error) {
-    console.error('Error getting repository:', error);
     res.status(500).json({
       error: 'Failed to get repository',
       message: error instanceof Error ? error.message : String(error),
@@ -131,7 +129,6 @@ export const searchRepositories = async (req: Request, res: Response): Promise<v
     // Return search results
     res.status(200).json(results);
   } catch (error) {
-    console.error('Error searching repositories:', error);
     res.status(500).json({
       error: 'Failed to search repositories',
       message: error instanceof Error ? error.message : String(error),
@@ -158,7 +155,6 @@ export const getSimilarRepositories = async (req: Request, res: Response): Promi
     // Return similar repositories
     res.status(200).json(similarRepositories);
   } catch (error) {
-    console.error('Error finding similar repositories:', error);
     res.status(500).json({
       error: 'Failed to find similar repositories',
       message: error instanceof Error ? error.message : String(error),
@@ -190,7 +186,6 @@ export const suggestCombinations = async (req: Request, res: Response): Promise<
     // Return combinations
     res.status(200).json(combinations);
   } catch (error) {
-    console.error('Error suggesting combinations:', error);
     res.status(500).json({
       error: 'Failed to suggest combinations',
       message: error instanceof Error ? error.message : String(error),
@@ -226,7 +221,6 @@ export const getRelationshipGraph = async (req: Request, res: Response): Promise
     // Return graph data
     res.status(200).json(graph);
   } catch (error) {
-    console.error('Error generating relationship graph:', error);
     res.status(500).json({
       error: 'Failed to generate relationship graph',
       message: error instanceof Error ? error.message : String(error),
@@ -259,7 +253,6 @@ export const getIntegrationOpportunities = async (req: Request, res: Response): 
     // Return opportunities
     res.status(200).json(opportunities);
   } catch (error) {
-    console.error('Error analyzing integration opportunities:', error);
     res.status(500).json({
       error: 'Failed to analyze integration opportunities',
       message: error instanceof Error ? error.message : String(error),
@@ -295,7 +288,6 @@ export const getRelationshipInsights = async (req: Request, res: Response): Prom
     // Return insights
     res.status(200).json(insights);
   } catch (error) {
-    console.error('Error generating relationship insights:', error);
     res.status(500).json({
       error: 'Failed to generate relationship insights',
       message: error instanceof Error ? error.message : String(error),
