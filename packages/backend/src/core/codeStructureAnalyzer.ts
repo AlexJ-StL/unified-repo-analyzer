@@ -2,7 +2,7 @@
  * Code structure analysis utilities
  */
 
-import { FunctionInfo, ClassInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import type { ClassInfo, FunctionInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 
 /**
  * Result of code structure analysis
@@ -186,7 +186,7 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
   const patterns = getLanguagePatterns(language);
 
   // Split content into lines for line number tracking
-  const lines = content.split('\n');
+  const _lines = content.split('\n');
 
   // Find functions
   const functionMatches = new Set<string>();

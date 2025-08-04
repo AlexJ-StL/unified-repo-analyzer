@@ -1,11 +1,11 @@
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
+import type {
+  AnalysisOptions,
+  BatchAnalysisResult,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared/src/types/analysis';
 import { LRUCache } from 'lru-cache';
 import { logger } from '../utils/logger';
-import {
-  AnalysisOptions,
-  RepositoryAnalysis,
-  BatchAnalysisResult,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
 
 export interface CacheOptions {
   ttl?: number; // Time to live in milliseconds
@@ -33,7 +33,7 @@ export class CacheService<T = any> {
       ttl: this.defaultTTL,
       updateAgeOnGet: options.updateAgeOnGet ?? true,
       updateAgeOnHas: options.updateAgeOnHas ?? false,
-      dispose: (value, key) => {
+      dispose: (_value, key) => {
         logger.debug(`Cache entry disposed: ${key}`);
       },
     });
@@ -186,7 +186,7 @@ export class CacheService<T = any> {
   /**
    * Get cache entries that are about to expire
    */
-  getExpiringEntries(withinMs: number = 60000): Array<{ key: string; expiresIn: number }> {
+  getExpiringEntries(withinMs = 60000): Array<{ key: string; expiresIn: number }> {
     const now = Date.now();
     const expiring: Array<{ key: string; expiresIn: number }> = [];
 

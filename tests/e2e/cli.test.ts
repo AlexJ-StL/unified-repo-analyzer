@@ -2,20 +2,20 @@
  * End-to-end tests for CLI functionality
  */
 
-import { describe, test, expect, beforeAll, afterAll } from 'vitest';
-import { spawn, ChildProcess } from 'child_process';
-import { join } from 'path';
-import { writeFile, mkdir, rm } from 'fs/promises';
-import { tmpdir } from 'os';
+import { spawn } from 'node:child_process';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterAll, describe, expect, test } from 'vitest';
 import {
   createTestRepository,
-  TEST_REPOSITORIES,
-  TestRepository,
   PerformanceMonitor,
+  TEST_REPOSITORIES,
+  type TestRepository,
 } from './setup';
 
 describe('CLI End-to-End Tests', () => {
-  let testRepos: TestRepository[] = [];
+  const testRepos: TestRepository[] = [];
   const perfMonitor = new PerformanceMonitor();
   const cliPath = join(__dirname, '../../packages/cli/dist/index.js');
 

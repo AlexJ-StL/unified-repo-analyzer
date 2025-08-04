@@ -2,9 +2,9 @@
  * Tests for ClaudeProvider
  */
 
+import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import axios from 'axios';
 import { ClaudeProvider } from '../ClaudeProvider';
-import { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 
 // Mock axios
 jest.mock('axios');

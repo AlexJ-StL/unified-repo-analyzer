@@ -6,18 +6,18 @@ import { FunctionInfo, ClassInfo } from '@unified-repo-analyzer/shared/src/types
  * Result of code structure analysis
  */
 export interface CodeStructureAnalysis {
-    /**
-     * Detected functions
-     */
-    functions: FunctionInfo[];
-    /**
-     * Detected classes
-     */
-    classes: ClassInfo[];
-    /**
-     * Number of import statements
-     */
-    importCount: number;
+  /**
+   * Detected functions
+   */
+  functions: FunctionInfo[];
+  /**
+   * Detected classes
+   */
+  classes: ClassInfo[];
+  /**
+   * Number of import statements
+   */
+  importCount: number;
 }
 /**
  * Analyzes code structure to detect functions, classes, and imports
@@ -26,4 +26,7 @@ export interface CodeStructureAnalysis {
  * @param language - Programming language
  * @returns Code structure analysis
  */
-export declare function analyzeCodeStructure(content: string, language: string): CodeStructureAnalysis;
+export declare function analyzeCodeStructure(
+  content: string,
+  language: string
+): CodeStructureAnalysis;

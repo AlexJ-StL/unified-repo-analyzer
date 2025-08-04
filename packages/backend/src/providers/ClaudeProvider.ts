@@ -2,12 +2,12 @@
  * Claude LLM provider implementation
  */
 
-import axios from 'axios';
-import {
-  ProviderConfig,
+import type {
   LLMResponse,
   ProjectInfo,
+  ProviderConfig,
 } from '@unified-repo-analyzer/shared/src/types/provider';
+import axios from 'axios';
 import { LLMProvider } from './LLMProvider';
 
 /**

@@ -1,8 +1,5 @@
-import { test, expect, describe, beforeEach, mock } from 'bun:test';
-import path from 'path';
-import fs from 'fs';
+import { beforeEach, describe, expect, mock, test } from 'bun:test';
 import { program } from '../index';
-import { ApiClient } from '../utils/api-client';
 import { config } from '../utils';
 
 // Mock the API client
@@ -261,7 +258,7 @@ describe('CLI Integration Tests', () => {
 
     test('should create a new profile when --create-profile flag is used', async () => {
       // Mock config.get and config.set
-      const configGetSpy = jest.spyOn(config, 'get').mockImplementation((key) => {
+      const _configGetSpy = jest.spyOn(config, 'get').mockImplementation((key) => {
         if (key === 'profiles') return {};
         if (key === 'apiUrl') return 'http://localhost:3000/api';
         if (key === 'defaultOptions') return { mode: 'standard' };

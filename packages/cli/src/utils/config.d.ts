@@ -1,12 +1,12 @@
-import { type AnalysisOptions, type UserPreferences } from "@unified-repo-analyzer/shared";
-import Conf from "conf";
+import { type AnalysisOptions, type UserPreferences } from '@unified-repo-analyzer/shared';
+import Conf from 'conf';
 interface CLIConfigSchema {
-    apiUrl: string;
-    defaultOptions: Partial<AnalysisOptions>;
-    outputDir: string;
-    userPreferences: UserPreferences;
-    profiles?: Record<string, any>;
-    activeProfile?: string;
+  apiUrl: string;
+  defaultOptions: Partial<AnalysisOptions>;
+  outputDir: string;
+  userPreferences: UserPreferences;
+  profiles?: Record<string, any>;
+  activeProfile?: string;
 }
 declare const config: Conf<CLIConfigSchema>;
 /**
