@@ -1,7 +1,7 @@
-import path from 'path';
-import fs from 'fs';
-import { OutputFormat } from '@unified-repo-analyzer/shared';
-import { ApiClient, ProgressTracker, ensureOutputDirectory, handleError, config } from '../utils';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { OutputFormat } from '@unified-repo-analyzer/shared';
+import { ApiClient, config, ensureOutputDirectory, handleError, ProgressTracker } from '../utils';
 
 interface ExportCommandOptions {
   format: OutputFormat;

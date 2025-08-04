@@ -2,13 +2,13 @@
  * Export controller for handling export requests
  */
 
-import { Request, Response } from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
+import type { OutputFormat } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
-import { OutputFormat } from '@unified-repo-analyzer/shared/src/types/analysis';
 import exportService from '../../services/export.service';
 
 const mkdir = promisify(fs.mkdir);
@@ -59,9 +59,7 @@ const cleanupOldExports = async () => {
         exportMetadata.delete(exportId);
       }
     }
-  } catch (error) {
-    console.error('Error cleaning up old exports:', error);
-  }
+  } catch (_error) {}
 };
 
 // Run cleanup every hour
@@ -135,7 +133,6 @@ export const exportAnalysis = async (req: Request, res: Response): Promise<void>
       size,
     });
   } catch (error) {
-    console.error('Error exporting analysis:', error);
     res.status(500).json({
       error: 'Failed to export analysis',
       message: error instanceof Error ? error.message : String(error),
@@ -211,7 +208,6 @@ export const exportBatchAnalysis = async (req: Request, res: Response): Promise<
       size,
     });
   } catch (error) {
-    console.error('Error exporting batch analysis:', error);
     res.status(500).json({
       error: 'Failed to export batch analysis',
       message: error instanceof Error ? error.message : String(error),
@@ -255,7 +251,6 @@ export const downloadExport = async (req: Request, res: Response): Promise<void>
     const fileStream = fs.createReadStream(exportPath);
     fileStream.pipe(res);
   } catch (error) {
-    console.error('Error downloading export:', error);
     res.status(500).json({
       error: 'Failed to download export',
       message: error instanceof Error ? error.message : String(error),
@@ -318,7 +313,7 @@ function getFormatFromExportId(exportId: string): OutputFormat | undefined {
  * @param req - Express request
  * @param res - Express response
  */
-export const getExportHistory = async (req: Request, res: Response): Promise<void> => {
+export const getExportHistory = async (_req: Request, res: Response): Promise<void> => {
   try {
     const history = Array.from(exportMetadata.values())
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
@@ -326,7 +321,6 @@ export const getExportHistory = async (req: Request, res: Response): Promise<voi
 
     res.status(200).json(history);
   } catch (error) {
-    console.error('Error getting export history:', error);
     res.status(500).json({
       error: 'Failed to get export history',
       message: error instanceof Error ? error.message : String(error),
@@ -357,17 +351,13 @@ export const deleteExport = async (req: Request, res: Response): Promise<void> =
 
     try {
       await unlink(exportPath);
-    } catch {
-      // File might not exist, but we'll still remove from metadata
-      console.warn(`Export file not found: ${exportPath}`);
-    }
+    } catch {}
 
     // Remove from metadata store
     exportMetadata.delete(exportId);
 
     res.status(200).json({ message: 'Export deleted successfully' });
   } catch (error) {
-    console.error('Error deleting export:', error);
     res.status(500).json({
       error: 'Failed to delete export',
       message: error instanceof Error ? error.message : String(error),

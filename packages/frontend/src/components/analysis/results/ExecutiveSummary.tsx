@@ -1,5 +1,5 @@
-import React from 'react';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface ExecutiveSummaryProps {
@@ -18,7 +18,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   };
 
   return (

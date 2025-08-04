@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
+import fs from 'node:fs';
+import type { Request, Response } from 'express';
+import exportService from '../../../services/export.service';
 import {
+  deleteExport,
+  downloadExport,
   exportAnalysis,
   exportBatchAnalysis,
-  downloadExport,
   getExportHistory,
-  deleteExport,
 } from '../export.controller';
-import exportService from '../../../services/export.service';
-import fs from 'fs';
 
 // Mock the export service
 jest.mock('../../../services/export.service', () => ({
@@ -90,7 +90,7 @@ const mockBatchAnalysis = {
 describe('Export Controller', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
-  let mockNext: any;
+  let _mockNext: any;
 
   beforeEach(() => {
     mockRequest = {
@@ -106,7 +106,7 @@ describe('Export Controller', () => {
       setHeader: jest.fn().mockReturnThis(),
     };
 
-    mockNext = jest.fn();
+    _mockNext = jest.fn();
     jest.clearAllMocks();
   });
 

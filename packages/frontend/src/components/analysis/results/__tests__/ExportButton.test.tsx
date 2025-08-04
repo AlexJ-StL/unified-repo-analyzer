@@ -1,9 +1,8 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import ExportButton from '../ExportButton';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiService } from '../../../../services/api';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import ExportButton from '../ExportButton';
 
 // Mock the API service
 vi.mock('../../../../services/api', () => ({

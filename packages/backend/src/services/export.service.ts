@@ -2,13 +2,13 @@
  * Export service for generating repository analysis exports in various formats
  */
 
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
-import {
-  RepositoryAnalysis,
+import fs from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
+import type {
   BatchAnalysisResult,
   OutputFormat,
+  RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 const writeFile = promisify(fs.writeFile);

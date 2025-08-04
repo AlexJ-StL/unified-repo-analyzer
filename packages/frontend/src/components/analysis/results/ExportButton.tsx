@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
 import { ChevronDownIcon, DocumentArrowDownIcon, ShareIcon } from '@heroicons/react/24/outline';
-import {
-  RepositoryAnalysis,
+import type {
   BatchAnalysisResult,
   OutputFormat,
+  RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
 import { apiService, handleApiError } from '../../../services/api';
 
 interface ExportButtonProps {
@@ -72,7 +73,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
         setExportHistory((prev) => [exportInfo, ...prev.slice(0, 9)]); // Keep last 10 exports
       }
     } catch (error) {
-      console.error('Export failed:', error);
       alert(`Export failed: ${handleApiError(error)}`);
     } finally {
       setIsExporting(null);
@@ -95,7 +95,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
       alert(`Download failed: ${handleApiError(error)}`);
     }
   };
@@ -122,7 +121,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
         }
       }
     } catch (error) {
-      console.error('Share failed:', error);
       alert(`Share failed: ${handleApiError(error)}`);
     }
   };
@@ -151,7 +149,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
         >
           {isExporting ? (
             <>
-              <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+              <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full" />
               Exporting {isExporting.toUpperCase()}...
             </>
           ) : (

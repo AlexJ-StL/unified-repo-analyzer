@@ -1,10 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import { ExportService } from '../export.service';
-import {
-  RepositoryAnalysis,
+import type {
   BatchAnalysisResult,
+  RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { ExportService } from '../export.service';
 
 // Mock fs module
 jest.mock('fs');

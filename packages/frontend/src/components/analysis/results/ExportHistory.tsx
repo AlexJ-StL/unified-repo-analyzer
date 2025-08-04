@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import {
-  DocumentArrowDownIcon,
-  TrashIcon,
   ClockIcon,
+  DocumentArrowDownIcon,
   FolderOpenIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
-import { OutputFormat } from '@unified-repo-analyzer/shared';
+import type { OutputFormat } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiService, handleApiError } from '../../../services/api';
 
 interface ExportHistoryItem {
@@ -28,12 +29,8 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
-  // Load export history from localStorage on component mount
-  useEffect(() => {
-    loadExportHistory();
-  }, []);
-
-  const loadExportHistory = () => {
+  // Define before useEffect to avoid \"used before declaration\" and stabilize identity
+  const loadExportHistory = useCallback(() => {
     try {
       const stored = localStorage.getItem('exportHistory');
       if (stored) {
@@ -44,20 +41,23 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
         }));
         setHistory(historyItems);
       }
-    } catch (error) {
-      console.error('Failed to load export history:', error);
+    } catch (_error) {
+      // no-op
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Load export history from localStorage on component mount
+  useEffect(() => {
+    loadExportHistory();
+  }, [loadExportHistory]);
 
   const saveExportHistory = (newHistory: ExportHistoryItem[]) => {
     try {
       localStorage.setItem('exportHistory', JSON.stringify(newHistory));
       setHistory(newHistory);
-    } catch (error) {
-      console.error('Failed to save export history:', error);
-    }
+    } catch (_error) {}
   };
 
   const handleDownload = async (item: ExportHistoryItem) => {
@@ -75,7 +75,6 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
       alert(`Download failed: ${handleApiError(error)}`);
     }
   };
@@ -152,7 +151,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
   if (isLoading) {
     return (
       <div className={`flex items-center justify-center p-8 ${className}`}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
   }
@@ -284,9 +283,7 @@ export const addExportToHistory = (item: Omit<ExportHistoryItem, 'timestamp'>) =
 
     const newHistory = [newItem, ...history.slice(0, 49)];
     localStorage.setItem('exportHistory', JSON.stringify(newHistory));
-  } catch (error) {
-    console.error('Failed to add to export history:', error);
-  }
+  } catch (_error) {}
 };
 
 export default ExportHistory;
