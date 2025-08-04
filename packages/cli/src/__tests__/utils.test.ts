@@ -1,12 +1,11 @@
-import { test, expect, describe, beforeEach, mock } from 'bun:test';
-import fs from 'fs';
-import path from 'path';
+import { beforeEach, describe, expect, mock, test } from 'bun:test';
+import fs from 'node:fs';
+import { CLIError } from '../utils/error-handler';
 import {
-  validateRepositoryPath,
   ensureOutputDirectory,
+  validateRepositoryPath,
   writeResultsToFile,
 } from '../utils/fs-utils';
-import { CLIError, ErrorType } from '../utils/error-handler';
 
 // Mock fs module
 mock.module('fs', () => ({

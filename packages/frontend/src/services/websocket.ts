@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import { io, type Socket } from 'socket.io-client';
 import { useAnalysisStore } from '../store/useAnalysisStore';
 
 class WebSocketService {
@@ -79,7 +79,6 @@ class WebSocketService {
     });
 
     this.socket.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
       this.reconnectAttempts++;
       this.connected = false;
 
@@ -89,7 +88,6 @@ class WebSocketService {
       });
 
       if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-        console.error('Max reconnect attempts reached, giving up');
         this.disconnect();
 
         // Update store with max reconnect attempts reached

@@ -2,35 +2,35 @@
  * Validate if a string is a valid file path
  */
 export const isValidFilePath = (path: string): boolean => {
-	// Basic path validation - this is a simplified version
-	// In a real app, you might want more sophisticated validation
-	if (!path || path.trim() === "") return false;
+  // Basic path validation - this is a simplified version
+  // In a real app, you might want more sophisticated validation
+  if (!path || path.trim() === '') return false;
 
-	// Check for invalid characters in Windows paths
-	const invalidCharsWindows = /[<>:"|?*]/;
-	if (invalidCharsWindows.test(path)) return false;
+  // Check for invalid characters in Windows paths
+  const invalidCharsWindows = /[<>:"|?*]/;
+  if (invalidCharsWindows.test(path)) return false;
 
-	return true;
+  return true;
 };
 
 /**
  * Validate if a string is a valid URL
  */
 export const isValidUrl = (url: string): boolean => {
-	try {
-		new URL(url);
-		return true;
-	} catch {
-		return false;
-	}
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 /**
  * Validate if a value is a positive number
  */
 export const isPositiveNumber = (value: any): boolean => {
-	const num = Number(value);
-	return !isNaN(num) && num > 0;
+  const num = Number(value);
+  return !Number.isNaN(num) && num > 0;
 };
 
 /**
@@ -38,38 +38,35 @@ export const isPositiveNumber = (value: any): boolean => {
  * This is a simple example - actual validation would depend on the API key format
  */
 export const isValidApiKey = (apiKey: string): boolean => {
-	// This is a simple check - adjust based on your actual API key format
-	return Boolean(apiKey && apiKey.length >= 8);
+  // This is a simple check - adjust based on your actual API key format
+  return Boolean(apiKey && apiKey.length >= 8);
 };
 
 /**
  * Validate analysis options
  */
 export const validateAnalysisOptions = (options: any): string[] => {
-	const errors: string[] = [];
+  const errors: string[] = [];
 
-	if (
-		!options.mode ||
-		!["quick", "standard", "comprehensive"].includes(options.mode)
-	) {
-		errors.push("Invalid analysis mode");
-	}
+  if (!options.mode || !['quick', 'standard', 'comprehensive'].includes(options.mode)) {
+    errors.push('Invalid analysis mode');
+  }
 
-	if (!isPositiveNumber(options.maxFiles)) {
-		errors.push("Max files must be a positive number");
-	}
+  if (!isPositiveNumber(options.maxFiles)) {
+    errors.push('Max files must be a positive number');
+  }
 
-	if (!isPositiveNumber(options.maxLinesPerFile)) {
-		errors.push("Max lines per file must be a positive number");
-	}
+  if (!isPositiveNumber(options.maxLinesPerFile)) {
+    errors.push('Max lines per file must be a positive number');
+  }
 
-	if (!options.llmProvider) {
-		errors.push("LLM provider is required");
-	}
+  if (!options.llmProvider) {
+    errors.push('LLM provider is required');
+  }
 
-	if (!options.outputFormats || options.outputFormats.length === 0) {
-		errors.push("At least one output format is required");
-	}
+  if (!options.outputFormats || options.outputFormats.length === 0) {
+    errors.push('At least one output format is required');
+  }
 
-	return errors;
+  return errors;
 };

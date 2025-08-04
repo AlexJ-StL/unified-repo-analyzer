@@ -2,7 +2,7 @@
  * Validation utility functions
  */
 
-import { z, ZodError } from 'zod';
+import { ZodError, type z } from 'zod';
 import * as schemas from './schemas';
 
 /**

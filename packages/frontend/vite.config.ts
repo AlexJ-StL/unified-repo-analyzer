@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 // Normalize env for Bun test runner that shells out to `bun build`
 const NODE_ENV = (process.env.NODE_ENV || 'development').toLowerCase();

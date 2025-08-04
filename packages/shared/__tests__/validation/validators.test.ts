@@ -2,7 +2,7 @@
  * Tests for validation utility functions
  */
 
-import { test, expect, describe } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { z } from 'zod';
 import * as validators from '../../src/validation/validators';
 

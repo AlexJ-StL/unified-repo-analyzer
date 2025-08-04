@@ -2,18 +2,18 @@
  * WebSocket integration tests
  */
 
+import { createServer } from 'node:http';
 import { Server } from 'socket.io';
-import { createServer } from 'http';
 import Client from 'socket.io-client';
 import {
   initializeWebSocketHandlers,
-  sendAnalysisProgress,
   sendAnalysisComplete,
+  sendAnalysisProgress,
 } from '../websocket';
 
 describe('WebSocket Tests', () => {
   let io: Server;
-  let serverSocket: any;
+  let _serverSocket: any;
   let clientSocket: any;
   let httpServer: any;
 
@@ -37,7 +37,7 @@ describe('WebSocket Tests', () => {
       });
 
       io.on('connection', (socket) => {
-        serverSocket = socket;
+        _serverSocket = socket;
       });
 
       clientSocket.on('connect', done);

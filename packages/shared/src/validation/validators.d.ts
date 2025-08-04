@@ -16,10 +16,13 @@ export declare function validate<T extends z.ZodType>(schema: T, data: unknown):
  * @param data Data to validate
  * @returns Object with success flag, validated data, and any errors
  */
-export declare function validateSafe<T extends z.ZodType>(schema: T, data: unknown): {
-    success: boolean;
-    data?: z.infer<T>;
-    errors?: z.ZodError;
+export declare function validateSafe<T extends z.ZodType>(
+  schema: T,
+  data: unknown
+): {
+  success: boolean;
+  data?: z.infer<T>;
+  errors?: z.ZodError;
 };
 /**
  * Validates repository analysis data
@@ -27,86 +30,88 @@ export declare function validateSafe<T extends z.ZodType>(schema: T, data: unkno
  * @returns Validated repository analysis data
  */
 export declare function validateRepositoryAnalysis(data: unknown): {
-    id: string;
-    path: string;
-    name: string;
-    language: string;
-    languages: string[];
-    frameworks: string[];
-    fileCount: number;
-    directoryCount: number;
-    totalSize: number;
-    createdAt: Date;
-    updatedAt: Date;
-    structure: {
-        directories: {
-            path: string;
-            files: number;
-            subdirectories: number;
-            role?: string | undefined;
-        }[];
-        keyFiles: {
-            path: string;
-            language: string;
-            size: number;
-            lineCount: number;
-            importance: number;
-            functions: {
-                name: string;
-                lineNumber: number;
-                parameters: string[];
-                description?: string | undefined;
-            }[];
-            classes: {
-                name: string;
-                lineNumber: number;
-                methods: string[];
-                description?: string | undefined;
-            }[];
-            tokenCount?: number | undefined;
-            description?: string | undefined;
-            useCase?: string | undefined;
-        }[];
-        tree: string;
+  id: string;
+  path: string;
+  name: string;
+  language: string;
+  languages: string[];
+  frameworks: string[];
+  fileCount: number;
+  directoryCount: number;
+  totalSize: number;
+  createdAt: Date;
+  updatedAt: Date;
+  structure: {
+    directories: {
+      path: string;
+      files: number;
+      subdirectories: number;
+      role?: string | undefined;
+    }[];
+    keyFiles: {
+      path: string;
+      language: string;
+      size: number;
+      lineCount: number;
+      importance: number;
+      functions: {
+        name: string;
+        lineNumber: number;
+        parameters: string[];
+        description?: string | undefined;
+      }[];
+      classes: {
+        name: string;
+        lineNumber: number;
+        methods: string[];
+        description?: string | undefined;
+      }[];
+      tokenCount?: number | undefined;
+      description?: string | undefined;
+      useCase?: string | undefined;
+    }[];
+    tree: string;
+  };
+  codeAnalysis: {
+    functionCount: number;
+    classCount: number;
+    importCount: number;
+    complexity: {
+      cyclomaticComplexity: number;
+      maintainabilityIndex: number;
+      technicalDebt: string;
+      codeQuality: 'good' | 'poor' | 'excellent' | 'fair';
     };
-    codeAnalysis: {
-        functionCount: number;
-        classCount: number;
-        importCount: number;
-        complexity: {
-            cyclomaticComplexity: number;
-            maintainabilityIndex: number;
-            technicalDebt: string;
-            codeQuality: "good" | "poor" | "excellent" | "fair";
-        };
-        patterns: {
-            name: string;
-            confidence: number;
-            description: string;
-        }[];
-    };
-    dependencies: {
-        production: any[];
-        development: any[];
-        frameworks: any[];
-    };
-    insights: {
-        executiveSummary: string;
-        technicalBreakdown: string;
-        recommendations: string[];
-        potentialIssues: string[];
-    };
-    metadata: {
-        analysisMode: "standard" | "quick" | "comprehensive";
-        processingTime: number;
-        llmProvider?: string | undefined;
-        tokenUsage?: {
-            prompt: number;
-            completion: number;
-            total: number;
-        } | undefined;
-    };
-    description?: string | undefined;
+    patterns: {
+      name: string;
+      confidence: number;
+      description: string;
+    }[];
+  };
+  dependencies: {
+    production: any[];
+    development: any[];
+    frameworks: any[];
+  };
+  insights: {
+    executiveSummary: string;
+    technicalBreakdown: string;
+    recommendations: string[];
+    potentialIssues: string[];
+  };
+  metadata: {
+    analysisMode: 'standard' | 'quick' | 'comprehensive';
+    processingTime: number;
+    llmProvider?: string | undefined;
+    tokenUsage?:
+      | {
+          prompt: number;
+          completion: number;
+          total: number;
+        }
+      | undefined;
+  };
+  description?: string | undefined;
 };
 /**
  * Validates file info data
@@ -114,26 +119,26 @@ export declare function validateRepositoryAnalysis(data: unknown): {
  * @returns Validated file info data
  */
 export declare function validateFileInfo(data: unknown): {
-    path: string;
-    language: string;
-    size: number;
-    lineCount: number;
-    importance: number;
-    functions: {
-        name: string;
-        lineNumber: number;
-        parameters: string[];
-        description?: string | undefined;
-    }[];
-    classes: {
-        name: string;
-        lineNumber: number;
-        methods: string[];
-        description?: string | undefined;
-    }[];
-    tokenCount?: number | undefined;
+  path: string;
+  language: string;
+  size: number;
+  lineCount: number;
+  importance: number;
+  functions: {
+    name: string;
+    lineNumber: number;
+    parameters: string[];
     description?: string | undefined;
-    useCase?: string | undefined;
+  }[];
+  classes: {
+    name: string;
+    lineNumber: number;
+    methods: string[];
+    description?: string | undefined;
+  }[];
+  tokenCount?: number | undefined;
+  description?: string | undefined;
+  useCase?: string | undefined;
 };
 /**
  * Validates analysis options data
@@ -141,13 +146,13 @@ export declare function validateFileInfo(data: unknown): {
  * @returns Validated analysis options data
  */
 export declare function validateAnalysisOptions(data: unknown): {
-    mode: "standard" | "quick" | "comprehensive";
-    maxFiles: number;
-    maxLinesPerFile: number;
-    includeLLMAnalysis: boolean;
-    llmProvider: string;
-    outputFormats: ("html" | "json" | "markdown")[];
-    includeTree: boolean;
+  mode: 'standard' | 'quick' | 'comprehensive';
+  maxFiles: number;
+  maxLinesPerFile: number;
+  includeLLMAnalysis: boolean;
+  llmProvider: string;
+  outputFormats: ('html' | 'json' | 'markdown')[];
+  includeTree: boolean;
 };
 /**
  * Validates repository index data
@@ -155,32 +160,32 @@ export declare function validateAnalysisOptions(data: unknown): {
  * @returns Validated repository index data
  */
 export declare function validateRepositoryIndex(data: unknown): {
-    repositories: {
-        id: string;
-        name: string;
-        path: string;
-        languages: string[];
-        frameworks: string[];
-        tags: string[];
-        summary: string;
-        lastAnalyzed: Date;
-        size: number;
-        complexity: number;
-    }[];
-    relationships: {
-        sourceId: string;
-        targetId: string;
-        type: "similar" | "complementary" | "dependency" | "fork";
-        strength: number;
-        reason: string;
-    }[];
-    tags: {
-        id: string;
-        name: string;
-        category?: string | undefined;
-        color?: string | undefined;
-    }[];
-    lastUpdated: Date;
+  repositories: {
+    id: string;
+    name: string;
+    path: string;
+    languages: string[];
+    frameworks: string[];
+    tags: string[];
+    summary: string;
+    lastAnalyzed: Date;
+    size: number;
+    complexity: number;
+  }[];
+  relationships: {
+    sourceId: string;
+    targetId: string;
+    type: 'similar' | 'complementary' | 'dependency' | 'fork';
+    strength: number;
+    reason: string;
+  }[];
+  tags: {
+    id: string;
+    name: string;
+    category?: string | undefined;
+    color?: string | undefined;
+  }[];
+  lastUpdated: Date;
 };
 /**
  * Validates search query data
@@ -188,14 +193,16 @@ export declare function validateRepositoryIndex(data: unknown): {
  * @returns Validated search query data
  */
 export declare function validateSearchQuery(data: unknown): {
-    languages?: string[] | undefined;
-    frameworks?: string[] | undefined;
-    keywords?: string[] | undefined;
-    fileTypes?: string[] | undefined;
-    dateRange?: {
+  languages?: string[] | undefined;
+  frameworks?: string[] | undefined;
+  keywords?: string[] | undefined;
+  fileTypes?: string[] | undefined;
+  dateRange?:
+    | {
         start: Date;
         end: Date;
-    } | undefined;
+      }
+    | undefined;
 };
 /**
  * Validates LLM provider config data
@@ -203,8 +210,8 @@ export declare function validateSearchQuery(data: unknown): {
  * @returns Validated LLM provider config data
  */
 export declare function validateProviderConfig(data: unknown): {
-    apiKey?: string | undefined;
-    model?: string | undefined;
-    maxTokens?: number | undefined;
-    temperature?: number | undefined;
+  apiKey?: string | undefined;
+  model?: string | undefined;
+  maxTokens?: number | undefined;
+  temperature?: number | undefined;
 };
