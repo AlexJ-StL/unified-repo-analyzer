@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { Request, Response } from 'express';
 import { env } from '../config/environment';
 import logger from './logger.service';
 
@@ -58,7 +58,8 @@ class HealthService {
           status: 'unhealthy' as const,
           message: `High memory usage: ${heapUsagePercent.toFixed(1)}%`,
         };
-      } else if (heapUsagePercent > 75) {
+      }
+      if (heapUsagePercent > 75) {
         return {
           status: 'degraded' as const,
           message: `Elevated memory usage: ${heapUsagePercent.toFixed(1)}%`,
@@ -192,7 +193,7 @@ class HealthService {
   }
 
   // Express middleware for health check endpoint
-  healthCheckHandler = async (req: Request, res: Response): Promise<void> => {
+  healthCheckHandler = async (_req: Request, res: Response): Promise<void> => {
     const healthStatus = this.getHealthStatus();
 
     // Set appropriate HTTP status code
@@ -203,7 +204,7 @@ class HealthService {
   };
 
   // Readiness check (for Kubernetes)
-  readinessHandler = async (req: Request, res: Response): Promise<void> => {
+  readinessHandler = async (_req: Request, res: Response): Promise<void> => {
     const healthStatus = this.getHealthStatus();
 
     // Ready if not unhealthy
@@ -215,7 +216,7 @@ class HealthService {
   };
 
   // Liveness check (for Kubernetes)
-  livenessHandler = async (req: Request, res: Response): Promise<void> => {
+  livenessHandler = async (_req: Request, res: Response): Promise<void> => {
     // Simple liveness check - if we can respond, we're alive
     res.status(200).json({
       status: 'alive',

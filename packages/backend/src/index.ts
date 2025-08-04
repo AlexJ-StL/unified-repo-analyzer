@@ -1,31 +1,24 @@
-import express from 'express';
+import { createServer } from 'node:http';
 import cors from 'cors';
+import express from 'express';
 import helmet from 'helmet';
-import morgan from 'morgan';
-import { createServer } from 'http';
 import { Server } from 'socket.io';
-
-// Import configuration and environment
-import { env, validateProductionConfig } from './config/environment';
-
-// Import core modules
-import * as core from './core';
-
+// Import error middleware
+import { errorHandler, notFound } from './api/middleware/error.middleware';
 // Import API routes
 import apiRoutes from './api/routes';
-
 // Import WebSocket handlers
 import { initializeWebSocketHandlers } from './api/websocket';
-
-// Import error middleware
-import { notFound, errorHandler } from './api/middleware/error.middleware';
-
+// Import configuration and environment
+import { env, validateProductionConfig } from './config/environment';
+// Import core modules
+import * as core from './core';
+import { backupService } from './services/backup.service';
+import { configurationService } from './services/config.service';
+import { healthService } from './services/health.service';
+import logger, { requestLogger } from './services/logger.service';
 // Import services
 import { metricsService } from './services/metrics.service';
-import { healthService } from './services/health.service';
-import { backupService } from './services/backup.service';
-import logger, { requestLogger } from './services/logger.service';
-import { configurationService } from './services/config.service';
 
 // Validate production configuration
 try {
@@ -84,7 +77,7 @@ app.use(requestLogger);
 app.use(metricsService.requestMiddleware());
 
 // Basic route
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({
     message: 'Unified Repository Analyzer API',
     version: process.env.npm_package_version || '1.0.0',

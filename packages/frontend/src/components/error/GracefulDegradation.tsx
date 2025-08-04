@@ -1,5 +1,6 @@
-import React, { ReactNode, useState, useEffect } from 'react';
 import { ExclamationTriangleIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 interface GracefulDegradationProps {
   children: ReactNode;
@@ -26,10 +27,9 @@ const GracefulDegradation: React.FC<GracefulDegradationProps> = ({
 
   useEffect(() => {
     if (!isEnabled && showWarning && !hasShownWarning) {
-      console.warn(`Feature "${feature}" is disabled or unavailable`);
       setHasShownWarning(true);
     }
-  }, [isEnabled, showWarning, hasShownWarning, feature]);
+  }, [isEnabled, showWarning, hasShownWarning]);
 
   // If feature is enabled and no error, render children
   if (isEnabled && !error) {

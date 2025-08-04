@@ -1,7 +1,7 @@
 interface IndexCommandOptions {
-    rebuild?: boolean;
-    update?: boolean;
-    path?: string;
+  rebuild?: boolean;
+  update?: boolean;
+  path?: string;
 }
 /**
  * Execute the index command
