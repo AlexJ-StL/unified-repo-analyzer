@@ -2,9 +2,9 @@
  * Tests for IndexSystem
  */
 
-import { IndexSystem } from '../IndexSystem';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { v4 as uuidv4 } from 'uuid';
+import { IndexSystem } from '../IndexSystem';
 
 describe('IndexSystem', () => {
   let indexSystem: IndexSystem;
@@ -19,12 +19,11 @@ describe('IndexSystem', () => {
   afterEach(() => {
     // Clean up temporary index file
     try {
-      const fs = await import('fs');
+      const fs = await import('node:fs');
       if (fs.existsSync(tempIndexPath)) {
         fs.unlinkSync(tempIndexPath);
       }
-    } catch (error) {
-      console.error('Failed to clean up test index file:', error);
+    } catch (_error) {
     }
   });
 

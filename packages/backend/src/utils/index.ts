@@ -2,7 +2,7 @@
  * Utility exports
  */
 
+export * from './fileImportance';
 export * from './fileSystem';
 export * from './languageDetection';
-export * from './fileImportance';
 export * from './repositoryDiscovery';

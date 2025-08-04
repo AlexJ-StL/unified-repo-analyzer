@@ -2,9 +2,9 @@
  * Tests for IndexSystem relationship functionality
  */
 
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { IndexSystem } from '../IndexSystem';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 
 describe('IndexSystem Relationship Functionality', () => {
   let indexSystem: IndexSystem;
@@ -188,8 +188,8 @@ describe('IndexSystem Relationship Functionality', () => {
       );
 
       expect(fullStackSuggestion).toBeDefined();
-      expect(fullStackSuggestion!.compatibility).toBeGreaterThan(0.5);
-      expect(fullStackSuggestion!.rationale).toContain('Full-stack');
+      expect(fullStackSuggestion?.compatibility).toBeGreaterThan(0.5);
+      expect(fullStackSuggestion?.rationale).toContain('Full-stack');
     });
 
     it('should suggest microservices combinations', async () => {
@@ -203,7 +203,7 @@ describe('IndexSystem Relationship Functionality', () => {
       );
 
       expect(microservicesSuggestion).toBeDefined();
-      expect(microservicesSuggestion!.rationale).toContain('Microservices');
+      expect(microservicesSuggestion?.rationale).toContain('Microservices');
     });
 
     it('should suggest library ecosystem combinations', async () => {
@@ -217,7 +217,7 @@ describe('IndexSystem Relationship Functionality', () => {
       );
 
       expect(librarySuggestion).toBeDefined();
-      expect(librarySuggestion!.rationale).toContain('Library');
+      expect(librarySuggestion?.rationale).toContain('Library');
     });
 
     it('should sort suggestions by compatibility score', async () => {

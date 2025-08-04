@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../App';
 import { ToastProvider } from '../../contexts/ToastContext';
 import * as apiService from '../../services/apiService';
@@ -228,7 +228,7 @@ describe('End-to-End Integration Tests', () => {
     it('should complete export workflow', async () => {
       const user = userEvent.setup();
 
-      const mockAnalysis = {
+      const _mockAnalysis = {
         id: 'test-analysis-1',
         name: 'test-repo',
         // ... other properties

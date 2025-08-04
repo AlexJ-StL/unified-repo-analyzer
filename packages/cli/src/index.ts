@@ -1,13 +1,13 @@
-import { Command } from 'commander';
 import chalk from 'chalk';
+import { Command } from 'commander';
 import {
   executeAnalyze,
   executeBatch,
-  executeSearch,
   executeExport,
   executeIndex,
+  executeSearch,
 } from './commands';
-import { handleError, config } from './utils';
+import { config, handleError } from './utils';
 
 // Create CLI program
 const program = new Command();
@@ -130,7 +130,6 @@ program
       } else if (options.set) {
         const [key, value] = options.set.split('=');
         if (!key || value === undefined) {
-          console.error(chalk.red('Invalid format. Use --set key=value'));
           return;
         }
 
@@ -152,7 +151,6 @@ program
         const profileName = options.profile;
 
         if (!profiles[profileName]) {
-          console.error(chalk.red(`Profile '${profileName}' does not exist`));
           return;
         }
 
@@ -163,7 +161,6 @@ program
         const profiles = (config.get('profiles') as Record<string, any>) || {};
 
         if (profiles[profileName]) {
-          console.error(chalk.red(`Profile '${profileName}' already exists`));
           return;
         }
 
@@ -218,7 +215,6 @@ program
       } else if (options.show) {
         const profileName = options.show;
         if (!profiles[profileName]) {
-          console.error(chalk.red(`Profile '${profileName}' does not exist`));
           return;
         }
 
@@ -227,7 +223,6 @@ program
       } else if (options.delete) {
         const profileName = options.delete;
         if (!profiles[profileName]) {
-          console.error(chalk.red(`Profile '${profileName}' does not exist`));
           return;
         }
 
@@ -253,7 +248,7 @@ program
   });
 
 // Only parse if this is the main module (not imported for tests)
-if (process.argv[1] && process.argv[1].endsWith('index.js')) {
+if (process.argv[1]?.endsWith('index.js')) {
   program.parse();
 }
 

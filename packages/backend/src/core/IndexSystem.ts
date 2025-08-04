@@ -2,20 +2,20 @@
  * Repository indexing and search system
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
-import {
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import type {
+  CombinationSuggestion,
   RepositoryAnalysis,
   SearchQuery,
   SearchResult,
-  CombinationSuggestion,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
-import {
+import type {
   IndexedRepository,
   RepositoryRelationship,
   Tag,
 } from '@unified-repo-analyzer/shared/src/types/repository';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Repository index data structure
@@ -71,8 +71,7 @@ export class IndexSystem {
         }
 
         this.index = loadedIndex;
-      } catch (error) {
-        console.error('Failed to load index file:', error);
+      } catch (_error) {
         this.initializeEmptyIndex();
       }
     } else {
@@ -176,12 +175,12 @@ export class IndexSystem {
     // Filter by languages if specified
     if (query.languages && query.languages.length > 0) {
       results = results.filter((result) =>
-        query.languages!.some((lang) => result.repository.languages.includes(lang))
+        query.languages?.some((lang) => result.repository.languages.includes(lang))
       );
 
       // Add language matches to results
       results.forEach((result) => {
-        const matchedLanguages = query.languages!.filter((lang) =>
+        const matchedLanguages = query.languages?.filter((lang) =>
           result.repository.languages.includes(lang)
         );
 
@@ -200,12 +199,12 @@ export class IndexSystem {
     // Filter by frameworks if specified
     if (query.frameworks && query.frameworks.length > 0) {
       results = results.filter((result) =>
-        query.frameworks!.some((framework) => result.repository.frameworks.includes(framework))
+        query.frameworks?.some((framework) => result.repository.frameworks.includes(framework))
       );
 
       // Add framework matches to results
       results.forEach((result) => {
-        const matchedFrameworks = query.frameworks!.filter((framework) =>
+        const matchedFrameworks = query.frameworks?.filter((framework) =>
           result.repository.frameworks.includes(framework)
         );
 
@@ -225,7 +224,7 @@ export class IndexSystem {
     if (query.keywords && query.keywords.length > 0) {
       results = results.filter((result) => {
         // Check if any keyword matches repository name or summary
-        return query.keywords!.some(
+        return query.keywords?.some(
           (keyword) =>
             result.repository.name.toLowerCase().includes(keyword.toLowerCase()) ||
             result.repository.summary.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -235,7 +234,7 @@ export class IndexSystem {
 
       // Add keyword matches to results
       results.forEach((result) => {
-        query.keywords!.forEach((keyword) => {
+        query.keywords?.forEach((keyword) => {
           const lowerKeyword = keyword.toLowerCase();
 
           // Check name match
@@ -288,7 +287,7 @@ export class IndexSystem {
       // We can use tags as a proxy for file types
       // Repositories with certain file types often have related tags
       results = results.filter((result) => {
-        return query.fileTypes!.some((fileType) => {
+        return query.fileTypes?.some((fileType) => {
           // Check if any tag contains the file type
           return result.repository.tags.some((tag) =>
             tag.toLowerCase().includes(fileType.toLowerCase().replace('.', ''))
@@ -298,7 +297,7 @@ export class IndexSystem {
 
       // Add file type matches to results
       results.forEach((result) => {
-        const matchedFileTypes = query.fileTypes!.filter((fileType) => {
+        const matchedFileTypes = query.fileTypes?.filter((fileType) => {
           return result.repository.tags.some((tag) =>
             tag.toLowerCase().includes(fileType.toLowerCase().replace('.', ''))
           );
@@ -320,8 +319,8 @@ export class IndexSystem {
     if (query.dateRange) {
       results = results.filter(
         (result) =>
-          result.repository.lastAnalyzed >= query.dateRange!.start &&
-          result.repository.lastAnalyzed <= query.dateRange!.end
+          result.repository.lastAnalyzed >= query.dateRange?.start &&
+          result.repository.lastAnalyzed <= query.dateRange?.end
       );
     }
 
@@ -440,8 +439,8 @@ export class IndexSystem {
   ): Promise<CombinationSuggestion> {
     const repoIds = repositories.map((repo) => repo.id);
     let totalCompatibility = 0;
-    let rationale: string[] = [];
-    let integrationPoints: string[] = [];
+    const rationale: string[] = [];
+    const integrationPoints: string[] = [];
 
     // Analyze pairwise compatibility
     const pairwiseScores: number[] = [];
@@ -702,8 +701,7 @@ export class IndexSystem {
     const complexities = repositories.map((repo) => repo.complexity);
     const avgComplexity = complexities.reduce((sum, c) => sum + c, 0) / complexities.length;
     const complexityVariance =
-      complexities.reduce((sum, c) => sum + Math.pow(c - avgComplexity, 2), 0) /
-      complexities.length;
+      complexities.reduce((sum, c) => sum + (c - avgComplexity) ** 2, 0) / complexities.length;
 
     if (complexityVariance < 100) {
       // Low variance in complexity
@@ -819,7 +817,6 @@ export class IndexSystem {
       // Write index to file
       fs.writeFileSync(this.indexPath, JSON.stringify(this.index, null, 2), 'utf8');
     } catch (error) {
-      console.error('Failed to save index file:', error);
       throw new Error(`Failed to save index to ${this.indexPath}: ${error}`);
     }
   }
@@ -933,7 +930,7 @@ export class IndexSystem {
     repoB: IndexedRepository
   ): { score: number; type: 'similar' | 'complementary' | 'dependency' | 'fork'; reason: string } {
     let score = 0;
-    let reasons: string[] = [];
+    const reasons: string[] = [];
 
     // Advanced language similarity with weighted scoring
     const languageSimilarity = this.calculateLanguageSimilarity(repoA, repoB);
@@ -1305,7 +1302,8 @@ export class IndexSystem {
     // Default to similar for high scores, complementary for moderate scores
     if (score > 0.6) {
       return { type: 'similar' };
-    } else if (score > 0.3) {
+    }
+    if (score > 0.3) {
       return { type: 'complementary' };
     }
 

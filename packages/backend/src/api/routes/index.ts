@@ -4,11 +4,11 @@
 
 import { Router } from 'express';
 import analyzeRoutes from './analyze';
-import repositoriesRoutes from './repositories';
+import backupRoutes from './backup.routes';
+import configRoutes from './config.routes';
 import exportRoutes from './export';
 import metricsRoutes from './metrics';
-import configRoutes from './config.routes';
-import backupRoutes from './backup.routes';
+import repositoriesRoutes from './repositories';
 
 const router = Router();
 

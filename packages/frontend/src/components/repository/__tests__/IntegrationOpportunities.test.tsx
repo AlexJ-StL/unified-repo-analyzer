@@ -2,11 +2,10 @@
  * Tests for IntegrationOpportunities component
  */
 
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import type { IntegrationOpportunity } from '@unified-repo-analyzer/shared/src/types/analysis';
 import IntegrationOpportunities from '../IntegrationOpportunities';
-import { IntegrationOpportunity } from '@unified-repo-analyzer/shared/src/types/analysis';
 
 describe('IntegrationOpportunities', () => {
   const mockOpportunities: IntegrationOpportunity[] = [

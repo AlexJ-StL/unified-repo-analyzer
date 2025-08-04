@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { IntegrationOpportunity } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { IntegrationOpportunity } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type React from 'react';
+import { useState } from 'react';
 
 interface IntegrationOpportunitiesProps {
   opportunities: IntegrationOpportunity[];

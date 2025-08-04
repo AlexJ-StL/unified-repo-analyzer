@@ -1,4 +1,4 @@
-import { ApiClient, ProgressTracker, handleError } from '../utils';
+import { ApiClient, handleError, ProgressTracker } from '../utils';
 
 interface IndexCommandOptions {
   rebuild?: boolean;
@@ -56,5 +56,5 @@ export async function executeIndex(options: IndexCommandOptions): Promise<void> 
 // Export all commands
 export { executeAnalyze } from './analyze';
 export { executeBatch } from './batch';
-export { executeSearch } from './search';
 export { executeExport } from './export';
+export { executeSearch } from './search';
