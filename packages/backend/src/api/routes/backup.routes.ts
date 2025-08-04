@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { backupService } from '../../services/backup.service';
 import logger from '../../services/logger.service';
@@ -15,7 +15,7 @@ const handleValidationErrors = (req: Request, res: Response, next: any) => {
 };
 
 // GET /api/backup/status - Get backup service status
-router.get('/status', async (req: Request, res: Response) => {
+router.get('/status', async (_req: Request, res: Response) => {
   try {
     const status = await backupService.getBackupStatus();
     res.json(status);
@@ -28,7 +28,7 @@ router.get('/status', async (req: Request, res: Response) => {
 });
 
 // GET /api/backup/list - List all backups
-router.get('/list', async (req: Request, res: Response) => {
+router.get('/list', async (_req: Request, res: Response) => {
   try {
     const backups = await backupService.listBackups();
     res.json(backups);
@@ -76,7 +76,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const { filename } = req.params;
-      const path = await import('path');
+      const path = await import('node:path');
       const backupPath = path.join(process.env.BACKUP_DIR || './backups', filename);
 
       await backupService.restoreBackup(backupPath);
@@ -124,7 +124,7 @@ router.delete(
 );
 
 // POST /api/backup/cleanup - Clean up old backups
-router.post('/cleanup', async (req: Request, res: Response) => {
+router.post('/cleanup', async (_req: Request, res: Response) => {
   try {
     await backupService.cleanupOldBackups();
 

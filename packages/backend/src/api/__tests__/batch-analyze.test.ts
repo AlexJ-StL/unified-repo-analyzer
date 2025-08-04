@@ -2,10 +2,10 @@
  * Tests for batch analysis API endpoint
  */
 
-import request from 'supertest';
+import { createServer } from 'node:http';
 import express from 'express';
 import { Server } from 'socket.io';
-import { createServer } from 'http';
+import request from 'supertest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 // Mock dependencies
@@ -14,7 +14,7 @@ jest.mock('../../core/AnalysisEngine');
 describe('Batch Analysis API', () => {
   let app: express.Application;
   let httpServer: any;
-  let io: Server;
+  let _io: Server;
 
   beforeEach(() => {
     // Reset mocks
@@ -28,7 +28,7 @@ describe('Batch Analysis API', () => {
     httpServer = createServer(app);
 
     // Create Socket.IO server
-    io = new Server(httpServer);
+    _io = new Server(httpServer);
 
     // Mock Socket.IO
     (global as any).io = {
@@ -39,7 +39,7 @@ describe('Batch Analysis API', () => {
 
     // Mock AnalysisEngine
     (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as jest.Mock).mockImplementation(
-      async (paths, options, concurrency, progressCallback) => {
+      async (paths, _options, _concurrency, progressCallback) => {
         // Call progress callback a few times to simulate progress
         if (progressCallback) {
           progressCallback({

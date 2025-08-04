@@ -1,13 +1,13 @@
-import path from 'path';
-import fs from 'fs';
-import { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
 import {
   ApiClient,
-  ProgressTracker,
-  writeResultsToFile,
+  config,
   ensureOutputDirectory,
   handleError,
-  config,
+  ProgressTracker,
+  writeResultsToFile,
 } from '../utils';
 
 interface BatchCommandOptions {
@@ -80,7 +80,7 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     const outputDirPath = ensureOutputDirectory(outputDir);
 
     // Write individual results to files
-    progress.succeed(`Analysis complete. Saving results...`);
+    progress.succeed('Analysis complete. Saving results...');
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
@@ -168,9 +168,7 @@ async function discoverRepositories(
           scanDirectory(path.join(dirPath, entry.name), currentDepth + 1);
         }
       }
-    } catch (error) {
-      console.warn(`Warning: Could not scan directory ${dirPath}: ${(error as Error).message}`);
-    }
+    } catch (_error) {}
   };
 
   // Start scanning from the base path

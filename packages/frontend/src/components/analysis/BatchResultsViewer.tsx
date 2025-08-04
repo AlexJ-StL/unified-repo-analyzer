@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { BatchAnalysisResult } from '@unified-repo-analyzer/shared';
 import { PrinterIcon } from '@heroicons/react/24/outline';
+import type { BatchAnalysisResult } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
 import ExportButton from './results/ExportButton';
-import PrintableReport from './results/PrintableReport';
 import ExportHistory from './results/ExportHistory';
+import PrintableReport from './results/PrintableReport';
 
 interface BatchResultsViewerProps {
   batchResult: BatchAnalysisResult;
@@ -208,7 +209,7 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.commonalities.map((item, index) => (
                         <li key={index} className="text-sm text-blue-800 flex items-start">
-                          <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -222,7 +223,7 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.differences.map((item, index) => (
                         <li key={index} className="text-sm text-yellow-800 flex items-start">
-                          <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -238,7 +239,7 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.integrationOpportunities.map((item, index) => (
                         <li key={index} className="text-sm text-green-800 flex items-start">
-                          <span className="inline-block w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          <span className="inline-block w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>
                       ))}

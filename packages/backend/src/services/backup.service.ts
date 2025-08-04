@@ -1,6 +1,5 @@
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
+import fs from 'node:fs';
+import path from 'node:path';
 import { env } from '../config/environment';
 import logger from './logger.service';
 
@@ -124,7 +123,7 @@ class BackupService {
 
   private async calculateChecksum(): Promise<string> {
     // Simple checksum based on directory modification times
-    const crypto = await import('crypto');
+    const crypto = await import('node:crypto');
     const hash = crypto.createHash('sha256');
 
     const addDirectoryToHash = async (dirPath: string) => {

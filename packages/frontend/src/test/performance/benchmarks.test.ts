@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { performance } from 'perf_hooks';
+import { performance } from 'node:perf_hooks';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock performance monitoring
 const performanceMarks: Record<string, number> = {};
@@ -64,7 +63,7 @@ describe('Performance Benchmarks', () => {
       }));
 
       // Simulate rendering with virtualization
-      const visibleItems = largeDataset.slice(0, 50); // Only render visible items
+      const _visibleItems = largeDataset.slice(0, 50); // Only render visible items
 
       const renderTime = performance.now() - startTime;
 
@@ -276,7 +275,7 @@ describe('Performance Benchmarks', () => {
       }
 
       // All interactions should be under 16ms for 60fps
-      Object.entries(interactionTimes).forEach(([interaction, time]) => {
+      Object.entries(interactionTimes).forEach(([_interaction, time]) => {
         expect(time).toBeLessThan(16);
       });
     });
@@ -302,7 +301,7 @@ describe('Performance Benchmarks', () => {
       performance.mark('virtualization-end');
       performance.measure('virtualization', 'virtualization-start', 'virtualization-end');
 
-      const calculationTime = performanceMeasures['virtualization'];
+      const calculationTime = performanceMeasures.virtualization;
 
       // Virtualization calculation should be very fast
       expect(calculationTime).toBeLessThan(1);
@@ -344,7 +343,7 @@ describe('Performance Benchmarks', () => {
       performance.mark('deduplication-end');
       performance.measure('deduplication', 'deduplication-start', 'deduplication-end');
 
-      const totalTime = performanceMeasures['deduplication'];
+      const totalTime = performanceMeasures.deduplication;
 
       // Should complete in roughly the same time as a single request
       expect(totalTime).toBeLessThan(150); // Slightly more than 100ms for overhead
