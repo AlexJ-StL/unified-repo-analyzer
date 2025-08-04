@@ -1,0 +1,4 @@
+/**
+ * Configuration service tests
+ */
+export {};
