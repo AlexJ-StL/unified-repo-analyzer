@@ -2,7 +2,7 @@
  * Tests for the queue system
  */
 
-import { TaskQueue, TaskStatus, QueueEvent } from '../queue';
+import { QueueEvent, TaskQueue, TaskStatus } from '../queue';
 
 describe('TaskQueue', () => {
   // Mock processor function

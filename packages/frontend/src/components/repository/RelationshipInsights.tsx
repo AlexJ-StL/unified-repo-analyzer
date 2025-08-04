@@ -1,5 +1,5 @@
-import React from 'react';
-import { RelationshipInsights } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { RelationshipInsights } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type React from 'react';
 
 interface RelationshipInsightsProps {
   insights: RelationshipInsights;

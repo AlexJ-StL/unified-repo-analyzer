@@ -2,7 +2,7 @@
  * Queue system for managing concurrent tasks
  */
 
-import EventEmitter from 'events';
+import EventEmitter from 'node:events';
 
 /**
  * Task status enum
@@ -68,7 +68,7 @@ export class TaskQueue<T, R> extends EventEmitter {
   private runningTasks: Set<string> = new Set();
   private options: QueueOptions;
   private processor: (data: T) => Promise<R>;
-  private isProcessing: boolean = false;
+  private isProcessing = false;
 
   /**
    * Creates a new task queue
@@ -186,9 +186,7 @@ export class TaskQueue<T, R> extends EventEmitter {
       this.emitProgress();
 
       // Process task
-      this.processTask(task).catch((error) => {
-        console.error(`Error processing task ${taskId}:`, error);
-      });
+      this.processTask(task).catch((_error) => {});
     }
   }
 

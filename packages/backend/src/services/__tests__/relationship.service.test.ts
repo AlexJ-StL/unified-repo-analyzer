@@ -2,10 +2,9 @@
  * Tests for RelationshipService
  */
 
-import { RelationshipService } from '../relationship.service';
+import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { IndexSystem } from '../../core/IndexSystem';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
+import { RelationshipService } from '../relationship.service';
 
 // Mock IndexSystem
 jest.mock('../../core/IndexSystem');
@@ -136,9 +135,9 @@ describe('RelationshipService', () => {
 
       const fullStackOpportunity = opportunities.find((opp) => opp.type === 'full-stack');
       expect(fullStackOpportunity).toBeDefined();
-      expect(fullStackOpportunity!.repositories).toEqual(['frontend', 'backend']);
-      expect(fullStackOpportunity!.title).toContain('Full-Stack');
-      expect(fullStackOpportunity!.benefits).toContain('Unified development workflow');
+      expect(fullStackOpportunity?.repositories).toEqual(['frontend', 'backend']);
+      expect(fullStackOpportunity?.title).toContain('Full-Stack');
+      expect(fullStackOpportunity?.benefits).toContain('Unified development workflow');
     });
 
     it('should identify microservices opportunities', async () => {
@@ -167,8 +166,8 @@ describe('RelationshipService', () => {
 
       const microservicesOpportunity = opportunities.find((opp) => opp.type === 'microservices');
       expect(microservicesOpportunity).toBeDefined();
-      expect(microservicesOpportunity!.title).toContain('Microservices');
-      expect(microservicesOpportunity!.benefits).toContain(
+      expect(microservicesOpportunity?.title).toContain('Microservices');
+      expect(microservicesOpportunity?.benefits).toContain(
         'Scalable and maintainable architecture'
       );
     });
@@ -198,8 +197,8 @@ describe('RelationshipService', () => {
 
       const libraryOpportunity = opportunities.find((opp) => opp.type === 'library-ecosystem');
       expect(libraryOpportunity).toBeDefined();
-      expect(libraryOpportunity!.title).toContain('Library Ecosystem');
-      expect(libraryOpportunity!.benefits).toContain('Code reusability and consistency');
+      expect(libraryOpportunity?.title).toContain('Library Ecosystem');
+      expect(libraryOpportunity?.benefits).toContain('Code reusability and consistency');
     });
 
     it('should identify mobile-backend opportunities', async () => {
@@ -222,8 +221,8 @@ describe('RelationshipService', () => {
 
       const mobileOpportunity = opportunities.find((opp) => opp.type === 'mobile-backend');
       expect(mobileOpportunity).toBeDefined();
-      expect(mobileOpportunity!.title).toContain('Mobile Application');
-      expect(mobileOpportunity!.benefits).toContain('Native mobile experience');
+      expect(mobileOpportunity?.title).toContain('Mobile Application');
+      expect(mobileOpportunity?.benefits).toContain('Native mobile experience');
     });
 
     it('should sort opportunities by priority', async () => {
@@ -339,11 +338,11 @@ describe('RelationshipService', () => {
         (p) => p.pattern === 'SPA (Single Page Application)'
       );
       expect(spaPattern).toBeDefined();
-      expect(spaPattern!.count).toBe(2);
+      expect(spaPattern?.count).toBe(2);
 
       const restPattern = insights.architecturalPatterns.find((p) => p.pattern === 'REST API');
       expect(restPattern).toBeDefined();
-      expect(restPattern!.count).toBe(1);
+      expect(restPattern?.count).toBe(1);
     });
   });
 });

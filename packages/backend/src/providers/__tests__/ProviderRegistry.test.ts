@@ -2,12 +2,12 @@
  * Tests for ProviderRegistry
  */
 
-import { ProviderRegistry } from '../ProviderRegistry';
-import { LLMProvider } from '../LLMProvider';
+import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
 import { ClaudeProvider } from '../ClaudeProvider';
 import { GeminiProvider } from '../GeminiProvider';
+import { LLMProvider } from '../LLMProvider';
 import { MockProvider } from '../MockProvider';
-import { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
+import { ProviderRegistry } from '../ProviderRegistry';
 
 describe('ProviderRegistry', () => {
   beforeEach(() => {

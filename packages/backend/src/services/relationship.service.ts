@@ -3,11 +3,11 @@
  * Provides advanced relationship analysis and visualization data
  */
 
-import { IndexSystem } from '../core/IndexSystem';
-import {
+import type {
   IndexedRepository,
   RepositoryRelationship,
 } from '@unified-repo-analyzer/shared/src/types/repository';
+import { IndexSystem } from '../core/IndexSystem';
 
 export interface RelationshipGraph {
   nodes: GraphNode[];
@@ -297,7 +297,7 @@ export class RelationshipService {
         if (!languageGroups.has(lang)) {
           languageGroups.set(lang, []);
         }
-        languageGroups.get(lang)!.push(repo);
+        languageGroups.get(lang)?.push(repo);
       });
     });
 
@@ -324,7 +324,7 @@ export class RelationshipService {
         if (!frameworkGroups.has(fw)) {
           frameworkGroups.set(fw, []);
         }
-        frameworkGroups.get(fw)!.push(repo);
+        frameworkGroups.get(fw)?.push(repo);
       });
     });
 
@@ -524,7 +524,7 @@ export class RelationshipService {
             repositories: combination.map((r) => r.id),
             type: 'microservices',
             title: `Microservices Architecture: ${combination.map((r) => r.name).join(' + ')}`,
-            description: `Integrate multiple services into a cohesive microservices architecture.`,
+            description: 'Integrate multiple services into a cohesive microservices architecture.',
             benefits: [
               'Scalable and maintainable architecture',
               'Independent deployment and scaling',
@@ -697,8 +697,9 @@ export class RelationshipService {
         id: `toolchain-${toolRepos.map((t) => t.id).join('-')}-${projectRepos.map((p) => p.id).join('-')}`,
         repositories: [...toolRepos.map((t) => t.id), ...projectRepos.map((p) => p.id)],
         type: 'tool-chain',
-        title: `Development Tool Chain Integration`,
-        description: `Integrate development tools with project repositories for streamlined workflow.`,
+        title: 'Development Tool Chain Integration',
+        description:
+          'Integrate development tools with project repositories for streamlined workflow.',
         benefits: [
           'Automated development workflow',
           'Consistent code quality and standards',

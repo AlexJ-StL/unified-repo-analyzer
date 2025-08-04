@@ -2,15 +2,10 @@
  * Tests for RelationshipGraph component
  */
 
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import type { RelationshipGraph } from '@unified-repo-analyzer/shared/src/types/analysis';
 import RelationshipGraphComponent from '../RelationshipGraph';
-import {
-  RelationshipGraph,
-  GraphNode,
-  GraphEdge,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
 
 // Mock D3 to avoid DOM manipulation issues in tests
 jest.mock('d3', () => ({

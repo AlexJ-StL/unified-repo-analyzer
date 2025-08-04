@@ -2,10 +2,10 @@
  * Registry for managing LLM providers
  */
 
-import { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
-import { LLMProvider } from './LLMProvider';
+import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
 import { ClaudeProvider } from './ClaudeProvider';
 import { GeminiProvider } from './GeminiProvider';
+import type { LLMProvider } from './LLMProvider';
 import { MockProvider } from './MockProvider';
 
 /**
