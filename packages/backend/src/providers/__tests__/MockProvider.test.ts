@@ -2,8 +2,8 @@
  * Tests for MockProvider
  */
 
+import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import { MockProvider } from '../MockProvider';
-import { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 
 describe('MockProvider', () => {
   describe('constructor', () => {

@@ -4,15 +4,15 @@
  * Performance benchmark script for the Unified Repository Analyzer
  */
 
-import { performance } from 'perf_hooks';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
+import fs from 'node:fs';
+import path from 'node:path';
+import { performance } from 'node:perf_hooks';
+import { promisify } from 'node:util';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../core/AnalysisEngine';
-import { cacheService, analysisCache } from '../services/cache.service';
+import { analysisCache } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { logger } from '../utils/logger';
 
 const mkdir = promisify(fs.mkdir);
@@ -46,7 +46,7 @@ class PerformanceBenchmark {
   async runBenchmark(
     name: string,
     operation: () => Promise<void> | void,
-    iterations: number = 1
+    iterations = 1
   ): Promise<BenchmarkResult> {
     logger.info(`Starting benchmark: ${name}`);
 
@@ -462,7 +462,7 @@ This is a test repository created for performance benchmarking.
       logger.info(`Report saved to: ${reportPath}`);
 
       // Print summary to console
-      console.log('\n' + report);
+      console.log(`\n${report}`);
     } catch (error) {
       logger.error('Benchmark failed:', error);
       throw error;

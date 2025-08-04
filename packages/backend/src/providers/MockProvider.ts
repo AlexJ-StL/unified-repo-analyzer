@@ -2,10 +2,10 @@
  * Mock LLM provider implementation for testing
  */
 
-import {
-  ProviderConfig,
+import type {
   LLMResponse,
   ProjectInfo,
+  ProviderConfig,
 } from '@unified-repo-analyzer/shared/src/types/provider';
 import { LLMProvider } from './LLMProvider';
 
@@ -66,7 +66,7 @@ export class MockProvider extends LLMProvider {
    * @param prompt - The prompt to analyze
    * @returns Promise resolving to mock LLM response
    */
-  async analyze(prompt: string): Promise<LLMResponse> {
+  async analyze(_prompt: string): Promise<LLMResponse> {
     if (this.delay > 0) {
       await new Promise((resolve) => setTimeout(resolve, this.delay));
     }
