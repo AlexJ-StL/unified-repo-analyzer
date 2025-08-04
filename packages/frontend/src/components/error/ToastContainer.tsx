@@ -1,42 +1,38 @@
-import type React from "react";
-import { useEffect, useRef } from "react";
-import { useToast } from "../../hooks/useToast";
-import Toast from "./Toast";
+import type React from 'react';
+import { useEffect, useRef } from 'react';
+import type { Toast as ToastType } from '../../hooks/useToast';
+import Toast from './Toast';
 
-const ToastContainer: React.FC = () => {
-	const { toasts, removeToast } = useToast();
-	const containerRef = useRef<HTMLDivElement>(null);
+interface ToastContainerProps {
+  toasts: ToastType[];
+  onRemoveToast: (id: string) => void;
+}
 
-	useEffect(() => {
-		if (containerRef.current) {
-			containerRef.current.scrollTop = containerRef.current.scrollHeight;
-		}
-	}, []);
+const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onRemoveToast }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-	if (toasts.length === 0) {
-		return null;
-	}
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, []);
 
-	return (
-		<div
-			ref={containerRef}
-			className="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full"
-			aria-live="polite"
-			aria-atomic="false"
-		>
-			{toasts.map((toast) => (
-				<Toast
-					key={toast.id}
-					id={toast.id}
-					message={toast.message}
-					type={toast.type}
-					duration={toast.duration}
-					action={toast.action}
-					onClose={() => removeToast(toast.id)}
-				/>
-			))}
-		</div>
-	);
+  if (toasts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full"
+      aria-live="polite"
+      aria-atomic="false"
+    >
+      {toasts.map((toast) => (
+        <Toast key={toast.id} toast={toast} onClose={onRemoveToast} />
+      ))}
+    </div>
+  );
 };
 
 export default ToastContainer;

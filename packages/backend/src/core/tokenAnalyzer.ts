@@ -15,7 +15,7 @@ export function countTokens(text: string): number {
   // Simple approximation: split by whitespace and punctuation
   // This is a rough estimate - actual tokenizers are more sophisticated
   const tokens = text
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .split(' ');
@@ -60,8 +60,6 @@ export function sampleText(
     case 'middle':
       // Take from the middle
       return sampleLines(lines, maxTokens, 'middle');
-
-    case 'smart':
     default:
       // Smart sampling: prioritize important parts
       return smartSample(text, maxTokens);
@@ -81,7 +79,7 @@ function sampleLines(
   maxTokens: number,
   position: 'start' | 'end' | 'middle'
 ): string {
-  let result: string[] = [];
+  const result: string[] = [];
   let currentTokens = 0;
 
   if (position === 'start') {
@@ -98,7 +96,8 @@ function sampleLines(
     }
 
     return result.join('\n') + (result.length < lines.length ? '\n... (truncated)' : '');
-  } else if (position === 'end') {
+  }
+  if (position === 'end') {
     // Take lines from the end
     for (let i = lines.length - 1; i >= 0; i--) {
       const line = lines[i];
@@ -113,65 +112,64 @@ function sampleLines(
     }
 
     return (result.length < lines.length ? '... (truncated)\n' : '') + result.join('\n');
-  } else {
-    // Take lines from the middle
-    const middleIndex = Math.floor(lines.length / 2);
-    let leftIndex = middleIndex;
-    let rightIndex = middleIndex;
+  }
+  // Take lines from the middle
+  const middleIndex = Math.floor(lines.length / 2);
+  let leftIndex = middleIndex;
+  let rightIndex = middleIndex;
 
-    // Add the middle line first
-    const middleLine = lines[middleIndex];
-    const middleTokens = countTokens(middleLine);
+  // Add the middle line first
+  const middleLine = lines[middleIndex];
+  const middleTokens = countTokens(middleLine);
 
-    if (middleTokens <= maxTokens) {
-      result.push(middleLine);
-      currentTokens += middleTokens;
+  if (middleTokens <= maxTokens) {
+    result.push(middleLine);
+    currentTokens += middleTokens;
 
-      // Expand outward from the middle
-      leftIndex--;
-      rightIndex++;
+    // Expand outward from the middle
+    leftIndex--;
+    rightIndex++;
 
-      while (leftIndex >= 0 || rightIndex < lines.length) {
-        // Try to add a line from the right
-        if (rightIndex < lines.length) {
-          const rightLine = lines[rightIndex];
-          const rightTokens = countTokens(rightLine);
+    while (leftIndex >= 0 || rightIndex < lines.length) {
+      // Try to add a line from the right
+      if (rightIndex < lines.length) {
+        const rightLine = lines[rightIndex];
+        const rightTokens = countTokens(rightLine);
 
-          if (currentTokens + rightTokens <= maxTokens) {
-            result.push(rightLine);
-            currentTokens += rightTokens;
-            rightIndex++;
-          }
-        }
-
-        // Try to add a line from the left
-        if (leftIndex >= 0) {
-          const leftLine = lines[leftIndex];
-          const leftTokens = countTokens(leftLine);
-
-          if (currentTokens + leftTokens <= maxTokens) {
-            result.unshift(leftLine);
-            currentTokens += leftTokens;
-            leftIndex--;
-          }
-        }
-
-        // If we can't add any more lines, break
-        if (
-          (leftIndex < 0 || currentTokens + countTokens(lines[leftIndex]) > maxTokens) &&
-          (rightIndex >= lines.length || currentTokens + countTokens(lines[rightIndex]) > maxTokens)
-        ) {
-          break;
+        if (currentTokens + rightTokens <= maxTokens) {
+          result.push(rightLine);
+          currentTokens += rightTokens;
+          rightIndex++;
         }
       }
-    }
 
-    return (
-      (leftIndex >= 0 ? '... (truncated)\n' : '') +
-      result.join('\n') +
-      (rightIndex < lines.length ? '\n... (truncated)' : '')
-    );
+      // Try to add a line from the left
+      if (leftIndex >= 0) {
+        const leftLine = lines[leftIndex];
+        const leftTokens = countTokens(leftLine);
+
+        if (currentTokens + leftTokens <= maxTokens) {
+          result.unshift(leftLine);
+          currentTokens += leftTokens;
+          leftIndex--;
+        }
+      }
+
+      // If we can't add any more lines, break
+      if (
+        (leftIndex < 0 || currentTokens + countTokens(lines[leftIndex]) > maxTokens) &&
+        (rightIndex >= lines.length || currentTokens + countTokens(lines[rightIndex]) > maxTokens)
+      ) {
+        break;
+      }
+    }
   }
+
+  return (
+    (leftIndex >= 0 ? '... (truncated)\n' : '') +
+    result.join('\n') +
+    (rightIndex < lines.length ? '\n... (truncated)' : '')
+  );
 }
 
 /**

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useToast } from './useToast';
 
 interface RetryOptions {
@@ -82,27 +82,36 @@ export const useRetry = (options: RetryOptions = {}) => {
               `Failed after ${finalMaxAttempts} attempts: ${errorObj.message}`
             );
             throw errorObj;
-          } else {
-            // Retry attempt
-            if (onRetry) {
-              onRetry(currentAttempt);
-            }
-
-            showInfo(
-              'Retrying Operation',
-              `Attempt ${currentAttempt} failed. Retrying in ${currentDelay / 1000} seconds...`
-            );
-
-            await sleep(currentDelay);
-            currentDelay *= finalBackoffMultiplier;
           }
+          // Retry attempt
+          if (onRetry) {
+            onRetry(currentAttempt);
+          }
+
+          showInfo(
+            'Retrying Operation',
+            `Attempt ${currentAttempt} failed. Retrying in ${currentDelay / 1000} seconds...`
+          );
+
+          await sleep(currentDelay);
+          currentDelay *= finalBackoffMultiplier;
         }
       }
 
       // This should never be reached, but TypeScript requires it
       throw new Error('Unexpected end of retry loop');
     },
-    [maxAttempts, delay, backoffMultiplier, onRetry, onMaxAttemptsReached, showError, showInfo]
+    [
+      maxAttempts,
+      delay,
+      backoffMultiplier,
+      onRetry,
+      onMaxAttemptsReached,
+      showError,
+      showInfo,
+      options,
+      sleep,
+    ]
   );
 
   const reset = useCallback(() => {

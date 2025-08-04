@@ -17,4 +17,8 @@ export declare function countTokens(text: string): number;
  * @param strategy - Sampling strategy
  * @returns Sampled text
  */
-export declare function sampleText(text: string, maxTokens: number, strategy?: 'start' | 'end' | 'middle' | 'smart'): string;
+export declare function sampleText(
+  text: string,
+  maxTokens: number,
+  strategy?: 'start' | 'end' | 'middle' | 'smart'
+): string;

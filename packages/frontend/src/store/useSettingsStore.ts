@@ -1,13 +1,13 @@
+import {
+  type AnalysisModePreset,
+  type ConfigurationProfile,
+  DEFAULT_USER_PREFERENCES,
+  type ProjectConfiguration,
+  type UserPreferences,
+  type WorkspaceConfiguration,
+} from '@unified-repo-analyzer/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  UserPreferences,
-  WorkspaceConfiguration,
-  ProjectConfiguration,
-  ConfigurationProfile,
-  AnalysisModePreset,
-  DEFAULT_USER_PREFERENCES,
-} from '@unified-repo-analyzer/shared';
 
 interface SettingsState {
   // User preferences

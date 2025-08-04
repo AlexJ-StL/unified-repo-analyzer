@@ -1,6 +1,5 @@
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ToastProvider, useToast } from '../useToast';
 
 // Test component that uses the toast hook

@@ -2,7 +2,8 @@
  * Hook for lazy loading large result sets with performance optimizations
  */
 
-import React, { useState, useEffect, useCallback, useRef, RefObject } from 'react';
+import type React from 'react';
+import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 interface LazyLoadingOptions {
   pageSize: number;
@@ -51,7 +52,6 @@ export function useLazyLoading<T>(
       setPage((prevPage) => prevPage + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load more items');
-      console.error('Error loading more items:', err);
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -138,7 +138,7 @@ export function useVirtualScrolling<T>(
   items: T[],
   itemHeight: number,
   containerHeight: number,
-  overscan: number = 5
+  overscan = 5
 ): {
   visibleItems: { index: number; item: T; style: React.CSSProperties }[];
   totalHeight: number;
@@ -207,7 +207,7 @@ export function usePaginatedData<T>(
     page: number,
     pageSize: number
   ) => Promise<{ items: T[]; total: number; hasMore: boolean }>,
-  pageSize: number = 20
+  pageSize = 20
 ): {
   items: T[];
   loading: boolean;
@@ -269,9 +269,7 @@ export function usePaginatedData<T>(
       try {
         await loadPage(page);
         setCurrentPage(page);
-      } catch (err) {
-        console.error('Error loading page:', err);
-      }
+      } catch (_err) {}
     },
     [loadPage, totalPages]
   );
@@ -297,7 +295,7 @@ export function usePaginatedData<T>(
   // Load initial page
   useEffect(() => {
     goToPage(1);
-  }, []);
+  }, [goToPage]);
 
   const items = cache.get(currentPage) || [];
 

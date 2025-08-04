@@ -2,7 +2,7 @@
  * Hook for performance optimization utilities
  */
 
-import { useCallback, useRef, useEffect, useMemo, useState, DependencyList } from 'react';
+import { type DependencyList, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { performanceService } from '../services/performance.service';
 
 /**
@@ -181,7 +181,7 @@ export function useIntersectionObserver(options: IntersectionObserverInit = {}):
         observerRef.current.observe(element);
       }
     },
-    [options.threshold, options.rootMargin, options.root]
+    [options.threshold, options.rootMargin, options.root, options]
   );
 
   useEffect(() => {
@@ -227,7 +227,7 @@ export function useOptimizedEventListener<K extends keyof WindowEventMap>(
     return () => {
       element.removeEventListener(eventName, eventListener, optimizedOptions);
     };
-  }, [eventName, element, options.capture, options.once, options.passive]);
+  }, [eventName, element, options.capture, options.once, options.passive, options]);
 }
 
 /**

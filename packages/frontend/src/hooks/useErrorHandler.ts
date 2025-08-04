@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
+import { getErrorTitle, getRecoverySuggestions, parseError } from '../utils/errorHandling';
 import { useToast } from './useToast';
-import { parseError, getRecoverySuggestions, getErrorTitle } from '../utils/errorHandling';
 
 interface UseErrorHandlerOptions {
   showToast?: boolean;
@@ -13,12 +13,11 @@ export const useErrorHandler = (options: UseErrorHandlerOptions = {}) => {
   const { showError } = useToast();
 
   const handleError = useCallback(
-    (error: unknown, context?: string) => {
+    (error: unknown, _context?: string) => {
       const errorInfo = parseError(error);
 
       // Log error if enabled
       if (logError) {
-        console.error(`Error${context ? ` in ${context}` : ''}:`, error);
       }
 
       // Call custom error handler if provided

@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { apiService, handleApiError } from '../services/api';
+import { parseError } from '../utils/errorHandling';
 import { useErrorHandler } from './useErrorHandler';
 import { useRetry } from './useRetry';
 import { useToast } from './useToast';
-import { parseError } from '../utils/errorHandling';
 
 interface UseApiState<T> {
   data: T | null;
@@ -166,7 +166,6 @@ export function useApi<T = any>(
 
   const retry = useCallback(async (): Promise<T | null> => {
     if (lastArgs.length === 0) {
-      console.warn('No previous arguments to retry with');
       return null;
     }
     return executeWithRetry(...lastArgs);
