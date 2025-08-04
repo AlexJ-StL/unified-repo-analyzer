@@ -3,7 +3,6 @@
  */
 
 import { ConfigurationService } from '../config.service';
-import fs from 'fs/promises';
 
 // Mock dependencies
 jest.mock('fs/promises', () => ({

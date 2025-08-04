@@ -2,8 +2,8 @@
  * Configuration service tests
  */
 
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { ConfigurationService } from '../config.service';
 
 // Mock fs module
@@ -25,7 +25,7 @@ jest.mock('os', () => ({
 const mockFs = fs as jest.Mocked<typeof fs>;
 const mockHomeDir = '/mock/home';
 
-const mockDefaultPreferences = {
+const _mockDefaultPreferences = {
   general: {
     autoSave: true,
     autoIndex: true,

@@ -13,7 +13,7 @@ const router = Router();
  * GET /api/config/preferences
  * Get user preferences
  */
-router.get('/preferences', async (req, res) => {
+router.get('/preferences', async (_req, res) => {
   try {
     const preferences = await configurationService.getUserPreferences();
     res.json(preferences);
@@ -73,7 +73,7 @@ router.patch(
  * GET /api/config/presets
  * Get analysis mode presets
  */
-router.get('/presets', (req, res) => {
+router.get('/presets', (_req, res) => {
   try {
     const presets = configurationService.getAnalysisModePresets();
     res.json(presets);
@@ -87,7 +87,7 @@ router.get('/presets', (req, res) => {
  * GET /api/config/workspaces
  * Get workspace configurations
  */
-router.get('/workspaces', async (req, res) => {
+router.get('/workspaces', async (_req, res) => {
   try {
     const workspaces = await configurationService.getWorkspaceConfigurations();
     res.json(workspaces);
@@ -165,7 +165,7 @@ router.delete('/workspaces/:id', param('id').isUUID(), async (req, res) => {
  * GET /api/config/projects
  * Get project configurations
  */
-router.get('/projects', async (req, res) => {
+router.get('/projects', async (_req, res) => {
   try {
     const projects = await configurationService.getProjectConfigurations();
     res.json(projects);
@@ -236,7 +236,7 @@ router.delete('/projects/:id', param('id').isUUID(), async (req, res) => {
  * GET /api/config/profiles
  * Get configuration profiles
  */
-router.get('/profiles', async (req, res) => {
+router.get('/profiles', async (_req, res) => {
   try {
     const profiles = await configurationService.getConfigurationProfiles();
     res.json(profiles);
@@ -323,7 +323,7 @@ router.post('/validate', body('preferences').isObject(), async (req, res) => {
  * POST /api/config/reset
  * Reset to default preferences
  */
-router.post('/reset', async (req, res) => {
+router.post('/reset', async (_req, res) => {
   try {
     const preferences = await configurationService.resetToDefaults();
     res.json(preferences);
@@ -337,7 +337,7 @@ router.post('/reset', async (req, res) => {
  * POST /api/config/backup
  * Create configuration backup
  */
-router.post('/backup', async (req, res) => {
+router.post('/backup', async (_req, res) => {
   try {
     const backup = await configurationService.createBackup('manual');
     res.status(201).json(backup);
@@ -367,7 +367,7 @@ router.post('/restore/:backupId', param('backupId').isUUID(), async (req, res) =
  * GET /api/config/export
  * Export configuration
  */
-router.get('/export', async (req, res) => {
+router.get('/export', async (_req, res) => {
   try {
     const configData = await configurationService.exportConfiguration();
     res.setHeader('Content-Type', 'application/json');

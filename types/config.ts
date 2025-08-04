@@ -3,20 +3,20 @@
  */
 
 export interface PostCSSConfig {
-  plugins: Record<string, any>;
+  plugins: Record<string, unknown>;
 }
 
 export interface TailwindConfig {
   content: string[];
   theme: {
-    extend: Record<string, any>;
+    extend: Record<string, unknown>;
   };
-  plugins: any[];
+  plugins: Array<unknown>;
 }
 
 export interface BiomeRuleConfig {
-  level?: "error" | "warn" | "info" | "off";
-  options?: Record<string, any>;
+  level?: 'error' | 'warn' | 'info' | 'off';
+  options?: Record<string, unknown>;
 }
 
 export interface BiomeRules {
@@ -33,43 +33,43 @@ export interface BiomeRules {
 export interface BiomeFormatterConfig {
   enabled: boolean;
   formatWithErrors?: boolean;
-  indentStyle: "tab" | "space";
+  indentStyle: 'tab' | 'space';
   indentWidth: number;
-  lineEnding?: "lf" | "crlf" | "cr";
+  lineEnding?: 'lf' | 'crlf' | 'cr';
   lineWidth?: number;
-  attributePosition?: "auto" | "multiline";
+  attributePosition?: 'auto' | 'multiline';
 }
 
 export interface BiomeJavaScriptFormatter {
-  quoteStyle: "double" | "single";
-  trailingCommas?: "all" | "es5" | "none";
-  semicolons?: "always" | "asNeeded";
-  arrowParentheses?: "always" | "asNeeded";
+  quoteStyle: 'double' | 'single';
+  trailingCommas?: 'all' | 'es5' | 'none';
+  semicolons?: 'always' | 'asNeeded';
+  arrowParentheses?: 'always' | 'asNeeded';
   bracketSpacing?: boolean;
   bracketSameLine?: boolean;
-  quoteProperties?: "asNeeded" | "preserve";
-  attributePosition?: "auto" | "multiline";
+  quoteProperties?: 'asNeeded' | 'preserve';
+  attributePosition?: 'auto' | 'multiline';
 }
 
 export interface BiomeTypeScriptFormatter {
-  quoteStyle: "double" | "single";
-  trailingCommas?: "all" | "es5" | "none";
-  semicolons?: "always" | "asNeeded";
+  quoteStyle: 'double' | 'single';
+  trailingCommas?: 'all' | 'es5' | 'none';
+  semicolons?: 'always' | 'asNeeded';
 }
 
 export interface BiomeJsonFormatter {
   enabled: boolean;
-  indentStyle: "tab" | "space";
+  indentStyle: 'tab' | 'space';
   indentWidth: number;
-  lineEnding: "lf" | "crlf" | "cr";
+  lineEnding: 'lf' | 'crlf' | 'cr';
   lineWidth: number;
-  trailingCommas: "none";
+  trailingCommas: 'none';
 }
 
 export interface BiomeAssistConfig {
   actions?: {
     source?: {
-      organizeImports?: "on" | "off";
+      organizeImports?: 'on' | 'off';
     };
   };
 }

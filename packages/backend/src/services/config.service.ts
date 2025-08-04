@@ -2,22 +2,22 @@
  * Configuration management service
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
-import { v4 as uuidv4 } from 'uuid';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import {
-  UserPreferences,
-  WorkspaceConfiguration,
-  ProjectConfiguration,
-  ConfigurationProfile,
-  ConfigurationValidationResult,
-  ConfigurationBackup,
-  DEFAULT_USER_PREFERENCES,
+  type AnalysisModePreset,
+  type ConfigurationBackup,
+  type ConfigurationProfile,
+  type ConfigurationValidationResult,
   DEFAULT_ANALYSIS_MODE_PRESETS,
-  AnalysisModePreset,
+  DEFAULT_USER_PREFERENCES,
+  type ProjectConfiguration,
+  type UserPreferences,
+  userPreferencesSchema,
+  type WorkspaceConfiguration,
 } from '@unified-repo-analyzer/shared';
-import { userPreferencesSchema } from '@unified-repo-analyzer/shared';
+import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../utils/logger';
 
 export class ConfigurationService {

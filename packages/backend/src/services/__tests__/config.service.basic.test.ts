@@ -2,7 +2,7 @@
  * Basic configuration service tests
  */
 
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import { ConfigurationService } from '../config.service';
 
 // Mock dependencies

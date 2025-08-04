@@ -2,10 +2,10 @@
  * Request deduplication service for concurrent identical requests
  */
 
-import crypto from 'crypto';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { logger } from '../utils/logger';
+import crypto from 'node:crypto';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { NodeJS } from 'node';
+import { logger } from '../utils/logger';
 
 interface PendingRequest<T> {
   promise: Promise<T>;
@@ -198,7 +198,7 @@ export class DeduplicationService {
 
 // Create singleton instance
 export const deduplicationService = new DeduplicationService(
-  parseInt(process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString())
+  Number.parseInt(process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString())
 );
 
 export default deduplicationService;

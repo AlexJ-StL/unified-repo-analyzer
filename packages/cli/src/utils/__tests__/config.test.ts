@@ -2,13 +2,13 @@
  * CLI configuration tests
  */
 
-import Conf from 'conf';
 import { DEFAULT_USER_PREFERENCES } from '@unified-repo-analyzer/shared';
-import config, {
+import Conf from 'conf';
+import {
   getEffectiveAnalysisOptions,
-  updateUserPreferences,
   getUserPreferences,
   resetPreferences,
+  updateUserPreferences,
 } from '../config';
 
 // Mock Conf
