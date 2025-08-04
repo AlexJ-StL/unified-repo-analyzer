@@ -1,9 +1,9 @@
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useToast } from "../../hooks/useToast";
 import {
-	AnalysisOptions,
+	type AnalysisOptions,
 	useAnalysisStore,
 } from "../../store/useAnalysisStore";
 import { useSettingsStore } from "../../store/useSettingsStore";
@@ -92,7 +92,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 		initializeConfiguration();
 	}, [
 		preferences,
-		options.mode,
+		options,
 		setOptions,
 		onConfigChange,
 		handleError,
@@ -300,11 +300,12 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 							</h3>
 							<ul className="mt-2 text-sm text-red-700 list-disc list-inside">
 								{validationErrors.map((error, index) => (
-									<li key={index}>{error}</li>
+									<li key={`error-${index}-${error}`}>{error}</li>
 								))}
 							</ul>
 						</div>
 						<button
+							type="button"
 							onClick={resetToDefaults}
 							className="ml-4 text-xs text-red-600 hover:text-red-800 underline"
 						>
@@ -416,10 +417,10 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 					</div>
 				</div>
 
-				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+				<fieldset>
+					<legend className="block text-sm font-medium text-gray-700 mb-2">
 						Output Formats
-					</label>
+					</legend>
 					<div className="space-x-4 flex items-center">
 						{availableFormats.map((format) => (
 							<label key={format} className="inline-flex items-center">
@@ -436,7 +437,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 							</label>
 						))}
 					</div>
-				</div>
+				</fieldset>
 
 				<div className="space-y-2">
 					<div className="flex items-center">
@@ -487,6 +488,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 					message="The analysis configuration component encountered an error."
 					showRetry={true}
 					showDetails={true}
+					error={new Error("Configuration component error")}
 				/>
 			}
 		>
