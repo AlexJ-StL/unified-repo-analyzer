@@ -5,7 +5,7 @@ A comprehensive tool for analyzing code repositories, generating executive summa
 ## Features
 
 - Repository analysis with executive summaries and technical breakdowns
-- Multiple LLM provider support (Claude, Gemini, etc.)
+- Multiple LLM provider support (Claude, Gemini, OpenRouter)
 - Batch processing for multiple repositories
 - Repository indexing and search capabilities
 - Modern React web interface
@@ -16,17 +16,17 @@ A comprehensive tool for analyzing code repositories, generating executive summa
 
 This is a monorepo containing the following packages:
 
-- `packages/backend` - Express.js REST API server
-- `packages/frontend` - React web application
-- `packages/cli` - Command-line interface
-- `packages/shared` - Shared types and utilities
+- `packages/backend` — Bun/Express REST API server
+- `packages/frontend` — React web application
+- `packages/cli` — Command-line interface
+- `packages/shared` — Shared types and utilities
 
 ## Getting Started
 
 ### Prerequisites
 
 - Bun 1.0+ (recommended) or Node.js 18+
-- For Bun installation, visit: https://bun.sh/docs/installation
+- Bun installation: https://bun.sh/docs/installation
 
 ### Installation
 
@@ -45,7 +45,7 @@ bun run build
 
 ### Development
 
-Start the backend and frontend development servers:
+Start all development servers:
 
 ```bash
 bun run dev
@@ -68,7 +68,7 @@ bun run dev:cli
 
 #### Web Interface
 
-Open your browser and navigate to `http://localhost:3001`
+Open your browser and navigate to http://localhost:3001
 
 #### CLI
 
@@ -83,16 +83,25 @@ bunx repo-analyzer batch /path/to/repositories
 bunx repo-analyzer search "query"
 ```
 
-### Development Workflow
+## Documentation
 
-This project uses modern tooling for improved developer experience:
+- User Guide: docs/USER_GUIDE.md
+- Release Notes: docs/RELEASE_NOTES.md
+- Deployment Guide (canonical): docs/DEPLOYMENT.md
+- Deployment Overview: README-DEPLOYMENT.md
+- Production Checklist: docs/PRODUCTION_CHECKLIST.md
+- Security Policy (canonical): docs/SECURITY.md
 
-#### Code Quality
-- **Linting & Formatting**: Uses [Biome](https://biomejs.dev/) for fast, unified linting and formatting
-- **Type Checking**: Full TypeScript support with native Bun execution
-- **Testing**: Bun's built-in test runner for fast test execution
+## Development Workflow
 
-#### Available Scripts
+Modern tooling for improved developer experience.
+
+### Code Quality
+- Linting & formatting: Biome
+- Type checking: TypeScript with native Bun execution
+- Testing: Bun’s built-in test runner
+
+### Available Scripts
 ```bash
 # Development
 bun run dev                 # Start all development servers
@@ -118,13 +127,18 @@ bun run docker:up           # Start with Docker Compose
 bun run deploy:prod         # Full production deployment
 ```
 
-#### Configuration Files
+### Configuration Files
 All configuration files are now in TypeScript for better type safety:
-- `bunfig.toml` - Bun runtime configuration
-- `biome.json` - Linting and formatting rules
-- `packages/*/tsconfig.json` - TypeScript configurations
-- `packages/frontend/tailwind.config.ts` - Tailwind CSS config
-- `packages/frontend/postcss.config.ts` - PostCSS config
+- `bunfig.toml` — Bun runtime configuration
+- `biome.json` — Linting and formatting rules
+- `packages/*/tsconfig.json` — TypeScript configurations
+- `packages/frontend/tailwind.config.ts` — Tailwind CSS config
+- `packages/frontend/postcss.config.ts` — PostCSS config
+
+## Versioning
+
+- Root package version: 1.0.0
+- Package versions: @unified-repo-analyzer/{backend,frontend,cli,shared} at 0.1.0
 
 ## License
 

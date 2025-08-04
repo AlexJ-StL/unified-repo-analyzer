@@ -1,44 +1,90 @@
 # Security Policy
 
+This document defines how we handle security for Unified Repository Analyzer.
+
 ## Supported Versions
 
-We release patches for security vulnerabilities. Which versions are eligible receiving such patches depend on the CVSS v3.0 Rating:
+We release patches for security vulnerabilities based on severity (CVSS v3.1).
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
+| Version range | Status                            |
+| ------------- | --------------------------------- |
+| 1.x.x         | Supported                         |
+| 0.x.x         | Best-effort (critical fixes only) |
 
 ## Reporting a Vulnerability
 
-Please report vulnerabilities by emailing us at [security@unified-repo-analyzer.com](mailto:security@unified-repo-analyzer.com).
+Email: security@unified-repo-analyzer.com
 
-Please include:
-- Description of the vulnerability
-- Steps to reproduce the issue
-- Possible impact
-- Suggested fix (if any)
+Include:
+- Affected component(s) and version(s)
+- Vulnerability description and impact
+- Reproduction steps or PoC
+- Any suggested mitigation
 
-We will acknowledge your email within 24 hours and provide a detailed response within 72 hours.
+SLA targets:
+- Acknowledge within 24 hours
+- Triage update within 72 hours
+- Fix ETA provided after triage based on severity
+
+We support encrypted reports upon request.
 
 ## Security Response Process
 
-1. **Initial Assessment**: We assess the severity and impact
-2. **Fix Development**: We develop and test a fix
-3. **Security Update**: We release a security update
-4. **Public Disclosure**: We publicly disclose the vulnerability (typically 30 days after fix release)
+1) Triage and severity
+- Assess impact, exploitability, and scope
+- Assign CVSS vector and provisional score
 
-## Security Headers
+2) Remediation
+- Develop and verify fix with targeted tests
+- Prepare backports as needed
 
-We implement security headers including:
-- Content Security Policy (CSP)
-- Strict Transport Security (HSTS)
-- X-Content-Type-Options
-- X-Frame-Options
+3) Release
+- Publish patched versions
+- Update changelog with “Security” section
 
-## Dependencies
+4) Disclosure
+- Coordinated disclosure; typical window 30 days post-fix, may vary by risk
 
-We regularly update dependencies to address security vulnerabilities. Security updates are prioritized and released promptly.
+## Secure Defaults and Hardening
+
+- Rate limiting on sensitive endpoints
+- Input validation and output encoding
+- Principle of least privilege for services and data access
+- HTTPS/TLS recommended in production
+- Secrets managed via platform secret stores (Docker/K8s secrets)
+
+## Security Headers (web)
+
+We recommend the following headers for the frontend and any reverse proxy:
+
+- Content-Security-Policy (CSP)
+- Strict-Transport-Security (HSTS)
+- X-Content-Type-Options: nosniff
+- X-Frame-Options: DENY or SAMEORIGIN
+- Referrer-Policy: no-referrer or strict-origin-when-cross-origin
+- Permissions-Policy: restrict sensitive APIs
+
+## Dependency and Supply Chain
+
+- Automated dependency updates with security advisories
+- Lockfile committed
+- Vulnerability scanning in CI (SCA)
+- Integrity checks and provenance where available
+
+## Kubernetes and Container Security
+
+- Use read-only root filesystems where possible
+- Drop unnecessary Linux capabilities
+- Run as non-root
+- Resource requests/limits defined
+- Secrets mounted from K8s Secrets; avoid in images
+- Network policies to restrict traffic
 
 ## Responsible Disclosure
 
-We follow responsible disclosure practices and appreciate coordinated disclosure. We do not support or encourage public disclosure of vulnerabilities before fixes are available.
+We appreciate coordinated disclosure and request that reporters:
+- Refrain from public disclosure until a fix is available
+- Avoid privacy or data integrity violations during testing
+- Follow applicable laws and ethical guidelines
+
+Thank you for helping keep users safe.

@@ -1,35 +1,36 @@
-# User Guide - Unified Repository Analyzer
+# User Guide — Unified Repository Analyzer
 
-Welcome to the Unified Repository Analyzer! This guide will help you get started with analyzing your code repositories and understanding your codebase better.
+This guide explains how to analyze repositories using the web UI and CLI, interpret results, and optimize workflows.
+- Project version: root 1.0.0; packages @unified-repo-analyzer/{backend,frontend,cli,shared} 0.1.0
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [Web Interface Guide](#web-interface-guide)
-- [Command Line Interface](#command-line-interface)
-- [Analysis Modes](#analysis-modes)
-- [Understanding Results](#understanding-results)
-- [Advanced Features](#advanced-features)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+- Getting Started
+- Web Interface Guide
+- Command Line Interface
+- Analysis Modes
+- Understanding Results
+- Advanced Features
+- Best Practices
+- Troubleshooting
 
 ## Getting Started
 
-### First Time Setup
+### First-time setup
 
-1. **Access the Application**
-   - Web Interface: Open your browser and navigate to the application URL
-   - CLI: Install the CLI tool using `npm install -g @unified-repo-analyzer/cli`
+1) Access the application
+- Web Interface: http://localhost:3001 (default)
+- CLI: npm install -g @unified-repo-analyzer/cli
 
-2. **Configure LLM Provider**
-   - Go to Settings → LLM Configuration
-   - Add your API key for at least one provider (Claude, Gemini, or OpenRouter)
-   - Test the connection to ensure it's working
+2) Configure LLM provider
+- Settings → LLM Providers
+- Provide at least one API key (Claude, Gemini, OpenRouter)
+- Test the connection
 
-3. **Set Analysis Preferences**
-   - Choose your default analysis mode (Quick, Standard, or Comprehensive)
-   - Set file and line limits based on your needs
-   - Configure output formats
+3) Set analysis preferences
+- Choose default mode (Quick, Standard, Comprehensive)
+- Set file and line limits
+- Choose output formats (json, markdown, html)
 
 ### Quick Start Tutorial
 
@@ -66,33 +67,28 @@ The dashboard provides an overview of your analyzed repositories and quick acces
 
 #### Single Repository Analysis
 
-1. **Repository Selection**
-   - **Path Input**: Enter the full path to your repository
-   - **File Browser**: Use the integrated file browser to navigate and select
-   - **Recent Paths**: Choose from recently analyzed repositories
-   - **Validation**: The system validates the path and checks accessibility
+1) Repository selection
+- Path input: enter a full path
+- File browser: use the integrated selector
+- Recent paths: pick from recent
+- Validation: path and access checks are automatic
 
-2. **Analysis Configuration**
-   ```
-   Analysis Mode:
-   • Quick: Basic structure analysis (5-15 seconds)
-   • Standard: Balanced analysis with LLM insights (30-90 seconds)
-   • Comprehensive: Detailed analysis with full LLM processing (2-10 minutes)
-   
-   LLM Provider:
-   • Claude: Best for code understanding and documentation
-   • Gemini: Good for technical analysis and patterns
-   • Mock: For testing without API costs
-   
-   File Limits:
-   • Max Files: Limit the number of files to analyze (default: 100)
-   • Max Lines per File: Limit lines per file to control token usage (default: 1000)
-   
-   Output Formats:
-   • JSON: Machine-readable format for integration
-   • Markdown: Human-readable documentation
-   • HTML: Rich formatted reports with styling
-   ```
+2) Analysis configuration
+- Mode
+  - Quick: 5–15s
+  - Standard: 30–90s
+  - Comprehensive: 2–10m
+- Provider
+  - Claude: code understanding, docs
+  - Gemini: technical analysis and patterns
+  - Mock: test without API cost
+- Limits
+  - Max files (default 100)
+  - Max lines per file (default 1000)
+- Output
+  - json (machine)
+  - markdown (readable)
+  - html (rich report)
 
 3. **Progress Tracking**
    - Real-time progress updates with WebSocket connection
@@ -203,13 +199,13 @@ For analyzing multiple repositories simultaneously:
 # Install globally
 npm install -g @unified-repo-analyzer/cli
 
-# Or use npx for one-time usage
+# Or run via npx
 npx @unified-repo-analyzer/cli --help
 ```
 
-### Basic Commands
+### Basic commands
 
-#### Single Repository Analysis
+#### Single repository analysis
 ```bash
 # Basic analysis
 repo-analyzer analyze /path/to/repository
@@ -234,7 +230,7 @@ repo-analyzer batch --from-file repositories.txt
 repo-analyzer batch "/projects/*/"
 ```
 
-#### Search and Discovery
+#### Search and discovery
 ```bash
 # Search repositories
 repo-analyzer search "javascript react"
@@ -242,7 +238,7 @@ repo-analyzer search "javascript react"
 # With filters
 repo-analyzer search --language javascript --framework react
 
-# List all repositories
+# List with sort/limit
 repo-analyzer list --sort-by date --limit 20
 ```
 
@@ -257,26 +253,25 @@ repo-analyzer search "python" --export results.json
 
 ### Configuration
 
-#### Global Configuration
+#### Global configuration
 ```bash
 # Set default LLM provider
 repo-analyzer config set llm.provider claude
 repo-analyzer config set llm.apiKey your-api-key
 
-# Set default analysis mode
+# Default analysis mode
 repo-analyzer config set analysis.mode standard
 
-# Set output preferences
+# Output preferences
 repo-analyzer config set output.formats json,markdown
 ```
 
-#### Project-Specific Configuration
-Create a `.repo-analyzer.json` file in your project root:
-
+#### Project configuration
+Place .repo-analyzer.json in your project root:
 ```json
 {
   "analysis": {
-    "mode": "comprehensive",
+    "mode": "standard",
     "maxFiles": 200,
     "maxLinesPerFile": 2000,
     "includeLLMAnalysis": true,
@@ -290,12 +285,7 @@ Create a `.repo-analyzer.json` file in your project root:
     "formats": ["json", "markdown"],
     "directory": "./analysis-results"
   },
-  "ignore": [
-    "node_modules",
-    "dist",
-    "build",
-    "*.log"
-  ]
+  "ignore": ["node_modules","dist","build","*.log"]
 }
 ```
 
@@ -371,72 +361,19 @@ jobs:
 
 ## Analysis Modes
 
-### Quick Mode (5-15 seconds)
-**Best for**: Initial exploration, CI/CD pipelines, large-scale batch processing
+### Quick (5–15s)
+Includes: structure, language/framework detection, basic metrics, dependencies, simple patterns.
+Excludes: LLM insights and deep analysis.
+Use: overviews, CI, cataloging.
 
-**What it includes**:
-- File structure analysis
-- Language and framework detection
-- Basic metrics (file counts, sizes)
-- Dependency identification
-- Simple pattern recognition
+### Standard (30–90s)
+Includes: Quick + LLM summary, technical breakdown, recommendations, potential issues, code quality.
+Excludes: deep architecture/security/performance.
+Use: daily workflow, reviews, docs, team sharing.
 
-**What it excludes**:
-- LLM-generated insights
-- Detailed code analysis
-- Complex pattern detection
-- Recommendations and suggestions
-
-**Use cases**:
-- Quick project overview
-- Technology stack identification
-- Automated scanning in CI/CD
-- Large-scale repository cataloging
-
-### Standard Mode (30-90 seconds)
-**Best for**: Regular development workflow, team reviews, documentation
-
-**What it includes**:
-- Everything from Quick mode
-- LLM-generated executive summary
-- Basic technical breakdown
-- Key recommendations
-- Potential issue identification
-- Code quality assessment
-
-**What it excludes**:
-- Deep architectural analysis
-- Comprehensive security review
-- Detailed performance analysis
-- Advanced pattern recognition
-
-**Use cases**:
-- Daily development workflow
-- Code review preparation
-- Project documentation
-- Team knowledge sharing
-
-### Comprehensive Mode (2-10 minutes)
-**Best for**: Deep analysis, architecture reviews, major decisions
-
-**What it includes**:
-- Everything from Standard mode
-- Detailed architectural analysis
-- Comprehensive code quality metrics
-- Security vulnerability assessment
-- Performance optimization suggestions
-- Advanced pattern recognition
-- Detailed technical debt analysis
-
-**What it excludes**:
-- Nothing - this is the complete analysis
-
-**Use cases**:
-- Architecture reviews
-- Technical debt assessment
-- Security audits
-- Major refactoring decisions
-- Due diligence for acquisitions
+### Comprehensive (2–10m)
+Includes: Standard + deep architecture, comprehensive metrics, security assessment, performance suggestions, advanced patterns, technical debt.
+Use: architecture reviews, debt assessment, security audits, major decisions.
 
 ## Understanding Results
 
@@ -634,28 +571,28 @@ const analysis = await response.json();
 
 ## Best Practices
 
-### Repository Preparation
+### Repository preparation
 
-1. **Clean Up Before Analysis**
-   - Remove build artifacts and temporary files
-   - Ensure dependencies are installed
-   - Update documentation
+1) Clean up before analysis
+- Remove build artifacts and temporary files
+- Install dependencies
+- Update documentation
 
-2. **Configure Ignore Patterns**
-   ```
-   # .repo-analyzer-ignore
-   node_modules/
-   dist/
-   build/
-   *.log
-   .env
-   coverage/
-   ```
+2) Configure ignore patterns
+```text
+# .repo-analyzer-ignore
+node_modules/
+dist/
+build/
+*.log
+.env
+coverage/
+```
 
-3. **Organize Code Structure**
-   - Use consistent naming conventions
-   - Group related files in directories
-   - Maintain clear separation of concerns
+3) Organize code structure
+- Consistent naming
+- Group related files
+- Clear separation of concerns
 
 ### Analysis Strategy
 
@@ -796,45 +733,24 @@ const analysis = await response.json();
 - Reduce concurrent analyses
 - Use smaller batch sizes
 
-### Getting Help
+### Getting help
 
-1. **Documentation**
-   - Check this user guide
-   - Review API documentation
-   - Read troubleshooting guides
+1) Documentation
+- User guide (this document)
+- API docs
+- Troubleshooting
 
-2. **Community Support**
-   - GitHub Discussions
-   - Stack Overflow (tag: unified-repo-analyzer)
-   - Community forums
+2) Community
+- GitHub Discussions
+- Stack Overflow (tag: unified-repo-analyzer)
 
-3. **Professional Support**
-   - Email: support@unified-repo-analyzer.com
-   - Priority support for enterprise users
-   - Custom training and consultation
+3) Support
+- Email: support@unified-repo-analyzer.com
 
-### Reporting Issues
+### Reporting issues
 
-When reporting issues, please include:
-
-1. **System Information**
-   - Operating system and version
-   - Node.js version
-   - Application version
-
-2. **Error Details**
-   - Complete error message
-   - Steps to reproduce
-   - Expected vs. actual behavior
-
-3. **Configuration**
-   - Analysis settings used
-   - LLM provider configuration
-   - Any custom settings
-
-4. **Repository Information**
-   - Repository size and structure
-   - Programming languages used
-   - Any special characteristics
-
-This comprehensive guide should help you make the most of the Unified Repository Analyzer. For additional help or advanced use cases, please refer to our API documentation or contact support.
+Include:
+- System: OS, Node.js, app version
+- Error: message, steps to reproduce, expected vs actual
+- Configuration: analysis settings, LLM provider config, custom settings
+- Repository: size, structure, languages, special characteristics

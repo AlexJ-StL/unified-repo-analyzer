@@ -1,25 +1,26 @@
 # Deployment Guide
 
-This guide covers the deployment and production setup of the Unified Repository Analyzer.
+This is the canonical deployment guide for Unified Repository Analyzer. The shorter overview in README-DEPLOYMENT.md links back here.
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Environment Configuration](#environment-configuration)
-- [Docker Deployment](#docker-deployment)
-- [Manual Deployment](#manual-deployment)
-- [Production Considerations](#production-considerations)
-- [Monitoring and Logging](#monitoring-and-logging)
-- [Backup and Recovery](#backup-and-recovery)
-- [Troubleshooting](#troubleshooting)
+- Prerequisites
+- Environment Configuration
+- Docker Deployment
+- Manual Deployment
+- Kubernetes Deployment
+- Production Considerations
+- Monitoring and Logging
+- Backup and Recovery
+- Troubleshooting
 
 ## Prerequisites
 
 ### System Requirements
 
 - **Operating System**: Linux, macOS, or Windows
-- **Node.js**: Version 18.0.0 or higher
-- **npm**: Version 8.0.0 or higher
+- **Bun**: 1.0+ (recommended) or Node.js 18+
+- **npm/bun**: npm 8+ or Bun (for local builds)
 - **Docker**: Version 20.0.0 or higher (for containerized deployment)
 - **Docker Compose**: Version 2.0.0 or higher
 - **Memory**: Minimum 2GB RAM, recommended 4GB+
@@ -27,9 +28,9 @@ This guide covers the deployment and production setup of the Unified Repository 
 
 ### Network Requirements
 
-- **Port 3000**: Backend API server
-- **Port 80**: Frontend web application (or custom port)
-- **Port 9090**: Metrics endpoint (optional)
+- Backend API: 3000/TCP
+- Frontend Web: 80/TCP (or custom)
+- Metrics (optional): 9090/TCP
 - **Outbound HTTPS**: Access to LLM provider APIs (Claude, Gemini, OpenRouter)
 
 ## Environment Configuration
@@ -96,30 +97,29 @@ BACKUP_RETENTION_DAYS=30
 
 ## Docker Deployment
 
-### Quick Start
+### Quick start
 
-1. **Clone and configure**:
-   ```bash
-   git clone <repository-url>
-   cd unified-repo-analyzer
-   cp packages/backend/.env.example packages/backend/.env
-   # Edit .env with your configuration
-   ```
+1) Clone and configure
+```bash
+git clone <repository-url>
+cd unified-repo-analyzer
+cp packages/backend/.env.example packages/backend/.env
+# Edit .env with your configuration
+```
 
-2. **Deploy using script**:
-   ```bash
-   # Linux/macOS
-   ./scripts/deploy.sh
+2) Deploy
+```bash
+bun run deploy:prod             # Bun task builds and brings up Docker
+# or:
+./scripts/deploy.sh             # Linux/macOS
+.\scripts\deploy.ps1            # Windows
+```
 
-   # Windows
-   .\scripts\deploy.ps1
-   ```
-
-3. **Verify deployment**:
-   ```bash
-   curl http://localhost:3000/health
-   curl http://localhost/
-   ```
+3) Verify
+```bash
+curl http://localhost:3000/health
+curl http://localhost/
+```
 
 ### Manual Docker Deployment
 
@@ -152,17 +152,17 @@ The `docker-compose.yml` file includes:
 
 ## Manual Deployment
 
-### 1. Build Application
+### 1. Build application
 
 ```bash
 # Install dependencies
-npm ci
+bun install
 
 # Run tests
-npm run test
+bun test
 
 # Build for production
-npm run build:prod
+bun run build:prod
 ```
 
 ### 2. Deploy Backend
@@ -170,11 +170,11 @@ npm run build:prod
 ```bash
 cd packages/backend
 
-# Install production dependencies only
-npm ci --only=production
+# Install production deps (if not using Docker)
+bun install --production
 
 # Start the server
-NODE_ENV=production npm start
+NODE_ENV=production bun run start
 ```
 
 ### 3. Deploy Frontend
@@ -183,7 +183,7 @@ NODE_ENV=production npm start
 cd packages/frontend
 
 # Build for production
-npm run build:prod
+bun run build:prod
 
 # Serve with your web server (nginx, apache, etc.)
 # Point document root to: packages/frontend/dist
@@ -226,7 +226,7 @@ server {
 
 ## Production Considerations
 
-### Performance Optimization
+### Performance Optimization (Backend ports and metrics)
 
 1. **Resource Limits**:
    - Set appropriate memory limits for Node.js processes
@@ -413,16 +413,29 @@ For additional support:
 
 ## Kubernetes Deployment
 
-For Kubernetes deployment, see the example manifests in the `k8s/` directory:
+For Kubernetes deployment, see the example manifests in k8s/:
 
-- `deployment.yaml` - Application deployment
-- `service.yaml` - Service configuration
-- `ingress.yaml` - Ingress configuration
-- `configmap.yaml` - Configuration management
-- `secret.yaml` - Secrets management
+- backend-deployment.yaml — Backend Deployment with containerPort 3000 and metrics 9090
+- frontend-deployment.yaml — Frontend Deployment with containerPort 80
+- services.yaml — ClusterIP services exposing:
+  - repo-analyzer-backend-service: ports 3000 (http) and 9090 (metrics)
+  - repo-analyzer-frontend-service: port 80 (http)
+- ingress.yaml — Ingress routing:
+  - /api, /socket.io, /health, /metrics -> repo-analyzer-backend-service:3000
+  - / -> repo-analyzer-frontend-service:80
+- configmap.yaml — Application configuration (PORT=3000, ENABLE_METRICS=true, METRICS_PORT=9090, etc.)
+- secret.yaml — Secrets (JWT_SECRET, SESSION_SECRET, ENCRYPTION_KEY, provider API keys)
+- namespace.yaml — Target namespace (repo-analyzer)
+- persistent-volumes.yaml — PV/PVC for data/logs/backups
 
 Deploy with:
-
 ```bash
 kubectl apply -f k8s/
+```
+
+Verify services:
+```bash
+kubectl -n repo-analyzer get deploy,svc,ingress,pods
+kubectl -n repo-analyzer get svc repo-analyzer-backend-service -o yaml | grep -A4 ports:
+kubectl -n repo-analyzer describe ingress repo-analyzer-ingress
 ```
