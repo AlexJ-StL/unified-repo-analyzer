@@ -1,99 +1,128 @@
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { ToastData } from '../components/error/Toast';
-import ToastContainer from '../components/error/ToastContainer';
+import type React from "react";
+import {
+	createContext,
+	type ReactNode,
+	useCallback,
+	useContext,
+	useState,
+} from "react";
+import ToastContainer from "../components/error/ToastContainer";
+
+interface Toast {
+	id: string;
+	type: "success" | "error" | "warning" | "info";
+	title: string;
+	message?: string;
+	duration?: number;
+	action?: {
+		label: string;
+		onClick: () => void;
+	};
+}
 
 interface ToastContextType {
-  showToast: (toast: Omit<ToastData, 'id'>) => void;
-  showSuccess: (title: string, message?: string, action?: ToastData['action']) => void;
-  showError: (title: string, message?: string, action?: ToastData['action']) => void;
-  showWarning: (title: string, message?: string, action?: ToastData['action']) => void;
-  showInfo: (title: string, message?: string, action?: ToastData['action']) => void;
-  removeToast: (id: string) => void;
-  clearAllToasts: () => void;
+	showToast: (toast: Omit<Toast, "id">) => void;
+	showSuccess: (
+		title: string,
+		message?: string,
+		action?: Toast["action"],
+	) => void;
+	showError: (
+		title: string,
+		message?: string,
+		action?: Toast["action"],
+	) => void;
+	showWarning: (
+		title: string,
+		message?: string,
+		action?: Toast["action"],
+	) => void;
+	showInfo: (title: string, message?: string, action?: Toast["action"]) => void;
+	removeToast: (id: string) => void;
+	clearAllToasts: () => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 interface ToastProviderProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
+const generateId = (): string => {
+	return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-  const [toasts, setToasts] = useState<ToastData[]>([]);
+	const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const generateId = () => {
-    return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  };
+	const showToast = useCallback((toast: Omit<Toast, "id">) => {
+		const id = generateId();
+		const newToast: Toast = {
+			id,
+			duration: 5000, // Default 5 seconds
+			...toast,
+		};
+		setToasts((prev) => [...prev, newToast]);
+	}, []);
 
-  const showToast = useCallback((toast: Omit<ToastData, 'id'>) => {
-    const id = generateId();
-    const newToast: ToastData = {
-      id,
-      duration: 5000, // Default 5 seconds
-      ...toast,
-    };
+	const showSuccess = useCallback(
+		(title: string, message?: string, action?: Toast["action"]) => {
+			showToast({ type: "success", title, message, action });
+		},
+		[showToast],
+	);
 
-    setToasts((prev) => [...prev, newToast]);
-  }, []);
+	const showError = useCallback(
+		(title: string, message?: string, action?: Toast["action"]) => {
+			showToast({ type: "error", title, message, action, duration: 0 }); // Errors don't auto-dismiss
+		},
+		[showToast],
+	);
 
-  const showSuccess = useCallback(
-    (title: string, message?: string, action?: ToastData['action']) => {
-      showToast({ type: 'success', title, message, action });
-    },
-    [showToast]
-  );
+	const showWarning = useCallback(
+		(title: string, message?: string, action?: Toast["action"]) => {
+			showToast({ type: "warning", title, message, action });
+		},
+		[showToast],
+	);
 
-  const showError = useCallback(
-    (title: string, message?: string, action?: ToastData['action']) => {
-      showToast({ type: 'error', title, message, action, duration: 0 }); // Errors don't auto-dismiss
-    },
-    [showToast]
-  );
+	const showInfo = useCallback(
+		(title: string, message?: string, action?: Toast["action"]) => {
+			showToast({ type: "info", title, message, action });
+		},
+		[showToast],
+	);
 
-  const showWarning = useCallback(
-    (title: string, message?: string, action?: ToastData['action']) => {
-      showToast({ type: 'warning', title, message, action });
-    },
-    [showToast]
-  );
+	const removeToast = useCallback((id: string) => {
+		setToasts((prev) => prev.filter((toast) => toast.id !== id));
+	}, []);
 
-  const showInfo = useCallback(
-    (title: string, message?: string, action?: ToastData['action']) => {
-      showToast({ type: 'info', title, message, action });
-    },
-    [showToast]
-  );
+	const clearAllToasts = useCallback(() => {
+		setToasts([]);
+	}, []);
 
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
+	const value: ToastContextType = {
+		showToast,
+		showSuccess,
+		showError,
+		showWarning,
+		showInfo,
+		removeToast,
+		clearAllToasts,
+	};
 
-  const clearAllToasts = useCallback(() => {
-    setToasts([]);
-  }, []);
-
-  const value: ToastContextType = {
-    showToast,
-    showSuccess,
-    showError,
-    showWarning,
-    showInfo,
-    removeToast,
-    clearAllToasts,
-  };
-
-  return (
-    <ToastContext.Provider value={value}>
-      {children}
-      <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
-    </ToastContext.Provider>
-  );
+	return (
+		<ToastContext.Provider value={value}>
+			{children}
+			<ToastContainer toasts={toasts} onRemoveToast={removeToast} />
+		</ToastContext.Provider>
+	);
 };
 
 export const useToast = (): ToastContextType => {
-  const context = useContext(ToastContext);
-  if (context === undefined) {
-    throw new Error('useToast must be used within a ToastProvider');
-  }
-  return context;
+	const context = useContext(ToastContext);
+	if (context === undefined) {
+		throw new Error("useToast must be used within a ToastProvider");
+	}
+	return context;
 };
