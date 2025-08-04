@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { useRepositoryStore } from '../../store/useRepositoryStore';
 
 interface SavedSearch {
@@ -31,9 +32,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({ onSelectSearch }) => {
           const parsedSearches = JSON.parse(savedSearchesJson);
           setSavedSearches(parsedSearches);
         }
-      } catch (error) {
-        console.error('Failed to load saved searches:', error);
-      }
+      } catch (_error) {}
     };
 
     loadSavedSearches();

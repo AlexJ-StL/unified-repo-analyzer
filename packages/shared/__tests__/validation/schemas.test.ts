@@ -2,7 +2,7 @@
  * Tests for validation schemas
  */
 
-import { test, expect, describe } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import * as schemas from '../../src/validation/schemas';
 
 describe('Validation Schemas', () => {

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useRepositoryStore } from '../../store/useRepositoryStore';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { apiService, handleApiError } from '../../services/api';
-import SearchFilters from './SearchFilters';
-import RepositoryCard from './RepositoryCard';
+import { useRepositoryStore } from '../../store/useRepositoryStore';
 import Pagination from './Pagination';
+import RepositoryCard from './RepositoryCard';
 import SavedSearches from './SavedSearches';
+import SearchFilters from './SearchFilters';
 
 interface SearchInterfaceProps {
   onSelectRepository?: (repositoryId: string) => void;
@@ -57,7 +58,16 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
     };
 
     fetchRepositories();
-  }, [searchQuery, filters, currentPage, sortField, sortDirection]);
+  }, [
+    searchQuery,
+    filters,
+    currentPage,
+    sortField,
+    sortDirection,
+    setError,
+    setLoading,
+    setRepositories,
+  ]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -194,7 +204,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           {/* Repository cards */}
           {isLoading ? (
             <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
             </div>
           ) : error ? (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
@@ -212,7 +222,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
                   repository={repository}
                   isSelected={selectedRepositories.includes(repository.id)}
                   onSelect={() => handleRepositorySelect(repository.id)}
-                  onView={() => onSelectRepository && onSelectRepository(repository.id)}
+                  onView={() => onSelectRepository?.(repository.id)}
                 />
               ))}
             </div>

@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import RepositorySelector from '../RepositorySelector';
 import { fileSystemService } from '../../../services/fileSystem';
 import { useAnalysisStore } from '../../../store/useAnalysisStore';
+import RepositorySelector from '../RepositorySelector';
 
 // Mock the fileSystemService
 vi.mock('../../../services/fileSystem', () => ({

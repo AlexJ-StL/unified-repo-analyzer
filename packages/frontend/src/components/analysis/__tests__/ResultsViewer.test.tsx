@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import { vi } from 'vitest';
 import ResultsViewer from '../ResultsViewer';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 
 // Mock the child components
 vi.mock('../results/ExecutiveSummary', () => ({

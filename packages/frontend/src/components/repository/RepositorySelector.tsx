@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { type DirectoryItem, fileSystemService } from '../../services/fileSystem';
 import { useAnalysisStore } from '../../store/useAnalysisStore';
-import { fileSystemService, DirectoryItem } from '../../services/fileSystem';
 import { isValidFilePath } from '../../utils/validators';
 
 interface RepositorySelectorProps {
@@ -16,6 +17,22 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
   const [error, setError] = useState<string | null>(null);
   const [recentRepositories, setRecentRepositories] = useState<string[]>([]);
 
+  // Define before useEffect to avoid \"used before declaration\" and to stabilize identity
+  const browseDirectory = useCallback(async (path: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fileSystemService.browseDirectory(path);
+      setDirectoryItems(response.items);
+      setCurrentPath(response.path);
+    } catch (_error) {
+      setError('Failed to browse directory');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Load home directory on component mount
   useEffect(() => {
     const loadHomeDirectory = async () => {
@@ -23,9 +40,8 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
         const homePath = await fileSystemService.getHomeDirectory();
         setCurrentPath(homePath);
         browseDirectory(homePath);
-      } catch (error) {
+      } catch (_error) {
         setError('Failed to load home directory');
-        console.error(error);
       }
     };
 
@@ -36,23 +52,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
 
     loadHomeDirectory();
     loadRecentRepositories();
-  }, []);
-
-  const browseDirectory = async (path: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fileSystemService.browseDirectory(path);
-      setDirectoryItems(response.items);
-      setCurrentPath(response.path);
-    } catch (error) {
-      setError('Failed to browse directory');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [browseDirectory]);
 
   const handleDirectoryClick = (item: DirectoryItem) => {
     if (item.isDirectory) {
@@ -183,12 +183,12 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"
-                ></circle>
+                />
                 <path
                   className="opacity-75"
                   fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
+                />
               </svg>
             </div>
           ) : directoryItems.length === 0 ? (

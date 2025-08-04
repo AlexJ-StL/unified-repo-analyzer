@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import { PrinterIcon } from '@heroicons/react/24/outline';
-import ExecutiveSummary from './results/ExecutiveSummary';
-import TechnicalBreakdown from './results/TechnicalBreakdown';
-import FileTreeViewer from './results/FileTreeViewer';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
 import DependencyGraph from './results/DependencyGraph';
+import ExecutiveSummary from './results/ExecutiveSummary';
 import ExportButton from './results/ExportButton';
-import PrintableReport from './results/PrintableReport';
 import ExportHistory from './results/ExportHistory';
+import FileTreeViewer from './results/FileTreeViewer';
+import PrintableReport from './results/PrintableReport';
+import TechnicalBreakdown from './results/TechnicalBreakdown';
 
 interface ResultsViewerProps {
   analysis: RepositoryAnalysis;
