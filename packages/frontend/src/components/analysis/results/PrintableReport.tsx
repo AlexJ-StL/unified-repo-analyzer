@@ -1,5 +1,5 @@
-import React from 'react';
-import { RepositoryAnalysis, BatchAnalysisResult } from '@unified-repo-analyzer/shared';
+import type { BatchAnalysisResult, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
 
 interface PrintableReportProps {
   analysis?: RepositoryAnalysis;

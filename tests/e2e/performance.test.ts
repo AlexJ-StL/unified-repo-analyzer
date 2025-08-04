@@ -2,21 +2,21 @@
  * Performance tests for large repository processing
  */
 
-import { describe, test, expect, beforeAll, afterAll } from 'vitest';
+import { join } from 'node:path';
 import axios from 'axios';
-import { join } from 'path';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import {
-  startTestServer,
   createTestRepository,
-  waitForAnalysis,
-  TestServer,
-  TestRepository,
   PerformanceMonitor,
+  startTestServer,
+  type TestRepository,
+  type TestServer,
+  waitForAnalysis,
 } from './setup';
 
 describe('Performance Tests', () => {
   let server: TestServer;
-  let testRepos: TestRepository[] = [];
+  const testRepos: TestRepository[] = [];
   const perfMonitor = new PerformanceMonitor();
 
   beforeAll(async () => {

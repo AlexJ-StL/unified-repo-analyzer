@@ -2,16 +2,15 @@
  * Frontend performance tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { performanceService } from '../services/performance.service';
-import { useLazyLoading, useInfiniteScroll, useVirtualScrolling } from '../hooks/useLazyLoading';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { useLazyLoading, useVirtualScrolling } from '../hooks/useLazyLoading';
 import {
   useDebounce,
-  useThrottle,
   useRenderPerformance,
+  useThrottle,
 } from '../hooks/usePerformanceOptimization';
-import { renderHook, act } from '@testing-library/react';
+import { performanceService } from '../services/performance.service';
 
 describe('Frontend Performance Tests', () => {
   beforeEach(() => {
@@ -244,7 +243,7 @@ describe('Frontend Performance Tests', () => {
       const startTime = performance.now();
 
       // Simulate lazy loading a component (mock since the actual component may not exist)
-      const LazyComponent = await Promise.resolve({ default: () => 'Mock Component' });
+      const _LazyComponent = await Promise.resolve({ default: () => 'Mock Component' });
 
       const duration = performance.now() - startTime;
 

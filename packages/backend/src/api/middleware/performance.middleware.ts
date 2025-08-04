@@ -2,8 +2,8 @@
  * Performance monitoring middleware for Express
  */
 
-import { Request, Response, NextFunction } from 'express';
-import { performance } from 'perf_hooks';
+import { performance } from 'node:perf_hooks';
+import type { NextFunction, Request, Response } from 'express';
 import { metricsService } from '../../services/metrics.service';
 import { logger } from '../../utils/logger';
 
@@ -73,7 +73,7 @@ export function performanceHeadersMiddleware() {
 /**
  * Middleware to monitor slow requests
  */
-export function slowRequestMiddleware(threshold: number = 1000) {
+export function slowRequestMiddleware(threshold = 1000) {
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
     res.on('finish', () => {
       if (req.startTime) {

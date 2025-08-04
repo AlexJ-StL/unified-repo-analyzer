@@ -2,15 +2,15 @@
  * Performance tests and benchmarks
  */
 
-import { performance } from 'perf_hooks';
+import fs from 'node:fs';
+import path from 'node:path';
+import { performance } from 'node:perf_hooks';
+import { promisify } from 'node:util';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../core/AnalysisEngine';
 import { analysisCache } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
-import { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
 
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
@@ -42,9 +42,7 @@ describe('Performance Tests', () => {
     // Clean up test repository
     try {
       await rmdir(testRepoPath, { recursive: true });
-    } catch (error) {
-      console.warn('Failed to clean up test repository:', error);
-    }
+    } catch (_error) {}
   });
 
   beforeEach(() => {
@@ -201,7 +199,7 @@ describe('Performance Tests', () => {
       expect(stats.totalDeduplicated).toBeGreaterThanOrEqual(0); // Allow 0 if requests complete too quickly
 
       console.log(`Concurrent requests completed in: ${totalTime.toFixed(2)}ms`);
-      console.log(`Deduplication stats:`, stats);
+      console.log('Deduplication stats:', stats);
     });
 
     it('should handle different requests separately', async () => {
@@ -249,9 +247,7 @@ describe('Performance Tests', () => {
         for (const repoPath of repoPaths) {
           try {
             await rmdir(repoPath, { recursive: true });
-          } catch (error) {
-            console.warn(`Failed to clean up ${repoPath}:`, error);
-          }
+          } catch (_error) {}
         }
       }
     });
@@ -293,7 +289,7 @@ describe('Performance Tests', () => {
 
       // Re-enable metrics
       const { MetricsService } = await import('../services/metrics.service');
-      const newMetricsService = new MetricsService();
+      const _newMetricsService = new MetricsService();
 
       // Measure performance with metrics
       const startWithMetrics = performance.now();
@@ -361,9 +357,7 @@ describe('Performance Tests', () => {
       } finally {
         try {
           await rmdir(largeRepoPath, { recursive: true });
-        } catch (error) {
-          console.warn('Failed to clean up large test repository:', error);
-        }
+        } catch (_error) {}
       }
     });
   });

@@ -1,9 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import ProgressTracker from '../ProgressTracker';
-import { useAnalysisStore } from '../../../store/useAnalysisStore';
-import websocketService from '../../../services/websocket';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiService } from '../../../services/api';
+import websocketService from '../../../services/websocket';
+import { useAnalysisStore } from '../../../store/useAnalysisStore';
+import ProgressTracker from '../ProgressTracker';
 
 // Mock the dependencies
 vi.mock('../../../store/useAnalysisStore');

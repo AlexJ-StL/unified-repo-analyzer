@@ -2,8 +2,9 @@
  * Project management component
  */
 
-import React, { useEffect } from 'react';
-import { PlusIcon, PencilIcon, TrashIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, RectangleStackIcon, TrashIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useEffect } from 'react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 
 const ProjectManager: React.FC = () => {
