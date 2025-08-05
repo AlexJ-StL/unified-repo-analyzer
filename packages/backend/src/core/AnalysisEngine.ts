@@ -170,13 +170,14 @@ export class AnalysisEngine {
 		for (let i = 0; i < repoPaths.length; i++) {
 			const repoPath = repoPaths[i];
 
+			// Narrow status reference for safe mutations (non-null: initialized above)
+			const status = batchResult.status!;
+
 			// Update status
-			batchResult.status.pending--;
-			batchResult.status.inProgress++;
-			batchResult.status.progress = Math.round(
-				((batchResult.status.completed + batchResult.status.failed) /
-					batchResult.status.total) *
-					100,
+			status.pending--;
+			status.inProgress++;
+			status.progress = Math.round(
+				((status.completed + status.failed) / status.total) * 100,
 			);
 
 			try {
@@ -187,19 +188,17 @@ export class AnalysisEngine {
 				batchResult.repositories.push(analysis);
 
 				// Update status
-				batchResult.status.completed++;
-				batchResult.status.inProgress--;
+				status.completed++;
+				status.inProgress--;
 			} catch (_error) {
 				// Update status
-				batchResult.status.failed++;
-				batchResult.status.inProgress--;
+				status.failed++;
+				status.inProgress--;
 			}
 
 			// Update progress
-			batchResult.status.progress = Math.round(
-				((batchResult.status.completed + batchResult.status.failed) /
-					batchResult.status.total) *
-					100,
+			status.progress = Math.round(
+				((status.completed + status.failed) / status.total) * 100,
 			);
 		}
 

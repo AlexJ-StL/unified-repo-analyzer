@@ -50,13 +50,28 @@ describe("Performance Tests", () => {
 		// Clear caches and metrics before each test
 		analysisCache.invalidateAll();
 		deduplicationService.clear();
-		// Some environments may resolve the metrics service default export differently.
-		// Use a defensive call to ensure the clear method is invoked on the singleton.
-		if (typeof (metricsService as any).clear === "function") {
-			(metricsService as any).clear();
-		} else if (typeof (metricsService as any)?.default?.clear === "function") {
-			(metricsService as any).default.clear();
-		}
+		// Reset the metrics service between tests (call destroy(), fallback to clear(), then dynamic import)
+		(async () => {
+			try {
+				(metricsService as unknown as { destroy: () => void }).destroy();
+			} catch {
+				try {
+					(metricsService as unknown as { clear: () => void }).clear();
+				} catch {
+					try {
+						const msModule: any = await import("../services/metrics.service");
+						const ms = msModule?.default ?? msModule?.metricsService;
+						if (ms && typeof ms.destroy === "function") {
+							ms.destroy();
+						} else if (ms && typeof ms.clear === "function") {
+							ms.clear();
+						}
+					} catch {
+						// ignore if metrics cannot be reset
+					}
+				}
+			}
+		})();
 	});
 
 	describe("Cache Performance", () => {
@@ -207,7 +222,11 @@ describe("Performance Tests", () => {
 
 	describe("Deduplication Performance", () => {
 		it("should deduplicate concurrent identical requests", async () => {
-			const promises = [];
+			const promises: Array<
+				Promise<
+					import("@unified-repo-analyzer/shared/src/types/analysis").RepositoryAnalysis
+				>
+			> = [];
 			const startTime = performance.now();
 
 			// Start 5 concurrent identical requests
@@ -254,7 +273,7 @@ describe("Performance Tests", () => {
 	describe("Batch Processing Performance", () => {
 		it("should process multiple repositories efficiently", async () => {
 			// Create multiple test repositories
-			const repoPaths = [];
+			const repoPaths: string[] = [];
 			for (let i = 0; i < 3; i++) {
 				const repoPath = path.join(__dirname, `test-repo-batch-${i}`);
 				await createTestRepository(repoPath);
@@ -272,8 +291,9 @@ describe("Performance Tests", () => {
 				const totalTime = performance.now() - startTime;
 
 				expect(batchResult.repositories).toHaveLength(3);
-				expect(batchResult.status.completed).toBe(3);
-				expect(batchResult.status.failed).toBe(0);
+				const status = batchResult.status!;
+				expect(status.completed).toBe(3);
+				expect(status.failed).toBe(0);
 
 				console.log(`Batch processing completed in: ${totalTime.toFixed(2)}ms`);
 				console.log(`Average per repository: ${(totalTime / 3).toFixed(2)}ms`);
