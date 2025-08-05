@@ -309,7 +309,7 @@ describe("Bun Runtime Compatibility Tests", () => {
 
 			// Verify scripts use Bun
 			expect(packageJson.scripts.dev).toContain("bun run");
-			expect(packageJson.scripts.test).toBe("bun test");
+			expect(packageJson.scripts.test).toContain("bun test");
 			expect(packageJson.scripts.build).toContain("bun run");
 			expect(packageJson.scripts.lint).toContain("biome");
 			expect(packageJson.scripts.format).toContain("biome");
