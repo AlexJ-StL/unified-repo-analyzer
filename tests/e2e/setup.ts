@@ -42,7 +42,7 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
 	let retries = 30;
 	while (retries > 0) {
 		try {
-			await axios.get(`${baseUrl}/api/health`);
+			await axios.get(`${baseUrl}/health`);
 			break;
 		} catch (_error) {
 			retries--;
