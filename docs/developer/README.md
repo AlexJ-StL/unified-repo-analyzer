@@ -742,7 +742,7 @@ export class ConfigManager {
 ### Code Style
 
 - Use TypeScript with strict mode enabled
-- Follow ESLint and Prettier configurations
+- Follow Biome linting and formatting configurations
 - Write descriptive commit messages
 - Add JSDoc comments for public APIs
 

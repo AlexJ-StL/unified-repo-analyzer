@@ -29,9 +29,33 @@ export interface TestRepository {
  * Start the backend server for testing
  */
 export async function startTestServer(port = 3001): Promise<TestServer> {
+	// Create necessary directories for the backend
+	const backendDir = join(__dirname, "../../packages/backend");
+	const dataDir = join(backendDir, "data");
+	const cacheDir = join(backendDir, "data/cache");
+	const indexDir = join(backendDir, "data/index");
+	const logDir = join(backendDir, "logs");
+	const backupDir = join(backendDir, "backups");
+
+	// Ensure directories exist
+	await mkdir(dataDir, { recursive: true });
+	await mkdir(cacheDir, { recursive: true });
+	await mkdir(indexDir, { recursive: true });
+	await mkdir(logDir, { recursive: true });
+	await mkdir(backupDir, { recursive: true });
+
 	const serverProcess = spawn("bun", ["run", "dev"], {
-		cwd: join(__dirname, "../../packages/backend"),
-		env: { ...process.env, PORT: port.toString() },
+		cwd: backendDir,
+		env: {
+			...process.env,
+			PORT: port.toString(),
+			NODE_ENV: "test",
+			DATA_DIR: dataDir,
+			CACHE_DIR: cacheDir,
+			INDEX_DIR: indexDir,
+			LOG_DIR: logDir,
+			BACKUP_DIR: backupDir,
+		},
 		stdio: "pipe",
 		shell: true,
 	});
@@ -40,15 +64,34 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
 
 	// Wait for server to be ready
 	let retries = 30;
+	let lastError: any = null;
+
+	// Capture server output for debugging
+	let serverOutput = "";
+	let serverError = "";
+
+	serverProcess.stdout?.on("data", (data) => {
+		serverOutput += data.toString();
+	});
+
+	serverProcess.stderr?.on("data", (data) => {
+		serverError += data.toString();
+	});
+
 	while (retries > 0) {
 		try {
-			await axios.get(`${baseUrl}/health`);
+			await axios.get(`${baseUrl}/health/live`);
 			break;
-		} catch (_error) {
+		} catch (error) {
+			lastError = error;
 			retries--;
 			if (retries === 0) {
 				serverProcess.kill();
-				throw new Error("Server failed to start within timeout");
+				console.error("Server stdout:", serverOutput);
+				console.error("Server stderr:", serverError);
+				throw new Error(
+					`Server failed to start within timeout. Last error: ${lastError?.message || "Unknown"}`,
+				);
 			}
 			await sleep(1000);
 		}

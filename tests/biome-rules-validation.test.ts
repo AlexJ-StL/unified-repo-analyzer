@@ -1,8 +1,8 @@
 /**
  * Biome linting rules validation tests
  *
- * Tests to validate that Biome linting rules match previous ESLint behavior
- * and provide equivalent functionality.
+ * Tests to validate that Biome linting rules work correctly
+ * and provide comprehensive code quality checks.
  */
 
 import { spawn } from "node:child_process";
@@ -149,7 +149,7 @@ describe("Biome Rules Validation Tests", () => {
 	});
 
 	describe("Linting Rule Equivalents", () => {
-		test("should detect explicit any usage (ESLint: @typescript-eslint/no-explicit-any)", async () => {
+		test("should detect explicit any usage (Biome: noExplicitAny)", async () => {
 			const testCode = `
         function badFunction(param: any): any {
           return param;
@@ -175,7 +175,7 @@ describe("Biome Rules Validation Tests", () => {
 			}
 		});
 
-		test("should enforce const usage (ESLint: prefer-const)", async () => {
+		test("should enforce const usage (Biome: useConst)", async () => {
 			const testCode = `
         let unchangedVariable = 'hello';
         console.log(unchangedVariable);
@@ -193,7 +193,7 @@ describe("Biome Rules Validation Tests", () => {
 			}
 		});
 
-		test("should enforce template literals (ESLint: prefer-template)", async () => {
+		test("should enforce template literals (Biome: useTemplate)", async () => {
 			const testCode = `
         const name = 'world';
         const message = 'Hello ' + name + '!';
@@ -212,7 +212,7 @@ describe("Biome Rules Validation Tests", () => {
 			}
 		});
 
-		test("should detect unused variables (ESLint: @typescript-eslint/no-unused-vars)", async () => {
+		test("should detect unused variables (Biome: noUnusedVariables)", async () => {
 			const testCode = `
         function testFunction() {
           const unusedVariable = 'not used';

@@ -77,7 +77,7 @@ sourcemap = "external"
 
 ### Code Quality: Biome
 
-Biome replaces ESLint + Prettier with a single, fast tool:
+Biome provides unified linting and formatting in a single, fast tool:
 
 - **Unified Tooling**: Linting and formatting in one tool
 - **Fast Performance**: Written in Rust for speed

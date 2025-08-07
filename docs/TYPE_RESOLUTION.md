@@ -126,7 +126,7 @@ export function useIntersectionObserver(options: IntersectionObserverInit = {}):
 
 ## Verification
 
-To verify the fixes, run ESLint:
+To verify the fixes, run Biome:
 
 ```bash
 npm run lint
