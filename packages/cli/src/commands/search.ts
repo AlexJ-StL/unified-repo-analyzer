@@ -16,7 +16,7 @@ interface SearchCommandOptions {
  */
 export async function executeSearch(query: string, options: SearchCommandOptions): Promise<void> {
   const progress = new ProgressTracker('Repository Search');
-  const apiClient = new ApiClient();
+  const _apiClient = new ApiClient();
 
   try {
     // Start search

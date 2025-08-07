@@ -29,7 +29,7 @@ interface BatchCommandOptions {
  */
 export async function executeBatch(basePath: string, options: BatchCommandOptions): Promise<void> {
   const progress = new ProgressTracker('Batch Repository Analysis');
-  const apiClient = new ApiClient();
+  const _apiClient = new ApiClient();
 
   try {
     // Validate base path

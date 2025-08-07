@@ -36,7 +36,7 @@ beforeAll(async () => {
     try {
       const { default: jestDom } = await import('@testing-library/jest-dom');
       expect.extend(jestDom);
-    } catch (error) {
+    } catch (_error) {
       // jest-dom not available, skip
     }
 
@@ -93,7 +93,7 @@ beforeEach(() => {
     try {
       const { cleanup } = await import('@testing-library/react');
       cleanup();
-    } catch (error) {
+    } catch (_error) {
       // @testing-library/react not available, skip
     }
   }

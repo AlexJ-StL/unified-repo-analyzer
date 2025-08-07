@@ -50,7 +50,6 @@ class MetricsService {
     analysisTimeHistogram: [],
     repositoriesProcessed: 0,
   };
-  private startTime: Date = new Date();
   private activeConnections = 0;
 
   constructor() {
@@ -121,7 +120,7 @@ class MetricsService {
   }
 
   recordAnalysis(
-    repoPath: string,
+    _repoPath: string,
     mode: string,
     processingTime: number,
     fileCount: number,

@@ -11,7 +11,7 @@ interface IndexCommandOptions {
  */
 export async function executeIndex(options: IndexCommandOptions): Promise<void> {
   const progress = new ProgressTracker('Repository Index');
-  const apiClient = new ApiClient();
+  const _apiClient = new ApiClient();
 
   try {
     if (process.env.NODE_ENV === 'test') {

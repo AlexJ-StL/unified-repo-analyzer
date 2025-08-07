@@ -67,15 +67,15 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
   let lastError: any = null;
 
   // Capture server output for debugging
-  let serverOutput = '';
-  let serverError = '';
+  let _serverOutput = '';
+  let _serverError = '';
 
   serverProcess.stdout?.on('data', (data) => {
-    serverOutput += data.toString();
+    _serverOutput += data.toString();
   });
 
   serverProcess.stderr?.on('data', (data) => {
-    serverError += data.toString();
+    _serverError += data.toString();
   });
 
   while (retries > 0) {
@@ -87,8 +87,6 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
       retries--;
       if (retries === 0) {
         serverProcess.kill();
-        console.error('Server stdout:', serverOutput);
-        console.error('Server stderr:', serverError);
         throw new Error(
           `Server failed to start within timeout. Last error: ${lastError?.message || 'Unknown'}`
         );

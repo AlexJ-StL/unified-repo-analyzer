@@ -17,7 +17,7 @@ export async function executeExport(
   options: ExportCommandOptions
 ): Promise<void> {
   const progress = new ProgressTracker('Analysis Export');
-  const apiClient = new ApiClient();
+  const _apiClient = new ApiClient();
 
   try {
     // Start export
