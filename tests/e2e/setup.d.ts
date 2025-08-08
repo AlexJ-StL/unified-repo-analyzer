@@ -1,7 +1,8 @@
 /**
  * End-to-end test setup and utilities
  */
-import { ChildProcess } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
+import type { AnalysisResult, PerformanceStats } from './types';
 export interface TestServer {
   process: ChildProcess;
   port: number;
@@ -32,7 +33,7 @@ export declare function waitForAnalysis(
   baseUrl: string,
   analysisId: string,
   timeout?: number
-): Promise<any>;
+): Promise<AnalysisResult>;
 /**
  * Sample test repositories for different scenarios
  */
@@ -70,5 +71,5 @@ export declare class PerformanceMonitor {
     median: number;
     p95: number;
   } | null;
-  getAllStats(): Record<string, any>;
+  getAllStats(): Record<string, PerformanceStats | null>;
 }

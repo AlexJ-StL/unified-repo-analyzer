@@ -13,6 +13,7 @@ import {
   type TestServer,
   waitForAnalysis,
 } from './setup';
+import type { BatchResult } from './types';
 
 describe('Performance Tests', () => {
   let server: TestServer;
@@ -424,7 +425,7 @@ export default function Component${i}() {
       });
 
       // Wait for batch completion
-      let batchResult;
+      let batchResult: BatchResult | undefined;
       let retries = 120; // 2 minute timeout
 
       while (retries > 0) {
@@ -446,8 +447,8 @@ export default function Component${i}() {
       }
 
       expect(batchResult).toBeDefined();
-      expect(batchResult.results).toHaveLength(20);
-      expect(batchResult.results.every((r: any) => r.status === 'completed')).toBe(true);
+      expect(batchResult?.results).toHaveLength(20);
+      expect(batchResult?.results.every((r) => r.status === 'completed')).toBe(true);
 
       const duration = endTimer();
       expect(duration).toBeLessThan(120000); // Should complete within 2 minutes

@@ -84,10 +84,10 @@ afterAll(async () => {
   // Cleanup after all tests
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   // Reset mocks before each test
   // Vitest mocks are automatically reset
-  
+
   // Cleanup DOM if in jsdom environment
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {

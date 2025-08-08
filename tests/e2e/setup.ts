@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import axios from 'axios';
+import type { AnalysisResult, PerformanceStats } from './types';
 
 const sleep = promisify(setTimeout);
 
@@ -64,7 +65,7 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
 
   // Wait for server to be ready
   let retries = 30;
-  let lastError: any = null;
+  let lastError: unknown = null;
 
   // Capture server output for debugging
   let _serverOutput = '';
@@ -146,7 +147,7 @@ export async function waitForAnalysis(
   baseUrl: string,
   analysisId: string,
   timeout = 30000
-): Promise<any> {
+): Promise<AnalysisResult> {
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeout) {
@@ -330,13 +331,13 @@ export class PerformanceMonitor {
     };
   }
 
-  getAllStats() {
+  getAllStats(): Record<string, PerformanceStats | null> {
     return Object.keys(this.metrics).reduce(
       (acc, name) => {
         acc[name] = this.getStats(name);
         return acc;
       },
-      {} as Record<string, any>
+      {} as Record<string, PerformanceStats | null>
     );
   }
 }

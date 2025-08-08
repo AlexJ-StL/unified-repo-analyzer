@@ -13,6 +13,7 @@ import {
   TEST_REPOSITORIES,
   type TestRepository,
 } from './setup';
+import type { CLIOutput, RepoSummary } from './types';
 
 describe('CLI End-to-End Tests', () => {
   const testRepos: TestRepository[] = [];
@@ -152,10 +153,10 @@ describe('CLI End-to-End Tests', () => {
 
       expect(result.exitCode).toBe(0);
 
-      const output = JSON.parse(result.stdout);
+      const output = JSON.parse(result.stdout) as CLIOutput;
       expect(output).toHaveProperty('results');
       expect(output.results).toHaveLength(3);
-      expect(output.results.every((r: any) => r.status === 'completed')).toBe(true);
+      expect(output.results.every((r) => r.status === 'completed')).toBe(true);
 
       const duration = endTimer();
       expect(duration).toBeLessThan(60000);
@@ -183,10 +184,10 @@ describe('CLI End-to-End Tests', () => {
 
       expect(result.exitCode).toBe(0); // Should not fail completely
 
-      const output = JSON.parse(result.stdout);
+      const output = JSON.parse(result.stdout) as CLIOutput;
       expect(output.results).toHaveLength(2);
-      expect(output.results.some((r: any) => r.status === 'completed')).toBe(true);
-      expect(output.results.some((r: any) => r.status === 'failed')).toBe(true);
+      expect(output.results.some((r) => r.status === 'completed')).toBe(true);
+      expect(output.results.some((r) => r.status === 'failed')).toBe(true);
 
       // Cleanup
       await rm(batchDir, { recursive: true, force: true });
@@ -212,11 +213,11 @@ describe('CLI End-to-End Tests', () => {
 
       expect(result.exitCode).toBe(0);
 
-      const output = JSON.parse(result.stdout);
+      const output = JSON.parse(result.stdout) as RepoSummary[];
       expect(Array.isArray(output)).toBe(true);
       if (output.length > 0) {
         expect(
-          output.every((repo: any) =>
+          output.every((repo) =>
             repo.languages.some((lang: string) => ['JavaScript', 'TypeScript'].includes(lang))
           )
         ).toBe(true);
@@ -236,9 +237,9 @@ describe('CLI End-to-End Tests', () => {
 
       expect(result.exitCode).toBe(0);
 
-      const output = JSON.parse(result.stdout);
+      const output = JSON.parse(result.stdout) as RepoSummary[];
       if (output.length > 0) {
-        expect(output.some((repo: any) => repo.frameworks.includes('React'))).toBe(true);
+        expect(output.some((repo) => repo.frameworks?.includes('React'))).toBe(true);
       }
     });
   });

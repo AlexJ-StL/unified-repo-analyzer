@@ -13,6 +13,7 @@ import {
   type TestServer,
   waitForAnalysis,
 } from './setup';
+import type { BatchResult, RepoSummary } from './types';
 
 describe('Repository Analysis E2E Tests', () => {
   let server: TestServer;
@@ -91,7 +92,9 @@ describe('Repository Analysis E2E Tests', () => {
       expect(analysis.result.structure.keyFiles).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ path: expect.stringContaining('App.tsx') }),
-          expect.objectContaining({ path: expect.stringContaining('index.tsx') }),
+          expect.objectContaining({
+            path: expect.stringContaining('index.tsx'),
+          }),
         ])
       );
 
@@ -162,7 +165,7 @@ describe('Repository Analysis E2E Tests', () => {
       expect(response.data).toHaveProperty('batchId');
 
       // Wait for batch completion
-      let batchResult;
+      let batchResult: BatchResult | undefined;
       let retries = 60; // 60 seconds timeout for batch
 
       while (retries > 0) {
@@ -187,8 +190,8 @@ describe('Repository Analysis E2E Tests', () => {
       }
 
       expect(batchResult).toBeDefined();
-      expect(batchResult.results).toHaveLength(3);
-      expect(batchResult.results.every((r: any) => r.status === 'completed')).toBe(true);
+      expect(batchResult?.results).toHaveLength(3);
+      expect(batchResult?.results.every((r) => r.status === 'completed')).toBe(true);
 
       const duration = endTimer();
       expect(duration).toBeLessThan(30000); // Batch should complete within 30 seconds
@@ -207,7 +210,7 @@ describe('Repository Analysis E2E Tests', () => {
       });
 
       // Wait for batch completion
-      let batchResult;
+      let batchResult: BatchResult | undefined;
       let retries = 30;
 
       while (retries > 0) {
@@ -228,9 +231,9 @@ describe('Repository Analysis E2E Tests', () => {
         retries--;
       }
 
-      expect(batchResult.results).toHaveLength(2);
-      expect(batchResult.results[0].status).toBe('completed');
-      expect(batchResult.results[1].status).toBe('failed');
+      expect(batchResult?.results).toHaveLength(2);
+      expect(batchResult?.results[0].status).toBe('completed');
+      expect(batchResult?.results[1].status).toBe('failed');
     });
   });
 
@@ -349,7 +352,7 @@ describe('Repository Analysis E2E Tests', () => {
 
       if (searchResponse.data.length > 0) {
         expect(
-          searchResponse.data.every((repo: any) => repo.languages.includes('JavaScript'))
+          searchResponse.data.every((repo: RepoSummary) => repo.languages.includes('JavaScript'))
         ).toBe(true);
       }
     });
