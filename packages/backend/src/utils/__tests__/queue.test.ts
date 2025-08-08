@@ -3,10 +3,11 @@
  */
 
 import { QueueEvent, TaskQueue, TaskStatus } from '../queue';
+import { vi } from "vitest";
 
 describe('TaskQueue', () => {
   // Mock processor function
-  const mockProcessor = jest.fn().mockImplementation(async (data: number) => {
+  const mockProcessor = vi.fn().mockImplementation(async (data: number) => {
     return data * 2;
   });
 
@@ -84,7 +85,7 @@ describe('TaskQueue', () => {
 
   test('should handle task failures', async () => {
     // Create processor that fails for even numbers
-    const failingProcessor = jest.fn().mockImplementation(async (data: number) => {
+    const failingProcessor = vi.fn().mockImplementation(async (data: number) => {
       if (data % 2 === 0) {
         throw new Error('Even number error');
       }
@@ -158,7 +159,7 @@ describe('TaskQueue', () => {
 
   test('should handle task timeout', async () => {
     // Create processor that takes time
-    const slowProcessor = jest.fn().mockImplementation(async (data: number) => {
+    const slowProcessor = vi.fn().mockImplementation(async (data: number) => {
       await new Promise((resolve) => setTimeout(resolve, data * 100));
       return data * 2;
     });

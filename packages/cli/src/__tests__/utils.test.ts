@@ -29,15 +29,15 @@ vi.mock("path", () => ({
 
 describe("File System Utilities", () => {
 	beforeEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
 	describe("validateRepositoryPath", () => {
 		test("should return absolute path for valid directory", () => {
 			// Mock implementation for valid directory
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
-			(fs.statSync as jest.Mock).mockReturnValue({ isDirectory: () => true });
-			(fs.accessSync as jest.Mock).mockImplementation(() => {});
+			(fs.existsSync as any).mockReturnValue(true);
+			(fs.statSync as any).mockReturnValue({ isDirectory: () => true });
+			(fs.accessSync as any).mockImplementation(() => {});
 
 			const result = validateRepositoryPath("/test/repo");
 
@@ -52,7 +52,7 @@ describe("File System Utilities", () => {
 
 		test("should throw error if path does not exist", () => {
 			// Mock implementation for non-existent path
-			(fs.existsSync as jest.Mock).mockReturnValue(false);
+			(fs.existsSync as any).mockReturnValue(false);
 
 			expect(() => validateRepositoryPath("/test/repo")).toThrow(CLIError);
 			expect(() => validateRepositoryPath("/test/repo")).toThrow(
@@ -62,8 +62,8 @@ describe("File System Utilities", () => {
 
 		test("should throw error if path is not a directory", () => {
 			// Mock implementation for file (not directory)
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
-			(fs.statSync as jest.Mock).mockReturnValue({ isDirectory: () => false });
+			(fs.existsSync as any).mockReturnValue(true);
+			(fs.statSync as any).mockReturnValue({ isDirectory: () => false });
 
 			expect(() => validateRepositoryPath("/test/repo")).toThrow(CLIError);
 			expect(() => validateRepositoryPath("/test/repo")).toThrow(
@@ -73,9 +73,9 @@ describe("File System Utilities", () => {
 
 		test("should throw error if directory is not readable", () => {
 			// Mock implementation for unreadable directory
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
-			(fs.statSync as jest.Mock).mockReturnValue({ isDirectory: () => true });
-			(fs.accessSync as jest.Mock).mockImplementation(() => {
+			(fs.existsSync as any).mockReturnValue(true);
+			(fs.statSync as any).mockReturnValue({ isDirectory: () => true });
+			(fs.accessSync as any).mockImplementation(() => {
 				throw new Error("Permission denied");
 			});
 
@@ -89,7 +89,7 @@ describe("File System Utilities", () => {
 	describe("ensureOutputDirectory", () => {
 		test("should return absolute path if directory exists", () => {
 			// Mock implementation for existing directory
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
+			(fs.existsSync as any).mockReturnValue(true);
 
 			const result = ensureOutputDirectory("/test/output");
 
@@ -100,7 +100,7 @@ describe("File System Utilities", () => {
 
 		test("should create directory if it does not exist", () => {
 			// Mock implementation for non-existent directory
-			(fs.existsSync as jest.Mock).mockReturnValue(false);
+			(fs.existsSync as any).mockReturnValue(false);
 
 			const result = ensureOutputDirectory("/test/output");
 
@@ -113,8 +113,8 @@ describe("File System Utilities", () => {
 
 		test("should throw error if directory creation fails", () => {
 			// Mock implementation for directory creation failure
-			(fs.existsSync as jest.Mock).mockReturnValue(false);
-			(fs.mkdirSync as jest.Mock).mockImplementation(() => {
+			(fs.existsSync as any).mockReturnValue(false);
+			(fs.mkdirSync as any).mockImplementation(() => {
 				throw new Error("Permission denied");
 			});
 
@@ -128,7 +128,7 @@ describe("File System Utilities", () => {
 	describe("writeResultsToFile", () => {
 		test("should write JSON data to file", () => {
 			// Mock implementation
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
+			(fs.existsSync as any).mockReturnValue(true);
 
 			const data = { name: "test", value: 123 };
 			const result = writeResultsToFile("/test/output.json", data, "json");
@@ -142,7 +142,7 @@ describe("File System Utilities", () => {
 
 		test("should write string data to file for non-JSON formats", () => {
 			// Mock implementation
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
+			(fs.existsSync as any).mockReturnValue(true);
 
 			const data = "# Markdown Content";
 			const result = writeResultsToFile("/test/output.md", data, "markdown");
@@ -156,8 +156,8 @@ describe("File System Utilities", () => {
 
 		test("should create directory if it does not exist", () => {
 			// Mock implementation for non-existent directory
-			(fs.existsSync as jest.Mock).mockReturnValue(false);
-			(fs.mkdirSync as jest.Mock).mockReturnValue(undefined); // Mock successful directory creation
+			(fs.existsSync as any).mockReturnValue(false);
+			(fs.mkdirSync as any).mockReturnValue(undefined); // Mock successful directory creation
 
 			const data = { name: "test", value: 123 };
 			writeResultsToFile("/test/output.json", data, "json");
@@ -170,8 +170,8 @@ describe("File System Utilities", () => {
 
 		test("should throw error if file writing fails", () => {
 			// Mock implementation for file writing failure
-			(fs.existsSync as jest.Mock).mockReturnValue(true);
-			(fs.writeFileSync as jest.Mock).mockImplementation(() => {
+			(fs.existsSync as any).mockReturnValue(true);
+			(fs.writeFileSync as any).mockImplementation(() => {
 				throw new Error("Disk full");
 			});
 
