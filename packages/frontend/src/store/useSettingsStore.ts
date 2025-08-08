@@ -24,7 +24,10 @@ interface SettingsState {
   // Actions
   loadPreferences: () => Promise<void>;
   updatePreferences: (preferences: UserPreferences) => Promise<void>;
-  updatePreferenceSection: (section: keyof UserPreferences, updates: any) => Promise<void>;
+  updatePreferenceSection: <K extends keyof UserPreferences>(
+    section: K,
+    updates: Partial<UserPreferences[K]>
+  ) => Promise<void>;
   resetToDefaults: () => Promise<void>;
 
   // Workspace management
@@ -65,7 +68,9 @@ interface SettingsState {
   importConfiguration: (configData: string) => Promise<void>;
 
   // Validation
-  validatePreferences: (preferences: UserPreferences) => Promise<any>;
+  validatePreferences: (
+    preferences: UserPreferences
+  ) => Promise<{ isValid: boolean; errors: string[]; warnings: string[] }>;
 
   // Clear error
   clearError: () => void;
@@ -122,7 +127,10 @@ export const useSettingsStore = create<SettingsState>()(
       },
 
       // Update specific preference section
-      updatePreferenceSection: async (section: keyof UserPreferences, updates: any) => {
+      updatePreferenceSection: async <K extends keyof UserPreferences>(
+        section: K,
+        updates: Partial<UserPreferences[K]>
+      ) => {
         set({ isLoading: true, error: null });
         try {
           const response = await fetch(`${API_BASE}/preferences/${section}`, {

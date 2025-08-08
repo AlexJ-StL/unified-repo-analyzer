@@ -14,7 +14,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Add performance timing
-    (config as any).metadata = { startTime: performance.now() };
+    (config as typeof config & { metadata?: { startTime: number } }).metadata = {
+      startTime: performance.now(),
+    };
 
     // You can add auth tokens here if needed
     return config;
@@ -28,7 +30,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     // Record API performance metrics
-    const config = response.config as any;
+    const config = response.config as typeof response.config & { metadata?: { startTime: number } };
     if (config.metadata?.startTime) {
       const duration = performance.now() - config.metadata.startTime;
       const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
@@ -47,8 +49,9 @@ api.interceptors.response.use(
     const { response, config } = error;
 
     // Record API performance metrics for errors
-    if (config && (config as any)?.metadata?.startTime) {
-      const duration = performance.now() - (config as any).metadata.startTime;
+    const configWithMetadata = config as typeof config & { metadata?: { startTime: number } };
+    if (config && configWithMetadata?.metadata?.startTime) {
+      const duration = performance.now() - configWithMetadata.metadata.startTime;
       const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
 
       performanceService.recordApiCall(
@@ -83,12 +86,12 @@ api.interceptors.response.use(
 // API service functions
 export const apiService = {
   // Repository analysis
-  analyzeRepository: (path: string, options: any) => {
+  analyzeRepository: (path: string, options: Record<string, unknown>) => {
     return api.post('/analyze', { path, options });
   },
 
   // Batch analysis
-  analyzeBatch: (paths: string[], options: any) => {
+  analyzeBatch: (paths: string[], options: Record<string, unknown>) => {
     return api.post('/analyze/batch', { paths, options });
   },
 
@@ -98,7 +101,7 @@ export const apiService = {
   },
 
   // Search repositories
-  searchRepositories: (query: string, filters: any) => {
+  searchRepositories: (query: string, filters: Record<string, unknown>) => {
     return api.get('/repositories/search', { params: { query, ...filters } });
   },
 
@@ -108,7 +111,7 @@ export const apiService = {
   },
 
   // Export analysis
-  exportAnalysis: (analysis: any, format: string, download = false) => {
+  exportAnalysis: (analysis: Record<string, unknown>, format: string, download = false) => {
     return api.post(
       '/export',
       { analysis, format },
@@ -120,7 +123,11 @@ export const apiService = {
   },
 
   // Export batch analysis
-  exportBatchAnalysis: (batchAnalysis: any, format: string, download = false) => {
+  exportBatchAnalysis: (
+    batchAnalysis: Record<string, unknown>,
+    format: string,
+    download = false
+  ) => {
     return api.post(
       '/export/batch',
       { batchAnalysis, format },
@@ -160,7 +167,7 @@ export const handleApiError = (error: unknown): string => {
     if (axiosError.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      const data = axiosError.response.data as any;
+      const data = axiosError.response.data as Record<string, unknown>;
       return (
         data.message || `Error ${axiosError.response.status}: ${axiosError.response.statusText}`
       );
@@ -178,8 +185,8 @@ export const handleApiError = (error: unknown): string => {
 };
 
 // Enhanced API service with error handling and retry logic
-export const createApiService = (onError?: (error: any) => void) => {
-  const handleError = (error: any) => {
+export const createApiService = (onError?: (error: unknown) => void) => {
+  const handleError = (error: unknown) => {
     if (onError) {
       onError(error);
     }
@@ -188,7 +195,7 @@ export const createApiService = (onError?: (error: any) => void) => {
 
   return {
     // Repository analysis with error handling
-    analyzeRepository: async (path: string, options: any) => {
+    analyzeRepository: async (path: string, options: Record<string, unknown>) => {
       try {
         return await api.post('/analyze', { path, options });
       } catch (error) {
@@ -197,7 +204,7 @@ export const createApiService = (onError?: (error: any) => void) => {
     },
 
     // Batch analysis with error handling
-    analyzeBatch: async (paths: string[], options: any) => {
+    analyzeBatch: async (paths: string[], options: Record<string, unknown>) => {
       try {
         return await api.post('/analyze/batch', { paths, options });
       } catch (error) {
@@ -215,7 +222,7 @@ export const createApiService = (onError?: (error: any) => void) => {
     },
 
     // Search repositories with error handling
-    searchRepositories: async (query: string, filters: any) => {
+    searchRepositories: async (query: string, filters: Record<string, unknown>) => {
       try {
         return await api.get('/repositories/search', {
           params: { query, ...filters },
@@ -235,7 +242,7 @@ export const createApiService = (onError?: (error: any) => void) => {
     },
 
     // Export analysis with error handling
-    exportAnalysis: async (analysis: any, format: string, download = false) => {
+    exportAnalysis: async (analysis: Record<string, unknown>, format: string, download = false) => {
       try {
         return await api.post(
           '/export',
@@ -251,7 +258,11 @@ export const createApiService = (onError?: (error: any) => void) => {
     },
 
     // Export batch analysis with error handling
-    exportBatchAnalysis: async (batchAnalysis: any, format: string, download = false) => {
+    exportBatchAnalysis: async (
+      batchAnalysis: Record<string, unknown>,
+      format: string,
+      download = false
+    ) => {
       try {
         return await api.post(
           '/export/batch',

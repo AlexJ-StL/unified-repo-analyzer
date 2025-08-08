@@ -9,7 +9,11 @@ import * as apiService from '../../services/apiService';
 // Mock API service
 vi.mock('../../services/apiService');
 
-const mockApiService = apiService as any;
+const mockApiService = apiService as typeof apiService & {
+  analyzeRepository: ReturnType<typeof vi.fn>;
+  getAnalysisStatus: ReturnType<typeof vi.fn>;
+  getRepositoryList: ReturnType<typeof vi.fn>;
+};
 
 // Test wrapper component
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -106,7 +110,9 @@ describe('End-to-End Integration Tests', () => {
       await user.type(pathInput, '/path/to/test-repo');
 
       // Start analysis
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for analysis to complete
@@ -156,11 +162,15 @@ describe('End-to-End Integration Tests', () => {
       await user.click(batchButton);
 
       // Add repositories
-      const addRepoButton = screen.getByRole('button', { name: /add repository/i });
+      const addRepoButton = screen.getByRole('button', {
+        name: /add repository/i,
+      });
       await user.click(addRepoButton);
 
       // Start batch analysis
-      const startBatchButton = screen.getByRole('button', { name: /start batch/i });
+      const startBatchButton = screen.getByRole('button', {
+        name: /start batch/i,
+      });
       await user.click(startBatchButton);
 
       // Wait for completion
@@ -283,7 +293,9 @@ describe('End-to-End Integration Tests', () => {
       const pathInput = screen.getByLabelText(/repository path/i);
       await user.type(pathInput, '/invalid/path');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for error message
@@ -328,7 +340,9 @@ describe('End-to-End Integration Tests', () => {
       const batchButton = screen.getByRole('button', { name: /batch/i });
       await user.click(batchButton);
 
-      const startBatchButton = screen.getByRole('button', { name: /start batch/i });
+      const startBatchButton = screen.getByRole('button', {
+        name: /start batch/i,
+      });
       await user.click(startBatchButton);
 
       // Wait for completion with partial failures

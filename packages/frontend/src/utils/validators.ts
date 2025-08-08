@@ -28,7 +28,7 @@ export const isValidUrl = (url: string): boolean => {
 /**
  * Validate if a value is a positive number
  */
-export const isPositiveNumber = (value: any): boolean => {
+export const isPositiveNumber = (value: unknown): boolean => {
   const num = Number(value);
   return !Number.isNaN(num) && num > 0;
 };
@@ -45,26 +45,37 @@ export const isValidApiKey = (apiKey: string): boolean => {
 /**
  * Validate analysis options
  */
-export const validateAnalysisOptions = (options: any): string[] => {
+export const validateAnalysisOptions = (options: unknown): string[] => {
   const errors: string[] = [];
 
-  if (!options.mode || !['quick', 'standard', 'comprehensive'].includes(options.mode)) {
+  if (!options || typeof options !== 'object') {
+    errors.push('Options must be an object');
+    return errors;
+  }
+
+  const opts = options as Record<string, unknown>;
+
+  if (!opts.mode || !['quick', 'standard', 'comprehensive'].includes(opts.mode as string)) {
     errors.push('Invalid analysis mode');
   }
 
-  if (!isPositiveNumber(options.maxFiles)) {
+  if (!isPositiveNumber(opts.maxFiles)) {
     errors.push('Max files must be a positive number');
   }
 
-  if (!isPositiveNumber(options.maxLinesPerFile)) {
+  if (!isPositiveNumber(opts.maxLinesPerFile)) {
     errors.push('Max lines per file must be a positive number');
   }
 
-  if (!options.llmProvider) {
+  if (!opts.llmProvider) {
     errors.push('LLM provider is required');
   }
 
-  if (!options.outputFormats || options.outputFormats.length === 0) {
+  if (
+    !opts.outputFormats ||
+    !Array.isArray(opts.outputFormats) ||
+    opts.outputFormats.length === 0
+  ) {
     errors.push('At least one output format is required');
   }
 

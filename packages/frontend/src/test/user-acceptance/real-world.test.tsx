@@ -8,7 +8,11 @@ import * as apiService from '../../services/apiService';
 
 // Mock API service
 vi.mock('../../services/apiService');
-const mockApiService = apiService as any;
+const mockApiService = apiService as typeof apiService & {
+  analyzeRepository: ReturnType<typeof vi.fn>;
+  getAnalysisStatus: ReturnType<typeof vi.fn>;
+  getRepositoryList: ReturnType<typeof vi.fn>;
+};
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
@@ -196,7 +200,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       await user.selectOptions(modeSelect, 'comprehensive');
 
       // Start analysis
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for results
@@ -257,7 +263,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
 
       // Add multiple repositories
       for (const repo of realWorldRepositories) {
-        const addButton = screen.getByRole('button', { name: /add repository/i });
+        const addButton = screen.getByRole('button', {
+          name: /add repository/i,
+        });
         await user.click(addButton);
 
         const pathInput = screen.getByDisplayValue(''); // Latest empty input
@@ -265,7 +273,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       }
 
       // Start batch analysis
-      const startBatchButton = screen.getByRole('button', { name: /start batch/i });
+      const startBatchButton = screen.getByRole('button', {
+        name: /start batch/i,
+      });
       await user.click(startBatchButton);
 
       // Wait for completion
@@ -282,7 +292,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       expect(screen.getByText('python-ml-project')).toBeInTheDocument();
 
       // Export combined report
-      const exportAllButton = screen.getByRole('button', { name: /export all/i });
+      const exportAllButton = screen.getByRole('button', {
+        name: /export all/i,
+      });
       await user.click(exportAllButton);
 
       const htmlOption = screen.getByText(/html/i);
@@ -356,7 +368,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       const modeSelect = screen.getByLabelText(/analysis mode/i);
       await user.selectOptions(modeSelect, 'standard');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for analysis
@@ -406,7 +420,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       const modeSelect = screen.getByLabelText(/analysis mode/i);
       await user.selectOptions(modeSelect, 'comprehensive');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for analysis
@@ -445,7 +461,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       );
 
       // Project manager views all projects
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i });
+      const dashboardButton = screen.getByRole('button', {
+        name: /dashboard/i,
+      });
       await user.click(dashboardButton);
 
       // Wait for project list
@@ -472,7 +490,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       await user.click(checkboxes[0]); // React project
       await user.click(checkboxes[1]); // Node project
 
-      const startCompareButton = screen.getByRole('button', { name: /start comparison/i });
+      const startCompareButton = screen.getByRole('button', {
+        name: /start comparison/i,
+      });
       await user.click(startCompareButton);
 
       // Wait for comparison results
@@ -508,7 +528,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       const pathInput = screen.getByLabelText(/repository path/i);
       await user.type(pathInput, '/projects/test-repo');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for error message
@@ -562,7 +584,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       const pathInput = screen.getByLabelText(/repository path/i);
       await user.type(pathInput, '/projects/large-monorepo');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Should show progress for large repository
@@ -603,7 +627,9 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       const pathInput = screen.getByLabelText(/repository path/i);
       await user.type(pathInput, '/restricted/private-repo');
 
-      const startButton = screen.getByRole('button', { name: /start analysis/i });
+      const startButton = screen.getByRole('button', {
+        name: /start analysis/i,
+      });
       await user.click(startButton);
 
       // Wait for permission error

@@ -89,9 +89,23 @@ export declare function validateRepositoryAnalysis(data: unknown): {
     }[];
   };
   dependencies: {
-    production: any[];
-    development: any[];
-    frameworks: any[];
+    production: {
+      name: string;
+      version: string;
+      type: 'production' | 'development';
+      description?: string | undefined;
+    }[];
+    development: {
+      name: string;
+      version: string;
+      type: 'production' | 'development';
+      description?: string | undefined;
+    }[];
+    frameworks: {
+      name: string;
+      version?: string | undefined;
+      confidence: number;
+    }[];
   };
   insights: {
     executiveSummary: string;

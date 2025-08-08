@@ -4,15 +4,15 @@
 /**
  * Check if a value is a DOM element
  */
-export declare function isElement(value: any): value is Element;
+export declare function isElement(value: unknown): value is Element;
 /**
  * Check if a value is an HTMLElement
  */
-export declare function isHTMLElement(value: any): value is HTMLElement;
+export declare function isHTMLElement(value: unknown): value is HTMLElement;
 /**
  * Check if a value is an HTMLDivElement
  */
-export declare function isHTMLDivElement(value: any): value is HTMLDivElement;
+export declare function isHTMLDivElement(value: unknown): value is HTMLDivElement;
 /**
  * Check if the IntersectionObserver API is available
  */

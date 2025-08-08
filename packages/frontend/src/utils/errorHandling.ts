@@ -4,7 +4,7 @@ export interface ErrorInfo {
   message: string;
   code?: string;
   statusCode?: number;
-  details?: any;
+  details?: Record<string, unknown>;
   recoverable: boolean;
   userMessage: string;
   suggestions: string[];
@@ -47,12 +47,12 @@ const parseAxiosError = (error: AxiosError): ErrorInfo => {
   if (response) {
     // Server responded with error status
     const statusCode = response.status;
-    const data = response.data as any;
+    const data = response.data as Record<string, unknown>;
 
     switch (statusCode) {
       case 400:
         return {
-          message: data?.message || 'Bad request',
+          message: (data?.message as string) || 'Bad request',
           code: 'BAD_REQUEST',
           statusCode,
           details: data,
@@ -168,7 +168,7 @@ const parseAxiosError = (error: AxiosError): ErrorInfo => {
 
       default:
         return {
-          message: data?.message || `HTTP ${statusCode}`,
+          message: (data?.message as string) || `HTTP ${statusCode}`,
           code: 'HTTP_ERROR',
           statusCode,
           details: data,

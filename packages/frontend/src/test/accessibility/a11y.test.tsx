@@ -195,8 +195,10 @@ describe('Accessibility Tests', () => {
       buttons.forEach((button) => {
         if (button.hasAttribute('aria-describedby')) {
           const descriptionId = button.getAttribute('aria-describedby');
-          const description = document.getElementById(descriptionId!);
-          expect(description).toBeInTheDocument();
+          if (descriptionId) {
+            const description = document.getElementById(descriptionId);
+            expect(description).toBeInTheDocument();
+          }
         }
       });
     });
@@ -214,7 +216,7 @@ describe('Accessibility Tests', () => {
       const liveRegions = screen
         .getAllByRole('status')
         .concat(screen.getAllByRole('alert'))
-        .concat(document.querySelectorAll('[aria-live]') as any);
+        .concat(Array.from(document.querySelectorAll('[aria-live]')));
 
       expect(liveRegions.length).toBeGreaterThan(0);
 
@@ -362,7 +364,9 @@ describe('Accessibility Tests', () => {
       // This would depend on your error handling implementation
 
       // Look for retry/recovery buttons
-      const retryButton = screen.queryByRole('button', { name: /retry|try again/i });
+      const retryButton = screen.queryByRole('button', {
+        name: /retry|try again/i,
+      });
       if (retryButton) {
         expect(retryButton).toBeInTheDocument();
         expect(retryButton).toBeEnabled();
@@ -414,7 +418,9 @@ describe('Accessibility Tests', () => {
       }
 
       // Check that critical functionality doesn't rely solely on JavaScript
-      const criticalButtons = screen.getAllByRole('button', { name: /submit|save|analyze/i });
+      const criticalButtons = screen.getAllByRole('button', {
+        name: /submit|save|analyze/i,
+      });
       criticalButtons.forEach((button) => {
         const form = button.closest('form');
         if (form) {

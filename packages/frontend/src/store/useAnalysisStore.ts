@@ -1,3 +1,4 @@
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import { create } from 'zustand';
 
 export interface AnalysisOptions {
@@ -23,11 +24,11 @@ interface AnalysisState {
   repositoryPath: string;
   options: AnalysisOptions;
   progress: AnalysisProgress;
-  results: any | null;
+  results: RepositoryAnalysis | null;
   setRepositoryPath: (path: string) => void;
   setOptions: (options: Partial<AnalysisOptions>) => void;
   setProgress: (progress: Partial<AnalysisProgress>) => void;
-  setResults: (results: any) => void;
+  setResults: (results: RepositoryAnalysis | null) => void;
   resetAnalysis: () => void;
 }
 

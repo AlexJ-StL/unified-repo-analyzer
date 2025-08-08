@@ -19,11 +19,11 @@ interface AnalysisState {
   repositoryPath: string;
   options: AnalysisOptions;
   progress: AnalysisProgress;
-  results: any | null;
+  results: RepositoryAnalysis | null;
   setRepositoryPath: (path: string) => void;
   setOptions: (options: Partial<AnalysisOptions>) => void;
   setProgress: (progress: Partial<AnalysisProgress>) => void;
-  setResults: (results: any) => void;
+  setResults: (results: RepositoryAnalysis | null) => void;
   resetAnalysis: () => void;
 }
 export declare const useAnalysisStore: import('zustand').UseBoundStore<

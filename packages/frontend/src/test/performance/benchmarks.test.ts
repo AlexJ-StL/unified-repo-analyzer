@@ -81,7 +81,9 @@ describe('Performance Benchmarks', () => {
       expect(renderTime).toBeLessThan(100);
 
       // Memory usage should be reasonable
-      const memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
+      const memoryUsage =
+        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+          ?.usedJSHeapSize || 0;
       expect(memoryUsage).toBeLessThan(50 * 1024 * 1024); // 50MB limit
     });
 
@@ -148,7 +150,7 @@ describe('Performance Benchmarks', () => {
   describe('API Performance', () => {
     it('should handle concurrent API requests efficiently', async () => {
       const concurrentRequests = 10;
-      const requestPromises: Promise<any>[] = [];
+      const requestPromises: Promise<unknown>[] = [];
 
       performance.mark('concurrent-requests-start');
 
@@ -213,7 +215,9 @@ describe('Performance Benchmarks', () => {
 
   describe('Memory Management', () => {
     it('should not leak memory during repeated operations', async () => {
-      const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const initialMemory =
+        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+          ?.usedJSHeapSize || 0;
 
       // Simulate repeated operations that could cause memory leaks
       for (let i = 0; i < 100; i++) {
@@ -230,11 +234,13 @@ describe('Performance Benchmarks', () => {
       }
 
       // Force garbage collection (if available)
-      if (global.gc) {
-        global.gc();
+      if ((global as unknown as { gc?: () => void }).gc) {
+        (global as unknown as { gc: () => void }).gc();
       }
 
-      const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const finalMemory =
+        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+          ?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
 
       // Memory increase should be minimal

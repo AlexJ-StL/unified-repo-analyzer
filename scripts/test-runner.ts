@@ -12,8 +12,8 @@ import { performance } from 'node:perf_hooks';
 import type { TestReport, TestResult, TestResults } from '../types/config.js';
 
 // For module detection compatibility
-declare const require: any;
-declare const module: any;
+declare const require: NodeRequire;
+declare const module: NodeModule;
 
 /**
  * Enhanced spawn options with strict typing
@@ -152,15 +152,15 @@ class CommandExecutionResultClass extends Error {
  * Type utilities for test runner
  */
 type TestType = keyof EnhancedTestResults;
-type TestStatus = TestResult['status'];
-type TestCategory = TestSuiteMetadata['category'];
+// type TestStatus = TestResult['status']; // Unused type removed
+// type TestCategory = TestSuiteMetadata['category']; // Unused type removed
 
 /**
  * Utility type to extract test results by status
  */
-type TestsByStatus<T extends TestStatus> = {
-  [K in TestType]: EnhancedTestResults[K] extends EnhancedTestResult & { status: T } ? K : never;
-}[TestType];
+// type TestsByStatus<T extends TestStatus> = { // Unused type removed
+//   [K in TestType]: EnhancedTestResults[K] extends EnhancedTestResult & { status: T } ? K : never;
+// }[TestType];
 
 /**
  * Utility type to make all properties required
@@ -395,7 +395,7 @@ class TestRunner {
       }
     }
 
-    throw lastError!;
+    throw lastError;
   }
 
   /**

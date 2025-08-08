@@ -2,7 +2,7 @@ export interface ErrorInfo {
   message: string;
   code?: string;
   statusCode?: number;
-  details?: any;
+  details?: Record<string, unknown>;
   recoverable: boolean;
   userMessage: string;
   suggestions: string[];

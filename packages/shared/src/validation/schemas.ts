@@ -111,9 +111,9 @@ export const repositoryAnalysisSchema = z.object({
   }),
 
   dependencies: z.object({
-    production: z.array(z.any()),
-    development: z.array(z.any()),
-    frameworks: z.array(z.any()),
+    production: z.array(dependencySchema),
+    development: z.array(dependencySchema),
+    frameworks: z.array(frameworkSchema),
   }),
 
   insights: z.object({

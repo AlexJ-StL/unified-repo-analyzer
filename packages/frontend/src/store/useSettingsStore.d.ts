@@ -15,7 +15,10 @@ interface SettingsState {
   presets: AnalysisModePreset[];
   loadPreferences: () => Promise<void>;
   updatePreferences: (preferences: UserPreferences) => Promise<void>;
-  updatePreferenceSection: (section: keyof UserPreferences, updates: any) => Promise<void>;
+  updatePreferenceSection: <K extends keyof UserPreferences>(
+    section: K,
+    updates: Partial<UserPreferences[K]>
+  ) => Promise<void>;
   resetToDefaults: () => Promise<void>;
   loadWorkspaces: () => Promise<void>;
   createWorkspace: (
@@ -40,7 +43,9 @@ interface SettingsState {
   restoreFromBackup: (backupId: string) => Promise<void>;
   exportConfiguration: () => Promise<string>;
   importConfiguration: (configData: string) => Promise<void>;
-  validatePreferences: (preferences: UserPreferences) => Promise<any>;
+  validatePreferences: (
+    preferences: UserPreferences
+  ) => Promise<{ isValid: boolean; errors: string[]; warnings: string[] }>;
   clearError: () => void;
 }
 export declare const useSettingsStore: import('zustand').UseBoundStore<

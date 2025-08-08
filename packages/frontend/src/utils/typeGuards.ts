@@ -5,21 +5,21 @@
 /**
  * Check if a value is a DOM element
  */
-export function isElement(value: any): value is Element {
+export function isElement(value: unknown): value is Element {
   return value instanceof Element;
 }
 
 /**
  * Check if a value is an HTMLElement
  */
-export function isHTMLElement(value: any): value is HTMLElement {
+export function isHTMLElement(value: unknown): value is HTMLElement {
   return value instanceof HTMLElement;
 }
 
 /**
  * Check if a value is an HTMLDivElement
  */
-export function isHTMLDivElement(value: any): value is HTMLDivElement {
+export function isHTMLDivElement(value: unknown): value is HTMLDivElement {
   return value instanceof HTMLDivElement;
 }
 

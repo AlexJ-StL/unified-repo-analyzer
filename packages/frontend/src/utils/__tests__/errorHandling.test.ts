@@ -289,18 +289,20 @@ describe('errorHandling utils', () => {
 
   describe('getErrorTitle', () => {
     it('returns specific titles for known error codes', () => {
-      expect(getErrorTitle({ code: 'NETWORK_ERROR' } as any)).toBe('Connection Error');
-      expect(getErrorTitle({ code: 'TIMEOUT' } as any)).toBe('Request Timeout');
-      expect(getErrorTitle({ code: 'FILE_NOT_FOUND' } as any)).toBe('File Not Found');
-      expect(getErrorTitle({ code: 'PERMISSION_DENIED' } as any)).toBe('Permission Denied');
-      expect(getErrorTitle({ code: 'OUT_OF_MEMORY' } as any)).toBe('Memory Error');
-      expect(getErrorTitle({ code: 'RATE_LIMITED' } as any)).toBe('Rate Limit Exceeded');
-      expect(getErrorTitle({ code: 'SERVICE_UNAVAILABLE' } as any)).toBe('Service Unavailable');
+      expect(getErrorTitle({ code: 'NETWORK_ERROR' } as ErrorInfo)).toBe('Connection Error');
+      expect(getErrorTitle({ code: 'TIMEOUT' } as ErrorInfo)).toBe('Request Timeout');
+      expect(getErrorTitle({ code: 'FILE_NOT_FOUND' } as ErrorInfo)).toBe('File Not Found');
+      expect(getErrorTitle({ code: 'PERMISSION_DENIED' } as ErrorInfo)).toBe('Permission Denied');
+      expect(getErrorTitle({ code: 'OUT_OF_MEMORY' } as ErrorInfo)).toBe('Memory Error');
+      expect(getErrorTitle({ code: 'RATE_LIMITED' } as ErrorInfo)).toBe('Rate Limit Exceeded');
+      expect(getErrorTitle({ code: 'SERVICE_UNAVAILABLE' } as ErrorInfo)).toBe(
+        'Service Unavailable'
+      );
     });
 
     it('returns generic title for unknown error codes', () => {
-      expect(getErrorTitle({ code: 'UNKNOWN_ERROR' } as any)).toBe('Error');
-      expect(getErrorTitle({} as any)).toBe('Error');
+      expect(getErrorTitle({ code: 'UNKNOWN_ERROR' } as ErrorInfo)).toBe('Error');
+      expect(getErrorTitle({} as ErrorInfo)).toBe('Error');
     });
   });
 });

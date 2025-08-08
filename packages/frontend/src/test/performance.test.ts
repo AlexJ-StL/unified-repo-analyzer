@@ -277,7 +277,9 @@ describe('Frontend Performance Tests', () => {
 
   describe('Memory Usage', () => {
     it('should not leak memory during repeated operations', () => {
-      const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const initialMemory =
+        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+          ?.usedJSHeapSize || 0;
 
       // Perform memory-intensive operations
       for (let i = 0; i < 1000; i++) {
@@ -293,11 +295,13 @@ describe('Frontend Performance Tests', () => {
       }
 
       // Force garbage collection if available
-      if ((global as any).gc) {
-        (global as any).gc();
+      if ((global as unknown as { gc?: () => void }).gc) {
+        (global as unknown as { gc: () => void }).gc();
       }
 
-      const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const finalMemory =
+        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+          ?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
 
       console.log(`Memory increase: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`);

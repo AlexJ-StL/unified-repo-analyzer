@@ -76,7 +76,11 @@ export declare class PerformanceService {
   /**
    * Record component render timing
    */
-  recordComponentRender(componentName: string, duration: number, props?: Record<string, any>): void;
+  recordComponentRender(
+    componentName: string,
+    duration: number,
+    props?: Record<string, unknown>
+  ): void;
   /**
    * Create a performance timer
    */
@@ -160,7 +164,7 @@ export declare function usePerformanceMonitoring(): {
   recordComponentRender: (
     componentName: string,
     duration: number,
-    props?: Record<string, any>
+    props?: Record<string, unknown>
   ) => void;
   createTimer: (name: string, tags?: Record<string, string>) => () => void;
   getStats: () => {

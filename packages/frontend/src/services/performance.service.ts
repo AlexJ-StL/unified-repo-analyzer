@@ -94,13 +94,20 @@ export class PerformanceService {
         this.recordMetric('lcp', entry.startTime, { type: 'web-vital' });
         break;
       case 'first-input':
-        this.recordMetric('fid', (entry as any).processingStart - entry.startTime, {
-          type: 'web-vital',
-        });
+        this.recordMetric(
+          'fid',
+          (entry as PerformanceEntry & { processingStart: number }).processingStart -
+            entry.startTime,
+          {
+            type: 'web-vital',
+          }
+        );
         break;
       case 'layout-shift':
-        if (!(entry as any).hadRecentInput) {
-          this.recordMetric('cls', (entry as any).value, { type: 'web-vital' });
+        if (!(entry as PerformanceEntry & { hadRecentInput: boolean }).hadRecentInput) {
+          this.recordMetric('cls', (entry as PerformanceEntry & { value: number }).value, {
+            type: 'web-vital',
+          });
         }
         break;
     }
@@ -247,7 +254,7 @@ export class PerformanceService {
   public recordComponentRender(
     componentName: string,
     duration: number,
-    props?: Record<string, any>
+    props?: Record<string, unknown>
   ): void {
     this.recordMetric('component.render', duration, {
       component: componentName,
@@ -409,7 +416,7 @@ export class PerformanceService {
     metrics: PerformanceMetric[];
     navigation: NavigationTiming | null;
     resources: ResourceTiming[];
-    stats: any;
+    stats: Record<string, unknown>;
   } {
     return {
       metrics: this.metrics,
@@ -478,7 +485,7 @@ export function usePerformanceMonitoring() {
   const recordComponentRender = (
     componentName: string,
     duration: number,
-    props?: Record<string, any>
+    props?: Record<string, unknown>
   ) => {
     performanceService.recordComponentRender(componentName, duration, props);
   };
