@@ -14,7 +14,7 @@
     "isolatedModules": true,
     "allowImportingTsExtensions": false,
     "lib": ["ES2022"],
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "noImplicitAny": true,
     "strictNullChecks": true
   },

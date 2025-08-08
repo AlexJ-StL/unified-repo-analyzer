@@ -9,8 +9,8 @@
  * This file intentionally has no exports. It is executed as a program.
  */
 
-declare const process: NodeJS.Process;
+// Process is already declared globally
 
 void (async () => {
-  await import('../dist/index.js');
+	await import("../dist/index.js");
 })();
