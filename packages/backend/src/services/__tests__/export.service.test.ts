@@ -3,10 +3,11 @@ import type {
 	RepositoryAnalysis,
 } from "@unified-repo-analyzer/shared/src/types/analysis";
 import { ExportService } from "../export.service";
+import { vi } from "vitest";
 
 // Mock fs module
-jest.mock("fs");
-jest.mock("util");
+vi.mock("fs");
+vi.mock("util");
 
 const mockAnalysis: RepositoryAnalysis = {
 	id: "test-id",
@@ -125,7 +126,7 @@ describe("ExportService", () => {
 
 	beforeEach(() => {
 		exportService = new ExportService();
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
 	describe("exportAnalysis", () => {

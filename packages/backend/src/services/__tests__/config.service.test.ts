@@ -5,24 +5,25 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { ConfigurationService } from '../config.service';
+import { vi } from "vitest";
 
 // Mock fs module
-jest.mock('fs/promises');
-jest.mock('uuid', () => ({
+vi.mock('fs/promises');
+vi.mock('uuid', () => ({
   v4: () => 'mock-uuid-123',
 }));
-jest.mock('../../utils/logger', () => ({
+vi.mock('../../utils/logger', () => ({
   logger: {
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   },
 }));
-jest.mock('os', () => ({
+vi.mock('os', () => ({
   homedir: () => '/mock/home',
 }));
 
-const mockFs = fs as jest.Mocked<typeof fs>;
+const mockFs = fs as anyed<typeof fs>;
 const mockHomeDir = '/mock/home';
 
 const _mockDefaultPreferences = {
@@ -76,7 +77,7 @@ describe('ConfigurationService', () => {
   const mockConfigDir = path.join(mockHomeDir, '.repo-analyzer');
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     configService = new ConfigurationService();
   });
 

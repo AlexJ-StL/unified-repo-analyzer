@@ -4,23 +4,24 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('../codeStructureAnalyzer', () => ({
-  analyzeCodeStructure: jest.fn().mockReturnValue({
+vi.mock('../codeStructureAnalyzer', () => ({
+  analyzeCodeStructure: vi.fn().mockReturnValue({
     functions: [{ name: 'testFunction', lineNumber: 1, parameters: [] }],
     classes: [{ name: 'TestClass', lineNumber: 5, methods: [] }],
     importCount: 3,
   }),
 }));
 
-jest.mock('../tokenAnalyzer', () => ({
-  countTokens: jest.fn().mockReturnValue(100),
-  sampleText: jest.fn().mockImplementation((text) => text),
+vi.mock('../tokenAnalyzer', () => ({
+  countTokens: vi.fn().mockReturnValue(100),
+  sampleText: vi.fn().mockImplementation((text) => text),
 }));
 
-jest.mock('../../utils/repositoryDiscovery', () => ({
-  discoverRepository: jest.fn().mockResolvedValue({
+vi.mock('../../utils/repositoryDiscovery', () => ({
+  discoverRepository: vi.fn().mockResolvedValue({
     id: 'test-id',
     path: '/test/repo',
     name: 'test-repo',
@@ -75,15 +76,15 @@ jest.mock('../../utils/repositoryDiscovery', () => ({
       processingTime: 100,
     },
   }),
-  analysisOptionsToDiscoveryOptions: jest.fn().mockReturnValue({
+  analysisOptionsToDiscoveryOptions: vi.fn().mockReturnValue({
     maxFiles: 500,
     maxLinesPerFile: 1000,
     includeTree: true,
   }),
 }));
 
-jest.mock('../../utils/fileSystem', () => ({
-  readFileWithErrorHandling: jest.fn().mockResolvedValue('// Test file content'),
+vi.mock('../../utils/fileSystem', () => ({
+  readFileWithErrorHandling: vi.fn().mockResolvedValue('// Test file content'),
   FileSystemError: class FileSystemError extends Error {
     constructor(message: string, _type: string, _path: string) {
       super(message);
@@ -96,7 +97,7 @@ describe('Analysis Engine', () => {
 
   beforeEach(() => {
     engine = new AnalysisEngine();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('analyzeRepository', () => {

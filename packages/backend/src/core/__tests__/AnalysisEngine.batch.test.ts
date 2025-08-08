@@ -4,10 +4,11 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('../../utils/repositoryDiscovery', () => ({
-  discoverRepository: jest.fn().mockImplementation(async (repoPath) => {
+vi.mock('../../utils/repositoryDiscovery', () => ({
+  discoverRepository: vi.fn().mockImplementation(async (repoPath) => {
     return {
       id: `repo-${repoPath.replace(/\//g, '-')}`,
       path: repoPath,
@@ -54,24 +55,24 @@ jest.mock('../../utils/repositoryDiscovery', () => ({
       },
     };
   }),
-  analysisOptionsToDiscoveryOptions: jest.fn().mockReturnValue({}),
+  analysisOptionsToDiscoveryOptions: vi.fn().mockReturnValue({}),
 }));
 
-jest.mock('../../utils/fileSystem', () => ({
-  readFileWithErrorHandling: jest.fn().mockResolvedValue('mock file content'),
+vi.mock('../../utils/fileSystem', () => ({
+  readFileWithErrorHandling: vi.fn().mockResolvedValue('mock file content'),
 }));
 
-jest.mock('../codeStructureAnalyzer', () => ({
-  analyzeCodeStructure: jest.fn().mockReturnValue({
+vi.mock('../codeStructureAnalyzer', () => ({
+  analyzeCodeStructure: vi.fn().mockReturnValue({
     functions: [],
     classes: [],
     importCount: 0,
   }),
 }));
 
-jest.mock('../tokenAnalyzer', () => ({
-  countTokens: jest.fn().mockReturnValue(100),
-  sampleText: jest.fn().mockReturnValue('sample'),
+vi.mock('../tokenAnalyzer', () => ({
+  countTokens: vi.fn().mockReturnValue(100),
+  sampleText: vi.fn().mockReturnValue('sample'),
 }));
 
 describe('AnalysisEngine - Batch Processing', () => {
@@ -341,7 +342,7 @@ describe('AnalysisEngine - Batch Processing', () => {
     const repoPaths = ['/path/to/repo1', '/path/to/repo2', '/path/to/repo3'];
 
     // Mock progress callback
-    const progressCallback = jest.fn();
+    const progressCallback = vi.fn();
 
     const result = await engine.analyzeMultipleRepositoriesWithQueue(
       repoPaths,

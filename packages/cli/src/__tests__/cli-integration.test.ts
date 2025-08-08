@@ -35,11 +35,11 @@ vi.mock("fs", () => ({
 
 // Mock console.log to avoid cluttering test output
 const originalConsoleLog = console.log;
-console.log = jest.fn();
+console.log = vi.fn();
 
 // Reset mocks before each test
 beforeEach(() => {
-	jest.clearAllMocks();
+	vi.clearAllMocks();
 	MockApiClient.mockClear();
 });
 
@@ -52,7 +52,7 @@ describe("CLI Integration Tests", () => {
 	describe("analyze command", () => {
 		test("should call analyzeRepository with correct parameters", async () => {
 			// Mock API response
-			const mockAnalyzeRepository = jest.fn().mockResolvedValue({
+			const mockAnalyzeRepository = vi.fn().mockResolvedValue({
 				id: "test-id",
 				name: "test-repo",
 				language: "TypeScript",
@@ -90,7 +90,7 @@ describe("CLI Integration Tests", () => {
 	describe("batch command", () => {
 		test("should call analyzeBatch with correct parameters", async () => {
 			// Mock API response
-			const mockAnalyzeBatch = jest.fn().mockResolvedValue({
+			const mockAnalyzeBatch = vi.fn().mockResolvedValue({
 				id: "batch-id",
 				repositories: [
 					{ id: "repo1-id", name: "repo1", path: "/path/to/repo1" },
@@ -135,7 +135,7 @@ describe("CLI Integration Tests", () => {
 	describe("search command", () => {
 		test("should call searchRepositories with correct parameters", async () => {
 			// Mock API response
-			const mockSearchRepositories = jest.fn().mockResolvedValue([
+			const mockSearchRepositories = vi.fn().mockResolvedValue([
 				{
 					repository: {
 						id: "repo1-id",
@@ -205,7 +205,7 @@ describe("CLI Integration Tests", () => {
 	describe("index command", () => {
 		test("should call rebuildIndex when --rebuild flag is used", async () => {
 			// Mock API response
-			const mockRebuildIndex = jest.fn().mockResolvedValue(undefined);
+			const mockRebuildIndex = vi.fn().mockResolvedValue(undefined);
 
 			MockApiClient.prototype.rebuildIndex = mockRebuildIndex;
 
@@ -218,7 +218,7 @@ describe("CLI Integration Tests", () => {
 
 		test("should call updateIndex when --update flag is used", async () => {
 			// Mock API response
-			const mockUpdateIndex = jest.fn().mockResolvedValue(undefined);
+			const mockUpdateIndex = vi.fn().mockResolvedValue(undefined);
 
 			MockApiClient.prototype.updateIndex = mockUpdateIndex;
 
@@ -238,7 +238,7 @@ describe("CLI Integration Tests", () => {
 
 		test("should call getIndexStatus when no flags are provided", async () => {
 			// Mock API response
-			const mockGetIndexStatus = jest.fn().mockResolvedValue({
+			const mockGetIndexStatus = vi.fn().mockResolvedValue({
 				totalRepositories: 10,
 				lastUpdated: new Date().toISOString(),
 				languages: ["TypeScript", "JavaScript"],
@@ -259,7 +259,7 @@ describe("CLI Integration Tests", () => {
 	describe("config command", () => {
 		test("should update configuration when --set flag is used", async () => {
 			// Spy on config.set
-			const configSetSpy = jest.spyOn(config, "set");
+			const configSetSpy = vi.spyOn(config, "set");
 
 			// Execute command
 			await program.parseAsync([
@@ -289,7 +289,7 @@ describe("CLI Integration Tests", () => {
 					return undefined;
 				});
 
-			const configSetSpy = jest.spyOn(config, "set");
+			const configSetSpy = vi.spyOn(config, "set");
 
 			// Execute command
 			await program.parseAsync([

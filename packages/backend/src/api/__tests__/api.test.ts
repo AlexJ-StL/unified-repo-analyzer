@@ -6,14 +6,15 @@ import request from 'supertest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
 import { app } from '../../index';
+import { vi } from "vitest";
 
 // Mock the AnalysisEngine and IndexSystem
-jest.mock('../../core/AnalysisEngine');
-jest.mock('../../core/IndexSystem');
+vi.mock('../../core/AnalysisEngine');
+vi.mock('../../core/IndexSystem');
 
 describe('API Integration Tests', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Health Check', () => {
@@ -72,7 +73,7 @@ describe('API Integration Tests', () => {
         },
       };
 
-      (AnalysisEngine.prototype.analyzeRepository as jest.Mock).mockResolvedValue(mockAnalysis);
+      (AnalysisEngine.prototype.analyzeRepository as any).mockResolvedValue(mockAnalysis);
 
       const response = await request(app)
         .post('/api/analyze')
@@ -128,7 +129,7 @@ describe('API Integration Tests', () => {
         processingTime: 200,
       };
 
-      (AnalysisEngine.prototype.analyzeMultipleRepositories as jest.Mock).mockResolvedValue(
+      (AnalysisEngine.prototype.analyzeMultipleRepositories as any).mockResolvedValue(
         mockBatchResult
       );
 
@@ -182,7 +183,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (IndexSystem.prototype.getIndex as jest.Mock).mockReturnValue({
+      (IndexSystem.prototype.getIndex as any).mockReturnValue({
         repositories: mockRepositories,
         relationships: [],
         tags: [],
@@ -211,7 +212,7 @@ describe('API Integration Tests', () => {
         complexity: 5,
       };
 
-      (IndexSystem.prototype.getIndex as jest.Mock).mockReturnValue({
+      (IndexSystem.prototype.getIndex as any).mockReturnValue({
         repositories: [mockRepository],
         relationships: [],
         tags: [],
@@ -227,7 +228,7 @@ describe('API Integration Tests', () => {
 
     it('should return 404 for non-existent repository', async () => {
       // Mock the getIndex method
-      (IndexSystem.prototype.getIndex as jest.Mock).mockReturnValue({
+      (IndexSystem.prototype.getIndex as any).mockReturnValue({
         repositories: [],
         relationships: [],
         tags: [],
@@ -272,7 +273,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.searchRepositories as jest.Mock).mockResolvedValue(
+      (AnalysisEngine.prototype.searchRepositories as any).mockResolvedValue(
         mockSearchResults
       );
 
@@ -314,7 +315,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.findSimilarRepositories as jest.Mock).mockResolvedValue(
+      (AnalysisEngine.prototype.findSimilarRepositories as any).mockResolvedValue(
         mockSimilarRepositories
       );
 
@@ -336,7 +337,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.suggestCombinations as jest.Mock).mockResolvedValue(
+      (AnalysisEngine.prototype.suggestCombinations as any).mockResolvedValue(
         mockCombinations
       );
 

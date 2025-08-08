@@ -4,34 +4,35 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AnalysisEngine } from '../AnalysisEngine';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('../../utils/fileSystem', () => ({
-  readFileWithErrorHandling: jest.fn(),
+vi.mock('../../utils/fileSystem', () => ({
+  readFileWithErrorHandling: vi.fn(),
 }));
 
-jest.mock('../../utils/repositoryDiscovery', () => ({
-  discoverRepository: jest.fn(),
-  analysisOptionsToDiscoveryOptions: jest.fn(),
+vi.mock('../../utils/repositoryDiscovery', () => ({
+  discoverRepository: vi.fn(),
+  analysisOptionsToDiscoveryOptions: vi.fn(),
 }));
 
-jest.mock('../../services/cache.service', () => ({
+vi.mock('../../services/cache.service', () => ({
   cacheService: {
-    getCachedAnalysis: jest.fn().mockResolvedValue(null),
-    setCachedAnalysis: jest.fn().mockResolvedValue(undefined),
+    getCachedAnalysis: vi.fn().mockResolvedValue(null),
+    setCachedAnalysis: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
-jest.mock('../../services/deduplication.service', () => ({
+vi.mock('../../services/deduplication.service', () => ({
   deduplicationService: {
-    deduplicateAnalysis: jest.fn().mockImplementation((_path, _options, fn) => fn()),
+    deduplicateAnalysis: vi.fn().mockImplementation((_path, _options, fn) => fn()),
   },
 }));
 
-jest.mock('../../services/metrics.service', () => ({
+vi.mock('../../services/metrics.service', () => ({
   metricsService: {
-    createTimer: jest.fn().mockReturnValue(() => {}),
-    recordAnalysis: jest.fn(),
+    createTimer: vi.fn().mockReturnValue(() => {}),
+    recordAnalysis: vi.fn(),
   },
 }));
 
@@ -59,7 +60,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
     };
 
     // Reset mocks
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     // Setup default mock implementations
     mockAnalysisOptionsToDiscoveryOptions.mockReturnValue({});

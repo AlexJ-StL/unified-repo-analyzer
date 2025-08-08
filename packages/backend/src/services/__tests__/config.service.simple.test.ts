@@ -3,28 +3,29 @@
  */
 
 import { ConfigurationService } from '../config.service';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('fs/promises', () => ({
-  mkdir: jest.fn().mockResolvedValue(undefined),
-  writeFile: jest.fn().mockResolvedValue(undefined),
-  readFile: jest.fn(),
-  access: jest.fn().mockRejectedValue(new Error('File not found')),
+vi.mock('fs/promises', () => ({
+  mkdir: vi.fn().mockResolvedValue(undefined),
+  writeFile: vi.fn().mockResolvedValue(undefined),
+  readFile: vi.fn(),
+  access: vi.fn().mockRejectedValue(new Error('File not found')),
 }));
 
-jest.mock('os', () => ({
+vi.mock('os', () => ({
   homedir: () => '/mock/home',
 }));
 
-jest.mock('uuid', () => ({
+vi.mock('uuid', () => ({
   v4: () => 'mock-uuid-123',
 }));
 
-jest.mock('../../utils/logger', () => ({
+vi.mock('../../utils/logger', () => ({
   logger: {
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
@@ -32,7 +33,7 @@ describe('ConfigurationService', () => {
   let configService: ConfigurationService;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Setup default mock responses
     mockReadFile.mockImplementation((path: string) => {
       if (

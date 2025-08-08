@@ -5,14 +5,15 @@
 import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import axios from 'axios';
 import { GeminiProvider } from '../GeminiProvider';
+import { vi } from "vitest";
 
 // Mock axios
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+vi.mock('axios');
+const mockedAxios = axios as anyed<typeof axios>;
 
 describe('GeminiProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('constructor', () => {

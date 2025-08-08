@@ -7,9 +7,10 @@ import express from 'express';
 import { Server } from 'socket.io';
 import request from 'supertest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('../../core/AnalysisEngine');
+vi.mock('../../core/AnalysisEngine');
 
 describe('Batch Analysis API', () => {
   let app: express.Application;
@@ -18,7 +19,7 @@ describe('Batch Analysis API', () => {
 
   beforeEach(() => {
     // Reset mocks
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     // Create Express app
     app = express();
@@ -32,13 +33,13 @@ describe('Batch Analysis API', () => {
 
     // Mock Socket.IO
     (global as any).io = {
-      to: jest.fn().mockReturnValue({
-        emit: jest.fn(),
+      to: vi.fn().mockReturnValue({
+        emit: vi.fn(),
       }),
     };
 
     // Mock AnalysisEngine
-    (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as jest.Mock).mockImplementation(
+    (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any).mockImplementation(
       async (paths, _options, _concurrency, progressCallback) => {
         // Call progress callback a few times to simulate progress
         if (progressCallback) {
@@ -199,7 +200,7 @@ describe('Batch Analysis API', () => {
   test('should handle errors during batch analysis', async () => {
     // Mock analyzeMultipleRepositoriesWithQueue to throw an error
     (
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as jest.Mock
+      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any
     ).mockRejectedValueOnce(new Error('Batch analysis failed'));
 
     const response = await request(app)

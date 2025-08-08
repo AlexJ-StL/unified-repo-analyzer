@@ -4,15 +4,16 @@
 
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { AdvancedAnalyzer } from '../advancedAnalyzer';
+import { vi } from "vitest";
 
 // Mock file system operations
-jest.mock('../../utils/fileSystem', () => ({
-  readFileWithErrorHandling: jest.fn(),
+vi.mock('../../utils/fileSystem', () => ({
+  readFileWithErrorHandling: vi.fn(),
 }));
 
-jest.mock('fs', () => ({
+vi.mock('fs', () => ({
   promises: {
-    stat: jest.fn(),
+    stat: vi.fn(),
   },
 }));
 
@@ -96,7 +97,7 @@ describe('AdvancedAnalyzer', () => {
     };
 
     // Reset mocks
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('analyzeRepository', () => {

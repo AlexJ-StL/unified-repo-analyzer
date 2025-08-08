@@ -4,16 +4,17 @@
 
 import fs from 'node:fs/promises';
 import { ConfigurationService } from '../config.service';
+import { vi } from "vitest";
 
 // Mock dependencies
-jest.mock('fs/promises');
-jest.mock('os', () => ({ homedir: () => '/mock/home' }));
-jest.mock('uuid', () => ({ v4: () => 'mock-uuid-123' }));
-jest.mock('../../utils/logger', () => ({
-  logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+vi.mock('fs/promises');
+vi.mock('os', () => ({ homedir: () => '/mock/home' }));
+vi.mock('uuid', () => ({ v4: () => 'mock-uuid-123' }));
+vi.mock('../../utils/logger', () => ({
+  logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
-const mockFs = fs as jest.Mocked<typeof fs>;
+const mockFs = fs as anyed<typeof fs>;
 
 describe('ConfigurationService - Basic Tests', () => {
   let configService: ConfigurationService;
@@ -65,7 +66,7 @@ describe('ConfigurationService - Basic Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     // Setup mock file system responses
     mockFs.mkdir.mockResolvedValue(undefined);
