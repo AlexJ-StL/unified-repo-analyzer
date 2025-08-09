@@ -2,8 +2,8 @@
  * Tests for the queue system
  */
 
+import { vi } from 'vitest';
 import { QueueEvent, TaskQueue, TaskStatus } from '../queue';
-import { vi } from "vitest";
 
 describe('TaskQueue', () => {
   // Mock processor function
