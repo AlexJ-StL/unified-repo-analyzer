@@ -4,8 +4,8 @@
 
 import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import axios from 'axios';
+import { vi } from 'vitest';
 import { ClaudeProvider } from '../ClaudeProvider';
-import { vi } from "vitest";
 
 // Mock axios
 vi.mock('axios');

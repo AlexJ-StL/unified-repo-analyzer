@@ -3,10 +3,10 @@
  */
 
 import request from 'supertest';
+import { vi } from 'vitest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
 import { app } from '../../index';
-import { vi } from "vitest";
 
 // Mock the AnalysisEngine and IndexSystem
 vi.mock('../../core/AnalysisEngine');
@@ -273,9 +273,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.searchRepositories as any).mockResolvedValue(
-        mockSearchResults
-      );
+      (AnalysisEngine.prototype.searchRepositories as any).mockResolvedValue(mockSearchResults);
 
       const response = await request(app)
         .get('/api/repositories/search')
@@ -337,9 +335,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.suggestCombinations as any).mockResolvedValue(
-        mockCombinations
-      );
+      (AnalysisEngine.prototype.suggestCombinations as any).mockResolvedValue(mockCombinations);
 
       const response = await request(app)
         .post('/api/repositories/combinations')

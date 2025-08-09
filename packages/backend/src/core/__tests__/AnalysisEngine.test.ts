@@ -3,8 +3,8 @@
  */
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { vi } from 'vitest';
 import { AnalysisEngine } from '../AnalysisEngine';
-import { vi } from "vitest";
 
 // Mock dependencies
 vi.mock('../codeStructureAnalyzer', () => ({

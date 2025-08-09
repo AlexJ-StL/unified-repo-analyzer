@@ -4,8 +4,8 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { vi } from 'vitest';
 import { ConfigurationService } from '../config.service';
-import { vi } from "vitest";
 
 // Mock fs module
 vi.mock('fs/promises');

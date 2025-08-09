@@ -3,8 +3,8 @@
  */
 
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { vi } from 'vitest';
 import { AdvancedAnalyzer } from '../advancedAnalyzer';
-import { vi } from "vitest";
 
 // Mock file system operations
 vi.mock('../../utils/fileSystem', () => ({

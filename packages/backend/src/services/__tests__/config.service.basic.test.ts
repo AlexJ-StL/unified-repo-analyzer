@@ -3,8 +3,8 @@
  */
 
 import fs from 'node:fs/promises';
+import { vi } from 'vitest';
 import { ConfigurationService } from '../config.service';
-import { vi } from "vitest";
 
 // Mock dependencies
 vi.mock('fs/promises');

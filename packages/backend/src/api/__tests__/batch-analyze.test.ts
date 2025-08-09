@@ -6,8 +6,8 @@ import { createServer } from 'node:http';
 import express from 'express';
 import { Server } from 'socket.io';
 import request from 'supertest';
-import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { vi } from "vitest";
+import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 // Mock dependencies
 vi.mock('../../core/AnalysisEngine');
