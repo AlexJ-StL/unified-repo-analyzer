@@ -2,12 +2,17 @@
 [install]
 # Use npm registry for package installation
 registry = "https://registry.npmjs.org"
-# Enable cache for faster installs
-cache = true
 # Automatically install peer dependencies
 auto = "auto"
+
+[install.cache]
+# Enable cache for faster installs
+disable = false
+
+[install.lockfile]
 # Use binary lock file format
-lockfile = "bun"
+save = true
+print = "yarn"
 
 [run]
 # Use bun runtime for scripts
