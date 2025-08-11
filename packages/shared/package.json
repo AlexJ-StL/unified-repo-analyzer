@@ -5,8 +5,8 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"build": "rimraf dist && (tsc && bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
-		"build:tsc": "tsc --project tsconfig.json",
+		"build": "rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
+		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.json",
 		"lint": "biome lint .",
 		"format": "biome format --write .",
 		"test": "bun test || npm test --silent || echo \"No npm tests configured\"",

@@ -9,7 +9,7 @@
 		"dev": "bun --watch src/index.ts || npm run dev:node",
 		"dev:node": "ts-node src/index.ts",
 		"build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
-		"build:tsc": "tsc --project tsconfig.prod.json",
+		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.prod.json",
 		"build:prod": "cross-env NODE_ENV=production bun run build --minify || cross-env NODE_ENV=production npm run build:tsc",
 		"start": "bun dist/index.js || node dist/index.js",
 		"start:prod": "cross-env NODE_ENV=production bun dist/index.js || cross-env NODE_ENV=production node dist/index.js",
@@ -28,6 +28,7 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@unified-repo-analyzer/shared": "workspace:*",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",

@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "bun run vite || npm run vite",
-		"tsc": "tsc --noEmit",
+		"tsc": "node ../../node_modules/typescript/bin/tsc --noEmit",
 		"build": "bun run tsc && bun run vite build || (npm run tsc && npm run vite -- build)",
 		"build:prod": "cross-env NODE_ENV=production bun run tsc && bun run vite build --mode production || cross-env NODE_ENV=production npm run tsc && npm run vite -- build --mode production",
 		"preview": "bun run vite preview || npm run vite -- preview",
@@ -17,6 +17,7 @@
 		"clean": "rimraf dist"
 	},
 	"dependencies": {
+		"@unified-repo-analyzer/shared": "workspace:*",
 		"@headlessui/react": "^1.7.18",
 		"@heroicons/react": "^2.1.1",
 		"axios": "^1.6.7",

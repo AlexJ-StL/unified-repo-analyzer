@@ -1,15 +1,7 @@
-import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type { RepositoryAnalysis, AnalysisOptions as SharedAnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
 import { create } from 'zustand';
 
-export interface AnalysisOptions {
-  mode: 'quick' | 'standard' | 'comprehensive';
-  maxFiles: number;
-  maxLinesPerFile: number;
-  includeLLMAnalysis: boolean;
-  llmProvider: string;
-  outputFormats: string[];
-  includeTree: boolean;
-}
+export interface AnalysisOptions extends SharedAnalysisOptions {}
 
 export interface AnalysisProgress {
   status: 'idle' | 'running' | 'completed' | 'failed';
@@ -38,7 +30,7 @@ const defaultOptions: AnalysisOptions = {
   maxLinesPerFile: 1000,
   includeLLMAnalysis: true,
   llmProvider: 'claude',
-  outputFormats: ['json'],
+  outputFormats: ['json'] as OutputFormat[],
   includeTree: true,
 };
 
