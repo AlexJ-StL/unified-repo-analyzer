@@ -3,8 +3,9 @@ import type {
 	BatchAnalysisResult,
 	OutputFormat,
 	RepositoryAnalysis,
+	SearchQuery,
 } from "@unified-repo-analyzer/shared";
-import axios, { type AxiosError } from "axios";
+import axios, { type AxiosError, type AxiosResponse } from "axios";
 import { performanceService } from "./performance.service";
 
 // Create axios instance with default config
@@ -100,27 +101,27 @@ api.interceptors.response.use(
 // API service functions
 export const apiService = {
 	// Repository analysis
-	analyzeRepository: (path: string, options: AnalysisOptions) => {
+	analyzeRepository: (path: string, options: AnalysisOptions): Promise<AxiosResponse<{ analysisId: string }>> => {
 		return api.post("/analyze", { path, options });
 	},
 
 	// Batch analysis
-	analyzeBatch: (paths: string[], options: AnalysisOptions) => {
+	analyzeBatch: (paths: string[], options: AnalysisOptions): Promise<AxiosResponse<{ batchId: string }>> => {
 		return api.post("/analyze/batch", { paths, options });
 	},
 
 	// Get repositories
-	getRepositories: () => {
+	getRepositories: (): Promise<AxiosResponse<RepositoryAnalysis[]>> => {
 		return api.get("/repositories");
 	},
 
 	// Search repositories
-	searchRepositories: (query: string, filters: Record<string, unknown>) => {
+	searchRepositories: (query: string, filters: SearchQuery): Promise<AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>> => {
 		return api.get("/repositories/search", { params: { query, ...filters } });
 	},
 
 	// Get analysis results
-	getAnalysis: (id: string) => {
+	getAnalysis: (id: string): Promise<AxiosResponse<RepositoryAnalysis>> => {
 		return api.get(`/analysis/${id}`);
 	},
 
@@ -129,7 +130,7 @@ export const apiService = {
 		analysis: RepositoryAnalysis,
 		format: OutputFormat,
 		download = false,
-	) => {
+	): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
 		return api.post(
 			"/export",
 			{ analysis, format },
@@ -145,7 +146,7 @@ export const apiService = {
 		batchAnalysis: BatchAnalysisResult,
 		format: OutputFormat,
 		download = false,
-	) => {
+	): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
 		return api.post(
 			"/export/batch",
 			{ batchAnalysis, format },
@@ -157,22 +158,22 @@ export const apiService = {
 	},
 
 	// Download export file
-	downloadExport: (exportId: string) => {
+	downloadExport: (exportId: string): Promise<AxiosResponse<Blob>> => {
 		return api.get(`/export/download/${exportId}`, { responseType: "blob" });
 	},
 
 	// Get export history
-	getExportHistory: () => {
+	getExportHistory: (): Promise<AxiosResponse<{ exports: Array<{ id: string; format: OutputFormat; createdAt: string; size: number }> }>> => {
 		return api.get("/export/history");
 	},
 
 	// Delete export
-	deleteExport: (exportId: string) => {
+	deleteExport: (exportId: string): Promise<AxiosResponse<{ success: boolean }>> => {
 		return api.delete(`/export/${exportId}`);
 	},
 
 	// Cancel analysis
-	cancelAnalysis: (id: string) => {
+	cancelAnalysis: (id: string): Promise<AxiosResponse<{ success: boolean }>> => {
 		return api.post(`/analysis/${id}/cancel`);
 	},
 };
@@ -185,11 +186,15 @@ export const handleApiError = (error: unknown): string => {
 		if (axiosError.response) {
 			// The request was made and the server responded with a status code
 			// that falls out of the range of 2xx
-			const data = axiosError.response.data as Record<string, unknown>;
-			return (
-				data.message ||
-				`Error ${axiosError.response.status}: ${axiosError.response.statusText}`
-			);
+			const data = axiosError.response.data as { message?: string; error?: string };
+			
+			// Ensure we return a proper string, not an empty object
+			const errorMessage = data?.message || data?.error;
+			if (typeof errorMessage === 'string' && errorMessage.trim()) {
+				return errorMessage;
+			}
+			
+			return `Error ${axiosError.response.status}: ${axiosError.response.statusText}`;
 		}
 		if (axiosError.request) {
 			// The request was made but no response was received
@@ -200,7 +205,16 @@ export const handleApiError = (error: unknown): string => {
 	}
 
 	// For non-axios errors
-	return error instanceof Error ? error.message : "An unknown error occurred";
+	if (error instanceof Error) {
+		return error.message;
+	}
+	
+	// Fallback for unknown error types
+	if (typeof error === 'string') {
+		return error;
+	}
+	
+	return "An unknown error occurred";
 };
 
 // Enhanced API service with error handling and retry logic
@@ -214,7 +228,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 
 	return {
 		// Repository analysis with error handling
-		analyzeRepository: async (path: string, options: AnalysisOptions) => {
+		analyzeRepository: async (path: string, options: AnalysisOptions): Promise<AxiosResponse<{ analysisId: string }>> => {
 			try {
 				return await api.post("/analyze", { path, options });
 			} catch (error) {
@@ -223,7 +237,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Batch analysis with error handling
-		analyzeBatch: async (paths: string[], options: AnalysisOptions) => {
+		analyzeBatch: async (paths: string[], options: AnalysisOptions): Promise<AxiosResponse<{ batchId: string }>> => {
 			try {
 				return await api.post("/analyze/batch", { paths, options });
 			} catch (error) {
@@ -232,7 +246,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Get repositories with error handling
-		getRepositories: async () => {
+		getRepositories: async (): Promise<AxiosResponse<RepositoryAnalysis[]>> => {
 			try {
 				return await api.get("/repositories");
 			} catch (error) {
@@ -243,8 +257,8 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		// Search repositories with error handling
 		searchRepositories: async (
 			query: string,
-			filters: Record<string, unknown>,
-		) => {
+			filters: SearchQuery,
+		): Promise<AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>> => {
 			try {
 				return await api.get("/repositories/search", {
 					params: { query, ...filters },
@@ -255,7 +269,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Get analysis results with error handling
-		getAnalysis: async (id: string) => {
+		getAnalysis: async (id: string): Promise<AxiosResponse<RepositoryAnalysis>> => {
 			try {
 				return await api.get(`/analysis/${id}`);
 			} catch (error) {
@@ -268,7 +282,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 			analysis: RepositoryAnalysis,
 			format: OutputFormat,
 			download = false,
-		) => {
+		): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
 			try {
 				return await api.post(
 					"/export",
@@ -288,7 +302,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 			batchAnalysis: BatchAnalysisResult,
 			format: OutputFormat,
 			download = false,
-		) => {
+		): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
 			try {
 				return await api.post(
 					"/export/batch",
@@ -304,7 +318,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Download export file with error handling
-		downloadExport: async (exportId: string) => {
+		downloadExport: async (exportId: string): Promise<AxiosResponse<Blob>> => {
 			try {
 				return await api.get(`/export/download/${exportId}`, {
 					responseType: "blob",
@@ -315,7 +329,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Get export history with error handling
-		getExportHistory: async () => {
+		getExportHistory: async (): Promise<AxiosResponse<{ exports: Array<{ id: string; format: OutputFormat; createdAt: string; size: number }> }>> => {
 			try {
 				return await api.get("/export/history");
 			} catch (error) {
@@ -324,7 +338,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Delete export with error handling
-		deleteExport: async (exportId: string) => {
+		deleteExport: async (exportId: string): Promise<AxiosResponse<{ success: boolean }>> => {
 			try {
 				return await api.delete(`/export/${exportId}`);
 			} catch (error) {
@@ -333,7 +347,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
 		},
 
 		// Cancel analysis with error handling
-		cancelAnalysis: async (id: string) => {
+		cancelAnalysis: async (id: string): Promise<AxiosResponse<{ success: boolean }>> => {
 			try {
 				return await api.post(`/analysis/${id}/cancel`);
 			} catch (error) {

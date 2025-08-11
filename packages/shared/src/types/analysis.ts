@@ -120,6 +120,13 @@ export interface SearchQuery {
     start: Date;
     end: Date;
   };
+  // Pagination and sorting
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  // Repository comparison
+  compareRepositories?: string[];
 }
 
 export interface SearchResult {

@@ -1,0 +1,106 @@
+{
+  "timestamp": "2025-08-11T06:05:37.870Z",
+  "overallScore": 83,
+  "overallStatus": "critical",
+  "checks": [
+    {
+      "name": "Workspace Health",
+      "status": "healthy",
+      "message": "Workspace is healthy",
+      "score": 100,
+      "details": "Workspace configuration found. 4 workspace packages found. 4/4 packages have valid configuration. ",
+      "suggestions": [],
+      "lastChecked": "2025-08-11T06:05:18.968Z",
+      "duration": 7.022100000000023
+    },
+    {
+      "name": "Security Health",
+      "status": "healthy",
+      "message": "Security is healthy",
+      "score": 100,
+      "details": "No exposed sensitive files. Good .gitignore coverage. ",
+      "suggestions": [],
+      "lastChecked": "2025-08-11T06:05:19.043Z",
+      "duration": 2.94440000000003
+    },
+    {
+      "name": "Maintenance Health",
+      "status": "healthy",
+      "message": "Maintenance is healthy",
+      "score": 100,
+      "details": "4 total dependencies. 2 log files present. ",
+      "suggestions": [],
+      "lastChecked": "2025-08-11T06:05:19.047Z",
+      "duration": 2.6358999999999924
+    },
+    {
+      "name": "Dependency Health",
+      "status": "warning",
+      "message": "Dependencies are healthy",
+      "score": 60,
+      "details": "549 packages installed. ",
+      "suggestions": [
+        "Generate lock file for reproducible builds",
+        "TypeScript dependency not accessible"
+      ],
+      "lastChecked": "2025-08-11T06:05:19.157Z",
+      "duration": 345.4488
+    },
+    {
+      "name": "Environment Health",
+      "status": "warning",
+      "message": "Environment is healthy",
+      "score": 85,
+      "details": "Node.js v24.3.0. Bun 1.2.19. Memory: 1/2MB. Project directory accessible. Windows platform. ",
+      "suggestions": [
+        "Consider increasing Node.js memory limit"
+      ],
+      "lastChecked": "2025-08-11T06:05:19.246Z",
+      "duration": 276.93449999999996
+    },
+    {
+      "name": "TypeScript Health",
+      "status": "healthy",
+      "message": "TypeScript system is healthy",
+      "score": 100,
+      "details": "TypeScript version: Version 5.9.2. 5/5 TypeScript configs found. ",
+      "suggestions": [],
+      "lastChecked": "2025-08-11T06:05:27.313Z",
+      "duration": 8430.2593
+    },
+    {
+      "name": "Performance Health",
+      "status": "critical",
+      "message": "Performance is healthy",
+      "score": 50,
+      "details": "549 dependencies. ",
+      "suggestions": [
+        "Build performance cannot be measured due to build failure"
+      ],
+      "lastChecked": "2025-08-11T06:05:37.775Z",
+      "duration": 18781.5891
+    },
+    {
+      "name": "Build System Health",
+      "status": "warning",
+      "message": "Build process has issues",
+      "score": 70,
+      "details": "40 scripts configured. 4/4 packages have build output. ",
+      "suggestions": [
+        "Fix shared package build errors"
+      ],
+      "lastChecked": "2025-08-11T06:05:37.869Z",
+      "duration": 18939.800600000002
+    }
+  ],
+  "summary": {
+    "healthy": 4,
+    "warnings": 3,
+    "critical": 1,
+    "total": 8
+  },
+  "recommendations": [
+    "Address critical issues immediately to restore build functionality",
+    "Review warning items to prevent future issues"
+  ]
+}

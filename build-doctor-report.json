@@ -1,0 +1,154 @@
+{
+  "timestamp": "2025-08-11T06:07:28.694Z",
+  "summary": {
+    "passed": 22,
+    "warnings": 2,
+    "failed": 1
+  },
+  "diagnostics": [
+    {
+      "name": "Root Package Configuration",
+      "status": "pass",
+      "message": "Root package.json exists with workspace configuration"
+    },
+    {
+      "name": "Packages Directory",
+      "status": "pass",
+      "message": "Found 4 packages: backend, cli, frontend, shared"
+    },
+    {
+      "name": "Package backend - Build Script",
+      "status": "pass",
+      "message": "Build script configured"
+    },
+    {
+      "name": "Package backend - TypeScript",
+      "status": "pass",
+      "message": "TypeScript configuration found"
+    },
+    {
+      "name": "Package cli - Build Script",
+      "status": "pass",
+      "message": "Build script configured"
+    },
+    {
+      "name": "Package cli - TypeScript",
+      "status": "pass",
+      "message": "TypeScript configuration found"
+    },
+    {
+      "name": "Package frontend - Build Script",
+      "status": "pass",
+      "message": "Build script configured"
+    },
+    {
+      "name": "Package frontend - TypeScript",
+      "status": "pass",
+      "message": "TypeScript configuration found"
+    },
+    {
+      "name": "Package shared - Build Script",
+      "status": "pass",
+      "message": "Build script configured"
+    },
+    {
+      "name": "Package shared - TypeScript",
+      "status": "pass",
+      "message": "TypeScript configuration found"
+    },
+    {
+      "name": "TypeScript Configuration",
+      "status": "pass",
+      "message": "Root tsconfig.json found"
+    },
+    {
+      "name": "Dependencies Installation",
+      "status": "pass",
+      "message": "node_modules directory exists"
+    },
+    {
+      "name": "Dependency Analysis",
+      "status": "pass",
+      "message": "No dependency issues detected"
+    },
+    {
+      "name": "Dependency Lock File",
+      "status": "warning",
+      "message": "No lock file found",
+      "suggestions": [
+        "Run package manager install to generate lock file"
+      ]
+    },
+    {
+      "name": "TypeScript Compilation",
+      "status": "fail",
+      "message": "TypeScript compilation failed with 0 errors",
+      "details": "$ bun run --cwd packages/shared build || bun run build --workspace @unified-repo-analyzer/shared\n$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n$ node ../../node_modules/typescript/bin/tsc --project tsconfig.json\n$ bun run scripts/enhanced-build.ts --workspace @unified-repo-analyzer/shared\nerror: script \"build\" exited with code 1\nerror: script \"build:shared\" exited with code 1\n",
+      "suggestions": [
+        "Review TypeScript errors in build output",
+        "Fix type mismatches and missing imports",
+        "Update type definitions"
+      ]
+    },
+    {
+      "name": "Build Script - build",
+      "status": "pass",
+      "message": "Script 'build' is configured"
+    },
+    {
+      "name": "Build Script - build:shared",
+      "status": "pass",
+      "message": "Script 'build:shared' is configured"
+    },
+    {
+      "name": "Build Script - build:backend",
+      "status": "pass",
+      "message": "Script 'build:backend' is configured"
+    },
+    {
+      "name": "Build Script - build:frontend",
+      "status": "pass",
+      "message": "Script 'build:frontend' is configured"
+    },
+    {
+      "name": "Build Script Syntax",
+      "status": "pass",
+      "message": "Build script syntax appears valid"
+    },
+    {
+      "name": "Node.js Version",
+      "status": "pass",
+      "message": "Node.js v24.3.0 (meets minimum requirement)"
+    },
+    {
+      "name": "Bun Installation",
+      "status": "pass",
+      "message": "Bun is installed: 1.2.19"
+    },
+    {
+      "name": "Available Memory",
+      "status": "warning",
+      "message": "Low available memory: 2MB",
+      "suggestions": [
+        "Consider increasing Node.js memory limit with --max-old-space-size"
+      ]
+    },
+    {
+      "name": "Project Directory Access",
+      "status": "pass",
+      "message": "Project directory is accessible"
+    },
+    {
+      "name": "Dependencies Size",
+      "status": "pass",
+      "message": "Reasonable number of dependencies (551 packages)"
+    }
+  ],
+  "recoveryActions": [],
+  "environment": {
+    "nodeVersion": "v24.3.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cwd": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer"
+  }
+}
