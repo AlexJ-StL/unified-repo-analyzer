@@ -11,6 +11,7 @@
 .pnp
 .pnp.js
 **/.bun/
+bun.lock
 
 # Build artifacts (deduplicated)
 **/dist/
