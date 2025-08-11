@@ -20,7 +20,7 @@ This guide explains how to analyze repositories using the web UI and CLI, interp
 
 1) Access the application
 - Web Interface: http://localhost:3001 (default)
-- CLI: npm install -g @unified-repo-analyzer/cli
+- CLI: bun install -g @unified-repo-analyzer/cli
 
 2) Configure LLM provider
 - Settings → LLM Providers
@@ -197,7 +197,7 @@ For analyzing multiple repositories simultaneously:
 
 ```bash
 # Install globally
-npm install -g @unified-repo-analyzer/cli
+bun install -g @unified-repo-analyzer/cli
 
 # Or run via npx
 npx @unified-repo-analyzer/cli --help
@@ -340,7 +340,7 @@ jobs:
           node-version: '18'
           
       - name: Install analyzer
-        run: npm install -g @unified-repo-analyzer/cli
+        run: bun install -g @unified-repo-analyzer/cli
         
       - name: Analyze repository
         run: |

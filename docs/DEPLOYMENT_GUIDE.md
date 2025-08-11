@@ -132,8 +132,8 @@ cp .env.example .env
 
 2. **Build and start services:**
 ```bash
-npm run docker:build
-npm run docker:up
+bun run docker:build
+bun run docker:up
 ```
 
 3. **Verify deployment:**
@@ -142,7 +142,7 @@ npm run docker:up
 docker-compose ps
 
 # View logs
-npm run docker:logs
+bun run docker:logs
 
 # Access the application
 curl http://localhost:3000/health
@@ -444,8 +444,8 @@ sudo chown repo-analyzer:repo-analyzer /var/cache/repo-analyzer
 ```bash
 cd /opt/repo-analyzer
 sudo -u repo-analyzer git clone https://github.com/your-org/unified-repo-analyzer.git .
-sudo -u repo-analyzer npm install
-sudo -u repo-analyzer npm run build:prod
+sudo -u repo-analyzer bun install
+sudo -u repo-analyzer bun run build:prod
 ```
 
 2. **Configure environment:**

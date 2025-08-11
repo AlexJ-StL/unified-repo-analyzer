@@ -33,48 +33,48 @@ tests/
 
 ```bash
 # Run complete test suite
-npm run test
+bun run test
 
 # Run with coverage
-npm run test:coverage
+bun run test:coverage
 
 # Run comprehensive test suite with reporting
-npm run test:full
+bun run test:full
 ```
 
 ### Specific Test Types
 
 ```bash
 # Unit tests only
-npm run test:unit
+bun run test:unit
 
 # Integration tests
-npm run test:integration
+bun run test:integration
 
 # End-to-end tests
-npm run test:e2e
+bun run test:e2e
 
 # Performance tests
-npm run test:performance
+bun run test:performance
 
 # CLI tests
-npm run test:cli
+bun run test:cli
 ```
 
 ### Package-Specific Tests
 
 ```bash
 # Backend tests
-npm run test:backend
+bun run test:backend
 
 # Frontend tests
-npm run test:frontend
+bun run test:frontend
 
 # CLI package tests
-npm run test:cli-package
+bun run test:cli-package
 
 # Shared utilities tests
-npm run test:shared
+bun run test:shared
 ```
 
 ## Test Configuration
@@ -368,7 +368,7 @@ The test suite is integrated with GitHub Actions:
 ```yaml
 # .github/workflows/ci.yml
 - name: Run tests
-  run: npm run test:ci
+  run: bun run test:ci
 
 - name: Upload coverage
   uses: codecov/codecov-action@v3
@@ -391,23 +391,23 @@ Tests are parallelized in CI:
 
 ```bash
 # Run tests in debug mode
-DEBUG=* npm run test
+DEBUG=* bun run test
 
 # Debug specific test file
-npm run test -- --reporter=verbose tests/e2e/analysis.test.ts
+bun run test -- --reporter=verbose tests/e2e/analysis.test.ts
 
 # Run single test
-npm run test -- --grep "should analyze JavaScript project"
+bun run test -- --grep "should analyze JavaScript project"
 ```
 
 ### Test Isolation
 
 ```bash
 # Run tests in isolation
-npm run test -- --no-coverage --reporter=verbose
+bun run test -- --no-coverage --reporter=verbose
 
 # Run with increased timeout
-npm run test -- --timeout 60000
+bun run test -- --timeout 60000
 ```
 
 ## Best Practices
@@ -448,10 +448,10 @@ npm run test -- --timeout 60000
 
 ```bash
 # Increase timeout
-npm run test -- --timeout 60000
+bun run test -- --timeout 60000
 
 # Check for hanging promises
-npm run test -- --detect-open-handles
+bun run test -- --detect-open-handles
 ```
 
 #### Memory Issues
@@ -461,14 +461,14 @@ npm run test -- --detect-open-handles
 node --max-old-space-size=4096 node_modules/.bin/vitest
 
 # Monitor memory usage
-npm run test:memory-profile
+bun run test:memory-profile
 ```
 
 #### Port Conflicts
 
 ```bash
 # Use different ports for testing
-TEST_PORT=3002 npm run test:e2e
+TEST_PORT=3002 bun run test:e2e
 
 # Kill processes using test ports
 lsof -ti:3001 | xargs kill -9
@@ -477,8 +477,8 @@ lsof -ti:3001 | xargs kill -9
 ### Getting Help
 
 1. Check test logs in `test-results/` directory
-2. Run tests with verbose output: `npm run test -- --reporter=verbose`
-3. Use debug mode: `DEBUG=* npm run test`
+2. Run tests with verbose output: `bun run test -- --reporter=verbose`
+3. Use debug mode: `DEBUG=* bun run test`
 4. Check GitHub Actions logs for CI failures
 
 ## Contributing

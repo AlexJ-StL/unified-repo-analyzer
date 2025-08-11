@@ -43,10 +43,10 @@ The Unified Repository Analyzer provides three ways to interact with your reposi
 
 ```bash
 # Install globally for CLI access
-npm install -g @unified-repo-analyzer/cli
+bun install -g @unified-repo-analyzer/cli
 
 # Or install locally in your project
-npm install @unified-repo-analyzer/cli
+bun install @unified-repo-analyzer/cli
 ```
 
 ### Install from Source
@@ -57,13 +57,13 @@ git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git
 cd unified-repo-analyzer
 
 # Install dependencies
-npm install
+bun install
 
 # Build all packages
-npm run build
+bun run build
 
 # Start the development server
-npm run dev
+bun run dev
 ```
 
 ## Quick Start
@@ -88,7 +88,7 @@ repo-analyzer search --languages JavaScript,TypeScript --frameworks React
 
 1. Start the server:
    ```bash
-   npm run dev
+   bun run dev
    ```
 
 2. Open your browser to `http://localhost:3000`
@@ -437,7 +437,7 @@ Enable detailed logging:
 DEBUG=* repo-analyzer analyze /path/to/repo
 
 # Web interface debug
-NODE_ENV=development npm run dev
+NODE_ENV=development bun run dev
 ```
 
 ### Log Files

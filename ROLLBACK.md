@@ -30,7 +30,7 @@ rm bunfig.toml
 npm uninstall @biomejs/biome
 
 # Reinstall ESLint and Prettier
-npm install --save-dev \
+bun install --save-dev \
   @eslint/js@^9.32.0 \
   @typescript-eslint/eslint-plugin@^8.38.0 \
   @typescript-eslint/parser@^8.38.0 \
@@ -242,7 +242,7 @@ class TestRunner {
   async runUnitTests() {
     console.log('Running unit tests...');
     try {
-      execSync('npm run test:all', { stdio: 'inherit' });
+      execSync('bun run test:all', { stdio: 'inherit' });
       this.results.unit = { status: 'passed', duration: Date.now() - this.startTime };
     } catch (error) {
       this.results.unit = { status: 'failed', error: error.message };
@@ -267,13 +267,13 @@ Restore npm-based scripts in all package.json files:
 ```json
 {
   "scripts": {
-    "dev": "npm run dev:backend & npm run dev:frontend",
-    "dev:backend": "npm run --workspace=packages/backend dev",
-    "dev:frontend": "npm run --workspace=packages/frontend dev",
-    "build": "npm run build:shared && npm run build:backend && npm run build:cli && npm run build:frontend",
-    "test": "jest",
-    "test:all": "npm run --workspaces test",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "dev": "bun run dev:backend & bun run dev:frontend",
+    "dev:backend": "bun run --workspace=packages/backend dev",
+    "dev:frontend": "bun run --workspace=packages/frontend dev",
+    "build": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",
+    "test": "bun test",
+    "test:all": "bun run --workspaces test",
+    "lint": "bun run lint",
     "format": "prettier --write .",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
   }
@@ -286,11 +286,11 @@ Restore npm-based scripts in all package.json files:
 # Remove Bun lockfile and node_modules
 rm -rf node_modules bun.lockb
 
-# Reinstall with npm
-npm install
+# Reinstall with bun
+bun install
 
 # Reinstall Jest and related dependencies
-npm install --save-dev \
+bun install --save-dev \
   jest@^29.7.0 \
   ts-jest@^29.1.2 \
   @types/jest@^29.5.12 \
@@ -324,22 +324,22 @@ After rollback, verify everything works:
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Run linting
-npm run lint
+bun run lint
 
 # Run formatting
-npm run format
+bun run format
 
 # Run tests
-npm run test:all
+bun run test:all
 
 # Build project
-npm run build
+bun run build
 
 # Start development servers
-npm run dev
+bun run dev
 ```
 
 ## Troubleshooting
@@ -356,7 +356,7 @@ npm run dev
 If you need to quickly restore functionality:
 
 1. Checkout the commit before migration started
-2. Run `npm install`
+2. Run `bun install`
 3. Verify functionality works
 4. Create a new branch for fixes
 

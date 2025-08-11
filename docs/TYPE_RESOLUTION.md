@@ -31,7 +31,7 @@ This provides access to DOM types and ES2020 features.
 We installed `@types/node` as a devDependency to provide Node.js type definitions:
 
 ```bash
-npm install --save-dev @types/node
+bun install --save-dev @types/node
 ```
 
 This provides types like `NodeJS.Timeout` and other Node.js globals.
@@ -129,7 +129,7 @@ export function useIntersectionObserver(options: IntersectionObserverInit = {}):
 To verify the fixes, run Biome:
 
 ```bash
-npm run lint
+bun run lint
 ```
 
 All type-related errors should be resolved.

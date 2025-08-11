@@ -69,13 +69,13 @@ git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git
 cd unified-repo-analyzer
 
 # Install dependencies for all packages
-npm install
+bun install
 
 # Build shared packages
-npm run build:shared
+bun run build:shared
 
 # Start development servers
-npm run dev
+bun run dev
 ```
 
 This starts:
@@ -87,25 +87,25 @@ This starts:
 
 ```bash
 # Build all packages
-npm run build
+bun run build
 
 # Run tests
-npm run test
+bun run test
 
 # Run tests with coverage
-npm run test:coverage
+bun run test:coverage
 
 # Lint code
-npm run lint
+bun run lint
 
 # Format code
-npm run format
+bun run format
 
 # Type checking
-npm run type-check
+bun run type-check
 
 # Clean build artifacts
-npm run clean
+bun run clean
 ```
 
 ## Project Structure
@@ -434,21 +434,21 @@ packages/
 
 ```bash
 # Run all tests
-npm run test
+bun run test
 
 # Run tests for specific package
-npm run test:backend
-npm run test:frontend
-npm run test:cli
+bun run test:backend
+bun run test:frontend
+bun run test:cli
 
 # Run tests in watch mode
-npm run test:watch
+bun run test:watch
 
 # Run tests with coverage
-npm run test:coverage
+bun run test:coverage
 
 # Run e2e tests
-npm run test:e2e
+bun run test:e2e
 ```
 
 ### Test Utilities
@@ -751,7 +751,7 @@ export class ConfigManager {
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Make changes with tests
-4. Run the full test suite: `npm run test`
+4. Run the full test suite: `bun run test`
 5. Update documentation if needed
 6. Submit a pull request
 

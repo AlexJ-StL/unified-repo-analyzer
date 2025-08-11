@@ -15,21 +15,21 @@ We welcome contributions to the Unified Repository Analyzer! This document provi
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Add tests for new functionality
-5. Ensure all tests pass (`npm test`)
+5. Ensure all tests pass (`bun test`)
 6. Commit your changes (`git commit -m 'Add amazing feature'`)
 7. Push to the branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request
 
 ### Development Setup
 1. Clone your fork
-2. Install dependencies: `npm install`
-3. Run tests: `npm test`
-4. Start development: `npm run dev`
+2. Install dependencies: `bun install`
+3. Run tests: `bun test`
+4. Start development: `bun run dev`
 
 ### Code Style
 - Follow the existing code style and conventions
-- Run `npm run lint` to check for style issues
-- Use `npm run format` to auto-format code
+- Run `bun run lint` to check for style issues
+- Use `bun run format` to auto-format code
 
 ### Testing
 - Write unit tests for new features
