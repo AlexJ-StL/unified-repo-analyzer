@@ -1,4 +1,8 @@
-import type { RepositoryAnalysis, AnalysisOptions as SharedAnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
+import type {
+  OutputFormat,
+  RepositoryAnalysis,
+  AnalysisOptions as SharedAnalysisOptions,
+} from '@unified-repo-analyzer/shared';
 import { create } from 'zustand';
 
 export interface AnalysisOptions extends SharedAnalysisOptions {}

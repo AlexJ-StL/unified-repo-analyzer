@@ -1,15 +1,12 @@
-import type React from "react";
-import { useEffect, useState } from "react";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
-import { useToast } from "../../hooks/useToast";
-import {
-  type AnalysisOptions,
-  useAnalysisStore,
-} from "../../store/useAnalysisStore";
-import { useSettingsStore } from "../../store/useSettingsStore";
-import { validateAnalysisOptions } from "../../utils/validators";
-import { ErrorBoundary, ErrorFallback, GracefulDegradation } from "../error";
-import { type OutputFormat } from "@unified-repo-analyzer/shared";
+import type { OutputFormat } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { useToast } from '../../hooks/useToast';
+import { type AnalysisOptions, useAnalysisStore } from '../../store/useAnalysisStore';
+import { useSettingsStore } from '../../store/useSettingsStore';
+import { validateAnalysisOptions } from '../../utils/validators';
+import { ErrorBoundary, ErrorFallback, GracefulDegradation } from '../error';
 
 interface AnalysisConfigurationProps {
   onConfigChange?: (options: AnalysisOptions) => void;
@@ -18,17 +15,13 @@ interface AnalysisConfigurationProps {
 
 const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
   onConfigChange,
-  className = "",
+  className = '',
 }) => {
   const { options, setOptions } = useAnalysisStore();
   const { preferences } = useSettingsStore();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [availableProviders] = useState<string[]>(["claude", "gemini", "mock"]);
-  const [availableFormats] = useState<OutputFormat[]>([
-    "json",
-    "markdown",
-    "html",
-  ]);
+  const [availableProviders] = useState<string[]>(['claude', 'gemini', 'mock']);
+  const [availableFormats] = useState<OutputFormat[]>(['json', 'markdown', 'html']);
   const [isLoading, setIsLoading] = useState(false);
   const [configError, setConfigError] = useState<Error | null>(null);
 
@@ -44,9 +37,9 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
         if (!options.mode) {
           const defaultOptions = {
-            mode: preferences.analysis?.defaultMode || "standard",
-            llmProvider: preferences.llmProvider?.defaultProvider || "claude",
-            outputFormats: ["json"] as OutputFormat[],
+            mode: preferences.analysis?.defaultMode || 'standard',
+            llmProvider: preferences.llmProvider?.defaultProvider || 'claude',
+            outputFormats: ['json'] as OutputFormat[],
           };
 
           // Validate default options before setting
@@ -56,8 +49,8 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           });
           if (errors.length > 0) {
             showWarning(
-              "Configuration Warning",
-              "Some default settings are invalid and have been adjusted."
+              'Configuration Warning',
+              'Some default settings are invalid and have been adjusted.'
             );
           }
 
@@ -68,16 +61,14 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           }
         }
       } catch (error) {
-        handleError(error, "configuration initialization");
-        setConfigError(
-          error instanceof Error ? error : new Error("Configuration failed")
-        );
+        handleError(error, 'configuration initialization');
+        setConfigError(error instanceof Error ? error : new Error('Configuration failed'));
 
         // Fallback to safe defaults
         const safeDefaults = {
-          mode: "standard" as const,
-          llmProvider: "claude",
-          outputFormats: ["json"] as OutputFormat[],
+          mode: 'standard' as const,
+          llmProvider: 'claude',
+          outputFormats: ['json'] as OutputFormat[],
           maxFiles: 100,
           maxLinesPerFile: 1000,
           includeLLMAnalysis: true,
@@ -86,8 +77,8 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
         setOptions(safeDefaults);
         showWarning(
-          "Configuration Error",
-          "Using safe default settings due to configuration error."
+          'Configuration Error',
+          'Using safe default settings due to configuration error.'
         );
       } finally {
         setIsLoading(false);
@@ -95,37 +86,30 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
     };
 
     initializeConfiguration();
-  }, [
-    preferences,
-    options,
-    setOptions,
-    onConfigChange,
-    handleError,
-    showWarning,
-  ]);
+  }, [preferences, options, setOptions, onConfigChange, handleError, showWarning]);
 
   const handleModeChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     await handleAsyncError(async () => {
-      const mode = e.target.value as "quick" | "standard" | "comprehensive";
+      const mode = e.target.value as 'quick' | 'standard' | 'comprehensive';
 
       // Adjust other options based on mode
       let updatedOptions: Partial<AnalysisOptions> = { mode };
 
-      if (mode === "quick") {
+      if (mode === 'quick') {
         updatedOptions = {
           ...updatedOptions,
           maxFiles: 50,
           maxLinesPerFile: 500,
           includeLLMAnalysis: false,
         };
-      } else if (mode === "standard") {
+      } else if (mode === 'standard') {
         updatedOptions = {
           ...updatedOptions,
           maxFiles: 100,
           maxLinesPerFile: 1000,
           includeLLMAnalysis: true,
         };
-      } else if (mode === "comprehensive") {
+      } else if (mode === 'comprehensive') {
         updatedOptions = {
           ...updatedOptions,
           maxFiles: 200,
@@ -139,7 +123,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
       // Validate before applying
       const isValid = validateOptions(finalOptions);
       if (!isValid) {
-        throw new Error("Invalid configuration options");
+        throw new Error('Invalid configuration options');
       }
 
       setOptions(updatedOptions);
@@ -148,13 +132,11 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         onConfigChange(finalOptions);
       }
 
-      showSuccess("Configuration Updated", `Analysis mode changed to ${mode}`);
-    }, "mode change");
+      showSuccess('Configuration Updated', `Analysis mode changed to ${mode}`);
+    }, 'mode change');
   };
 
-  const handleProviderChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleProviderChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     await handleAsyncError(async () => {
       const llmProvider = e.target.value;
 
@@ -167,7 +149,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
       const isValid = validateOptions(finalOptions);
       if (!isValid) {
-        throw new Error("Invalid provider configuration");
+        throw new Error('Invalid provider configuration');
       }
 
       setOptions({ llmProvider });
@@ -176,14 +158,14 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         onConfigChange(finalOptions);
       }
 
-      showSuccess("Provider Updated", `LLM provider changed to ${llmProvider}`);
-    }, "provider change");
+      showSuccess('Provider Updated', `LLM provider changed to ${llmProvider}`);
+    }, 'provider change');
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
 
-    if (name === "includeTree") {
+    if (name === 'includeTree') {
       setOptions({ includeTree: checked });
 
       if (onConfigChange) {
@@ -191,7 +173,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
       }
 
       validateOptions({ ...options, includeTree: checked });
-    } else if (name === "includeLLMAnalysis") {
+    } else if (name === 'includeLLMAnalysis') {
       setOptions({ includeLLMAnalysis: checked });
 
       if (onConfigChange) {
@@ -243,15 +225,15 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
       if (errors.length > 0) {
         showWarning(
-          "Configuration Issues",
-          `Found ${errors.length} configuration issue${errors.length > 1 ? "s" : ""}`
+          'Configuration Issues',
+          `Found ${errors.length} configuration issue${errors.length > 1 ? 's' : ''}`
         );
       }
 
       return errors.length === 0;
     } catch (error) {
-      handleError(error, "options validation");
-      setValidationErrors(["Validation failed - using previous settings"]);
+      handleError(error, 'options validation');
+      setValidationErrors(['Validation failed - using previous settings']);
       return false;
     }
   };
@@ -259,9 +241,9 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
   const resetToDefaults = async () => {
     await handleAsyncError(async () => {
       const defaultOptions = {
-        mode: "standard" as const,
-        llmProvider: "claude",
-        outputFormats: ["json"] as OutputFormat[],
+        mode: 'standard' as const,
+        llmProvider: 'claude',
+        outputFormats: ['json'] as OutputFormat[],
         maxFiles: 100,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: true,
@@ -276,11 +258,8 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         onConfigChange({ ...options, ...defaultOptions });
       }
 
-      showSuccess(
-        "Configuration Reset",
-        "Settings have been reset to defaults"
-      );
-    }, "reset to defaults");
+      showSuccess('Configuration Reset', 'Settings have been reset to defaults');
+    }, 'reset to defaults');
   };
 
   const ConfigurationContent = () => (
@@ -289,9 +268,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
           <div className="flex items-center">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2" />
-            <span className="text-sm text-blue-800">
-              Loading configuration...
-            </span>
+            <span className="text-sm text-blue-800">Loading configuration...</span>
           </div>
         </div>
       )}
@@ -300,9 +277,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-sm font-medium text-red-800">
-                Configuration Issues
-              </h3>
+              <h3 className="text-sm font-medium text-red-800">Configuration Issues</h3>
               <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
                 {validationErrors.map((error, index) => (
                   <li key={`error-${index}-${error}`}>{error}</li>
@@ -322,10 +297,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
       <div className="space-y-4" style={{ opacity: isLoading ? 0.6 : 1 }}>
         <div>
-          <label
-            htmlFor="analysis-mode"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label htmlFor="analysis-mode" className="block text-sm font-medium text-gray-700 mb-1">
             Analysis Mode
           </label>
           <select
@@ -338,17 +310,15 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           >
             <option value="quick">Quick - Basic structure analysis</option>
             <option value="standard">Standard - Balanced analysis</option>
-            <option value="comprehensive">
-              Comprehensive - Detailed analysis
-            </option>
+            <option value="comprehensive">Comprehensive - Detailed analysis</option>
           </select>
           <p className="mt-1 text-xs text-gray-500">
-            {options.mode === "quick" &&
-              "Fast analysis with minimal LLM usage, focusing on structure only."}
-            {options.mode === "standard" &&
-              "Balanced analysis with moderate LLM usage and code insights."}
-            {options.mode === "comprehensive" &&
-              "Detailed analysis with full LLM insights and comprehensive code review."}
+            {options.mode === 'quick' &&
+              'Fast analysis with minimal LLM usage, focusing on structure only.'}
+            {options.mode === 'standard' &&
+              'Balanced analysis with moderate LLM usage and code insights.'}
+            {options.mode === 'comprehensive' &&
+              'Detailed analysis with full LLM insights and comprehensive code review.'}
           </p>
         </div>
 
@@ -359,10 +329,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           onRetry={resetToDefaults}
         >
           <div>
-            <label
-              htmlFor="llm-provider"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="llm-provider" className="block text-sm font-medium text-gray-700 mb-1">
               LLM Provider
             </label>
             <select
@@ -384,10 +351,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              htmlFor="max-files"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="max-files" className="block text-sm font-medium text-gray-700 mb-1">
               Max Files to Process
             </label>
             <input
@@ -403,10 +367,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           </div>
 
           <div>
-            <label
-              htmlFor="max-lines"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="max-lines" className="block text-sm font-medium text-gray-700 mb-1">
               Max Lines Per File
             </label>
             <input
@@ -423,9 +384,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         </div>
 
         <fieldset>
-          <legend className="block text-sm font-medium text-gray-700 mb-2">
-            Output Formats
-          </legend>
+          <legend className="block text-sm font-medium text-gray-700 mb-2">Output Formats</legend>
           <div className="space-x-4 flex items-center">
             {availableFormats.map((format) => (
               <label key={format} className="inline-flex items-center">
@@ -455,10 +414,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
               disabled={isLoading}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
             />
-            <label
-              htmlFor="include-llm"
-              className="ml-2 block text-sm text-gray-700"
-            >
+            <label htmlFor="include-llm" className="ml-2 block text-sm text-gray-700">
               Include LLM Analysis
             </label>
           </div>
@@ -473,10 +429,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
               disabled={isLoading}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
             />
-            <label
-              htmlFor="include-tree"
-              className="ml-2 block text-sm text-gray-700"
-            >
+            <label htmlFor="include-tree" className="ml-2 block text-sm text-gray-700">
               Include File Tree in Output
             </label>
           </div>
@@ -493,7 +446,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           message="The analysis configuration component encountered an error."
           showRetry={true}
           showDetails={true}
-          error={new Error("Configuration component error")}
+          error={new Error('Configuration component error')}
         />
       }
     >

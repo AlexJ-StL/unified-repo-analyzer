@@ -1,16 +1,12 @@
-import {
-  ChevronDownIcon,
-  DocumentArrowDownIcon,
-  ShareIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronDownIcon, DocumentArrowDownIcon, ShareIcon } from '@heroicons/react/24/outline';
 import type {
   BatchAnalysisResult,
   OutputFormat,
   RepositoryAnalysis,
-} from "@unified-repo-analyzer/shared";
-import type React from "react";
-import { useState } from "react";
-import { apiService, handleApiError } from "../../../services/api";
+} from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
+import { apiService, handleApiError } from '../../../services/api';
 
 interface ExportButtonProps {
   analysis?: RepositoryAnalysis;
@@ -18,11 +14,7 @@ interface ExportButtonProps {
   className?: string;
 }
 
-const ExportButton: React.FC<ExportButtonProps> = ({
-  analysis,
-  batchAnalysis,
-  className = "",
-}) => {
+const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState<OutputFormat | null>(null);
   const [exportHistory, setExportHistory] = useState<
@@ -41,19 +33,19 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     description: string;
   }> = [
     {
-      value: "json",
-      label: "JSON",
-      description: "Structured data for programmatic use",
+      value: 'json',
+      label: 'JSON',
+      description: 'Structured data for programmatic use',
     },
     {
-      value: "markdown",
-      label: "Markdown",
-      description: "Human-readable documentation",
+      value: 'markdown',
+      label: 'Markdown',
+      description: 'Human-readable documentation',
     },
     {
-      value: "html",
-      label: "HTML",
-      description: "Formatted report with styling",
+      value: 'html',
+      label: 'HTML',
+      description: 'Formatted report with styling',
     },
   ];
 
@@ -64,8 +56,8 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     return (
       analysis !== undefined &&
       analysis !== null &&
-      typeof analysis === "object" &&
-      "id" in analysis
+      typeof analysis === 'object' &&
+      'id' in analysis
     );
   };
 
@@ -75,8 +67,8 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     return (
       batchAnalysis !== undefined &&
       batchAnalysis !== null &&
-      typeof batchAnalysis === "object" &&
-      "id" in batchAnalysis
+      typeof batchAnalysis === 'object' &&
+      'id' in batchAnalysis
     );
   };
 
@@ -85,7 +77,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     const validBatchAnalysis = isValidBatchAnalysis(batchAnalysis);
 
     if (!validAnalysis && !validBatchAnalysis) {
-      console.warn("No valid analysis data available for export");
+      console.warn('No valid analysis data available for export');
       return;
     }
 
@@ -96,11 +88,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
       if (validAnalysis) {
         response = await apiService.exportAnalysis(analysis, format, download);
       } else if (validBatchAnalysis) {
-        response = await apiService.exportBatchAnalysis(
-          batchAnalysis,
-          format,
-          download
-        );
+        response = await apiService.exportBatchAnalysis(batchAnalysis, format, download);
       }
 
       if (download && response) {
@@ -108,16 +96,13 @@ const ExportButton: React.FC<ExportButtonProps> = ({
         if (response.data instanceof Blob) {
           const blob = response.data;
           const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
+          const link = document.createElement('a');
           link.href = url;
 
           const name =
-            (validAnalysis
-              ? analysis.name
-              : validBatchAnalysis
-                ? "batch_analysis"
-                : "analysis") || "analysis";
-          link.download = `${name.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_analysis.${getFileExtension(format)}`;
+            (validAnalysis ? analysis.name : validBatchAnalysis ? 'batch_analysis' : 'analysis') ||
+            'analysis';
+          link.download = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_analysis.${getFileExtension(format)}`;
 
           document.body.appendChild(link);
           link.click();
@@ -126,8 +111,8 @@ const ExportButton: React.FC<ExportButtonProps> = ({
         }
       } else if (
         response?.data &&
-        typeof response.data === "object" &&
-        "exportId" in response.data
+        typeof response.data === 'object' &&
+        'exportId' in response.data
       ) {
         // Add to export history
         const exportData = response.data as {
@@ -138,8 +123,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
         const exportInfo = {
           id: exportData.exportId,
           format,
-          filename:
-            exportData.filename || `analysis.${getFileExtension(format)}`,
+          filename: exportData.filename || `analysis.${getFileExtension(format)}`,
           timestamp: new Date(),
           downloadUrl: exportData.downloadUrl,
         };
@@ -154,15 +138,13 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     }
   };
 
-  const handleDownloadFromHistory = async (
-    exportInfo: (typeof exportHistory)[0]
-  ) => {
+  const handleDownloadFromHistory = async (exportInfo: (typeof exportHistory)[0]) => {
     try {
       const response = await apiService.downloadExport(exportInfo.id);
 
       const blob = new Blob([response.data]);
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
       link.download = exportInfo.filename;
 
@@ -180,7 +162,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     const validBatchAnalysis = isValidBatchAnalysis(batchAnalysis);
 
     if (!validAnalysis && !validBatchAnalysis) {
-      alert("No valid analysis data available for sharing");
+      alert('No valid analysis data available for sharing');
       return;
     }
 
@@ -189,24 +171,20 @@ const ExportButton: React.FC<ExportButtonProps> = ({
         ? await apiService.exportAnalysis(analysis, format, false)
         : await apiService.exportBatchAnalysis(batchAnalysis!, format, false);
 
-      if (
-        response?.data &&
-        typeof response.data === "object" &&
-        "downloadUrl" in response.data
-      ) {
+      if (response?.data && typeof response.data === 'object' && 'downloadUrl' in response.data) {
         const exportData = response.data as { downloadUrl: string };
         const shareUrl = `${window.location.origin}${exportData.downloadUrl}`;
 
         if (navigator.share) {
           await navigator.share({
-            title: `Repository Analysis - ${validAnalysis ? analysis.name : validBatchAnalysis ? "Batch Analysis" : "Analysis"}`,
-            text: "Check out this repository analysis",
+            title: `Repository Analysis - ${validAnalysis ? analysis.name : validBatchAnalysis ? 'Batch Analysis' : 'Analysis'}`,
+            text: 'Check out this repository analysis',
             url: shareUrl,
           });
         } else {
           // Fallback: copy to clipboard
           await navigator.clipboard.writeText(shareUrl);
-          alert("Share link copied to clipboard!");
+          alert('Share link copied to clipboard!');
         }
       }
     } catch (error) {
@@ -216,19 +194,18 @@ const ExportButton: React.FC<ExportButtonProps> = ({
 
   const getFileExtension = (format: OutputFormat): string => {
     switch (format) {
-      case "json":
-        return "json";
-      case "markdown":
-        return "md";
-      case "html":
-        return "html";
+      case 'json':
+        return 'json';
+      case 'markdown':
+        return 'md';
+      case 'html':
+        return 'html';
       default:
-        return "txt";
+        return 'txt';
     }
   };
 
-  const hasValidData =
-    isValidAnalysis(analysis) || isValidBatchAnalysis(batchAnalysis);
+  const hasValidData = isValidAnalysis(analysis) || isValidBatchAnalysis(batchAnalysis);
 
   return (
     <div className={`relative inline-block text-left ${className}`}>
@@ -237,14 +214,12 @@ const ExportButton: React.FC<ExportButtonProps> = ({
           type="button"
           className={`inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
             hasValidData && isExporting === null
-              ? "bg-white text-gray-700 hover:bg-gray-50"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              ? 'bg-white text-gray-700 hover:bg-gray-50'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
           onClick={() => hasValidData && setIsOpen(!isOpen)}
           disabled={isExporting !== null || !hasValidData}
-          title={
-            !hasValidData ? "No analysis data available for export" : undefined
-          }
+          title={!hasValidData ? 'No analysis data available for export' : undefined}
         >
           {isExporting ? (
             <>
@@ -275,12 +250,8 @@ const ExportButton: React.FC<ExportButtonProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-900">
-                      {format.label}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {format.description}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{format.label}</div>
+                    <div className="text-xs text-gray-500">{format.description}</div>
                   </div>
                   <div className="flex space-x-2 ml-4">
                     <button
@@ -311,15 +282,10 @@ const ExportButton: React.FC<ExportButtonProps> = ({
                 </div>
                 <div className="max-h-32 overflow-y-auto">
                   {exportHistory.slice(0, 5).map((exportInfo) => (
-                    <div
-                      key={exportInfo.id}
-                      className="px-4 py-2 hover:bg-gray-50"
-                    >
+                    <div key={exportInfo.id} className="px-4 py-2 hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-900">
-                            {exportInfo.filename}
-                          </div>
+                          <div className="text-sm text-gray-900">{exportInfo.filename}</div>
                           <div className="text-xs text-gray-500">
                             {exportInfo.timestamp.toLocaleString()}
                           </div>

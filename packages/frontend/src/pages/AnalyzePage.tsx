@@ -1,36 +1,29 @@
-import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared";
-import { useEffect, useState } from "react";
-import {
-  MobileProgressTracker,
-  ProgressTracker,
-  ResultsViewer,
-} from "../components/analysis";
-import AnalysisConfiguration from "../components/analysis/AnalysisConfiguration";
-import MainLayout from "../components/layout/MainLayout";
-import RepositorySelector from "../components/repository/RepositorySelector";
-import { apiService, handleApiError } from "../services/api";
-import websocketService from "../services/websocket";
-import { useAnalysisStore } from "../store/useAnalysisStore";
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import { useEffect, useState } from 'react';
+import { MobileProgressTracker, ProgressTracker, ResultsViewer } from '../components/analysis';
+import AnalysisConfiguration from '../components/analysis/AnalysisConfiguration';
+import MainLayout from '../components/layout/MainLayout';
+import RepositorySelector from '../components/repository/RepositorySelector';
+import { apiService, handleApiError } from '../services/api';
+import websocketService from '../services/websocket';
+import { useAnalysisStore } from '../store/useAnalysisStore';
 
 const AnalyzePage = () => {
-  const { repositoryPath, options, progress, setProgress, setResults } =
-    useAnalysisStore();
+  const { repositoryPath, options, progress, setProgress, setResults } = useAnalysisStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isValid, setIsValid] = useState(true);
   const [analysisId, setAnalysisId] = useState<string | undefined>();
 
   // Type guard to ensure analysis results are valid
-  const isValidAnalysisResult = (
-    results: any
-  ): results is RepositoryAnalysis => {
+  const isValidAnalysisResult = (results: any): results is RepositoryAnalysis => {
     return (
       results !== null &&
       results !== undefined &&
-      typeof results === "object" &&
-      "id" in results &&
-      "name" in results &&
-      "path" in results
+      typeof results === 'object' &&
+      'id' in results &&
+      'name' in results &&
+      'path' in results
     );
   };
 
@@ -47,7 +40,7 @@ const AnalyzePage = () => {
 
   const handleStartAnalysis = async () => {
     if (!repositoryPath) {
-      setError("Please select a repository path");
+      setError('Please select a repository path');
       setIsValid(false);
       return;
     }
@@ -55,18 +48,15 @@ const AnalyzePage = () => {
     setError(null);
     setIsSubmitting(true);
     setProgress({
-      status: "running",
-      currentStep: "Initializing analysis",
+      status: 'running',
+      currentStep: 'Initializing analysis',
       progress: 0,
       totalSteps: 100,
-      log: "Starting repository analysis",
+      log: 'Starting repository analysis',
     });
 
     try {
-      const response = await apiService.analyzeRepository(
-        repositoryPath,
-        options
-      );
+      const response = await apiService.analyzeRepository(repositoryPath, options);
       const newAnalysisId = response.data.analysisId;
       setAnalysisId(newAnalysisId);
 
@@ -79,8 +69,8 @@ const AnalyzePage = () => {
       const errorMessage = handleApiError(err);
       setError(errorMessage);
       setProgress({
-        status: "failed",
-        currentStep: "Analysis failed",
+        status: 'failed',
+        currentStep: 'Analysis failed',
         progress: 0,
         totalSteps: 100,
         error: errorMessage,
@@ -98,7 +88,7 @@ const AnalyzePage = () => {
 
   // Effect to update submission state based on progress status
   useEffect(() => {
-    if (progress.status === "completed" || progress.status === "failed") {
+    if (progress.status === 'completed' || progress.status === 'failed') {
       setIsSubmitting(false);
     }
   }, [progress.status]);
@@ -106,9 +96,7 @@ const AnalyzePage = () => {
   return (
     <MainLayout>
       <div className="bg-white shadow rounded-lg p-6">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-4">
-          Analyze Repository
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-4">Analyze Repository</h1>
         <p className="text-gray-600 mb-6">
           Select a repository to analyze and configure analysis options.
         </p>
@@ -121,9 +109,9 @@ const AnalyzePage = () => {
 
         <div className="space-y-6">
           {/* Show progress tracker when analysis is running or completed */}
-          {(progress.status === "running" ||
-            progress.status === "completed" ||
-            progress.status === "failed") && (
+          {(progress.status === 'running' ||
+            progress.status === 'completed' ||
+            progress.status === 'failed') && (
             <div className="border border-gray-200 rounded-md p-4">
               {/* Desktop version */}
               <div className="hidden md:block">
@@ -137,7 +125,7 @@ const AnalyzePage = () => {
           )}
 
           {/* Show results viewer when analysis is completed */}
-          {progress.status === "completed" &&
+          {progress.status === 'completed' &&
             (() => {
               const results = useAnalysisStore.getState().results;
               if (isValidAnalysisResult(results)) {
@@ -146,25 +134,22 @@ const AnalyzePage = () => {
                     <ResultsViewer analysis={results} />
                   </div>
                 );
-              } else {
-                return (
-                  <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                    <p className="text-sm text-yellow-600">
-                      Analysis completed but no valid results are available.
-                      Please try running the analysis again.
-                    </p>
-                  </div>
-                );
               }
+              return (
+                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-sm text-yellow-600">
+                    Analysis completed but no valid results are available. Please try running the
+                    analysis again.
+                  </p>
+                </div>
+              );
             })()}
 
           {/* Only show repository selection and configuration when not running */}
-          {progress.status !== "running" && (
+          {progress.status !== 'running' && (
             <>
               <div className="border border-gray-200 rounded-md p-4">
-                <h2 className="text-lg font-medium text-gray-900 mb-2">
-                  Repository Selection
-                </h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-2">Repository Selection</h2>
                 <p className="text-sm text-gray-500 mb-4">
                   Select a local repository directory to analyze
                 </p>
@@ -172,22 +157,20 @@ const AnalyzePage = () => {
               </div>
 
               <div className="border border-gray-200 rounded-md p-4">
-                <h2 className="text-lg font-medium text-gray-900 mb-2">
-                  Analysis Options
-                </h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-2">Analysis Options</h2>
                 <AnalysisConfiguration onConfigChange={handleConfigChange} />
               </div>
             </>
           )}
 
           <div className="flex justify-end">
-            {progress.status !== "running" && (
+            {progress.status !== 'running' && (
               <button
                 type="button"
                 className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
                   isSubmitting
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    ? 'bg-blue-400 cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
                 }`}
                 onClick={handleStartAnalysis}
                 disabled={isSubmitting || !isValid}
@@ -217,20 +200,20 @@ const AnalyzePage = () => {
                     Processing...
                   </>
                 ) : (
-                  "Start Analysis"
+                  'Start Analysis'
                 )}
               </button>
             )}
 
-            {progress.status === "completed" && (
+            {progress.status === 'completed' && (
               <button
                 type="button"
                 className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => {
                   // Reset for new analysis
                   setProgress({
-                    status: "idle",
-                    currentStep: "",
+                    status: 'idle',
+                    currentStep: '',
                     progress: 0,
                     totalSteps: 0,
                   });

@@ -194,7 +194,7 @@ class RecoveryTools {
 
 			// Check Node.js version
 			const nodeVersion = process.version;
-			const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0], 10);
+			const majorVersion = Number.parseInt(nodeVersion.slice(1).split(".")[0], 10);
 			if (majorVersion < 18) {
 				issues.push(`Node.js version ${nodeVersion} is below minimum (18.0.0)`);
 			} else {

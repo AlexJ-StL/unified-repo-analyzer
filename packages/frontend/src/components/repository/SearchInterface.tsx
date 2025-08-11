@@ -1,11 +1,11 @@
-import type React from "react";
-import { useEffect, useState } from "react";
-import { apiService, handleApiError } from "../../services/api";
-import { useRepositoryStore } from "../../store/useRepositoryStore";
-import Pagination from "./Pagination";
-import RepositoryCard from "./RepositoryCard";
-import SavedSearches from "./SavedSearches";
-import SearchFilters from "./SearchFilters";
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { apiService, handleApiError } from '../../services/api';
+import { useRepositoryStore } from '../../store/useRepositoryStore';
+import Pagination from './Pagination';
+import RepositoryCard from './RepositoryCard';
+import SavedSearches from './SavedSearches';
+import SearchFilters from './SearchFilters';
 
 interface SearchInterfaceProps {
   onSelectRepository?: (repositoryId: string) => void;
@@ -28,13 +28,11 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
     setSearchQuery,
   } = useRepositoryStore();
 
-  const [selectedRepositories, setSelectedRepositories] = useState<string[]>(
-    []
-  );
+  const [selectedRepositories, setSelectedRepositories] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortField, setSortField] = useState<string>("lastAnalyzed");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [sortField, setSortField] = useState<string>('lastAnalyzed');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const itemsPerPage = 10;
 
   // Fetch repositories based on search query, filters, sorting and pagination
@@ -51,18 +49,16 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         });
 
         // Convert RepositoryAnalysis to Repository format expected by the store
-        const convertedRepositories = response.data.repositories.map(
-          (repo) => ({
-            id: repo.id,
-            name: repo.name,
-            path: repo.path,
-            description: repo.description,
-            languages: repo.languages,
-            frameworks: repo.frameworks,
-            lastAnalyzed: repo.updatedAt.toISOString(),
-            size: repo.totalSize,
-          })
-        );
+        const convertedRepositories = response.data.repositories.map((repo) => ({
+          id: repo.id,
+          name: repo.name,
+          path: repo.path,
+          description: repo.description,
+          languages: repo.languages,
+          frameworks: repo.frameworks,
+          lastAnalyzed: repo.updatedAt.toISOString(),
+          size: repo.totalSize,
+        }));
         setRepositories(convertedRepositories);
         setTotalPages(Math.ceil(response.data.total / itemsPerPage));
         setLoading(false);
@@ -92,19 +88,17 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
   const handleSort = (field: string) => {
     if (sortField === field) {
       // Toggle direction if same field
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       // Default to descending for new sort field
       setSortField(field);
-      setSortDirection("desc");
+      setSortDirection('desc');
     }
   };
 
   const handleRepositorySelect = (id: string) => {
     if (selectedRepositories.includes(id)) {
-      setSelectedRepositories(
-        selectedRepositories.filter((repoId) => repoId !== id)
-      );
+      setSelectedRepositories(selectedRepositories.filter((repoId) => repoId !== id));
     } else {
       setSelectedRepositories([...selectedRepositories, id]);
     }
@@ -130,7 +124,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           />
           {searchQuery && (
             <button
-              onClick={() => handleSearch("")}
+              onClick={() => handleSearch('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
               <svg
@@ -153,8 +147,8 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           onClick={handleCompare}
           className={`px-4 py-2 rounded-md text-sm font-medium ${
             selectedRepositories.length < 2
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700'
           }`}
         >
           Compare Selected ({selectedRepositories.length})
@@ -173,9 +167,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         <div className="md:w-3/4">
           {/* Sort options */}
           <div className="flex justify-end mb-4">
-            <label className="text-sm text-gray-600 mr-2 self-center">
-              Sort by:
-            </label>
+            <label className="text-sm text-gray-600 mr-2 self-center">Sort by:</label>
             <select
               value={sortField}
               onChange={(e) => handleSort(e.target.value)}
@@ -187,12 +179,10 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
               <option value="complexity">Complexity</option>
             </select>
             <button
-              onClick={() =>
-                setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-              }
+              onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
               className="ml-2 p-1 rounded-md hover:bg-gray-100"
             >
-              {sortDirection === "asc" ? (
+              {sortDirection === 'asc' ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
