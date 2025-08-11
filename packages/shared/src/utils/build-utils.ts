@@ -509,11 +509,14 @@ export class BuildExecutor {
 
 			EnhancedLogger.logInfo(`Building package: ${packageInfo.name}`);
 
+			// Increase timeout for frontend packages which can take longer to build
+			const timeout = packageInfo.name.includes("frontend") ? 600000 : 300000; // 10 minutes for frontend, 5 for others
+
 			const buildResult = await this.executeBuildCommand({
 				command: "bun",
 				args: ["run", "build"],
 				cwd: packageInfo.path,
-				timeout: 300000, // 5 minutes
+				timeout,
 				retries: 1,
 			});
 

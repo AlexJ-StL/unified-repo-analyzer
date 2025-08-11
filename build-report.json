@@ -1,95 +1,90 @@
 {
-  "timestamp": "2025-08-11T12:09:38.171Z",
-  "success": false,
-  "duration": 7928.2656,
+  "timestamp": "2025-08-11T16:02:05.506Z",
+  "success": true,
+  "duration": 26204.9988,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
       "success": true,
       "exitCode": 0,
-      "duration": 5410.4968,
-      "stdout": "Bundled 20 modules in 92ms\n\n  index.js      164.17 KB  (entry point)\n  index.js.map  0.33 MB    (source map)\n\n",
-      "stderr": "$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
+      "duration": 4679.9745,
+      "stdout": "Bundled 20 modules in 72ms\n\n  index.js      164.24 KB  (entry point)\n  index.js.map  0.33 MB    (source map)\n\nBundled 18 modules in 58ms\n\n  browser.js      136.1 KB  (entry point)\n  browser.js.map  0.28 MB   (source map)\n\n",
+      "stderr": "$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/backend": {
       "success": true,
       "exitCode": 0,
-      "duration": 1331.8387000000002,
-      "stdout": "Bundled 637 modules in 464ms\n\n  index.js      3.24 MB  (entry point)\n  index.js.map  5.62 MB  (source map)\n\n",
+      "duration": 1117.5656,
+      "stdout": "Bundled 637 modules in 471ms\n\n  index.js      3.24 MB  (entry point)\n  index.js.map  5.62 MB  (source map)\n\n",
       "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/cli": {
       "success": true,
       "exitCode": 0,
-      "duration": 1185.9300999999996,
-      "stdout": "Bundled 305 modules in 247ms\n\n  index.js      1.45 MB  (entry point)\n  index.js.map  2.79 MB  (source map)\n\n",
+      "duration": 927.1210000000001,
+      "stdout": "Bundled 305 modules in 234ms\n\n  index.js      1.45 MB  (entry point)\n  index.js.map  2.79 MB  (source map)\n\n",
       "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/frontend": {
-      "success": false,
-      "exitCode": 1,
-      "duration": 0,
-      "stdout": "\u001b[36mvite v7.0.6 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1305 modules transformed.\n\n> @unified-repo-analyzer/frontend@0.1.0 tsc\n> node ../../node_modules/typescript/bin/tsc --noEmit\n\n",
-      "stderr": "$ bun run tsc && bun run vite build || (npm run tsc && bun run vite -- build)\n$ node ../../node_modules/typescript/bin/tsc --noEmit\n\u001b[33m[plugin vite:resolve] Module \"node:module\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:child_process\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:fs\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:path\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:perf_hooks\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[31m✗\u001b[39m Build failed in 7.75s\n\u001b[31merror during build:\n\u001b[31m../shared/dist/index.js (2:9): \"createRequire\" is not exported by \"__vite-browser-external\", imported by \"../shared/dist/index.js\".\u001b[31m\nfile: \u001b[36mC:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js:2:9\u001b[31m\n\u001b[33m\n1: import { createRequire } from \"node:module\";\n2: var __defProp = Object.defineProperty;\n            ^\n3: var __export = (target, all) => {\n4:   for (var name in all)\n\u001b[31m\n    at getRollupError (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/parseAst.js:401:41)\n    at error (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/parseAst.js:397:42)\n    at Module.error (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:16875:16)\n    at Module.traceVariable (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:17327:29)\n    at ModuleScope.findVariable (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:14997:39)\n    at Identifier.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:5394:40)\n    at CallExpression.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)\n    at CallExpression.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:12058:15)\n    at VariableDeclarator.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)\n    at VariableDeclaration.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2781:28)\u001b[39m\nerror: \"vite.exe\" exited with code 1\n'node' is not recognized as an internal or external command,\r\noperable program or batch file.\r\nnpm error Lifecycle script `tsc` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\frontend\nnpm error workspace @unified-repo-analyzer/frontend@0.1.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\frontend\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c node ../../node_modules/typescript/bin/tsc --noEmit\nerror: script \"build\" exited with code 1\n",
-      "error": "$ bun run tsc && bun run vite build || (npm run tsc && bun run vite -- build)\n$ node ../../node_modules/typescript/bin/tsc --noEmit\n\u001b[33m[plugin vite:resolve] Module \"node:module\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:child_process\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:fs\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:path\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[33m[plugin vite:resolve] Module \"node:perf_hooks\" has been externalized for browser compatibility, imported by \"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\u001b[39m\n\u001b[31m✗\u001b[39m Build failed in 7.75s\n\u001b[31merror during build:\n\u001b[31m../shared/dist/index.js (2:9): \"createRequire\" is not exported by \"__vite-browser-external\", imported by \"../shared/dist/index.js\".\u001b[31m\nfile: \u001b[36mC:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js:2:9\u001b[31m\n\u001b[33m\n1: import { createRequire } from \"node:module\";\n2: var __defProp = Object.defineProperty;\n            ^\n3: var __export = (target, all) => {\n4:   for (var name in all)\n\u001b[31m\n    at getRollupError (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/parseAst.js:401:41)\n    at error (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/parseAst.js:397:42)\n    at Module.error (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:16875:16)\n    at Module.traceVariable (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:17327:29)\n    at ModuleScope.findVariable (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:14997:39)\n    at Identifier.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:5394:40)\n    at CallExpression.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)\n    at CallExpression.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:12058:15)\n    at VariableDeclarator.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)\n    at VariableDeclaration.bind (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/rollup/dist/es/shared/node-entry.js:2781:28)\u001b[39m\nerror: \"vite.exe\" exited with code 1\n'node' is not recognized as an internal or external command,\r\noperable program or batch file.\r\nnpm error Lifecycle script `tsc` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\frontend\nnpm error workspace @unified-repo-analyzer/frontend@0.1.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\frontend\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c node ../../node_modules/typescript/bin/tsc --noEmit\nerror: script \"build\" exited with code 1\n",
-      "suggestions": [
-        "Clean and reinstall dependencies",
-        "Check build logs for detailed error information"
-      ]
+      "success": true,
+      "exitCode": 0,
+      "duration": 19480.3377,
+      "stdout": "\u001b[36mvite v7.0.6 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1304 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-BNnm65yy.css             \u001b[39m\u001b[1m\u001b[2m 35.01 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.15 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-RLP3j_4M.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-CwjeVcU1.js   \u001b[39m\u001b[1m\u001b[2m  4.28 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.90 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-BWYxyr2e.js       \u001b[39m\u001b[1m\u001b[2m  5.08 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-JGxSWePR.js   \u001b[39m\u001b[1m\u001b[2m 22.72 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.40 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-DMmc_xMh.js  \u001b[39m\u001b[1m\u001b[2m 37.22 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.47 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-B652S-tZ.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.74 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-DVMr866o.js                \u001b[39m\u001b[1m\u001b[2m 42.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.41 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-CWG0qYjw.js              \u001b[39m\u001b[1m\u001b[2m177.39 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.65 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-Ctvydq8J.js        \u001b[39m\u001b[1m\u001b[2m321.20 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 87.34 kB\u001b[22m\n\u001b[32m✓ built in 8.45s\u001b[39m\n",
+      "stderr": "$ bun run tsc --skipLibCheck && bun run vite build || (npm run tsc --skipLibCheck && bun run vite -- build)\n$ node ../../node_modules/typescript/bin/tsc --noEmit --skipLibCheck --skipLibCheck\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-08-11T12:08:50.436Z",
+      "timestamp": "2025-08-11T16:01:39.032Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-08-11T12:08:50.766Z",
+      "timestamp": "2025-08-11T16:01:39.292Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-08-11T12:08:56.177Z",
+      "timestamp": "2025-08-11T16:01:43.972Z",
       "level": "success",
-      "message": "Command completed successfully in 5410ms",
+      "message": "Command completed successfully in 4680ms",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-08-11T12:08:56.177Z",
+      "timestamp": "2025-08-11T16:01:43.973Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-08-11T12:08:57.509Z",
+      "timestamp": "2025-08-11T16:01:45.091Z",
       "level": "success",
-      "message": "Command completed successfully in 1332ms",
+      "message": "Command completed successfully in 1118ms",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-08-11T12:08:57.509Z",
+      "timestamp": "2025-08-11T16:01:45.092Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-08-11T12:08:58.695Z",
+      "timestamp": "2025-08-11T16:01:46.019Z",
       "level": "success",
-      "message": "Command completed successfully in 1186ms",
+      "message": "Command completed successfully in 927ms",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-08-11T12:08:58.695Z",
+      "timestamp": "2025-08-11T16:01:46.023Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/frontend"
     },
     {
-      "timestamp": "2025-08-11T12:09:17.708Z",
-      "level": "warning",
-      "message": "Command failed, retrying (1/1)",
+      "timestamp": "2025-08-11T16:02:05.503Z",
+      "level": "success",
+      "message": "Command completed successfully in 19480ms",
       "package": "@unified-repo-analyzer/frontend"
     }
   ],
@@ -99,9 +94,5 @@
     "arch": "x64",
     "cwd": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer"
   },
-  "suggestions": [
-    "Review failed package build logs for specific errors",
-    "Run `bun install --force` to refresh dependencies",
-    "Check TypeScript configuration in failed packages"
-  ]
+  "suggestions": []
 }

@@ -3,9 +3,10 @@
 	"version": "0.1.0",
 	"description": "Shared types and utilities for the Unified Repository Analyzer",
 	"main": "dist/index.js",
+	"browser": "dist/browser.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"build": "rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
+		"build": "rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || npm run build:tsc)",
 		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.json",
 		"lint": "biome lint .",
 		"format": "biome format --write .",
