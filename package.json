@@ -44,7 +44,7 @@
 		"format": "biome format --write .",
 		"check": "biome check .",
 		"clean": "bun run --cwd packages/backend clean || npm run clean --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend clean || npm run clean --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli clean || npm run clean --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared clean || npm run clean --workspace @unified-repo-analyzer/shared",
-		"prepare": "bun run build || npm run build",
+		"postinstall": "echo \"Dependencies installed successfully. Run 'bun run build' to build the project.\"",
 		"docker:build": "docker-compose build",
 		"docker:up": "docker-compose up -d",
 		"docker:down": "docker-compose down",

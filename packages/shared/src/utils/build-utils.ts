@@ -86,7 +86,9 @@ export class BuildExecutor {
 			projectRoot: resolve(projectRoot),
 			packages: [],
 			buildPhase: "dependency",
-			environment: { ...process.env },
+			environment: Object.fromEntries(
+				Object.entries(process.env).filter(([, value]) => value !== undefined),
+			) as Record<string, string>,
 		};
 
 		this.initializeBuildContext();
@@ -110,40 +112,42 @@ export class BuildExecutor {
 				.filter((dirent: any) => dirent.isDirectory())
 				.map((dirent: any) => dirent.name);
 
-			this.buildContext.packages = packageDirs.map((dir, index) => {
-				const packagePath = join(packagesDir, dir);
-				const packageJsonPath = join(packagePath, "package.json");
+			this.buildContext.packages = packageDirs.map(
+				(dir: string, index: number) => {
+					const packagePath = join(packagesDir, dir);
+					const packageJsonPath = join(packagePath, "package.json");
 
-				const packageInfo: PackageBuildInfo = {
-					name: dir,
-					path: packagePath,
-					hasTypeScript: false,
-					hasBuildScript: false,
-					dependencies: [],
-					buildOrder: index,
-				};
+					const packageInfo: PackageBuildInfo = {
+						name: dir,
+						path: packagePath,
+						hasTypeScript: false,
+						hasBuildScript: false,
+						dependencies: [],
+						buildOrder: index,
+					};
 
-				if (existsSync(packageJsonPath)) {
-					try {
-						const packageJson = JSON.parse(
-							readFileSync(packageJsonPath, "utf-8"),
-						);
-						packageInfo.name = packageJson.name || dir;
-						packageInfo.hasTypeScript = existsSync(
-							join(packagePath, "tsconfig.json"),
-						);
-						packageInfo.hasBuildScript = !!packageJson.scripts?.build;
-						packageInfo.dependencies = Object.keys({
-							...packageJson.dependencies,
-							...packageJson.devDependencies,
-						});
-					} catch (error) {
-						this.log("error", `Failed to parse package.json for ${dir}`, dir);
+					if (existsSync(packageJsonPath)) {
+						try {
+							const packageJson = JSON.parse(
+								readFileSync(packageJsonPath, "utf-8"),
+							);
+							packageInfo.name = packageJson.name || dir;
+							packageInfo.hasTypeScript = existsSync(
+								join(packagePath, "tsconfig.json"),
+							);
+							packageInfo.hasBuildScript = !!packageJson.scripts?.build;
+							packageInfo.dependencies = Object.keys({
+								...packageJson.dependencies,
+								...packageJson.devDependencies,
+							});
+						} catch (error) {
+							this.log("error", `Failed to parse package.json for ${dir}`, dir);
+						}
 					}
-				}
 
-				return packageInfo;
-			});
+					return packageInfo;
+				},
+			);
 
 			// Sort packages by build order (shared first, then others)
 			this.buildContext.packages.sort((a, b) => {
@@ -443,39 +447,50 @@ export class BuildExecutor {
 
 		EnhancedLogger.logInfo("Starting build process for all packages");
 
-		// Phase 1: Clean and install dependencies
+		// Phase 1: Check dependencies (skip install if already present)
 		this.buildContext.buildPhase = "dependency";
-		EnhancedLogger.logInfo("Phase 1: Installing dependencies");
+		EnhancedLogger.logInfo("Phase 1: Checking dependencies");
 
-		const installResult = await this.executeBuildCommand({
-			command: "bun",
-			args: ["install", "--force"],
-			timeout: 120000, // 2 minutes
-			retries: 2,
-		});
+		const nodeModulesExists = existsSync(
+			join(this.buildContext.projectRoot, "node_modules"),
+		);
 
-		if (!installResult.success) {
-			EnhancedLogger.logError({
-				id: "INSTALL_FAILED",
-				category: ErrorCategory.DEPENDENCY,
-				severity: ErrorSeverity.CRITICAL,
-				title: "Dependency Installation Failed",
-				message: "Failed to install project dependencies",
-				suggestions: [
-					{
-						action: "Clear node_modules and try again",
-						description: "Remove corrupted dependencies",
-						automated: true,
-					},
-					{
-						action: "Check network connectivity",
-						description: "Ensure internet access for package downloads",
-						automated: false,
-					},
-				],
-				timestamp: new Date(),
+		if (!nodeModulesExists) {
+			EnhancedLogger.logInfo("Installing dependencies...");
+			const installResult = await this.executeBuildCommand({
+				command: "bun",
+				args: ["install"],
+				timeout: 300000, // 5 minutes
+				retries: 1,
 			});
-			return { success: false, results: { install: installResult } };
+
+			if (!installResult.success) {
+				EnhancedLogger.logError({
+					id: "INSTALL_FAILED",
+					category: ErrorCategory.DEPENDENCY,
+					severity: ErrorSeverity.CRITICAL,
+					title: "Dependency Installation Failed",
+					message: "Failed to install project dependencies",
+					suggestions: [
+						{
+							action: "Clear node_modules and try again",
+							description: "Remove corrupted dependencies",
+							automated: true,
+						},
+						{
+							action: "Check network connectivity",
+							description: "Ensure internet access for package downloads",
+							automated: false,
+						},
+					],
+					timestamp: new Date(),
+				});
+				return { success: false, results: { install: installResult } };
+			}
+		} else {
+			EnhancedLogger.logInfo(
+				"Dependencies already installed, skipping install phase",
+			);
 		}
 
 		// Phase 2: Build packages in order
