@@ -282,17 +282,34 @@ class BuildDoctor {
 		}
 
 		// Check lock file
-		const lockFiles = ["bun.lockb", "package-lock.json", "yarn.lock"];
-		const existingLockFile = lockFiles.find((file) =>
+		const preferredLockFiles = ["bun.lockb"];
+		const acceptableLockFiles = ["bun.lock", "package-lock.json", "yarn.lock"];
+		const allLockFiles = [...preferredLockFiles, ...acceptableLockFiles];
+
+		const existingLockFile = allLockFiles.find((file) =>
 			existsSync(join(this.projectRoot, file)),
 		);
 
 		if (existingLockFile) {
-			this.addDiagnostic({
-				name: "Dependency Lock File",
-				status: "pass",
-				message: `Lock file found: ${existingLockFile}`,
-			});
+			if (preferredLockFiles.includes(existingLockFile)) {
+				this.addDiagnostic({
+					name: "Dependency Lock File",
+					status: "pass",
+					message: `Lock file found: ${existingLockFile} (preferred format)`,
+				});
+			} else {
+				this.addDiagnostic({
+					name: "Dependency Lock File",
+					status: "pass",
+					message: `Lock file found: ${existingLockFile}`,
+					suggestions:
+						existingLockFile === "bun.lock"
+							? [
+									"Consider upgrading to bun.lockb format for better performance",
+								]
+							: [],
+				});
+			}
 		} else {
 			this.addDiagnostic({
 				name: "Dependency Lock File",

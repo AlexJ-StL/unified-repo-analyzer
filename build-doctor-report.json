@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-08-11T16:02:19.163Z",
+  "timestamp": "2025-08-11T16:21:45.760Z",
   "summary": {
-    "passed": 23,
-    "warnings": 2,
+    "passed": 24,
+    "warnings": 1,
     "failed": 0
   },
   "diagnostics": [
@@ -73,10 +73,10 @@
     },
     {
       "name": "Dependency Lock File",
-      "status": "warning",
-      "message": "No lock file found",
+      "status": "pass",
+      "message": "Lock file found: bun.lock",
       "suggestions": [
-        "Run package manager install to generate lock file"
+        "Consider upgrading to bun.lockb format for better performance"
       ]
     },
     {

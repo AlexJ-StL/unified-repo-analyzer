@@ -6,6 +6,8 @@ registry = "https://registry.npmjs.org"
 cache = true
 # Automatically install peer dependencies
 auto = "auto"
+# Use binary lock file format
+lockfile = "bun"
 
 [run]
 # Use bun runtime for scripts
