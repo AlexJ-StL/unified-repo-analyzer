@@ -108,8 +108,8 @@ export class BuildExecutor {
       const fs = require('node:fs');
       const packageDirs = fs
         .readdirSync(packagesDir, { withFileTypes: true })
-        .filter((dirent: any) => dirent.isDirectory())
-        .map((dirent: any) => dirent.name);
+        .filter((dirent: { isDirectory: () => boolean }) => dirent.isDirectory())
+        .map((dirent: { name: string }) => dirent.name);
 
       this.buildContext.packages = packageDirs.map((dir: string, index: number) => {
         const packagePath = join(packagesDir, dir);

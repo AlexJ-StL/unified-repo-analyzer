@@ -66,7 +66,7 @@ interface MonitorState {
   lastHealthScore: number;
   alertCount: number;
   autoFixCount: number;
-  watchers: Map<string, any>;
+  watchers: Map<string, boolean>;
 }
 
 /**
@@ -151,7 +151,16 @@ class BuildMonitor {
   /**
    * Get monitor status
    */
-  getStatus(): any {
+  getStatus(): {
+    isRunning: boolean;
+    uptime: string;
+    lastHealthCheck: Date;
+    lastHealthScore: number;
+    alertCount: number;
+    autoFixCount: number;
+    watchedFiles: string[];
+    recentAlerts: MonitorAlert[];
+  } {
     const uptime = Date.now() - this.state.startTime.getTime();
     const uptimeHours = Math.round((uptime / (1000 * 60 * 60)) * 100) / 100;
 

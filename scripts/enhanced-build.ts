@@ -6,7 +6,11 @@
  */
 
 import { runBuildProcess } from '../packages/shared/src/utils/build-utils.js';
-import { EnhancedLogger } from '../packages/shared/src/utils/error-handling.js';
+import {
+  EnhancedLogger,
+  ErrorCategory,
+  ErrorSeverity,
+} from '../packages/shared/src/utils/error-handling.js';
 
 /**
  * Main build function
@@ -34,8 +38,8 @@ async function main(): Promise<void> {
     } else {
       EnhancedLogger.logError({
         id: 'BUILD_PROCESS_FAILED',
-        category: 'BUILD' as any,
-        severity: 'HIGH' as any,
+        category: ErrorCategory.BUILD,
+        severity: ErrorSeverity.HIGH,
         title: 'Build Process Failed',
         message: 'One or more packages failed to build',
         suggestions: [
@@ -64,8 +68,8 @@ async function main(): Promise<void> {
   } catch (error) {
     EnhancedLogger.logError({
       id: 'BUILD_SCRIPT_ERROR',
-      category: 'BUILD' as any,
-      severity: 'CRITICAL' as any,
+      category: ErrorCategory.BUILD,
+      severity: ErrorSeverity.CRITICAL,
       title: 'Build Script Error',
       message: error instanceof Error ? error.message : String(error),
       suggestions: [
@@ -96,8 +100,8 @@ async function main(): Promise<void> {
 process.on('uncaughtException', (error) => {
   EnhancedLogger.logError({
     id: 'UNCAUGHT_EXCEPTION',
-    category: 'RUNTIME' as any,
-    severity: 'CRITICAL' as any,
+    category: ErrorCategory.RUNTIME,
+    severity: ErrorSeverity.CRITICAL,
     title: 'Uncaught Exception',
     message: error.message,
     context: { stack: error.stack },
@@ -116,8 +120,8 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason) => {
   EnhancedLogger.logError({
     id: 'UNHANDLED_REJECTION',
-    category: 'RUNTIME' as any,
-    severity: 'CRITICAL' as any,
+    category: ErrorCategory.RUNTIME,
+    severity: ErrorSeverity.CRITICAL,
     title: 'Unhandled Promise Rejection',
     message: reason instanceof Error ? reason.message : String(reason),
     suggestions: [

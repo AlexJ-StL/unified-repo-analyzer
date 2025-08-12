@@ -398,8 +398,8 @@ class BuildHealthMonitor {
         const fs = require('node:fs');
         const packages = fs
           .readdirSync(packagesDir, { withFileTypes: true })
-          .filter((dirent: any) => dirent.isDirectory())
-          .map((dirent: any) => dirent.name);
+          .filter((dirent: { isDirectory: () => boolean }) => dirent.isDirectory())
+          .map((dirent: { name: string }) => dirent.name);
 
         details += `${packages.length} workspace packages found. `;
 
@@ -504,7 +504,7 @@ class BuildHealthMonitor {
 
       if (heapTotalMB < 512) {
         score -= 15;
-        status = status === 'critical' ? 'critical' : 'warning';
+        status = 'warning';
         suggestions.push('Consider increasing Node.js memory limit');
       }
 
@@ -599,7 +599,7 @@ class BuildHealthMonitor {
 
           if (packageCount > 1500) {
             score -= 15;
-            status = status === 'critical' ? 'critical' : 'warning';
+            status = 'warning';
             suggestions.push('Large dependency count may impact performance');
           }
         } catch {
