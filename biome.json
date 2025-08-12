@@ -1,135 +1,140 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
-  "files": {
-    "includes": [
-      "**/*.{js,ts,tsx,jsx}",
-      "packages/**/*.{js,ts,tsx,jsx}",
-      "scripts/**/*.{js,ts}",
-      "tests/**/*.{js,ts,tsx}",
-      "*.{js,ts,tsx,jsx}"
-    ],
-    "maxSize": 12582912,
-    "ignoreUnknown": false,
-    "experimentalScannerIgnores": [
-      "**/.bun/**",
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/coverage/**",
-      "**/.next/**",
-      "**/out/**",
-      "**/.cache/**",
-      "packages/**/dist/**",
-      "packages/**/build/**"
-    ]
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "error",
-        "noConsole": { "level": "warn", "options": { "allow": ["log"] } }
-      },
-      "style": {
-        "noUselessElse": "error",
-        "useConst": "error",
-        "useTemplate": "error",
-        "noParameterAssign": "error",
-        "useAsConstAssertion": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useSelfClosingElements": "error",
-        "useSingleVarDeclarator": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error"
-      },
-      "correctness": {
-        "noUnusedVariables": {
-          "level": "warn",
-          "options": {
-            "ignoreRestSiblings": true
-          }
-        }
-      },
-      "complexity": {
-        "noUselessFragments": "error"
-      },
-      "a11y": {
-        "useButtonType": "warn",
-        "noSvgWithoutTitle": "warn",
-        "noLabelWithoutControl": "warn"
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 100,
-    "attributePosition": "auto"
-  },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "es5",
-      "semicolons": "always",
-      "arrowParentheses": "always",
-      "bracketSpacing": true,
-      "bracketSameLine": false,
-      "quoteProperties": "asNeeded",
-      "attributePosition": "auto"
-    }
-  },
-  "json": {
-    "formatter": {
-      "enabled": true,
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "lineEnding": "lf",
-      "lineWidth": 100,
-      "trailingCommas": "none"
-    }
-  },
-  "overrides": [
-    {
-      "includes": [
-        "**/.bun/**",
-        "**/node_modules/**",
-        "**/dist/**",
-        "**/build/**",
-        "**/coverage/**",
-        "**/.next/**",
-        "**/out/**",
-        "**/.cache/**"
-      ],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
-    },
-    {
-      "includes": ["**/packages/**/dist/**", "**/packages/**/build/**"],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
-    },
-    {
-      "includes": ["**/__tests__/**", "tests/**", "**/*.test.ts", "**/*.test.tsx"],
-      "linter": {
-        "rules": {
-          "suspicious": { "noExplicitAny": "warn" }
-        }
-      }
-    },
-    {
-      "includes": ["**/*.d.ts"],
-      "linter": {
-        "rules": {
-          "suspicious": { "noExplicitAny": "warn" }
-        }
-      }
-    }
-  ]
+	"$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+	"files": {
+		"includes": [
+			"**/*.{js,ts,tsx,jsx}",
+			"packages/**/*.{js,ts,tsx,jsx}",
+			"scripts/**/*.{js,ts}",
+			"tests/**/*.{js,ts,tsx}",
+			"*.{js,ts,tsx,jsx}"
+		],
+		"maxSize": 12582912,
+		"ignoreUnknown": false,
+		"experimentalScannerIgnores": [
+			"**/.bun/**",
+			"**/node_modules/**",
+			"**/dist/**",
+			"**/build/**",
+			"**/coverage/**",
+			"**/.next/**",
+			"**/out/**",
+			"**/.cache/**",
+			"packages/**/dist/**",
+			"packages/**/build/**"
+		]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "error",
+				"noConsole": { "level": "warn", "options": { "allow": ["log"] } }
+			},
+			"style": {
+				"noUselessElse": "error",
+				"useConst": "error",
+				"useTemplate": "error",
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error"
+			},
+			"correctness": {
+				"noUnusedVariables": {
+					"level": "warn",
+					"options": {
+						"ignoreRestSiblings": true
+					}
+				}
+			},
+			"complexity": {
+				"noUselessFragments": "error"
+			},
+			"a11y": {
+				"useButtonType": "warn",
+				"noSvgWithoutTitle": "warn",
+				"noLabelWithoutControl": "warn"
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "space",
+		"indentWidth": 2,
+		"lineEnding": "lf",
+		"lineWidth": 100,
+		"attributePosition": "auto"
+	},
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"trailingCommas": "es5",
+			"semicolons": "always",
+			"arrowParentheses": "always",
+			"bracketSpacing": true,
+			"bracketSameLine": false,
+			"quoteProperties": "asNeeded",
+			"attributePosition": "auto"
+		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true,
+			"indentStyle": "space",
+			"indentWidth": 2,
+			"lineEnding": "lf",
+			"lineWidth": 100,
+			"trailingCommas": "none"
+		}
+	},
+	"overrides": [
+		{
+			"includes": [
+				"**/.bun/**",
+				"**/node_modules/**",
+				"**/dist/**",
+				"**/build/**",
+				"**/coverage/**",
+				"**/.next/**",
+				"**/out/**",
+				"**/.cache/**"
+			],
+			"linter": { "enabled": false },
+			"formatter": { "enabled": false }
+		},
+		{
+			"includes": ["**/packages/**/dist/**", "**/packages/**/build/**"],
+			"linter": { "enabled": false },
+			"formatter": { "enabled": false }
+		},
+		{
+			"includes": [
+				"**/__tests__/**",
+				"tests/**",
+				"**/*.test.ts",
+				"**/*.test.tsx"
+			],
+			"linter": {
+				"rules": {
+					"suspicious": { "noExplicitAny": "warn" }
+				}
+			}
+		},
+		{
+			"includes": ["**/*.d.ts"],
+			"linter": {
+				"rules": {
+					"suspicious": { "noExplicitAny": "warn" }
+				}
+			}
+		}
+	]
 }
