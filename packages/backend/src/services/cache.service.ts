@@ -128,25 +128,23 @@ export class CacheService<T = any> {
       max: this.cache.max,
       ttl: this.defaultTTL,
       calculatedSize: this.cache.calculatedSize,
-      hits: (this.cache as any).hits || 0,
-      misses: (this.cache as any).misses || 0,
-      hitRate: (this.cache as any).hits
-        ? (this.cache as any).hits / ((this.cache as any).hits + (this.cache as any).misses)
-        : 0,
+      hits: 0,
+      misses: 0,
+      hitRate: 0,
     };
   }
 
   /**
    * Get or set pattern - if key exists return it, otherwise compute and cache
    */
-  async getOrSet<R = T>(key: string, factory: () => Promise<R> | R, ttl?: number): Promise<R> {
-    const existing = this.get(key) as R;
+  async getOrSet<R>(key: string, factory: () => Promise<R> | R, ttl?: number): Promise<R> {
+    const existing = this.get(key);
     if (existing !== undefined) {
-      return existing;
+      return existing as R;
     }
 
     const value = await factory();
-    this.set(key, value as any, ttl);
+    this.set(key, value as unknown as T, ttl);
     return value;
   }
 

@@ -3,7 +3,7 @@
  */
 
 import request from 'supertest';
-import { vi } from 'vitest';
+import { describe, vi } from 'vitest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
 import { app } from '../../index';
@@ -73,7 +73,7 @@ describe('API Integration Tests', () => {
         },
       };
 
-      (AnalysisEngine.prototype.analyzeRepository as any).mockResolvedValue(mockAnalysis);
+      vi.mocked(AnalysisEngine.prototype.analyzeRepository).mockResolvedValue(mockAnalysis);
 
       const response = await request(app)
         .post('/api/analyze')
@@ -129,7 +129,7 @@ describe('API Integration Tests', () => {
         processingTime: 200,
       };
 
-      (AnalysisEngine.prototype.analyzeMultipleRepositories as any).mockResolvedValue(
+      vi.mocked(AnalysisEngine.prototype.analyzeMultipleRepositories).mockResolvedValue(
         mockBatchResult
       );
 
@@ -183,7 +183,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (IndexSystem.prototype.getIndex as any).mockReturnValue({
+      vi.mocked(IndexSystem.prototype.getIndex).mockReturnValue({
         repositories: mockRepositories,
         relationships: [],
         tags: [],
@@ -212,7 +212,7 @@ describe('API Integration Tests', () => {
         complexity: 5,
       };
 
-      (IndexSystem.prototype.getIndex as any).mockReturnValue({
+      vi.mocked(IndexSystem.prototype.getIndex).mockReturnValue({
         repositories: [mockRepository],
         relationships: [],
         tags: [],
@@ -228,7 +228,7 @@ describe('API Integration Tests', () => {
 
     it('should return 404 for non-existent repository', async () => {
       // Mock the getIndex method
-      (IndexSystem.prototype.getIndex as any).mockReturnValue({
+      vi.mocked(IndexSystem.prototype.getIndex).mockReturnValue({
         repositories: [],
         relationships: [],
         tags: [],
@@ -335,7 +335,9 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.suggestCombinations as any).mockResolvedValue(mockCombinations);
+      (AnalysisEngine.prototype.suggestCombinations as jest.Mock).mockResolvedValue(
+        mockCombinations
+      );
 
       const response = await request(app)
         .post('/api/repositories/combinations')

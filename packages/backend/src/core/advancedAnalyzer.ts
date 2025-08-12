@@ -642,31 +642,58 @@ export class AdvancedAnalyzer {
     const securityPatterns = {
       // Hardcoded secrets
       hardcodedSecrets: [
-        { pattern: /password\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Password' },
-        { pattern: /api[_-]?key\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded API Key' },
+        {
+          pattern: /password\s*=\s*["'][^"']+["']/gi,
+          type: 'Hardcoded Password',
+        },
+        {
+          pattern: /api[_-]?key\s*=\s*["'][^"']+["']/gi,
+          type: 'Hardcoded API Key',
+        },
         { pattern: /secret\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Secret' },
         { pattern: /token\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Token' },
-        { pattern: /private[_-]?key\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Private Key' },
+        {
+          pattern: /private[_-]?key\s*=\s*["'][^"']+["']/gi,
+          type: 'Hardcoded Private Key',
+        },
       ],
 
       // SQL Injection
       sqlInjection: [
-        { pattern: /query\s*=\s*["'][^"']*\+/gi, type: 'Potential SQL Injection' },
-        { pattern: /execute\s*\(\s*["'][^"']*\+/gi, type: 'Potential SQL Injection' },
+        {
+          pattern: /query\s*=\s*["'][^"']*\+/gi,
+          type: 'Potential SQL Injection',
+        },
+        {
+          pattern: /execute\s*\(\s*["'][^"']*\+/gi,
+          type: 'Potential SQL Injection',
+        },
         { pattern: /SELECT\s+.*\+.*FROM/gi, type: 'Potential SQL Injection' },
-        { pattern: /["'][^"']*\+\s*\w+\s*\+[^"']*["']/gi, type: 'Potential SQL Injection' },
+        {
+          pattern: /["'][^"']*\+\s*\w+\s*\+[^"']*["']/gi,
+          type: 'Potential SQL Injection',
+        },
       ],
 
       // XSS vulnerabilities
       xss: [
-        { pattern: /innerHTML\s*=\s*[^"'][^;]+/gi, type: 'Potential XSS via innerHTML' },
-        { pattern: /document\.write\s*\(/gi, type: 'Potential XSS via document.write' },
+        {
+          pattern: /innerHTML\s*=\s*[^"'][^;]+/gi,
+          type: 'Potential XSS via innerHTML',
+        },
+        {
+          pattern: /document\.write\s*\(/gi,
+          type: 'Potential XSS via document.write',
+        },
         { pattern: /eval\s*\(/gi, type: 'Dangerous eval() usage' },
       ],
 
       // Insecure random
       insecureRandom: [
-        { pattern: /Math\.random\(\)/gi, type: 'Insecure Random Number Generation' },
+        {
+          pattern: /Math\.random\(\)/gi,
+          type: 'Insecure Random Number Generation',
+        },
       ],
 
       // Insecure HTTP
@@ -674,8 +701,14 @@ export class AdvancedAnalyzer {
 
       // Command injection
       commandInjection: [
-        { pattern: /exec\s*\(\s*[^"'][^)]*\+/gi, type: 'Potential Command Injection' },
-        { pattern: /system\s*\(\s*[^"'][^)]*\+/gi, type: 'Potential Command Injection' },
+        {
+          pattern: /exec\s*\(\s*[^"'][^)]*\+/gi,
+          type: 'Potential Command Injection',
+        },
+        {
+          pattern: /system\s*\(\s*[^"'][^)]*\+/gi,
+          type: 'Potential Command Injection',
+        },
       ],
     };
 
@@ -1186,9 +1219,7 @@ export class AdvancedAnalyzer {
           insights: this.generateTrendInsights(trends),
         };
       }
-    } catch (_error) {
-      // Trends are optional, so we don't fail the entire analysis
-    }
+    } catch (_error) {}
   }
 
   /**

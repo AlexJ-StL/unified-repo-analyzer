@@ -81,19 +81,27 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       const { default: exportService } = await import('../../services/export.service');
 
       // Generate exports for each requested format
-      const exports = {};
+      const exports: Record<string, { content: string; size: number } | null> = {
+        json: null,
+        markdown: null,
+        html: null,
+      };
       for (const format of analysisOptions.outputFormats) {
         try {
           const content = await exportService.exportAnalysis(analysis, format);
           exports[format] = {
-            format,
+            content,
             size: Buffer.byteLength(content, 'utf8'),
           };
         } catch (_exportError) {}
       }
 
       // Add exports to the response
-      analysis.exports = exports;
+      (
+        analysis as {
+          exports?: Record<string, { content: string; size: number } | null>;
+        }
+      ).exports = exports;
     }
 
     // Return analysis result
@@ -198,19 +206,27 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
       const { default: exportService } = await import('../../services/export.service');
 
       // Generate exports for each requested format
-      const exports = {};
+      const exports: Record<string, { content: string; size: number } | null> = {
+        json: null,
+        markdown: null,
+        html: null,
+      };
       for (const format of analysisOptions.outputFormats) {
         try {
           const content = await exportService.exportBatchAnalysis(batchResult, format);
           exports[format] = {
-            format,
+            content,
             size: Buffer.byteLength(content, 'utf8'),
           };
         } catch (_exportError) {}
       }
 
       // Add exports to the response
-      batchResult.exports = exports;
+      (
+        batchResult as {
+          exports?: Record<string, { content: string; size: number } | null>;
+        }
+      ).exports = exports;
     }
 
     // Return batch analysis result

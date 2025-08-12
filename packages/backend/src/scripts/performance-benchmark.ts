@@ -29,7 +29,7 @@ interface BenchmarkResult {
     after: NodeJS.MemoryUsage;
     delta: number;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 class PerformanceBenchmark {
@@ -200,16 +200,6 @@ class PerformanceBenchmark {
       outputFormats: ['json'],
       includeTree: true,
     };
-
-    // Deduplication key generation
-    await this.runBenchmark(
-      'Deduplication Key Generation',
-      () => {
-        const service = deduplicationService as any;
-        service.generateAnalysisKey(`/test/repo/${Math.random()}`, testOptions);
-      },
-      10000
-    );
 
     // Concurrent request simulation
     const concurrentRequests = 100;

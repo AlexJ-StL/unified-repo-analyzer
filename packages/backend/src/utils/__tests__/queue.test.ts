@@ -125,7 +125,14 @@ describe('TaskQueue', () => {
     const queue = new TaskQueue(mockProcessor, { concurrency: 1 });
 
     // Set up progress tracking
-    const progressEvents: any[] = [];
+    const progressEvents: Array<{
+      total: number;
+      pending: number;
+      running: number;
+      completed: number;
+      failed: number;
+      progress: number;
+    }> = [];
     queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
       progressEvents.push({ ...progress });
     });
@@ -165,7 +172,10 @@ describe('TaskQueue', () => {
     });
 
     // Create queue with short timeout
-    const queue = new TaskQueue(slowProcessor, { concurrency: 1, timeout: 150 });
+    const queue = new TaskQueue(slowProcessor, {
+      concurrency: 1,
+      timeout: 150,
+    });
 
     // Add tasks
     queue.addTask('task1', 1); // Should complete (100ms)

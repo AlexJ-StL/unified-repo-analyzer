@@ -6,7 +6,7 @@ import { createServer } from 'node:http';
 import express from 'express';
 import { Server } from 'socket.io';
 import request from 'supertest';
-import { vi } from "vitest";
+import { vi } from 'vitest';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 // Mock dependencies
@@ -199,9 +199,9 @@ describe('Batch Analysis API', () => {
 
   test('should handle errors during batch analysis', async () => {
     // Mock analyzeMultipleRepositoriesWithQueue to throw an error
-    (
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any
-    ).mockRejectedValueOnce(new Error('Batch analysis failed'));
+    (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any).mockRejectedValueOnce(
+      new Error('Batch analysis failed')
+    );
 
     const response = await request(app)
       .post('/api/analyze/batch')

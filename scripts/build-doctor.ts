@@ -56,8 +56,6 @@ class BuildDoctor {
     this.errorHandler = ErrorHandler.getInstance();
   }
 
-  private errorHandler: ErrorHandler;
-
   /**
    * Run comprehensive build diagnostics
    */

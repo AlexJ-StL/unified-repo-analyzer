@@ -23,8 +23,7 @@ describe('IndexSystem', () => {
       if (fs.existsSync(tempIndexPath)) {
         fs.unlinkSync(tempIndexPath);
       }
-    } catch (_error) {
-    }
+    } catch (_error) {}
   });
 
   // Helper function to create mock repository analysis
