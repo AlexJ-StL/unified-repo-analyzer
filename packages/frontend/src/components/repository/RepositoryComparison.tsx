@@ -51,7 +51,7 @@ const RepositoryComparison: React.FC<RepositoryComparisonProps> = ({ repositoryI
         setRepositories(repoResults);
 
         // Fetch comparison data
-        const comparisonResponse = await apiService.searchRepositories('', {
+        const _comparisonResponse = await apiService.searchRepositories('', {
           compareRepositories: repositoryIds,
         });
 

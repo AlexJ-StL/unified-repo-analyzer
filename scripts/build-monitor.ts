@@ -8,7 +8,6 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, unwatchFile, watchFile, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { performance } from 'node:perf_hooks';
 
 /**
  * Monitor event types
@@ -141,7 +140,7 @@ class BuildMonitor {
     this.state.isRunning = false;
 
     // Clean up file watchers
-    for (const [file, watcher] of this.state.watchers) {
+    for (const [file, _watcher] of this.state.watchers) {
       unwatchFile(file);
     }
     this.state.watchers.clear();
@@ -202,7 +201,7 @@ class BuildMonitor {
       try {
         const configData = JSON.parse(readFileSync(configPath, 'utf-8'));
         return { ...defaultConfig, ...configData };
-      } catch (error) {
+      } catch (_error) {
         console.log('⚠️  Failed to load monitor config, using defaults');
         return defaultConfig;
       }
@@ -215,7 +214,7 @@ class BuildMonitor {
         require('node:fs').mkdirSync(configDir, { recursive: true });
       }
       writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2));
-    } catch (error) {
+    } catch (_error) {
       console.log('⚠️  Failed to save default monitor config');
     }
 
@@ -595,7 +594,7 @@ class BuildMonitor {
       }
 
       writeFileSync(alertsPath, JSON.stringify(existingAlerts, null, 2));
-    } catch (error) {
+    } catch (_error) {
       console.log('⚠️  Failed to save alert to file');
     }
   }

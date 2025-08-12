@@ -15,7 +15,6 @@ import {
   ErrorCategory,
   ErrorHandler,
   ErrorSeverity,
-  type TypeScriptErrorContext,
 } from './error-handling.js';
 
 /**
@@ -135,7 +134,7 @@ export class BuildExecutor {
               ...packageJson.dependencies,
               ...packageJson.devDependencies,
             });
-          } catch (error) {
+          } catch (_error) {
             this.log('error', `Failed to parse package.json for ${dir}`, dir);
           }
         }
@@ -628,7 +627,7 @@ export class BuildExecutor {
    * Print build summary to console
    */
   private printBuildSummary(results: Record<string, BuildResult>, success: boolean): void {
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${'='.repeat(60)}`);
     console.log('                    BUILD SUMMARY');
     console.log('='.repeat(60));
 
@@ -665,7 +664,7 @@ export class BuildExecutor {
       });
     }
 
-    console.log('='.repeat(60) + '\n');
+    console.log(`${'='.repeat(60)}\n`);
   }
 
   /**

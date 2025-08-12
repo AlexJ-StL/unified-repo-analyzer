@@ -161,7 +161,7 @@ class RecoveryTools {
 
 			// Step 4: Test TypeScript compilation
 			console.log("  Testing TypeScript compilation...");
-			const compileTest = await this.runCommand("bunx", ["tsc", "--noEmit"]);
+			const _compileTest = await this.runCommand("bunx", ["tsc", "--noEmit"]);
 
 			const duration = performance.now() - startTime;
 			return {
@@ -383,7 +383,7 @@ class RecoveryTools {
 
 			console.log(`  Found packages: ${packages.join(", ")}`);
 
-			const packagesFixed = 0;
+			const _packagesFixed = 0;
 			for (const pkg of packages) {
 				const packageJsonPath = join(packagesDir, pkg, "package.json");
 				if (!existsSync(packageJsonPath)) {
@@ -546,7 +546,7 @@ class RecoveryTools {
 			const nodeModules = join(this.projectRoot, "node_modules");
 			const binDir = join(nodeModules, ".bin");
 
-			if (!existsSync(nodeModules)) {
+			if (!_existsSync(_nodeModules)) {
 				return {
 					success: false,
 					message: "node_modules directory missing",
@@ -763,7 +763,7 @@ async function main(): Promise<void> {
 	}
 
 	// Output result
-	console.log("\n" + "=".repeat(60));
+	console.log(`\n${"=".repeat(60)}`);
 	if (result.success) {
 		console.log(`✅ SUCCESS: ${result.message}`);
 	} else {

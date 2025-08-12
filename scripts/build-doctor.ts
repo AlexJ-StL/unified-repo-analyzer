@@ -9,14 +9,9 @@ import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
-import {
-  BuildExecutor,
-  type BuildResult,
-  type PackageBuildInfo,
-} from '../packages/shared/src/utils/build-utils.js';
+import type { BuildResult } from '../packages/shared/src/utils/build-utils.js';
 // Import our enhanced error handling utilities
 import {
-  type EnhancedError,
   EnhancedLogger,
   ErrorAnalyzer,
   ErrorCategory,
@@ -53,7 +48,6 @@ interface RecoveryAction {
  */
 class BuildDoctor {
   private projectRoot: string;
-  private errorHandler: ErrorHandler;
   private diagnostics: DiagnosticResult[] = [];
   private recoveryActions: RecoveryAction[] = [];
 
@@ -107,7 +101,7 @@ class BuildDoctor {
             suggestions: ['Add workspaces configuration to package.json'],
           });
         }
-      } catch (error) {
+      } catch (_error) {
         this.addDiagnostic({
           name: 'Root Package Configuration',
           status: 'fail',
@@ -224,7 +218,7 @@ class BuildDoctor {
             suggestions: [`Create tsconfig.json in ${packageName} package`],
           });
         }
-      } catch (error) {
+      } catch (_error) {
         this.addDiagnostic({
           name: `Package ${packageName} - Configuration`,
           status: 'fail',
@@ -473,7 +467,7 @@ class BuildDoctor {
               status: 'pass',
               message: 'Build script syntax appears valid',
             });
-          } catch (error) {
+          } catch (_error) {
             this.addDiagnostic({
               name: 'Build Script Syntax',
               status: 'fail',
@@ -482,7 +476,7 @@ class BuildDoctor {
             });
           }
         }
-      } catch (error) {
+      } catch (_error) {
         this.addDiagnostic({
           name: 'Build Scripts Configuration',
           status: 'fail',
@@ -561,7 +555,7 @@ class BuildDoctor {
     // Check disk space (simplified check)
     try {
       const fs = require('node:fs');
-      const stats = fs.statSync(this.projectRoot);
+      const _stats = fs.statSync(this.projectRoot);
       this.addDiagnostic({
         name: 'Project Directory Access',
         status: 'pass',
@@ -673,7 +667,7 @@ class BuildDoctor {
    * Generate diagnostic report
    */
   private generateDiagnosticReport(): void {
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
     console.log('                        BUILD DOCTOR REPORT');
     console.log('='.repeat(80));
 
@@ -749,7 +743,7 @@ class BuildDoctor {
       return;
     }
 
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
     console.log('                        RECOVERY PLAN');
     console.log('='.repeat(80));
 

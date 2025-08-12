@@ -77,7 +77,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
     const validBatchAnalysis = isValidBatchAnalysis(batchAnalysis);
 
     if (!validAnalysis && !validBatchAnalysis) {
-      console.warn('No valid analysis data available for export');
       return;
     }
 

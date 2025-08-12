@@ -510,7 +510,7 @@ class BuildHealthMonitor {
 
       // Check disk space (simplified)
       try {
-        const stats = statSync(this.projectRoot);
+        const _stats = statSync(this.projectRoot);
         details += 'Project directory accessible. ';
       } catch {
         score -= 30;
@@ -714,7 +714,7 @@ class BuildHealthMonitor {
         // Check for scripts that might be security risks
         const scripts = packageData.scripts || {};
         const riskyScripts = Object.entries(scripts).filter(
-          ([name, script]) =>
+          ([_name, script]) =>
             typeof script === 'string' &&
             (script.includes('rm -rf /') ||
               script.includes('sudo') ||
@@ -777,7 +777,7 @@ class BuildHealthMonitor {
         details += `${totalDeps} total dependencies. `;
 
         // Check for common outdated patterns
-        if (devDeps.typescript && devDeps.typescript.startsWith('^4.')) {
+        if (devDeps.typescript?.startsWith('^4.')) {
           score -= 10;
           status = 'warning';
           suggestions.push('Consider updating TypeScript to version 5.x');
@@ -926,7 +926,7 @@ class BuildHealthMonitor {
    * Display health report to console
    */
   private displayHealthReport(report: HealthReport): void {
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
     console.log('                     BUILD HEALTH REPORT');
     console.log('='.repeat(80));
 
@@ -1089,11 +1089,7 @@ async function main(): Promise<void> {
     } else {
       process.exit(0);
     }
-  } catch (error) {
-    console.error(
-      '❌ Health check failed:',
-      error instanceof Error ? error.message : String(error)
-    );
+  } catch (_error) {
     process.exit(3);
   }
 }

@@ -407,7 +407,7 @@ export class ErrorAnalyzer {
       }
 
       return issues;
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
