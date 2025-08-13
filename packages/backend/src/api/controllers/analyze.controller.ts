@@ -2,24 +2,24 @@
  * Analysis controller
  */
 
-import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import type { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
-import { AnalysisEngine } from '../../core/AnalysisEngine';
-import { pathHandler } from '../../services/path-handler.service';
-import { errorMessageService } from '../../services/error-message.service';
-import logger from '../../services/logger.service';
-import { io } from '../../index';
+import type { AnalysisOptions } from "@unified-repo-analyzer/shared/src/types/analysis";
+import type { Request, Response } from "express";
+import { validationResult } from "express-validator";
+import { AnalysisEngine } from "../../core/AnalysisEngine";
+import { io } from "../../index";
+import { errorMessageService } from "../../services/error-message.service";
+import logger from "../../services/logger.service";
+import { pathHandler } from "../../services/path-handler.service";
 
 // Default analysis options
 const defaultOptions: AnalysisOptions = {
-  mode: 'standard',
-  maxFiles: 100,
-  maxLinesPerFile: 1000,
-  includeLLMAnalysis: false,
-  llmProvider: 'none',
-  outputFormats: ['json'],
-  includeTree: true,
+	mode: "standard",
+	maxFiles: 100,
+	maxLinesPerFile: 1000,
+	includeLLMAnalysis: false,
+	llmProvider: "none",
+	outputFormats: ["json"],
+	includeTree: true,
 };
 
 /**
@@ -28,364 +28,428 @@ const defaultOptions: AnalysisOptions = {
  * @param req - Express request
  * @param res - Express response
  */
-export const analyzeRepository = async (req: Request, res: Response): Promise<void> => {
-  const requestId = req.headers['x-request-id'] as string || `req-${Date.now()}`;
-  
-  try {
-    // Validate request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      logger.warn('Repository analysis request validation failed', {
-        requestId,
-        errors: errors.array(),
-        path: req.body.path
-      });
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
+export const analyzeRepository = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
+	const requestId =
+		(req.headers["x-request-id"] as string) || `req-${Date.now()}`;
 
-    const { path, options = {} } = req.body;
+	try {
+		// Validate request
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			logger.warn("Repository analysis request validation failed", {
+				requestId,
+				errors: errors.array(),
+				path: req.body.path,
+			});
+			res.status(400).json({ errors: errors.array() });
+			return;
+		}
 
-    logger.info('Starting repository analysis', {
-      requestId,
-      path,
-      options
-    });
+		const { path, options = {} } = req.body;
 
-    // Step 1: Validate and normalize the path using PathHandler
-    logger.debug('Validating repository path', { requestId, path });
-    
-    const pathValidationResult = await pathHandler.validatePath(path, {
-      timeoutMs: 10000, // 10 seconds timeout for path validation
-      onProgress: (progress) => {
-        logger.debug('Path validation progress', {
-          requestId,
-          stage: progress.stage,
-          percentage: progress.percentage,
-          message: progress.message
-        });
-      }
-    });
+		// Check if path is missing or invalid before calling PathHandler
+		if (!path || typeof path !== "string" || path.trim() === "") {
+			logger.warn("Repository path validation failed", {
+				requestId,
+				path,
+				errors: [
+					{ code: "INVALID_INPUT", message: "Path must be a non-empty string" },
+				],
+				warnings: [],
+			});
 
-    // Check if path validation failed
-    if (!pathValidationResult.isValid) {
-      const userFriendlyError = errorMessageService.createPathErrorMessage(
-        pathValidationResult.errors,
-        pathValidationResult.warnings,
-        path
-      );
+			res.status(400).json({
+				error: "Invalid Repository Path",
+				message: "Repository path is required and must be a non-empty string.",
+				details: "The path parameter is missing, empty, or not a string.",
+				path,
+				suggestions: [
+					"Provide a valid repository path",
+					"Ensure the path is a non-empty string",
+					'Check that the request body includes a "path" field',
+				],
+				technicalDetails: {
+					errors: [
+						{
+							code: "INVALID_INPUT",
+							message: "Path must be a non-empty string",
+						},
+					],
+					warnings: [],
+				},
+			});
+			return;
+		}
 
-      logger.warn('Repository path validation failed', {
-        requestId,
-        path,
-        errors: pathValidationResult.errors,
-        warnings: pathValidationResult.warnings
-      });
+		logger.info("Starting repository analysis", {
+			requestId,
+			path,
+			options,
+		});
 
-      res.status(400).json({
-        error: userFriendlyError.title,
-        message: userFriendlyError.message,
-        details: userFriendlyError.details,
-        path,
-        suggestions: userFriendlyError.suggestions,
-        learnMoreUrl: userFriendlyError.learnMoreUrl,
-        technicalDetails: {
-          errors: pathValidationResult.errors,
-          warnings: pathValidationResult.warnings
-        }
-      });
-      return;
-    }
+		// Step 1: Validate and normalize the path using PathHandler
+		logger.debug("Validating repository path", { requestId, path });
 
-    // Check if path exists and is accessible
-    if (!pathValidationResult.metadata.exists) {
-      const userFriendlyError = errorMessageService.createPathErrorMessage(
-        [{ code: 'PATH_NOT_FOUND', message: 'Path does not exist' }],
-        pathValidationResult.warnings,
-        path
-      );
+		const pathValidationResult = await pathHandler.validatePath(path, {
+			timeoutMs: 10000, // 10 seconds timeout for path validation
+			onProgress: (progress) => {
+				logger.debug("Path validation progress", {
+					requestId,
+					stage: progress.stage,
+					percentage: progress.percentage,
+					message: progress.message,
+				});
+			},
+		});
 
-      logger.warn('Repository path does not exist', {
-        requestId,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath
-      });
+		// Check if path validation failed
+		if (!pathValidationResult.isValid) {
+			const userFriendlyError = errorMessageService.createPathErrorMessage(
+				pathValidationResult.errors,
+				pathValidationResult.warnings,
+				path,
+			);
 
-      res.status(404).json({
-        error: userFriendlyError.title,
-        message: userFriendlyError.message,
-        details: userFriendlyError.details,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath,
-        suggestions: userFriendlyError.suggestions,
-        learnMoreUrl: userFriendlyError.learnMoreUrl
-      });
-      return;
-    }
+			logger.warn("Repository path validation failed", {
+				requestId,
+				path,
+				errors: pathValidationResult.errors,
+				warnings: pathValidationResult.warnings,
+			});
 
-    // Check if path is a directory (repositories should be directories)
-    if (!pathValidationResult.metadata.isDirectory) {
-      const userFriendlyError = errorMessageService.createPathErrorMessage(
-        [{ code: 'NOT_DIRECTORY', message: 'Path is not a directory' }],
-        pathValidationResult.warnings,
-        path
-      );
+			res.status(400).json({
+				error: userFriendlyError.title,
+				message: userFriendlyError.message,
+				details: userFriendlyError.details,
+				path,
+				suggestions: userFriendlyError.suggestions,
+				learnMoreUrl: userFriendlyError.learnMoreUrl,
+				technicalDetails: {
+					errors: pathValidationResult.errors,
+					warnings: pathValidationResult.warnings,
+				},
+			});
+			return;
+		}
 
-      logger.warn('Repository path is not a directory', {
-        requestId,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath
-      });
+		// Check if path exists and is accessible
+		if (!pathValidationResult.metadata.exists) {
+			const userFriendlyError = errorMessageService.createPathErrorMessage(
+				[{ code: "PATH_NOT_FOUND", message: "Path does not exist" }],
+				pathValidationResult.warnings,
+				path,
+			);
 
-      res.status(400).json({
-        error: userFriendlyError.title,
-        message: userFriendlyError.message,
-        details: userFriendlyError.details,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath,
-        suggestions: userFriendlyError.suggestions,
-        learnMoreUrl: userFriendlyError.learnMoreUrl
-      });
-      return;
-    }
+			logger.warn("Repository path does not exist", {
+				requestId,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+			});
 
-    // Check read permissions
-    if (!pathValidationResult.metadata.permissions.read) {
-      const userFriendlyError = errorMessageService.createPathErrorMessage(
-        [{ code: 'READ_PERMISSION_DENIED', message: 'Insufficient read permissions' }],
-        pathValidationResult.warnings,
-        path
-      );
+			res.status(404).json({
+				error: userFriendlyError.title,
+				message: userFriendlyError.message,
+				details: userFriendlyError.details,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+				suggestions: userFriendlyError.suggestions,
+				learnMoreUrl: userFriendlyError.learnMoreUrl,
+			});
+			return;
+		}
 
-      logger.warn('Insufficient read permissions for repository path', {
-        requestId,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath,
-        permissions: pathValidationResult.metadata.permissions
-      });
+		// Check if path is a directory (repositories should be directories)
+		if (!pathValidationResult.metadata.isDirectory) {
+			const userFriendlyError = errorMessageService.createPathErrorMessage(
+				[{ code: "NOT_DIRECTORY", message: "Path is not a directory" }],
+				pathValidationResult.warnings,
+				path,
+			);
 
-      res.status(403).json({
-        error: userFriendlyError.title,
-        message: userFriendlyError.message,
-        details: userFriendlyError.details,
-        path,
-        normalizedPath: pathValidationResult.normalizedPath,
-        suggestions: userFriendlyError.suggestions,
-        learnMoreUrl: userFriendlyError.learnMoreUrl
-      });
-      return;
-    }
+			logger.warn("Repository path is not a directory", {
+				requestId,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+			});
 
-    // Use the normalized path for analysis
-    const normalizedPath = pathValidationResult.normalizedPath!;
-    
-    logger.info('Path validation successful', {
-      requestId,
-      originalPath: path,
-      normalizedPath,
-      metadata: pathValidationResult.metadata,
-      warnings: pathValidationResult.warnings
-    });
+			res.status(400).json({
+				error: userFriendlyError.title,
+				message: userFriendlyError.message,
+				details: userFriendlyError.details,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+				suggestions: userFriendlyError.suggestions,
+				learnMoreUrl: userFriendlyError.learnMoreUrl,
+			});
+			return;
+		}
 
-    // Merge with default options
-    const analysisOptions: AnalysisOptions = {
-      ...defaultOptions,
-      ...options,
-    };
+		// Check read permissions
+		if (!pathValidationResult.metadata.permissions.read) {
+			const userFriendlyError = errorMessageService.createPathErrorMessage(
+				[
+					{
+						code: "READ_PERMISSION_DENIED",
+						message: "Insufficient read permissions",
+					},
+				],
+				pathValidationResult.warnings,
+				path,
+			);
 
-    // Create analysis engine
-    const analysisEngine = new AnalysisEngine();
+			logger.warn("Insufficient read permissions for repository path", {
+				requestId,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+				permissions: pathValidationResult.metadata.permissions,
+			});
 
-    // Generate unique client ID for progress tracking
-    const clientId = (req.headers['x-client-id'] as string) || 'anonymous';
+			res.status(403).json({
+				error: userFriendlyError.title,
+				message: userFriendlyError.message,
+				details: userFriendlyError.details,
+				path,
+				normalizedPath: pathValidationResult.normalizedPath,
+				suggestions: userFriendlyError.suggestions,
+				learnMoreUrl: userFriendlyError.learnMoreUrl,
+			});
+			return;
+		}
 
-    // Set up progress tracking
-    const progressTracker = {
-      total: 0,
-      processed: 0,
-      currentFile: '',
-      status: 'initializing',
-    };
+		// Use the normalized path for analysis
+		const normalizedPath = pathValidationResult.normalizedPath!;
 
-    // Start progress updates
-    const progressInterval = setInterval(() => {
-      io.to(clientId).emit('analysis-progress', progressTracker);
-    }, 1000);
+		logger.info("Path validation successful", {
+			requestId,
+			originalPath: path,
+			normalizedPath,
+			metadata: pathValidationResult.metadata,
+			warnings: pathValidationResult.warnings,
+		});
 
-    // Update progress tracker with repository discovery
-    progressTracker.status = 'analyzing';
+		// Merge with default options
+		const analysisOptions: AnalysisOptions = {
+			...defaultOptions,
+			...options,
+		};
 
-    logger.info('Starting repository analysis with validated path', {
-      requestId,
-      normalizedPath,
-      analysisOptions
-    });
+		// Create analysis engine
+		const analysisEngine = new AnalysisEngine();
 
-    // Analyze repository using the normalized path
-    const analysis = await analysisEngine.analyzeRepository(normalizedPath, analysisOptions);
+		// Generate unique client ID for progress tracking
+		const clientId = (req.headers["x-client-id"] as string) || "anonymous";
 
-    // Update progress tracker with completion
-    progressTracker.processed = progressTracker.total;
-    progressTracker.status = 'completed';
-    io.to(clientId).emit('analysis-progress', progressTracker);
+		// Set up progress tracking
+		const progressTracker = {
+			total: 0,
+			processed: 0,
+			currentFile: "",
+			status: "initializing",
+		};
 
-    // Clear progress interval
-    clearInterval(progressInterval);
+		// Start progress updates
+		const progressInterval = setInterval(() => {
+			io.to(clientId).emit("analysis-progress", progressTracker);
+		}, 1000);
 
-    logger.info('Repository analysis completed successfully', {
-      requestId,
-      normalizedPath,
-      analysisId: analysis.id,
-      fileCount: analysis.files?.length || 0
-    });
+		// Update progress tracker with repository discovery
+		progressTracker.status = "analyzing";
 
-    // Generate exports if requested in options
-    if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
-      logger.debug('Generating exports', {
-        requestId,
-        formats: analysisOptions.outputFormats
-      });
+		logger.info("Starting repository analysis with validated path", {
+			requestId,
+			normalizedPath,
+			analysisOptions,
+		});
 
-      // Import export service
-      const { default: exportService } = await import('../../services/export.service');
+		// Analyze repository using the normalized path
+		const analysis = await analysisEngine.analyzeRepository(
+			normalizedPath,
+			analysisOptions,
+		);
 
-      // Generate exports for each requested format
-      const exports: Record<string, { content: string; size: number } | null> = {
-        json: null,
-        markdown: null,
-        html: null,
-      };
-      for (const format of analysisOptions.outputFormats) {
-        try {
-          const content = await exportService.exportAnalysis(analysis, format);
-          exports[format] = {
-            content,
-            size: Buffer.byteLength(content, 'utf8'),
-          };
-          logger.debug('Export generated successfully', {
-            requestId,
-            format,
-            size: exports[format]?.size
-          });
-        } catch (exportError) {
-          logger.error('Export generation failed', {
-            requestId,
-            format,
-            error: exportError instanceof Error ? exportError.message : String(exportError)
-          });
-        }
-      }
+		// Update progress tracker with completion
+		progressTracker.processed = progressTracker.total;
+		progressTracker.status = "completed";
+		io.to(clientId).emit("analysis-progress", progressTracker);
 
-      // Add exports to the response
-      (
-        analysis as {
-          exports?: Record<string, { content: string; size: number } | null>;
-        }
-      ).exports = exports;
-    }
+		// Clear progress interval
+		clearInterval(progressInterval);
 
-    // Return analysis result
-    res.status(200).json(analysis);
-  } catch (error) {
-    // Clear progress interval on error
-    if (typeof progressInterval !== 'undefined') {
-      clearInterval(progressInterval);
-    }
+		logger.info("Repository analysis completed successfully", {
+			requestId,
+			normalizedPath,
+			analysisId: analysis.id,
+			fileCount: analysis.files?.length || 0,
+		});
 
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    
-    logger.error('Repository analysis failed', {
-      requestId,
-      path: req.body.path,
-      error: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined
-    });
+		// Generate exports if requested in options
+		if (
+			analysisOptions.outputFormats &&
+			analysisOptions.outputFormats.length > 0
+		) {
+			logger.debug("Generating exports", {
+				requestId,
+				formats: analysisOptions.outputFormats,
+			});
 
-    // Check for specific error types and provide appropriate responses
-    if (error instanceof Error) {
-      if (error.name === 'TimeoutError') {
-        res.status(408).json({
-          error: 'Repository analysis timed out',
-          message: errorMessage,
-          suggestions: [
-            'Try analyzing a smaller repository',
-            'Increase timeout settings',
-            'Check if the repository contains very large files'
-          ]
-        });
-        return;
-      }
+			// Import export service
+			const { default: exportService } = await import(
+				"../../services/export.service"
+			);
 
-      if (error.name === 'AbortError') {
-        res.status(499).json({
-          error: 'Repository analysis was cancelled',
-          message: errorMessage
-        });
-        return;
-      }
+			// Generate exports for each requested format
+			const exports: Record<string, { content: string; size: number } | null> =
+				{
+					json: null,
+					markdown: null,
+					html: null,
+				};
+			for (const format of analysisOptions.outputFormats) {
+				try {
+					const content = await exportService.exportAnalysis(analysis, format);
+					exports[format] = {
+						content,
+						size: Buffer.byteLength(content, "utf8"),
+					};
+					logger.debug("Export generated successfully", {
+						requestId,
+						format,
+						size: exports[format]?.size,
+					});
+				} catch (exportError) {
+					logger.error("Export generation failed", {
+						requestId,
+						format,
+						error:
+							exportError instanceof Error
+								? exportError.message
+								: String(exportError),
+					});
+				}
+			}
 
-      if (errorMessage.includes('ENOENT') || errorMessage.includes('no such file')) {
-        const userFriendlyError = errorMessageService.createPathErrorMessage(
-          [{ code: 'PATH_NOT_FOUND', message: 'Path does not exist' }],
-          [],
-          req.body.path
-        );
+			// Add exports to the response
+			(
+				analysis as {
+					exports?: Record<string, { content: string; size: number } | null>;
+				}
+			).exports = exports;
+		}
 
-        res.status(404).json({
-          error: userFriendlyError.title,
-          message: userFriendlyError.message,
-          details: userFriendlyError.details,
-          path: req.body.path,
-          suggestions: userFriendlyError.suggestions,
-          learnMoreUrl: userFriendlyError.learnMoreUrl
-        });
-        return;
-      }
+		// Return analysis result
+		res.status(200).json(analysis);
+	} catch (error) {
+		// Clear progress interval on error
+		if (typeof progressInterval !== "undefined") {
+			clearInterval(progressInterval);
+		}
 
-      if (errorMessage.includes('EACCES') || errorMessage.includes('permission denied')) {
-        const userFriendlyError = errorMessageService.createPathErrorMessage(
-          [{ code: 'READ_PERMISSION_DENIED', message: 'Permission denied' }],
-          [],
-          req.body.path
-        );
+		const errorMessage = error instanceof Error ? error.message : String(error);
 
-        res.status(403).json({
-          error: userFriendlyError.title,
-          message: userFriendlyError.message,
-          details: userFriendlyError.details,
-          path: req.body.path,
-          suggestions: userFriendlyError.suggestions,
-          learnMoreUrl: userFriendlyError.learnMoreUrl
-        });
-        return;
-      }
+		logger.error("Repository analysis failed", {
+			requestId,
+			path: req.body.path,
+			error: errorMessage,
+			stack: error instanceof Error ? error.stack : undefined,
+		});
 
-      if (errorMessage.includes('network') || errorMessage.includes('UNC')) {
-        const userFriendlyError = errorMessageService.createNetworkErrorMessage(req.body.path, errorMessage);
+		// Check for specific error types and provide appropriate responses
+		if (error instanceof Error) {
+			if (error.name === "TimeoutError") {
+				res.status(408).json({
+					error: "Repository analysis timed out",
+					message: errorMessage,
+					suggestions: [
+						"Try analyzing a smaller repository",
+						"Increase timeout settings",
+						"Check if the repository contains very large files",
+					],
+				});
+				return;
+			}
 
-        res.status(503).json({
-          error: userFriendlyError.title,
-          message: userFriendlyError.message,
-          details: userFriendlyError.details,
-          path: req.body.path,
-          suggestions: userFriendlyError.suggestions,
-          learnMoreUrl: userFriendlyError.learnMoreUrl
-        });
-        return;
-      }
-    }
+			if (error.name === "AbortError") {
+				res.status(499).json({
+					error: "Repository analysis was cancelled",
+					message: errorMessage,
+				});
+				return;
+			}
 
-    res.status(500).json({
-      error: 'Failed to analyze repository',
-      message: errorMessage,
-      path: req.body.path,
-      suggestions: [
-        'Check if the repository path is valid',
-        'Ensure the repository is accessible',
-        'Try again with a different repository'
-      ]
-    });
-  }
+			if (
+				errorMessage.includes("ENOENT") ||
+				errorMessage.includes("no such file")
+			) {
+				const userFriendlyError = errorMessageService.createPathErrorMessage(
+					[{ code: "PATH_NOT_FOUND", message: "Path does not exist" }],
+					[],
+					req.body.path,
+				);
+
+				res.status(404).json({
+					error: userFriendlyError.title,
+					message: userFriendlyError.message,
+					details: userFriendlyError.details,
+					path: req.body.path,
+					suggestions: userFriendlyError.suggestions,
+					learnMoreUrl: userFriendlyError.learnMoreUrl,
+				});
+				return;
+			}
+
+			if (
+				errorMessage.includes("EACCES") ||
+				errorMessage.includes("permission denied")
+			) {
+				const userFriendlyError = errorMessageService.createPathErrorMessage(
+					[{ code: "READ_PERMISSION_DENIED", message: "Permission denied" }],
+					[],
+					req.body.path,
+				);
+
+				res.status(403).json({
+					error: userFriendlyError.title,
+					message: userFriendlyError.message,
+					details: userFriendlyError.details,
+					path: req.body.path,
+					suggestions: userFriendlyError.suggestions,
+					learnMoreUrl: userFriendlyError.learnMoreUrl,
+				});
+				return;
+			}
+
+			if (errorMessage.includes("network") || errorMessage.includes("UNC")) {
+				const userFriendlyError = errorMessageService.createNetworkErrorMessage(
+					req.body.path,
+					errorMessage,
+				);
+
+				res.status(503).json({
+					error: userFriendlyError.title,
+					message: userFriendlyError.message,
+					details: userFriendlyError.details,
+					path: req.body.path,
+					suggestions: userFriendlyError.suggestions,
+					learnMoreUrl: userFriendlyError.learnMoreUrl,
+				});
+				return;
+			}
+		}
+
+		res.status(500).json({
+			error: "Failed to analyze repository",
+			message: errorMessage,
+			path: req.body.path,
+			suggestions: [
+				"Check if the repository path is valid",
+				"Ensure the repository is accessible",
+				"Try again with a different repository",
+			],
+		});
+	}
 };
 
 /**
@@ -394,365 +458,426 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
  * @param req - Express request
  * @param res - Express response
  */
-export const analyzeMultipleRepositories = async (req: Request, res: Response): Promise<void> => {
-  const requestId = req.headers['x-request-id'] as string || `req-${Date.now()}`;
-  
-  try {
-    // Validate request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      logger.warn('Batch repository analysis request validation failed', {
-        requestId,
-        errors: errors.array(),
-        pathCount: req.body.paths?.length || 0
-      });
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
+export const analyzeMultipleRepositories = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
+	const requestId =
+		(req.headers["x-request-id"] as string) || `req-${Date.now()}`;
 
-    const { paths, options = {} } = req.body;
+	try {
+		// Validate request
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			logger.warn("Batch repository analysis request validation failed", {
+				requestId,
+				errors: errors.array(),
+				pathCount: req.body.paths?.length || 0,
+			});
+			res.status(400).json({ errors: errors.array() });
+			return;
+		}
 
-    logger.info('Starting batch repository analysis', {
-      requestId,
-      pathCount: paths.length,
-      options
-    });
+		const { paths, options = {} } = req.body;
 
-    // Step 1: Validate all paths before starting analysis
-    logger.debug('Validating all repository paths', { requestId, pathCount: paths.length });
-    
-    const pathValidationResults: Array<{
-      originalPath: string;
-      normalizedPath?: string;
-      isValid: boolean;
-      errors: any[];
-      warnings: any[];
-    }> = [];
+		// Additional safety check for paths
+		if (!paths || !Array.isArray(paths)) {
+			logger.warn("Batch repository analysis request missing paths", {
+				requestId,
+				paths,
+			});
+			res.status(400).json({
+				error: "Repository paths are required",
+				message: "The 'paths' field must be provided as a non-empty array",
+				suggestions: [
+					"Include a 'paths' field in the request body",
+					"Ensure 'paths' is an array of repository paths",
+					"Provide at least one repository path",
+				],
+			});
+			return;
+		}
 
-    const validPaths: string[] = [];
-    const invalidPaths: Array<{ path: string; errors: any[]; warnings: any[] }> = [];
+		logger.info("Starting batch repository analysis", {
+			requestId,
+			pathCount: paths.length,
+			options,
+		});
 
-    // Validate each path
-    for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
-      
-      try {
-        logger.debug(`Validating path ${i + 1}/${paths.length}`, { requestId, path });
-        
-        const validationResult = await pathHandler.validatePath(path, {
-          timeoutMs: 5000, // 5 seconds timeout per path
-          onProgress: (progress) => {
-            logger.debug('Path validation progress', {
-              requestId,
-              pathIndex: i + 1,
-              path,
-              stage: progress.stage,
-              percentage: progress.percentage
-            });
-          }
-        });
+		// Step 1: Validate all paths before starting analysis
+		logger.debug("Validating all repository paths", {
+			requestId,
+			pathCount: paths.length,
+		});
 
-        const pathResult = {
-          originalPath: path,
-          normalizedPath: validationResult.normalizedPath,
-          isValid: validationResult.isValid && validationResult.metadata.exists && validationResult.metadata.isDirectory && validationResult.metadata.permissions.read,
-          errors: validationResult.errors,
-          warnings: validationResult.warnings
-        };
+		const pathValidationResults: Array<{
+			originalPath: string;
+			normalizedPath?: string;
+			isValid: boolean;
+			errors: any[];
+			warnings: any[];
+		}> = [];
 
-        pathValidationResults.push(pathResult);
+		const validPaths: string[] = [];
+		const invalidPaths: Array<{
+			path: string;
+			errors: any[];
+			warnings: any[];
+		}> = [];
 
-        if (pathResult.isValid && validationResult.normalizedPath) {
-          validPaths.push(validationResult.normalizedPath);
-        } else {
-          // Collect specific error reasons
-          const pathErrors = [...validationResult.errors];
-          
-          if (!validationResult.metadata.exists) {
-            pathErrors.push({
-              code: 'PATH_NOT_FOUND',
-              message: 'Path does not exist',
-              suggestions: ['Verify the path is correct', 'Check if the directory exists']
-            });
-          } else if (!validationResult.metadata.isDirectory) {
-            pathErrors.push({
-              code: 'NOT_DIRECTORY',
-              message: 'Path is not a directory',
-              suggestions: ['Select a directory instead of a file']
-            });
-          } else if (!validationResult.metadata.permissions.read) {
-            pathErrors.push({
-              code: 'READ_PERMISSION_DENIED',
-              message: 'Insufficient read permissions',
-              suggestions: ['Check directory permissions', 'Run with appropriate privileges']
-            });
-          }
+		// Validate each path
+		for (let i = 0; i < paths.length; i++) {
+			const path = paths[i];
 
-          invalidPaths.push({
-            path,
-            errors: pathErrors,
-            warnings: validationResult.warnings
-          });
-        }
-      } catch (error) {
-        logger.error('Path validation failed with exception', {
-          requestId,
-          path,
-          error: error instanceof Error ? error.message : String(error)
-        });
+			try {
+				logger.debug(`Validating path ${i + 1}/${paths.length}`, {
+					requestId,
+					path,
+				});
 
-        pathValidationResults.push({
-          originalPath: path,
-          isValid: false,
-          errors: [{
-            code: 'VALIDATION_ERROR',
-            message: 'Path validation failed',
-            details: error instanceof Error ? error.message : String(error)
-          }],
-          warnings: []
-        });
+				const validationResult = await pathHandler.validatePath(path, {
+					timeoutMs: 5000, // 5 seconds timeout per path
+					onProgress: (progress) => {
+						logger.debug("Path validation progress", {
+							requestId,
+							pathIndex: i + 1,
+							path,
+							stage: progress.stage,
+							percentage: progress.percentage,
+						});
+					},
+				});
 
-        invalidPaths.push({
-          path,
-          errors: [{
-            code: 'VALIDATION_ERROR',
-            message: 'Path validation failed',
-            details: error instanceof Error ? error.message : String(error)
-          }],
-          warnings: []
-        });
-      }
-    }
+				const pathResult = {
+					originalPath: path,
+					normalizedPath: validationResult.normalizedPath,
+					isValid:
+						validationResult.isValid &&
+						validationResult.metadata.exists &&
+						validationResult.metadata.isDirectory &&
+						validationResult.metadata.permissions.read,
+					errors: validationResult.errors,
+					warnings: validationResult.warnings,
+				};
 
-    logger.info('Batch path validation completed', {
-      requestId,
-      totalPaths: paths.length,
-      validPaths: validPaths.length,
-      invalidPaths: invalidPaths.length
-    });
+				pathValidationResults.push(pathResult);
 
-    // If no valid paths, return error
-    if (validPaths.length === 0) {
-      logger.warn('No valid paths found in batch analysis request', {
-        requestId,
-        invalidPaths: invalidPaths.length
-      });
+				if (pathResult.isValid && validationResult.normalizedPath) {
+					validPaths.push(validationResult.normalizedPath);
+				} else {
+					// Collect specific error reasons
+					const pathErrors = [...validationResult.errors];
 
-      res.status(400).json({
-        error: 'No valid repository paths found',
-        totalPaths: paths.length,
-        validPaths: 0,
-        invalidPaths: invalidPaths.length,
-        pathValidationResults,
-        suggestions: [
-          'Verify all paths are correct',
-          'Check directory permissions',
-          'Ensure paths point to directories, not files'
-        ]
-      });
-      return;
-    }
+					if (!validationResult.metadata.exists) {
+						pathErrors.push({
+							code: "PATH_NOT_FOUND",
+							message: "Path does not exist",
+							suggestions: [
+								"Verify the path is correct",
+								"Check if the directory exists",
+							],
+						});
+					} else if (!validationResult.metadata.isDirectory) {
+						pathErrors.push({
+							code: "NOT_DIRECTORY",
+							message: "Path is not a directory",
+							suggestions: ["Select a directory instead of a file"],
+						});
+					} else if (!validationResult.metadata.permissions.read) {
+						pathErrors.push({
+							code: "READ_PERMISSION_DENIED",
+							message: "Insufficient read permissions",
+							suggestions: [
+								"Check directory permissions",
+								"Run with appropriate privileges",
+							],
+						});
+					}
 
-    // If some paths are invalid, log warnings but continue with valid paths
-    if (invalidPaths.length > 0) {
-      logger.warn('Some paths are invalid, continuing with valid paths only', {
-        requestId,
-        validPaths: validPaths.length,
-        invalidPaths: invalidPaths.length,
-        invalidPathDetails: invalidPaths
-      });
-    }
+					invalidPaths.push({
+						path,
+						errors: pathErrors,
+						warnings: validationResult.warnings,
+					});
+				}
+			} catch (error) {
+				logger.error("Path validation failed with exception", {
+					requestId,
+					path,
+					error: error instanceof Error ? error.message : String(error),
+				});
 
-    // Merge with default options
-    const analysisOptions: AnalysisOptions = {
-      ...defaultOptions,
-      ...options,
-    };
+				pathValidationResults.push({
+					originalPath: path,
+					isValid: false,
+					errors: [
+						{
+							code: "VALIDATION_ERROR",
+							message: "Path validation failed",
+							details: error instanceof Error ? error.message : String(error),
+						},
+					],
+					warnings: [],
+				});
 
-    // Create analysis engine
-    const analysisEngine = new AnalysisEngine();
+				invalidPaths.push({
+					path,
+					errors: [
+						{
+							code: "VALIDATION_ERROR",
+							message: "Path validation failed",
+							details: error instanceof Error ? error.message : String(error),
+						},
+					],
+					warnings: [],
+				});
+			}
+		}
 
-    // Generate unique client ID for progress tracking
-    const clientId = (req.headers['x-client-id'] as string) || 'anonymous';
+		logger.info("Batch path validation completed", {
+			requestId,
+			totalPaths: paths.length,
+			validPaths: validPaths.length,
+			invalidPaths: invalidPaths.length,
+		});
 
-    // Generate unique batch ID
-    const batchId = req.body.batchId || `batch-${Date.now()}`;
+		// If no valid paths, return error
+		if (validPaths.length === 0) {
+			logger.warn("No valid paths found in batch analysis request", {
+				requestId,
+				invalidPaths: invalidPaths.length,
+			});
 
-    // Set up initial progress tracker
-    const progressTracker = {
-      batchId,
-      total: validPaths.length, // Use valid paths count
-      completed: 0,
-      failed: 0,
-      inProgress: 0,
-      pending: validPaths.length,
-      progress: 0,
-      status: 'initializing',
-      currentRepositories: [],
-    };
+			res.status(400).json({
+				error: "No valid repository paths found",
+				totalPaths: paths.length,
+				validPaths: 0,
+				invalidPaths: invalidPaths.length,
+				pathValidationResults,
+				suggestions: [
+					"Verify all paths are correct",
+					"Check directory permissions",
+					"Ensure paths point to directories, not files",
+				],
+			});
+			return;
+		}
 
-    // Send initial progress update
-    io.to(clientId).emit('batch-analysis-progress', progressTracker);
+		// If some paths are invalid, log warnings but continue with valid paths
+		if (invalidPaths.length > 0) {
+			logger.warn("Some paths are invalid, continuing with valid paths only", {
+				requestId,
+				validPaths: validPaths.length,
+				invalidPaths: invalidPaths.length,
+				invalidPathDetails: invalidPaths,
+			});
+		}
 
-    // Update progress tracker with batch analysis starting
-    progressTracker.status = 'analyzing';
-    io.to(clientId).emit('batch-analysis-progress', progressTracker);
+		// Merge with default options
+		const analysisOptions: AnalysisOptions = {
+			...defaultOptions,
+			...options,
+		};
 
-    logger.info('Starting batch analysis with validated paths', {
-      requestId,
-      batchId,
-      validPathCount: validPaths.length,
-      analysisOptions
-    });
+		// Create analysis engine
+		const analysisEngine = new AnalysisEngine();
 
-    // Determine concurrency based on request or default to 2
-    const concurrency = req.body.concurrency || 2;
+		// Generate unique client ID for progress tracking
+		const clientId = (req.headers["x-client-id"] as string) || "anonymous";
 
-    // Analyze repositories with queue and progress tracking using validated paths
-    const batchResult = await analysisEngine.analyzeMultipleRepositoriesWithQueue(
-      validPaths, // Use validated and normalized paths
-      analysisOptions,
-      concurrency,
-      (progress) => {
-        // Update progress tracker
-        progressTracker.completed = progress.status.completed;
-        progressTracker.failed = progress.status.failed;
-        progressTracker.inProgress = progress.status.inProgress;
-        progressTracker.pending = progress.status.pending;
-        progressTracker.progress = progress.status.progress;
-        progressTracker.currentRepositories = progress.currentRepository || [];
+		// Generate unique batch ID
+		const batchId = req.body.batchId || `batch-${Date.now()}`;
 
-        // Send progress update
-        io.to(clientId).emit('batch-analysis-progress', progressTracker);
-      }
-    );
+		// Set up initial progress tracker
+		const progressTracker = {
+			batchId,
+			total: validPaths.length, // Use valid paths count
+			completed: 0,
+			failed: 0,
+			inProgress: 0,
+			pending: validPaths.length,
+			progress: 0,
+			status: "initializing",
+			currentRepositories: [],
+		};
 
-    // Update progress tracker with completion
-    progressTracker.status = 'completed';
-    progressTracker.completed = batchResult.repositories.length;
-    progressTracker.failed = validPaths.length - batchResult.repositories.length;
-    progressTracker.inProgress = 0;
-    progressTracker.pending = 0;
-    progressTracker.progress = 100;
-    progressTracker.currentRepositories = [];
+		// Send initial progress update
+		io.to(clientId).emit("batch-analysis-progress", progressTracker);
 
-    // Send final progress update
-    io.to(clientId).emit('batch-analysis-progress', progressTracker);
+		// Update progress tracker with batch analysis starting
+		progressTracker.status = "analyzing";
+		io.to(clientId).emit("batch-analysis-progress", progressTracker);
 
-    logger.info('Batch repository analysis completed', {
-      requestId,
-      batchId,
-      totalRequested: paths.length,
-      validPaths: validPaths.length,
-      successfulAnalyses: batchResult.repositories.length,
-      failedAnalyses: validPaths.length - batchResult.repositories.length,
-      skippedInvalidPaths: invalidPaths.length
-    });
+		logger.info("Starting batch analysis with validated paths", {
+			requestId,
+			batchId,
+			validPathCount: validPaths.length,
+			analysisOptions,
+		});
 
-    // Generate exports if requested in options
-    if (analysisOptions.outputFormats && analysisOptions.outputFormats.length > 0) {
-      logger.debug('Generating batch exports', {
-        requestId,
-        batchId,
-        formats: analysisOptions.outputFormats
-      });
+		// Determine concurrency based on request or default to 2
+		const concurrency = req.body.concurrency || 2;
 
-      // Import export service
-      const { default: exportService } = await import('../../services/export.service');
+		// Analyze repositories with queue and progress tracking using validated paths
+		const batchResult =
+			await analysisEngine.analyzeMultipleRepositoriesWithQueue(
+				validPaths, // Use validated and normalized paths
+				analysisOptions,
+				concurrency,
+				(progress) => {
+					// Update progress tracker
+					progressTracker.completed = progress.status.completed;
+					progressTracker.failed = progress.status.failed;
+					progressTracker.inProgress = progress.status.inProgress;
+					progressTracker.pending = progress.status.pending;
+					progressTracker.progress = progress.status.progress;
+					progressTracker.currentRepositories =
+						progress.currentRepository || [];
 
-      // Generate exports for each requested format
-      const exports: Record<string, { content: string; size: number } | null> = {
-        json: null,
-        markdown: null,
-        html: null,
-      };
-      for (const format of analysisOptions.outputFormats) {
-        try {
-          const content = await exportService.exportBatchAnalysis(batchResult, format);
-          exports[format] = {
-            content,
-            size: Buffer.byteLength(content, 'utf8'),
-          };
-          logger.debug('Batch export generated successfully', {
-            requestId,
-            batchId,
-            format,
-            size: exports[format]?.size
-          });
-        } catch (exportError) {
-          logger.error('Batch export generation failed', {
-            requestId,
-            batchId,
-            format,
-            error: exportError instanceof Error ? exportError.message : String(exportError)
-          });
-        }
-      }
+					// Send progress update
+					io.to(clientId).emit("batch-analysis-progress", progressTracker);
+				},
+			);
 
-      // Add exports to the response
-      (
-        batchResult as {
-          exports?: Record<string, { content: string; size: number } | null>;
-        }
-      ).exports = exports;
-    }
+		// Update progress tracker with completion
+		progressTracker.status = "completed";
+		progressTracker.completed = batchResult.repositories.length;
+		progressTracker.failed =
+			validPaths.length - batchResult.repositories.length;
+		progressTracker.inProgress = 0;
+		progressTracker.pending = 0;
+		progressTracker.progress = 100;
+		progressTracker.currentRepositories = [];
 
-    // Enhance the response with path validation information
-    const enhancedResult = {
-      ...batchResult,
-      pathValidation: {
-        totalRequested: paths.length,
-        validPaths: validPaths.length,
-        invalidPaths: invalidPaths.length,
-        invalidPathDetails: invalidPaths.length > 0 ? invalidPaths : undefined
-      }
-    };
+		// Send final progress update
+		io.to(clientId).emit("batch-analysis-progress", progressTracker);
 
-    // Return batch analysis result
-    res.status(200).json(enhancedResult);
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    
-    logger.error('Batch repository analysis failed', {
-      requestId,
-      pathCount: req.body.paths?.length || 0,
-      error: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined
-    });
+		logger.info("Batch repository analysis completed", {
+			requestId,
+			batchId,
+			totalRequested: paths.length,
+			validPaths: validPaths.length,
+			successfulAnalyses: batchResult.repositories.length,
+			failedAnalyses: validPaths.length - batchResult.repositories.length,
+			skippedInvalidPaths: invalidPaths.length,
+		});
 
-    // Check for specific error types
-    if (error instanceof Error) {
-      if (error.name === 'TimeoutError') {
-        res.status(408).json({
-          error: 'Batch repository analysis timed out',
-          message: errorMessage,
-          suggestions: [
-            'Try analyzing fewer repositories at once',
-            'Increase timeout settings',
-            'Check if repositories contain very large files'
-          ]
-        });
-        return;
-      }
+		// Generate exports if requested in options
+		if (
+			analysisOptions.outputFormats &&
+			analysisOptions.outputFormats.length > 0
+		) {
+			logger.debug("Generating batch exports", {
+				requestId,
+				batchId,
+				formats: analysisOptions.outputFormats,
+			});
 
-      if (error.name === 'AbortError') {
-        res.status(499).json({
-          error: 'Batch repository analysis was cancelled',
-          message: errorMessage
-        });
-        return;
-      }
-    }
+			// Import export service
+			const { default: exportService } = await import(
+				"../../services/export.service"
+			);
 
-    res.status(500).json({
-      error: 'Failed to analyze repositories',
-      message: errorMessage,
-      pathCount: req.body.paths?.length || 0,
-      suggestions: [
-        'Check if all repository paths are valid',
-        'Ensure repositories are accessible',
-        'Try analyzing fewer repositories at once'
-      ]
-    });
-  }
+			// Generate exports for each requested format
+			const exports: Record<string, { content: string; size: number } | null> =
+				{
+					json: null,
+					markdown: null,
+					html: null,
+				};
+			for (const format of analysisOptions.outputFormats) {
+				try {
+					const content = await exportService.exportBatchAnalysis(
+						batchResult,
+						format,
+					);
+					exports[format] = {
+						content,
+						size: Buffer.byteLength(content, "utf8"),
+					};
+					logger.debug("Batch export generated successfully", {
+						requestId,
+						batchId,
+						format,
+						size: exports[format]?.size,
+					});
+				} catch (exportError) {
+					logger.error("Batch export generation failed", {
+						requestId,
+						batchId,
+						format,
+						error:
+							exportError instanceof Error
+								? exportError.message
+								: String(exportError),
+					});
+				}
+			}
+
+			// Add exports to the response
+			(
+				batchResult as {
+					exports?: Record<string, { content: string; size: number } | null>;
+				}
+			).exports = exports;
+		}
+
+		// Enhance the response with path validation information
+		const enhancedResult = {
+			...batchResult,
+			pathValidation: {
+				totalRequested: paths.length,
+				validPaths: validPaths.length,
+				invalidPaths: invalidPaths.length,
+				invalidPathDetails: invalidPaths.length > 0 ? invalidPaths : undefined,
+			},
+		};
+
+		// Return batch analysis result
+		res.status(200).json(enhancedResult);
+	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : String(error);
+
+		logger.error("Batch repository analysis failed", {
+			requestId,
+			pathCount: req.body.paths?.length || 0,
+			error: errorMessage,
+			stack: error instanceof Error ? error.stack : undefined,
+		});
+
+		// Check for specific error types
+		if (error instanceof Error) {
+			if (error.name === "TimeoutError") {
+				res.status(408).json({
+					error: "Batch repository analysis timed out",
+					message: errorMessage,
+					suggestions: [
+						"Try analyzing fewer repositories at once",
+						"Increase timeout settings",
+						"Check if repositories contain very large files",
+					],
+				});
+				return;
+			}
+
+			if (error.name === "AbortError") {
+				res.status(499).json({
+					error: "Batch repository analysis was cancelled",
+					message: errorMessage,
+				});
+				return;
+			}
+		}
+
+		res.status(500).json({
+			error: "Failed to analyze repositories",
+			message: errorMessage,
+			pathCount: req.body.paths?.length || 0,
+			suggestions: [
+				"Check if all repository paths are valid",
+				"Ensure repositories are accessible",
+				"Try analyzing fewer repositories at once",
+			],
+		});
+	}
 };
