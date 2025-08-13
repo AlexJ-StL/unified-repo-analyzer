@@ -21,7 +21,7 @@ export interface CacheEntry<T> {
   key: string;
 }
 
-export class CacheService<T = any> {
+export class CacheService<T = unknown> {
   private cache: LRUCache<string, CacheEntry<T>>;
   private defaultTTL: number;
 
@@ -42,11 +42,22 @@ export class CacheService<T = any> {
   /**
    * Generate a cache key from various inputs
    */
-  generateKey(...inputs: any[]): string {
+  generateKey(...inputs: unknown[]): string {
     const serialized = inputs
       .map((input) => {
-        if (typeof input === 'object') {
-          return JSON.stringify(input, Object.keys(input).sort());
+        if (typeof input === 'object' && input !== null) {
+          try {
+            return JSON.stringify(input, Object.keys(input).sort());
+          } catch (error) {
+            logger.warn(`Failed to serialize input for cache key generation: ${error}`);
+            return '[unserializable-object]';
+          }
+        }
+        if (typeof input === 'symbol') {
+          return input.toString();
+        }
+        if (typeof input === 'function') {
+          return '[function]';
         }
         return String(input);
       })
@@ -206,7 +217,7 @@ export class CacheService<T = any> {
 /**
  * Enhanced cache service with repository-specific methods
  */
-export class EnhancedCacheService extends CacheService<any> {
+export class EnhancedCacheService extends CacheService<RepositoryAnalysis | BatchAnalysisResult> {
   /**
    * Cache analysis result with repository-specific key
    */
@@ -233,7 +244,8 @@ export class EnhancedCacheService extends CacheService<any> {
     options: AnalysisOptions
   ): Promise<RepositoryAnalysis | null> {
     const key = this.generateAnalysisKey(repoPath, options);
-    return this.get(key) || null;
+    const result = this.get(key);
+    return result && typeof result === 'object' && 'path' in result ? result : null;
   }
 
   /**
@@ -257,7 +269,8 @@ export class EnhancedCacheService extends CacheService<any> {
     options: AnalysisOptions
   ): Promise<BatchAnalysisResult | null> {
     const key = this.generateBatchKey(repoPaths, options);
-    return this.get(key) || null;
+    const result = this.get(key);
+    return result && typeof result === 'object' && 'repositories' in result ? result : null;
   }
 
   /**
