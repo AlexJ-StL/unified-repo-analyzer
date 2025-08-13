@@ -1195,7 +1195,7 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz"
   integrity sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==
 
-"@unified-repo-analyzer/backend@packages/backend":
+"@unified-repo-analyzer/backend@^workspace:packages/backend":
   version "workspace:packages/backend"
   resolved "workspace:packages/backend"
   devDependencies:
@@ -1224,7 +1224,7 @@
     winston "^3.12.0"
     zod "^3.22.4"
 
-"@unified-repo-analyzer/cli@packages/cli":
+"@unified-repo-analyzer/cli@^workspace:packages/cli":
   version "workspace:packages/cli"
   resolved "workspace:packages/cli"
   devDependencies:
@@ -1243,7 +1243,7 @@
     ora "^5.4.1"
     undici "^6.0.0"
 
-"@unified-repo-analyzer/frontend@packages/frontend":
+"@unified-repo-analyzer/frontend@^workspace:packages/frontend":
   version "workspace:packages/frontend"
   resolved "workspace:packages/frontend"
   devDependencies:
@@ -1276,7 +1276,7 @@
     socket.io-client "^4.7.5"
     zustand "^4.5.2"
 
-"@unified-repo-analyzer/shared@packages/shared", "@unified-repo-analyzer/shared@workspace:*":
+"@unified-repo-analyzer/shared@^workspace:packages/shared", "@unified-repo-analyzer/shared@workspace:*":
   version "workspace:packages/shared"
   resolved "workspace:packages/shared"
   devDependencies:
