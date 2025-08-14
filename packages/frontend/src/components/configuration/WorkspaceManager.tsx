@@ -2,23 +2,35 @@
  * Workspace management component
  */
 
-import { FolderIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import type { WorkspaceConfiguration } from '@unified-repo-analyzer/shared';
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useToast } from '../../hooks/useToast';
-import { useSettingsStore } from '../../store/useSettingsStore';
+import {
+  FolderIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
+import type { WorkspaceConfiguration } from "@unified-repo-analyzer/shared";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "../../hooks/useToast";
+import { useSettingsStore } from "../../store/useSettingsStore";
+import PathInput from "../common/PathInput";
 
 const WorkspaceManager: React.FC = () => {
-  const { workspaces, loadWorkspaces, createWorkspace, updateWorkspace, deleteWorkspace } =
-    useSettingsStore();
+  const {
+    workspaces,
+    loadWorkspaces,
+    createWorkspace,
+    updateWorkspace,
+    deleteWorkspace,
+  } = useSettingsStore();
   const { showToast } = useToast();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    path: '',
+    name: "",
+    path: "",
   });
+  const [isPathValid, setIsPathValid] = useState(true);
 
   useEffect(() => {
     loadWorkspaces();
@@ -26,7 +38,15 @@ const WorkspaceManager: React.FC = () => {
 
   const handleCreate = async () => {
     if (!formData.name.trim() || !formData.path.trim()) {
-      showToast({ type: 'error', title: 'Please fill in all required fields' });
+      showToast({ type: "error", title: "Please fill in all required fields" });
+      return;
+    }
+
+    if (!isPathValid) {
+      showToast({
+        type: "error",
+        title: "Please fix path validation errors before creating workspace",
+      });
       return;
     }
 
@@ -37,16 +57,24 @@ const WorkspaceManager: React.FC = () => {
         preferences: {},
       });
       setIsCreating(false);
-      setFormData({ name: '', path: '' });
-      showToast({ type: 'success', title: 'Workspace created successfully' });
+      setFormData({ name: "", path: "" });
+      showToast({ type: "success", title: "Workspace created successfully" });
     } catch {
-      showToast({ type: 'error', title: 'Failed to create workspace' });
+      showToast({ type: "error", title: "Failed to create workspace" });
     }
   };
 
   const handleUpdate = async (id: string) => {
     if (!formData.name.trim() || !formData.path.trim()) {
-      showToast({ type: 'error', title: 'Please fill in all required fields' });
+      showToast({ type: "error", title: "Please fill in all required fields" });
+      return;
+    }
+
+    if (!isPathValid) {
+      showToast({
+        type: "error",
+        title: "Please fix path validation errors before updating workspace",
+      });
       return;
     }
 
@@ -56,20 +84,22 @@ const WorkspaceManager: React.FC = () => {
         path: formData.path,
       });
       setEditingId(null);
-      setFormData({ name: '', path: '' });
-      showToast({ type: 'success', title: 'Workspace updated successfully' });
+      setFormData({ name: "", path: "" });
+      showToast({ type: "success", title: "Workspace updated successfully" });
     } catch {
-      showToast({ type: 'error', title: 'Failed to update workspace' });
+      showToast({ type: "error", title: "Failed to update workspace" });
     }
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete the workspace "${name}"?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete the workspace "${name}"?`)
+    ) {
       try {
         await deleteWorkspace(id);
-        showToast({ type: 'success', title: 'Workspace deleted successfully' });
+        showToast({ type: "success", title: "Workspace deleted successfully" });
       } catch {
-        showToast({ type: 'error', title: 'Failed to delete workspace' });
+        showToast({ type: "error", title: "Failed to delete workspace" });
       }
     }
   };
@@ -85,14 +115,14 @@ const WorkspaceManager: React.FC = () => {
   const cancelEdit = () => {
     setEditingId(null);
     setIsCreating(false);
-    setFormData({ name: '', path: '' });
+    setFormData({ name: "", path: "" });
   };
 
   const selectDirectory = async () => {
     // In a real implementation, this would use the file system API
     showToast({
-      type: 'info',
-      title: 'Directory selection not implemented in demo',
+      type: "info",
+      title: "Directory selection not implemented in demo",
     });
   };
 
@@ -120,7 +150,7 @@ const WorkspaceManager: React.FC = () => {
       {(isCreating || editingId) && (
         <div className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700">
           <h4 className="text-md font-medium text-gray-900 dark:text-white mb-4">
-            {isCreating ? 'Create New Workspace' : 'Edit Workspace'}
+            {isCreating ? "Create New Workspace" : "Edit Workspace"}
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -130,31 +160,25 @@ const WorkspaceManager: React.FC = () => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="Workspace name"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Path *
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  value={formData.path}
-                  onChange={(e) => setFormData({ ...formData, path: e.target.value })}
-                  placeholder="/path/to/workspace"
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
-                />
-                <button
-                  onClick={selectDirectory}
-                  className="px-3 py-2 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md bg-gray-100 dark:bg-gray-500 hover:bg-gray-200 dark:hover:bg-gray-400"
-                >
-                  <FolderIcon className="h-4 w-4 text-gray-500 dark:text-gray-300" />
-                </button>
-              </div>
-            </div>
+            <PathInput
+              label="Path"
+              value={formData.path}
+              onChange={(path) => setFormData({ ...formData, path })}
+              onValidationChange={(isValid) => setIsPathValid(isValid)}
+              placeholder="/path/to/workspace"
+              required={true}
+              showFormatHints={true}
+              validateOnChange={true}
+              validateExistence={true}
+              validatePermissions={true}
+            />
           </div>
           <div className="flex justify-end space-x-3 mt-4">
             <button
@@ -164,10 +188,12 @@ const WorkspaceManager: React.FC = () => {
               Cancel
             </button>
             <button
-              onClick={isCreating ? handleCreate : () => handleUpdate(editingId!)}
+              onClick={
+                isCreating ? handleCreate : () => handleUpdate(editingId!)
+              }
               className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              {isCreating ? 'Create' : 'Update'}
+              {isCreating ? "Create" : "Update"}
             </button>
           </div>
         </div>
@@ -177,7 +203,8 @@ const WorkspaceManager: React.FC = () => {
       <div className="space-y-4">
         {workspaces.length === 0 ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            No workspaces configured. Create your first workspace to get started.
+            No workspaces configured. Create your first workspace to get
+            started.
           </div>
         ) : (
           workspaces.map((workspace) => (
@@ -193,14 +220,18 @@ const WorkspaceManager: React.FC = () => {
                       <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                         {workspace.name}
                       </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{workspace.path}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {workspace.path}
+                      </p>
                     </div>
                   </div>
                   <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    Created: {new Date(workspace.createdAt).toLocaleDateString()}
+                    Created:{" "}
+                    {new Date(workspace.createdAt).toLocaleDateString()}
                     {workspace.updatedAt !== workspace.createdAt && (
                       <span className="ml-4">
-                        Updated: {new Date(workspace.updatedAt).toLocaleDateString()}
+                        Updated:{" "}
+                        {new Date(workspace.updatedAt).toLocaleDateString()}
                       </span>
                     )}
                   </div>
@@ -224,17 +255,25 @@ const WorkspaceManager: React.FC = () => {
               {/* Workspace Stats */}
               <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-500 dark:text-gray-400">Projects:</span>
-                  <span className="ml-1 font-medium text-gray-900 dark:text-white">0</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Projects:
+                  </span>
+                  <span className="ml-1 font-medium text-gray-900 dark:text-white">
+                    0
+                  </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 dark:text-gray-400">Custom Preferences:</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Custom Preferences:
+                  </span>
                   <span className="ml-1 font-medium text-gray-900 dark:text-white">
                     {Object.keys(workspace.preferences || {}).length}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 dark:text-gray-400">Status:</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Status:
+                  </span>
                   <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                     Active
                   </span>

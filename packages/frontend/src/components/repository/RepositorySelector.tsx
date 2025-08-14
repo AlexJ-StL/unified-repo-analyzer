@@ -4,11 +4,9 @@ import {
   type DirectoryItem,
   fileSystemService,
 } from "../../services/fileSystem";
+import type { PathValidationResult } from "../../services/pathValidation";
 import { useAnalysisStore } from "../../store/useAnalysisStore";
-import {
-  isValidFilePath,
-  validateRepositoryPath,
-} from "../../utils/validators";
+import PathInput from "../common/PathInput";
 
 interface RepositorySelectorProps {
   onSelect?: (path: string) => void;
@@ -24,9 +22,9 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({
   const [directoryItems, setDirectoryItems] = useState<DirectoryItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [pathValidationErrors, setPathValidationErrors] = useState<string[]>(
-    []
-  );
+  const [isPathValid, setIsPathValid] = useState<boolean>(false);
+  const [pathValidationResult, setPathValidationResult] =
+    useState<PathValidationResult | null>(null);
   const [recentRepositories, setRecentRepositories] = useState<string[]>([]);
 
   // Define before useEffect to avoid \"used before declaration\" and to stabilize identity
@@ -84,41 +82,16 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({
   };
 
   const handleSelectRepository = () => {
-    const validation = validateRepositoryPath(currentPath);
-
-    if (validation.isValid && isValidFilePath(currentPath)) {
-      setRepositoryPath(currentPath);
+    if (isPathValid && pathValidationResult?.isValid) {
+      // Use normalized path if available
+      const pathToUse = pathValidationResult.normalizedPath || currentPath;
+      setRepositoryPath(pathToUse);
       setError(null);
-      setPathValidationErrors([]);
       if (onSelect) {
-        onSelect(currentPath);
+        onSelect(pathToUse);
       }
     } else {
-      setPathValidationErrors(validation.errors);
       setError("Please fix the path validation errors before selecting");
-    }
-  };
-
-  const handlePathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPath = e.target.value;
-    setCurrentPath(newPath);
-
-    // Clear previous errors
-    setError(null);
-    setPathValidationErrors([]);
-
-    // Validate path as user types (debounced validation would be better for performance)
-    if (newPath.trim()) {
-      const validation = validateRepositoryPath(newPath);
-      if (!validation.isValid) {
-        setPathValidationErrors(validation.errors);
-      }
-    }
-  };
-
-  const handlePathKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      browseDirectory(currentPath);
     }
   };
 
@@ -130,43 +103,36 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({
   return (
     <div className={`repository-selector ${className}`}>
       <div className="mb-4">
-        <label
-          htmlFor="repository-path"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Repository Path
-        </label>
+        <PathInput
+          label="Repository Path"
+          value={currentPath}
+          onChange={(path) => {
+            setCurrentPath(path);
+            setError(null);
+          }}
+          onValidationChange={(isValid, result) => {
+            setIsPathValid(isValid);
+            setPathValidationResult(result || null);
+          }}
+          placeholder="/path/to/repository"
+          showFormatHints={true}
+          validateOnChange={true}
+          validateExistence={true}
+          validatePermissions={true}
+          className="mb-2"
+        />
+
         <div className="flex items-center space-x-2">
-          <input
-            id="repository-path"
-            type="text"
-            className="flex-1 rounded-md border border-gray-300 shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="/path/to/repository"
-            value={currentPath}
-            onChange={handlePathChange}
-            onKeyDown={handlePathKeyDown}
-          />
           <button
             type="button"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             onClick={() => browseDirectory(currentPath)}
           >
-            Browse
+            Browse Directory
           </button>
         </div>
+
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-        {pathValidationErrors.length > 0 && (
-          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
-            <p className="text-sm font-medium text-yellow-800">
-              Path validation issues:
-            </p>
-            <ul className="mt-1 text-sm text-yellow-700 list-disc list-inside">
-              {pathValidationErrors.map((validationError, index) => (
-                <li key={index}>{validationError}</li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
       {recentRepositories.length > 0 && (
@@ -296,7 +262,12 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({
       <div className="mt-4 flex justify-end">
         <button
           type="button"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          disabled={!isPathValid || !currentPath.trim()}
+          className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+            isPathValid && currentPath.trim()
+              ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
           onClick={handleSelectRepository}
         >
           Select Repository
