@@ -7,7 +7,7 @@ The Logging API provides comprehensive access to application logs and logging co
 ## Base URL
 
 ```
-http://localhost:3001/api
+http://localhost:3000/api
 ```
 
 ## Authentication

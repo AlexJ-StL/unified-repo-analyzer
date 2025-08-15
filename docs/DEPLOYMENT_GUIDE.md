@@ -124,7 +124,7 @@ VITE_APP_VERSION=1.0.0
 
 1. **Clone and prepare the repository:**
 ```bash
-git clone https://github.com/your-org/unified-repo-analyzer.git
+git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git
 cd unified-repo-analyzer
 cp .env.example .env
 # Edit .env with your configuration
@@ -443,7 +443,7 @@ sudo chown repo-analyzer:repo-analyzer /var/cache/repo-analyzer
 1. **Clone and build:**
 ```bash
 cd /opt/repo-analyzer
-sudo -u repo-analyzer git clone https://github.com/your-org/unified-repo-analyzer.git .
+sudo -u repo-analyzer git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git .
 sudo -u repo-analyzer bun install
 sudo -u repo-analyzer bun run build:prod
 ```
@@ -684,10 +684,10 @@ find $BACKUP_DIR -name "*.tar.gz" -mtime +30 -delete
 1. **Health Checks:**
 ```bash
 # Backend health check
-curl -f http://localhost:3001/health || exit 1
+curl -f http://localhost:3000/health || exit 1
 
 # Frontend health check
-curl -f http://localhost:3000/ || exit 1
+curl -f http://localhost:3001/ || exit 1
 ```
 
 2. **Prometheus Metrics:**
@@ -699,7 +699,7 @@ global:
 scrape_configs:
   - job_name: 'repo-analyzer-backend'
     static_configs:
-      - targets: ['localhost:3001']
+      - targets: ['localhost:3000']
     metrics_path: '/metrics'
 ```
 
@@ -769,7 +769,7 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 2. **API Rate Limiting:**
 ```bash
 # Check rate limit status
-curl -I http://localhost:3001/api/health
+curl -I http://localhost:3000/api/health
 
 # Adjust rate limits in configuration
 RATE_LIMIT_REQUESTS=200

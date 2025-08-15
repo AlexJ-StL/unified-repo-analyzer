@@ -68,8 +68,8 @@ MIT — see LICENSE.
 
 Support
 - Documentation: docs/
-- Issues: https://github.com/your-org/unified-repo-analyzer/issues
-- Discussions: https://github.com/your-org/unified-repo-analyzer/discussions
+- Issues: https://github.com/unified-repo-analyzer/unified-repo-analyzer/issues
+- Discussions: https://github.com/unified-repo-analyzer/unified-repo-analyzer/discussions
 - Email: support@unified-repo-analyzer.com
 
 Previous versions

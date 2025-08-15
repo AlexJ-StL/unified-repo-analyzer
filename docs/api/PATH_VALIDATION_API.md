@@ -7,7 +7,7 @@ The Path Validation API provides comprehensive path validation, normalization, a
 ## Base URL
 
 ```
-http://localhost:3001/api
+http://localhost:3000/api
 ```
 
 ## Authentication

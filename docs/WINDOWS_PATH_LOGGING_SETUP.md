@@ -345,7 +345,7 @@ fsutil file setCaseSensitiveInfo C:\path\to\repository enable
 
 ```bash
 # Test the path validation endpoint
-curl -X POST http://localhost:3001/api/validate-path \
+curl -X POST http://localhost:3000/api/validate-path \
   -H "Content-Type: application/json" \
   -d '{"path": "C:/Users/AlexJ/Documents/Repos/myProject"}'
 ```
@@ -354,10 +354,10 @@ curl -X POST http://localhost:3001/api/validate-path \
 
 ```bash
 # Get current logging configuration
-curl http://localhost:3001/api/logs/config
+curl http://localhost:3000/api/logs/config
 
 # Update logging configuration
-curl -X PUT http://localhost:3001/api/logs/config \
+curl -X PUT http://localhost:3000/api/logs/config \
   -H "Content-Type: application/json" \
   -d '{"level": "DEBUG", "pathLogging": {"enabled": true, "logValidation": true}}'
 ```
@@ -366,20 +366,20 @@ curl -X PUT http://localhost:3001/api/logs/config \
 
 ```bash
 # Get recent logs
-curl "http://localhost:3001/api/logs?limit=10"
+curl "http://localhost:3000/api/logs?limit=10"
 
 # Get error logs
-curl "http://localhost:3001/api/logs?level=ERROR&limit=50"
+curl "http://localhost:3000/api/logs?level=ERROR&limit=50"
 
 # Get path handler logs
-curl "http://localhost:3001/api/logs?component=PathHandler&limit=25"
+curl "http://localhost:3000/api/logs?component=PathHandler&limit=25"
 ```
 
 ### 4. Test Repository Analysis
 
 ```bash
 # Test repository analysis with Windows path
-curl -X POST http://localhost:3001/api/analyze \
+curl -X POST http://localhost:3000/api/analyze \
   -H "Content-Type: application/json" \
   -d '{"path": "C:/Users/AlexJ/Documents/Repos/myProject", "options": {"mode": "standard"}}'
 ```
@@ -484,14 +484,14 @@ Get-Counter "\Process(node)\IO Write Operations/sec"
 
 ```powershell
 # Test HTTP endpoints
-Invoke-RestMethod -Uri "http://localhost:3001/api/health" -Method GET
+Invoke-RestMethod -Uri "http://localhost:3000/api/health" -Method GET
 
 # Test with specific path
 $body = @{
     path = "C:/Users/$env:USERNAME/Documents"
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://localhost:3001/api/validate-path" -Method POST -Body $body -ContentType "application/json"
+Invoke-RestMethod -Uri "http://localhost:3000/api/validate-path" -Method POST -Body $body -ContentType "application/json"
 ```
 
 ## Maintenance and Monitoring
@@ -522,17 +522,17 @@ LOG_SLOW_OPERATIONS=true
 SLOW_OPERATION_THRESHOLD=500
 
 # Monitor via API
-curl "http://localhost:3001/api/logs?search=duration&limit=100"
+curl "http://localhost:3000/api/logs?search=duration&limit=100"
 ```
 
 ### Health Checks
 
 ```bash
 # Application health check
-curl http://localhost:3001/api/health
+curl http://localhost:3000/api/health
 
 # Detailed system status
-curl http://localhost:3001/api/system/status
+curl http://localhost:3000/api/system/status
 ```
 
 ## Security Considerations

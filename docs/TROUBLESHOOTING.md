@@ -414,7 +414,7 @@ Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
 
 1. **Health Check Endpoint:**
    ```bash
-   curl http://localhost:3001/api/health
+   curl http://localhost:3000/api/health
    ```
 
 2. **Log Level Testing:**

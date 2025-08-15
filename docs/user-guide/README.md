@@ -105,7 +105,7 @@ repo-analyzer search --languages JavaScript,TypeScript --frameworks React
 
 ```bash
 # Start analysis
-curl -X POST http://localhost:3001/api/analyze \
+curl -X POST http://localhost:3000/api/analyze \
   -H "Content-Type: application/json" \
   -d '{
     "path": "/path/to/repository",
@@ -116,7 +116,7 @@ curl -X POST http://localhost:3001/api/analyze \
   }'
 
 # Get results
-curl http://localhost:3001/api/analysis/{analysisId}
+curl http://localhost:3000/api/analysis/{analysisId}
 ```
 
 ## User Interfaces

@@ -38,7 +38,7 @@ cp -r logs backups/pre-migration-*/ 2>/dev/null || true
 cat .env
 
 # Verify application is working
-curl http://localhost:3001/api/health
+curl http://localhost:3000/api/health
 ```
 
 ## Migration Process
@@ -138,9 +138,9 @@ npm run deploy:prod
 npm run verify:deployment
 
 # Check specific components
-curl http://localhost:3001/api/health
-curl http://localhost:3001/api/validate-path -X POST -H "Content-Type: application/json" -d '{"path":"C:/Windows"}'
-curl http://localhost:3001/api/logs/config
+curl http://localhost:3000/api/health
+curl http://localhost:3000/api/validate-path -X POST -H "Content-Type: application/json" -d '{"path":"C:/Windows"}'
+curl http://localhost:3000/api/logs/config
 ```
 
 ## Platform-Specific Deployment
@@ -320,7 +320,7 @@ chmod 755 scripts/
 
 ```bash
 # Health check endpoint
-curl http://localhost:3001/api/health
+curl http://localhost:3000/api/health
 
 # Metrics endpoint (if enabled)
 curl http://localhost:9090/metrics
@@ -395,7 +395,7 @@ npm run validate:compatibility
 
 ```bash
 # Test path validation directly
-curl -X POST http://localhost:3001/api/validate-path \
+curl -X POST http://localhost:3000/api/validate-path \
   -H "Content-Type: application/json" \
   -d '{"path":"C:/Windows"}'
 
@@ -413,8 +413,8 @@ reg query "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled
 ls -la logs/
 
 # Test log endpoints
-curl http://localhost:3001/api/logs/config
-curl http://localhost:3001/api/logs?limit=10
+curl http://localhost:3000/api/logs/config
+curl http://localhost:3000/api/logs?limit=10
 
 # Check log file creation
 ls -la logs/*.log
@@ -431,7 +431,7 @@ echo "LOG_SLOW_OPERATIONS=true" >> .env
 top -p $(pgrep -f "node.*unified-repo-analyzer")
 
 # Check for memory leaks
-curl http://localhost:3001/api/logs?search=memory
+curl http://localhost:3000/api/logs?search=memory
 ```
 
 ### Getting Help

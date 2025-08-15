@@ -150,7 +150,7 @@ cd packages/frontend
 bun run dev
 
 # Test API connectivity
-curl http://localhost:3001/api/health
+curl http://localhost:3000/api/health
 ```
 
 ### 5. Workspace Package Linking Issues

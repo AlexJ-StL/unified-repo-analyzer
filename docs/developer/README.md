@@ -79,8 +79,8 @@ bun run dev
 ```
 
 This starts:
-- Backend API server on `http://localhost:3001`
-- Frontend development server on `http://localhost:3000`
+- Backend API server on `http://localhost:3000`
+- Frontend development server on `http://localhost:3001`
 - File watchers for automatic rebuilding
 
 ### Development Scripts
@@ -638,7 +638,7 @@ Use the centralized API client:
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000/api',
   timeout: 30000
 });
 

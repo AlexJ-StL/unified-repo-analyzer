@@ -68,7 +68,7 @@ bun run dev:cli
 
 #### Web Interface
 
-Open your browser and navigate to http://localhost:3001
+Open your browser and navigate to http://localhost:3000
 
 #### CLI
 

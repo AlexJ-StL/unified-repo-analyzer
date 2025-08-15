@@ -33,7 +33,7 @@ npm --version
 
 ```powershell
 # Clone the repository
-git clone https://github.com/your-org/unified-repo-analyzer.git
+git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git
 cd unified-repo-analyzer
 
 # Install dependencies

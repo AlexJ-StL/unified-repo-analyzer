@@ -19,7 +19,7 @@ This guide explains how to analyze repositories using the web UI and CLI, interp
 ### First-time setup
 
 1) Access the application
-- Web Interface: http://localhost:3001 (default)
+- Web Interface: http://localhost:3000 (default)
 - CLI: bun install -g @unified-repo-analyzer/cli
 
 2) Configure LLM provider
