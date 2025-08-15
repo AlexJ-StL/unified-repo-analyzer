@@ -34,6 +34,12 @@
 		"monitor:status": "bun run scripts/build-monitor.ts status",
 		"test": "bun test || npm test",
 		"test:all": "bun run --cwd packages/backend test || npm run test --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend test || npm run test --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli test || npm run test --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared test || npm run test --workspace @unified-repo-analyzer/shared",
+		"test:integration": "vitest run tests/integration/ --config tests/integration/vitest.config.ts",
+		"test:integration:watch": "vitest tests/integration/ --config tests/integration/vitest.config.ts",
+		"test:integration:coverage": "vitest run tests/integration/ --config tests/integration/vitest.config.ts --coverage",
+		"test:platform": "vitest run tests/integration/path-handler-platform.test.ts --config tests/integration/vitest.config.ts",
+		"test:e2e": "vitest run tests/integration/path-handler-e2e.test.ts --config tests/integration/vitest.config.ts",
+		"test:performance": "vitest run tests/integration/path-handler-performance.test.ts --config tests/integration/vitest.config.ts",
 
 		"lint": "bunx biome check unified-repo-analyzer --reporter summary --max-diagnostics 500",
 		"lint:fix": "bunx biome check unified-repo-analyzer --write --reporter summary --max-diagnostics 500",
