@@ -55,7 +55,11 @@
 		"docker:up": "docker-compose up -d",
 		"docker:down": "docker-compose down",
 		"docker:logs": "docker-compose logs -f",
-		"deploy:prod": "bun run build:prod && bun run docker:build && bun run docker:up"
+		"deploy:prod": "bun run build:prod && bun run docker:build && bun run docker:up",
+		"migrate:config": "bun run scripts/migrate-config.ts",
+		"validate:compatibility": "bun run scripts/validate-compatibility.ts",
+		"feature:rollout": "bun run scripts/feature-rollout.ts",
+		"verify:deployment": "bun run scripts/deployment-verification.ts"
 	},
 	"keywords": [
 		"repository",

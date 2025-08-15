@@ -59,6 +59,169 @@ paths:
                     type: string
                     example: '1.0.0'
 
+  /validate-path:
+    post:
+      summary: Validate repository path
+      description: |
+        Validates a repository path for accessibility, format, and permissions.
+        Supports Windows, macOS, and Linux path formats including UNC paths.
+        Returns detailed validation results and suggestions for path issues.
+      operationId: validatePath
+      tags:
+        - Path Validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PathValidationRequest'
+            examples:
+              windows_backslash:
+                summary: Windows path with backslashes
+                value:
+                  path: 'C:\Users\AlexJ\Documents\Repos\myProject'
+                  options:
+                    checkPermissions: true
+                    resolveSymlinks: true
+              windows_forward_slash:
+                summary: Windows path with forward slashes
+                value:
+                  path: 'C:/Users/AlexJ/Documents/Repos/myProject'
+                  options:
+                    checkPermissions: true
+              unc_path:
+                summary: UNC network path
+                value:
+                  path: '\\server\share\repository'
+                  options:
+                    checkPermissions: true
+                    networkTimeout: 10000
+      responses:
+        '200':
+          description: Path validation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PathValidationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /logs:
+    get:
+      summary: Retrieve application logs
+      description: |
+        Retrieves application logs with filtering and pagination support.
+        Supports filtering by log level, component, time range, and search terms.
+      operationId: getLogs
+      tags:
+        - Logging
+      parameters:
+        - name: level
+          in: query
+          schema:
+            type: string
+            enum: [DEBUG, INFO, WARN, ERROR]
+          description: Filter by log level
+        - name: component
+          in: query
+          schema:
+            type: string
+          description: Filter by component name
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start time for log entries
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End time for log entries
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search term in log messages
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of log entries to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of log entries to skip
+      responses:
+        '200':
+          description: Log entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /logs/config:
+    get:
+      summary: Get logging configuration
+      description: Returns the current logging configuration settings
+      operationId: getLogConfig
+      tags:
+        - Logging
+      responses:
+        '200':
+          description: Current logging configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoggingConfig'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    put:
+      summary: Update logging configuration
+      description: |
+        Updates the logging configuration at runtime.
+        Changes take effect immediately without requiring a restart.
+      operationId: updateLogConfig
+      tags:
+        - Logging
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoggingConfig'
+      responses:
+        '200':
+          description: Configuration updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Logging configuration updated successfully'
+                  config:
+                    $ref: '#/components/schemas/LoggingConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /analyze:
     post:
       summary: Analyze a single repository
@@ -940,6 +1103,317 @@ components:
               type: string
               description: Custom template name for HTML/Markdown export
 
+    PathValidationRequest:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+          description: The file system path to validate
+          example: 'C:/Users/AlexJ/Documents/Repos/myProject'
+        options:
+          type: object
+          properties:
+            checkPermissions:
+              type: boolean
+              default: true
+              description: Whether to check file system permissions
+            resolveSymlinks:
+              type: boolean
+              default: false
+              description: Whether to resolve symbolic links
+            networkTimeout:
+              type: integer
+              default: 10000
+              description: Timeout for network path validation in milliseconds
+            validateContents:
+              type: boolean
+              default: false
+              description: Whether to validate that path contains a valid repository
+
+    PathValidationResponse:
+      type: object
+      properties:
+        isValid:
+          type: boolean
+          description: Whether the path is valid and accessible
+        normalizedPath:
+          type: string
+          description: The normalized version of the path
+        pathInfo:
+          type: object
+          properties:
+            exists:
+              type: boolean
+            isDirectory:
+              type: boolean
+            isFile:
+              type: boolean
+            size:
+              type: integer
+              description: Size in bytes (for files)
+            permissions:
+              $ref: '#/components/schemas/PathPermissions'
+            platform:
+              type: string
+              enum: [windows, linux, darwin]
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PathValidationError'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/PathValidationWarning'
+        suggestions:
+          type: array
+          items:
+            type: string
+          description: Suggestions for resolving path issues
+        validationTime:
+          type: integer
+          description: Time taken for validation in milliseconds
+
+    PathPermissions:
+      type: object
+      properties:
+        canRead:
+          type: boolean
+        canWrite:
+          type: boolean
+        canExecute:
+          type: boolean
+        owner:
+          type: string
+        group:
+          type: string
+
+    PathValidationError:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [PATH_NOT_FOUND, PATH_INVALID_FORMAT, PATH_TOO_LONG, PATH_RESERVED_NAME, PATH_PERMISSION_DENIED, NETWORK_ERROR, TIMEOUT_ERROR]
+        message:
+          type: string
+        details:
+          type: string
+        suggestion:
+          type: string
+
+    PathValidationWarning:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [PATH_LONG, PATH_SPECIAL_CHARS, PATH_CASE_MISMATCH, NETWORK_SLOW]
+        message:
+          type: string
+        details:
+          type: string
+
+    LogResponse:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogEntry'
+        total:
+          type: integer
+          description: Total number of log entries matching the filter
+        limit:
+          type: integer
+        offset:
+          type: integer
+        hasMore:
+          type: boolean
+          description: Whether there are more log entries available
+
+    LogEntry:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+          enum: [DEBUG, INFO, WARN, ERROR]
+        component:
+          type: string
+          description: Component that generated the log entry
+        requestId:
+          type: string
+          description: Unique request identifier for correlation
+        message:
+          type: string
+        metadata:
+          type: object
+          description: Additional structured data
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+            stack:
+              type: string
+        duration:
+          type: integer
+          description: Operation duration in milliseconds (if applicable)
+
+    LoggingConfig:
+      type: object
+      properties:
+        level:
+          type: string
+          enum: [DEBUG, INFO, WARN, ERROR]
+          default: INFO
+          description: Minimum log level to output
+        format:
+          type: string
+          enum: [JSON, TEXT]
+          default: JSON
+          description: Log output format
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogOutput'
+        includeStackTrace:
+          type: boolean
+          default: true
+          description: Include stack traces in error logs
+        redactSensitiveData:
+          type: boolean
+          default: true
+          description: Redact sensitive information from logs
+        httpLogging:
+          $ref: '#/components/schemas/HttpLoggingConfig'
+        pathLogging:
+          $ref: '#/components/schemas/PathLoggingConfig'
+        performanceLogging:
+          $ref: '#/components/schemas/PerformanceLoggingConfig'
+
+    LogOutput:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [console, file, external]
+        enabled:
+          type: boolean
+          default: true
+        config:
+          oneOf:
+            - $ref: '#/components/schemas/ConsoleLogConfig'
+            - $ref: '#/components/schemas/FileLogConfig'
+            - $ref: '#/components/schemas/ExternalLogConfig'
+
+    ConsoleLogConfig:
+      type: object
+      properties:
+        colorize:
+          type: boolean
+          default: true
+          description: Enable colored console output
+
+    FileLogConfig:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Log file path
+        maxSize:
+          type: string
+          default: '10MB'
+          description: Maximum file size before rotation
+        maxFiles:
+          type: integer
+          default: 5
+          description: Maximum number of rotated files to keep
+        rotateDaily:
+          type: boolean
+          default: true
+          description: Enable daily log rotation
+
+    ExternalLogConfig:
+      type: object
+      properties:
+        url:
+          type: string
+          description: External logging service URL
+        apiKey:
+          type: string
+          description: API key for authentication
+        timeout:
+          type: integer
+          default: 10000
+          description: Request timeout in milliseconds
+        batchSize:
+          type: integer
+          default: 100
+          description: Number of log entries to batch together
+
+    HttpLoggingConfig:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+        logRequests:
+          type: boolean
+          default: true
+        logResponses:
+          type: boolean
+          default: true
+        logHeaders:
+          type: boolean
+          default: false
+        logBodies:
+          type: boolean
+          default: false
+        maxBodySize:
+          type: integer
+          default: 1024
+          description: Maximum body size to log in bytes
+
+    PathLoggingConfig:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+        logValidation:
+          type: boolean
+          default: true
+        logPermissionChecks:
+          type: boolean
+          default: false
+        logNormalization:
+          type: boolean
+          default: false
+
+    PerformanceLoggingConfig:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: false
+        logSlowOperations:
+          type: boolean
+          default: true
+        slowOperationThreshold:
+          type: integer
+          default: 1000
+          description: Threshold in milliseconds for slow operation logging
+        logMemoryUsage:
+          type: boolean
+          default: false
+
     Error:
       type: object
       properties:
@@ -991,3 +1465,7 @@ tags:
     description: Repository indexing and search operations
   - name: Export
     description: Export and sharing functionality
+  - name: Path Validation
+    description: Path validation and normalization operations
+  - name: Logging
+    description: Logging configuration and log retrieval operations

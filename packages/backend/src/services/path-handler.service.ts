@@ -1,7 +1,9 @@
 import fs from "node:fs/promises";
 import { platform } from "node:os";
 import path from "node:path";
+import { CacheService } from "./cache.service.js";
 import logger from "./logger.service.js";
+import { performanceMonitor } from "./performance-monitor.service.js";
 
 /**
  * Path validation result interface
@@ -87,12 +89,41 @@ export interface TimeoutOptions {
 }
 
 /**
+ * Cache configuration for path validation
+ */
+export interface PathCacheConfig {
+	enabled: boolean;
+	ttl: number; // Time to live in milliseconds
+	maxEntries: number;
+	invalidateOnChange: boolean;
+}
+
+/**
+ * Cache statistics for monitoring
+ */
+export interface PathCacheStats {
+	hits: number;
+	misses: number;
+	hitRate: number;
+	size: number;
+	maxSize: number;
+	evictions: number;
+	averageValidationTime: number;
+	cacheMemoryUsage: number;
+}
+
+/**
  * PathHandler service for cross-platform path processing and validation
  */
 export class PathHandler {
 	private static instance: PathHandler;
 	private readonly isWindows: boolean;
 	private readonly pathSeparator: string;
+
+	// Path validation cache
+	private pathCache: CacheService<PathValidationResult>;
+	private cacheConfig: PathCacheConfig;
+	private cacheStats: PathCacheStats;
 
 	// Windows reserved names
 	private readonly windowsReservedNames = new Set([
@@ -128,9 +159,40 @@ export class PathHandler {
 	private readonly defaultTimeoutMs = 5000; // 5 seconds
 	private readonly progressUpdateIntervalMs = 100; // 100ms
 
-	constructor(platformOverride?: string) {
+	constructor(
+		platformOverride?: string,
+		cacheConfig?: Partial<PathCacheConfig>,
+	) {
 		this.isWindows = (platformOverride || platform()) === "win32";
 		this.pathSeparator = this.isWindows ? "\\" : "/";
+
+		// Initialize cache configuration
+		this.cacheConfig = {
+			enabled: true,
+			ttl: 5 * 60 * 1000, // 5 minutes default TTL
+			maxEntries: 1000,
+			invalidateOnChange: true,
+			...cacheConfig,
+		};
+
+		// Initialize path validation cache
+		this.pathCache = new CacheService<PathValidationResult>({
+			ttl: this.cacheConfig.ttl,
+			max: this.cacheConfig.maxEntries,
+			updateAgeOnGet: true,
+		});
+
+		// Initialize cache statistics
+		this.cacheStats = {
+			hits: 0,
+			misses: 0,
+			hitRate: 0,
+			size: 0,
+			maxSize: this.cacheConfig.maxEntries,
+			evictions: 0,
+			averageValidationTime: 0,
+			cacheMemoryUsage: 0,
+		};
 	}
 
 	/**
@@ -223,16 +285,102 @@ export class PathHandler {
 		inputPath: string,
 		options?: TimeoutOptions,
 	): Promise<PathValidationResult> {
+		const startTime = Date.now();
+		const operationId = `path-validation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 		const timeoutMs = options?.timeoutMs || this.defaultTimeoutMs;
 		const onProgress = options?.onProgress;
 		const signal = options?.signal;
 
-		return this.withTimeout(
+		// Start performance monitoring
+		performanceMonitor.startOperation(operationId, "path-validation", {
+			path: inputPath,
+			timeout: timeoutMs,
+		});
+
+		// Check cache first if enabled
+		if (this.cacheConfig.enabled) {
+			const cacheKey = this.generatePathCacheKey(inputPath, options);
+			const cachedResult = this.pathCache.get(cacheKey);
+
+			if (cachedResult) {
+				this.cacheStats.hits++;
+				this.updateCacheStats();
+
+				const cacheHitTime = Date.now() - startTime;
+
+				logger.debug("Path validation cache hit", {
+					path: inputPath,
+					cacheKey,
+					validationTime: cacheHitTime,
+				});
+
+				// End performance monitoring for cache hit
+				performanceMonitor.endOperation(operationId, cachedResult.isValid);
+
+				// Record cache hit metrics
+				performanceMonitor.recordMetric(
+					"path-validation.duration",
+					cacheHitTime,
+					"ms",
+					{
+						platform: this.isWindows ? "windows" : "unix",
+						cached: "true",
+					},
+				);
+
+				return cachedResult;
+			}
+
+			this.cacheStats.misses++;
+		}
+
+		// Perform validation with timeout
+		const result = await this.withTimeout(
 			this.validatePathInternal(inputPath, onProgress, signal),
 			timeoutMs,
 			`Path validation timed out after ${timeoutMs}ms`,
 			signal,
 		);
+
+		// Cache the result if enabled and path format is valid (even if permissions fail)
+		// This allows us to cache paths that exist but have permission issues
+		if (
+			this.cacheConfig.enabled &&
+			result.normalizedPath &&
+			result.metadata.exists
+		) {
+			const cacheKey = this.generatePathCacheKey(inputPath, options);
+			this.pathCache.set(cacheKey, result);
+
+			logger.debug("Path validation result cached", {
+				path: inputPath,
+				cacheKey,
+				isValid: result.isValid,
+				exists: result.metadata.exists,
+				validationTime: Date.now() - startTime,
+			});
+		}
+
+		// Update performance statistics
+		const validationTime = Date.now() - startTime;
+		this.updateValidationTimeStats(validationTime);
+		this.updateCacheStats();
+
+		// End performance monitoring
+		performanceMonitor.endOperation(operationId, result.isValid);
+
+		// Record additional metrics
+		performanceMonitor.recordMetric(
+			"path-validation.duration",
+			validationTime,
+			"ms",
+			{
+				platform: this.isWindows ? "windows" : "unix",
+				cached: "false",
+			},
+		);
+
+		return result;
 	}
 
 	/**
@@ -979,6 +1127,181 @@ export class PathHandler {
 			/^([A-Za-z]):/,
 			(match, letter) => `${letter.toUpperCase()}:`,
 		);
+	}
+
+	/**
+	 * Generate cache key for path validation
+	 */
+	private generatePathCacheKey(
+		inputPath: string,
+		options?: TimeoutOptions,
+	): string {
+		// Include relevant options that affect validation result
+		const keyData = {
+			path: inputPath,
+			platform: this.isWindows ? "win32" : "unix",
+			// Don't include progress callback or signal in cache key
+			timeoutMs: options?.timeoutMs || this.defaultTimeoutMs,
+		};
+
+		return this.pathCache.generateKey("path-validation", keyData);
+	}
+
+	/**
+	 * Update cache statistics
+	 */
+	private updateCacheStats(): void {
+		const total = this.cacheStats.hits + this.cacheStats.misses;
+		this.cacheStats.hitRate = total > 0 ? this.cacheStats.hits / total : 0;
+		this.cacheStats.size = this.pathCache.getStats().size;
+
+		// Estimate memory usage (rough calculation)
+		this.cacheStats.cacheMemoryUsage = this.cacheStats.size * 1024; // Rough estimate: 1KB per entry
+	}
+
+	/**
+	 * Update validation time statistics
+	 */
+	private updateValidationTimeStats(validationTime: number): void {
+		const currentAvg = this.cacheStats.averageValidationTime;
+		const total = this.cacheStats.hits + this.cacheStats.misses;
+
+		// Calculate running average
+		this.cacheStats.averageValidationTime =
+			total === 1
+				? validationTime
+				: (currentAvg * (total - 1) + validationTime) / total;
+	}
+
+	/**
+	 * Get cache statistics for monitoring
+	 */
+	public getCacheStats(): PathCacheStats {
+		this.updateCacheStats();
+		return { ...this.cacheStats };
+	}
+
+	/**
+	 * Clear path validation cache
+	 */
+	public clearCache(): void {
+		this.pathCache.clear();
+		this.cacheStats.hits = 0;
+		this.cacheStats.misses = 0;
+		this.cacheStats.hitRate = 0;
+		this.cacheStats.evictions = 0;
+
+		logger.info("Path validation cache cleared");
+	}
+
+	/**
+	 * Invalidate cache entries for a specific path pattern
+	 */
+	public invalidateCachePattern(pathPattern: string): number {
+		const invalidated = this.pathCache.invalidatePattern(pathPattern);
+
+		logger.info("Path validation cache invalidated by pattern", {
+			pattern: pathPattern,
+			invalidatedCount: invalidated,
+		});
+
+		return invalidated;
+	}
+
+	/**
+	 * Invalidate cache entry for a specific path
+	 */
+	public invalidatePath(inputPath: string): boolean {
+		const cacheKey = this.generatePathCacheKey(inputPath);
+		const deleted = this.pathCache.delete(cacheKey);
+
+		if (deleted) {
+			logger.debug("Path validation cache entry invalidated", {
+				path: inputPath,
+				cacheKey,
+			});
+		}
+
+		return deleted;
+	}
+
+	/**
+	 * Configure cache settings
+	 */
+	public configureCaching(config: Partial<PathCacheConfig>): void {
+		this.cacheConfig = { ...this.cacheConfig, ...config };
+
+		// If cache is disabled, clear it
+		if (!this.cacheConfig.enabled) {
+			this.clearCache();
+		}
+
+		logger.info("Path validation cache configuration updated", {
+			config: this.cacheConfig,
+		});
+	}
+
+	/**
+	 * Warm up cache with commonly used paths
+	 */
+	public async warmUpCache(paths: string[]): Promise<void> {
+		if (!this.cacheConfig.enabled) {
+			logger.warn("Cache warm-up skipped: caching is disabled");
+			return;
+		}
+
+		logger.info("Starting path validation cache warm-up", {
+			pathCount: paths.length,
+		});
+
+		const warmUpPromises = paths.map(async (path) => {
+			try {
+				await this.validatePath(path);
+			} catch (error) {
+				logger.warn("Cache warm-up failed for path", {
+					path,
+					error: error instanceof Error ? error.message : String(error),
+				});
+			}
+		});
+
+		await Promise.allSettled(warmUpPromises);
+
+		logger.info("Path validation cache warm-up completed", {
+			cacheSize: this.pathCache.getStats().size,
+		});
+	}
+
+	/**
+	 * Monitor cache performance and trigger maintenance if needed
+	 */
+	public performCacheMaintenance(): void {
+		const stats = this.getCacheStats();
+
+		// Log cache performance metrics
+		logger.debug("Path validation cache performance", {
+			hitRate: stats.hitRate,
+			size: stats.size,
+			averageValidationTime: stats.averageValidationTime,
+			memoryUsage: stats.cacheMemoryUsage,
+		});
+
+		// Trigger cache cleanup if hit rate is too low
+		if (stats.hitRate < 0.1 && stats.size > 100) {
+			logger.warn("Low cache hit rate detected, consider cache tuning", {
+				hitRate: stats.hitRate,
+				size: stats.size,
+			});
+		}
+
+		// Warn if cache is getting full
+		if (stats.size > stats.maxSize * 0.9) {
+			logger.warn("Path validation cache is nearly full", {
+				size: stats.size,
+				maxSize: stats.maxSize,
+				utilization: stats.size / stats.maxSize,
+			});
+		}
 	}
 }
 
