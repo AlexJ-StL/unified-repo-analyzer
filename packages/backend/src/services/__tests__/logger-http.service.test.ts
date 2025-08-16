@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestLogger } from '../logger.service.js';
 
 describe('HTTP Request/Response Logging', () => {
@@ -9,7 +9,6 @@ describe('HTTP Request/Response Logging', () => {
   let errorCallback: any;
 
   beforeEach(() => {
-
     mockReq = {
       method: 'GET',
       url: '/api/test',
@@ -17,7 +16,7 @@ describe('HTTP Request/Response Logging', () => {
       query: { param1: 'value1', password: 'secret123' },
       headers: {
         'user-agent': 'test-agent',
-        'authorization': 'Bearer token123',
+        authorization: 'Bearer token123',
         'content-type': 'application/json',
         'x-api-key': 'api-key-123',
       },

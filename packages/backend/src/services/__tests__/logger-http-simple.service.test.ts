@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestLogger } from '../logger.service.js';
 
 describe('HTTP Request/Response Logging - Simplified', () => {
@@ -16,7 +16,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
       query: { param1: 'value1', password: 'secret123' },
       headers: {
         'user-agent': 'test-agent',
-        'authorization': 'Bearer token123',
+        authorization: 'Bearer token123',
         'content-type': 'application/json',
       },
       body: {
@@ -124,7 +124,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
     it('should handle different status codes', () => {
       const statusCodes = [200, 201, 400, 404, 500];
 
-      statusCodes.forEach(statusCode => {
+      statusCodes.forEach((statusCode) => {
         mockRes.statusCode = statusCode;
         requestLogger(mockReq, mockRes, mockNext);
 
@@ -159,7 +159,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
   describe('HTTP Methods', () => {
     const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
 
-    methods.forEach(method => {
+    methods.forEach((method) => {
       it(`should handle ${method} requests`, () => {
         mockReq.method = method;
         requestLogger(mockReq, mockRes, mockNext);
@@ -191,9 +191,9 @@ describe('HTTP Request/Response Logging - Simplified', () => {
 
     it('should handle requests with sensitive data in headers', () => {
       mockReq.headers = {
-        'authorization': 'Bearer secret-token',
+        authorization: 'Bearer secret-token',
         'x-api-key': 'api-key-123',
-        'cookie': 'session=abc123',
+        cookie: 'session=abc123',
         'content-type': 'application/json',
       };
 
@@ -281,7 +281,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
 
       const error = new Error('Test error');
       error.stack = 'Error: Test error\n    at test location';
-      
+
       expect(() => {
         errorCallback(error);
       }).not.toThrow();
@@ -297,7 +297,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
       setTimeout(() => {
         const endTime = Date.now();
         finishCallback();
-        
+
         // Verify timing was tracked (duration should be positive)
         expect(endTime).toBeGreaterThanOrEqual(startTime);
       }, 1);

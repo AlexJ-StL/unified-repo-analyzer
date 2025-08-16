@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
-import { PathHandler } from '../services/path-handler.service';
-import { Logger } from '../services/logger.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LogManagementService } from '../services/log-management.service';
+import { Logger } from '../services/logger.service';
+import { PathHandler } from '../services/path-handler.service';
 
 describe('Performance and Load Testing', () => {
   let testDir: string;
@@ -14,7 +14,7 @@ describe('Performance and Load Testing', () => {
 
   beforeEach(async () => {
     testDir = path.join(process.cwd(), 'test-performance-load');
-    
+
     // Clean up and create test directory
     try {
       await fs.rm(testDir, { recursive: true, force: true });
@@ -24,23 +24,23 @@ describe('Performance and Load Testing', () => {
     await fs.mkdir(testDir, { recursive: true });
 
     pathHandler = new PathHandler();
-    
+
     logger = new Logger({
       level: 'INFO', // Use INFO level to reduce overhead in performance tests
       outputs: [
-        { 
-          type: 'file', 
-          config: { 
+        {
+          type: 'file',
+          config: {
             path: path.join(testDir, 'performance.log'),
             maxSize: '50MB',
             maxFiles: 3,
-            rotateDaily: false
-          }
-        }
+            rotateDaily: false,
+          },
+        },
       ],
       format: 'JSON',
       includeStackTrace: false, // Disable stack traces for performance
-      redactSensitiveData: true
+      redactSensitiveData: true,
     });
 
     logManagement = new LogManagementService({
@@ -49,20 +49,20 @@ describe('Performance and Load Testing', () => {
         maxAge: 1,
         maxSize: '100MB',
         maxFiles: 10,
-        cleanupInterval: 1
+        cleanupInterval: 1,
       },
       monitoringEnabled: true,
       alertThresholds: {
         diskUsage: 90,
         fileSize: '20MB',
-        errorRate: 20
-      }
+        errorRate: 20,
+      },
     });
   });
 
   afterEach(async () => {
     await logManagement?.stop();
-    
+
     // Clean up test directory
     try {
       await fs.rm(testDir, { recursive: true, force: true });
@@ -84,7 +84,7 @@ describe('Performance and Load Testing', () => {
         const start = performance.now();
         const result = await pathHandler.validatePath(testPath);
         const end = performance.now();
-        
+
         times.push(end - start);
         expect(result.isValid).toBe(true);
       }
@@ -102,7 +102,7 @@ describe('Performance and Load Testing', () => {
       // Performance assertions
       expect(avgTime).toBeLessThan(50); // Average should be under 50ms
       expect(maxTime).toBeLessThan(200); // Max should be under 200ms
-      expect(times.filter(t => t > 100).length).toBeLessThan(iterations * 0.1); // Less than 10% should exceed 100ms
+      expect(times.filter((t) => t > 100).length).toBeLessThan(iterations * 0.1); // Less than 10% should exceed 100ms
     });
 
     it('should handle concurrent path validations efficiently', async () => {
@@ -115,29 +115,31 @@ describe('Performance and Load Testing', () => {
       }
 
       const concurrencyLevels = [1, 5, 10, 20];
-      
+
       for (const concurrency of concurrencyLevels) {
         const start = performance.now();
-        
+
         // Create batches of concurrent validations
         const batches: Promise<any>[][] = [];
         for (let i = 0; i < testPaths.length; i += concurrency) {
-          const batch = testPaths.slice(i, i + concurrency).map(testPath =>
-            pathHandler.validatePath(testPath)
-          );
+          const batch = testPaths
+            .slice(i, i + concurrency)
+            .map((testPath) => pathHandler.validatePath(testPath));
           batches.push(batch);
         }
 
         // Execute batches sequentially, but within each batch concurrently
         for (const batch of batches) {
           const results = await Promise.all(batch);
-          expect(results.every(r => r.isValid)).toBe(true);
+          expect(results.every((r) => r.isValid)).toBe(true);
         }
 
         const end = performance.now();
         const totalTime = end - start;
 
-        console.log(`Concurrency ${concurrency}: ${totalTime.toFixed(2)}ms for ${testPaths.length} paths`);
+        console.log(
+          `Concurrency ${concurrency}: ${totalTime.toFixed(2)}ms for ${testPaths.length} paths`
+        );
 
         // Higher concurrency should not be significantly slower
         expect(totalTime).toBeLessThan(5000); // Should complete within 5 seconds
@@ -170,10 +172,10 @@ describe('Performance and Load Testing', () => {
 
       // Test validation performance on large structure
       const samplePaths = createdPaths.filter((_, index) => index % 10 === 0); // Sample every 10th path
-      
+
       const start = performance.now();
       const results = await Promise.all(
-        samplePaths.map(testPath => pathHandler.validatePath(testPath))
+        samplePaths.map((testPath) => pathHandler.validatePath(testPath))
       );
       const end = performance.now();
 
@@ -185,7 +187,7 @@ describe('Performance and Load Testing', () => {
         Paths tested: ${samplePaths.length}
         Average per path: ${avgTimePerPath.toFixed(2)}ms`);
 
-      expect(results.every(r => r.isValid)).toBe(true);
+      expect(results.every((r) => r.isValid)).toBe(true);
       expect(avgTimePerPath).toBeLessThan(100); // Should average under 100ms per path
       expect(totalTime).toBeLessThan(10000); // Total should be under 10 seconds
     });
@@ -202,27 +204,27 @@ describe('Performance and Load Testing', () => {
       // First run - populate cache
       const firstRunStart = performance.now();
       const firstRunResults = await Promise.all(
-        testPaths.map(testPath => pathHandler.validatePath(testPath))
+        testPaths.map((testPath) => pathHandler.validatePath(testPath))
       );
       const firstRunEnd = performance.now();
       const firstRunTime = firstRunEnd - firstRunStart;
 
-      expect(firstRunResults.every(r => r.isValid)).toBe(true);
+      expect(firstRunResults.every((r) => r.isValid)).toBe(true);
 
       // Second run - should benefit from caching (if implemented)
       const secondRunStart = performance.now();
       const secondRunResults = await Promise.all(
-        testPaths.map(testPath => pathHandler.validatePath(testPath))
+        testPaths.map((testPath) => pathHandler.validatePath(testPath))
       );
       const secondRunEnd = performance.now();
       const secondRunTime = secondRunEnd - secondRunStart;
 
-      expect(secondRunResults.every(r => r.isValid)).toBe(true);
+      expect(secondRunResults.every((r) => r.isValid)).toBe(true);
 
       console.log(`Caching performance:
         First run: ${firstRunTime.toFixed(2)}ms
         Second run: ${secondRunTime.toFixed(2)}ms
-        Improvement: ${((firstRunTime - secondRunTime) / firstRunTime * 100).toFixed(1)}%`);
+        Improvement: ${(((firstRunTime - secondRunTime) / firstRunTime) * 100).toFixed(1)}%`);
 
       // Second run should not be significantly slower (caching may not be implemented yet)
       expect(secondRunTime).toBeLessThan(firstRunTime * 2);
@@ -242,17 +244,22 @@ describe('Performance and Load Testing', () => {
       // Generate logs in batches to simulate realistic usage
       for (let batch = 0; batch < messageCount / batchSize; batch++) {
         const batchPromises: Promise<void>[] = [];
-        
+
         for (let i = 0; i < batchSize; i++) {
           const messageIndex = batch * batchSize + i;
           batchPromises.push(
             Promise.resolve().then(() => {
-              logger.info(`Load test message ${messageIndex}`, {
-                batch,
-                messageIndex,
-                timestamp: new Date().toISOString(),
-                data: `Sample data for message ${messageIndex}`
-              }, 'load-test', requestId);
+              logger.info(
+                `Load test message ${messageIndex}`,
+                {
+                  batch,
+                  messageIndex,
+                  timestamp: new Date().toISOString(),
+                  data: `Sample data for message ${messageIndex}`,
+                },
+                'load-test',
+                requestId
+              );
             })
           );
         }
@@ -261,7 +268,7 @@ describe('Performance and Load Testing', () => {
 
         // Small delay between batches to simulate realistic timing
         if (batch % 10 === 0) {
-          await new Promise(resolve => setTimeout(resolve, 1));
+          await new Promise((resolve) => setTimeout(resolve, 1));
         }
       }
 
@@ -280,7 +287,10 @@ describe('Performance and Load Testing', () => {
 
       // Verify logs were written
       const logContent = await fs.readFile(path.join(testDir, 'performance.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
       expect(logLines.length).toBeGreaterThanOrEqual(messageCount * 0.9); // Allow for some async timing
     });
 
@@ -294,23 +304,28 @@ describe('Performance and Load Testing', () => {
       // Create concurrent logging from multiple components
       const componentPromises = components.map(async (component, componentIndex) => {
         const componentStart = performance.now();
-        
+
         const promises: Promise<void>[] = [];
         for (let i = 0; i < messagesPerComponent; i++) {
           promises.push(
             Promise.resolve().then(() => {
-              logger.info(`Message ${i} from ${component}`, {
-                componentIndex,
-                messageIndex: i,
-                processingTime: Math.random() * 100,
-                data: { component, iteration: i }
-              }, component, `${requestId}-${componentIndex}`);
+              logger.info(
+                `Message ${i} from ${component}`,
+                {
+                  componentIndex,
+                  messageIndex: i,
+                  processingTime: Math.random() * 100,
+                  data: { component, iteration: i },
+                },
+                component,
+                `${requestId}-${componentIndex}`
+              );
             })
           );
         }
 
         await Promise.all(promises);
-        
+
         const componentEnd = performance.now();
         return componentEnd - componentStart;
       });
@@ -328,7 +343,7 @@ describe('Performance and Load Testing', () => {
         Total messages: ${totalMessages}
         Total time: ${totalTime.toFixed(2)}ms
         Messages per second: ${messagesPerSecond.toFixed(0)}
-        Component times: ${componentTimes.map(t => t.toFixed(0)).join(', ')}ms`);
+        Component times: ${componentTimes.map((t) => t.toFixed(0)).join(', ')}ms`);
 
       // Performance assertions
       expect(totalTime).toBeLessThan(20000); // Should complete within 20 seconds
@@ -336,10 +351,13 @@ describe('Performance and Load Testing', () => {
 
       // Verify all components logged
       const logContent = await fs.readFile(path.join(testDir, 'performance.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
-      const loggedComponents = [...new Set(logEntries.map(e => e.component))];
+      const loggedComponents = [...new Set(logEntries.map((e) => e.component))];
       for (const component of components) {
         expect(loggedComponents).toContain(component);
       }
@@ -356,13 +374,13 @@ describe('Performance and Load Testing', () => {
               path: path.join(testDir, 'rotating-load.log'),
               maxSize: '100KB', // Small size to trigger rotation
               maxFiles: 5,
-              rotateDaily: false
-            }
-          }
+              rotateDaily: false,
+            },
+          },
         ],
         format: 'JSON',
         includeStackTrace: false,
-        redactSensitiveData: false // Disable for performance
+        redactSensitiveData: false, // Disable for performance
       });
 
       const messageCount = 2000;
@@ -372,19 +390,24 @@ describe('Performance and Load Testing', () => {
 
       // Generate messages that will trigger multiple rotations
       for (let i = 0; i < messageCount; i++) {
-        rotatingLogger.info(`Rotation load test message ${i}`, {
-          iteration: i,
-          timestamp: new Date().toISOString(),
-          data: 'x'.repeat(200), // Add bulk to trigger rotation
-          metadata: {
-            batch: Math.floor(i / 100),
-            sequence: i % 100
-          }
-        }, 'rotation-test', requestId);
+        rotatingLogger.info(
+          `Rotation load test message ${i}`,
+          {
+            iteration: i,
+            timestamp: new Date().toISOString(),
+            data: 'x'.repeat(200), // Add bulk to trigger rotation
+            metadata: {
+              batch: Math.floor(i / 100),
+              sequence: i % 100,
+            },
+          },
+          'rotation-test',
+          requestId
+        );
 
         // Small delay every 100 messages to allow rotation to complete
         if (i % 100 === 0) {
-          await new Promise(resolve => setTimeout(resolve, 1));
+          await new Promise((resolve) => setTimeout(resolve, 1));
         }
       }
 
@@ -403,7 +426,7 @@ describe('Performance and Load Testing', () => {
 
       // Verify rotation occurred
       const files = await fs.readdir(testDir);
-      const rotatedFiles = files.filter(f => f.includes('rotating-load') && f.endsWith('.log'));
+      const rotatedFiles = files.filter((f) => f.includes('rotating-load') && f.endsWith('.log'));
       expect(rotatedFiles.length).toBeGreaterThan(1); // Should have created multiple files
     });
   });
@@ -411,7 +434,7 @@ describe('Performance and Load Testing', () => {
   describe('Memory Usage and Resource Management', () => {
     it('should not leak memory during extended operations', async () => {
       const initialMemory = process.memoryUsage();
-      
+
       // Perform extended operations
       const iterations = 1000;
       const testPaths: string[] = [];
@@ -426,17 +449,21 @@ describe('Performance and Load Testing', () => {
       // Perform many operations
       for (let i = 0; i < iterations; i++) {
         const testPath = testPaths[i % testPaths.length];
-        
+
         // Path validation
         const result = await pathHandler.validatePath(testPath);
         expect(result.isValid).toBe(true);
 
         // Logging
-        logger.info(`Memory test iteration ${i}`, {
-          iteration: i,
-          path: testPath,
-          memoryUsage: process.memoryUsage()
-        }, 'memory-test');
+        logger.info(
+          `Memory test iteration ${i}`,
+          {
+            iteration: i,
+            path: testPath,
+            memoryUsage: process.memoryUsage(),
+          },
+          'memory-test'
+        );
 
         // Force garbage collection periodically if available
         if (global.gc && i % 100 === 0) {
@@ -473,28 +500,28 @@ describe('Performance and Load Testing', () => {
       const validationPromises = usedControllers.map(async (controller, index) => {
         const testPath = path.join(testDir, `resource-test-${index}`);
         await fs.mkdir(testPath, { recursive: true });
-        
+
         return pathHandler.validatePath(testPath, {
           signal: controller.signal,
-          timeoutMs: 1000
+          timeoutMs: 1000,
         });
       });
 
       // Cancel some operations
       setTimeout(() => {
-        usedControllers.slice(0, 25).forEach(controller => controller.abort());
+        usedControllers.slice(0, 25).forEach((controller) => controller.abort());
       }, 100);
 
       const results = await Promise.all(validationPromises);
 
       // Some should be cancelled, others should complete
-      const cancelledResults = results.filter(r => 
-        r.errors.some(e => e.code === 'OPERATION_CANCELLED')
+      const cancelledResults = results.filter((r) =>
+        r.errors.some((e) => e.code === 'OPERATION_CANCELLED')
       );
-      const completedResults = results.filter(r => r.isValid);
+      const completedResults = results.filter((r) => r.isValid);
 
       expect(cancelledResults.length + completedResults.length).toBe(usedControllers.length);
-      
+
       console.log(`Resource cleanup test:
         Total controllers: ${resourceCount}
         Used controllers: ${usedControllers.length}
@@ -508,7 +535,7 @@ describe('Performance and Load Testing', () => {
       const extremeLoad = {
         pathValidations: 500,
         logMessages: 5000,
-        concurrentOperations: 50
+        concurrentOperations: 50,
       };
 
       const start = performance.now();
@@ -528,25 +555,30 @@ describe('Performance and Load Testing', () => {
         // Path validation operations
         for (let i = 0; i < extremeLoad.pathValidations; i += extremeLoad.concurrentOperations) {
           const batch = testPaths.slice(i, i + extremeLoad.concurrentOperations);
-          operations.push(
-            Promise.all(batch.map(testPath => pathHandler.validatePath(testPath)))
-          );
+          operations.push(Promise.all(batch.map((testPath) => pathHandler.validatePath(testPath))));
         }
 
         // Logging operations
         for (let i = 0; i < extremeLoad.logMessages; i += extremeLoad.concurrentOperations) {
           operations.push(
             Promise.all(
-              Array.from({ length: Math.min(extremeLoad.concurrentOperations, extremeLoad.logMessages - i) }, (_, j) => {
-                const messageIndex = i + j;
-                return Promise.resolve().then(() => {
-                  logger.info(`Stress test message ${messageIndex}`, {
-                    messageIndex,
-                    timestamp: new Date().toISOString(),
-                    data: `Stress test data ${messageIndex}`
-                  }, 'stress-test');
-                });
-              })
+              Array.from(
+                { length: Math.min(extremeLoad.concurrentOperations, extremeLoad.logMessages - i) },
+                (_, j) => {
+                  const messageIndex = i + j;
+                  return Promise.resolve().then(() => {
+                    logger.info(
+                      `Stress test message ${messageIndex}`,
+                      {
+                        messageIndex,
+                        timestamp: new Date().toISOString(),
+                        data: `Stress test data ${messageIndex}`,
+                      },
+                      'stress-test'
+                    );
+                  });
+                }
+              )
             )
           );
         }
@@ -562,12 +594,11 @@ describe('Performance and Load Testing', () => {
           Log messages: ${extremeLoad.logMessages}
           Concurrent operations: ${extremeLoad.concurrentOperations}
           Total time: ${totalTime.toFixed(2)}ms
-          Operations per second: ${((extremeLoad.pathValidations + extremeLoad.logMessages) / totalTime * 1000).toFixed(0)}`);
+          Operations per second: ${(((extremeLoad.pathValidations + extremeLoad.logMessages) / totalTime) * 1000).toFixed(0)}`);
 
         // Should complete without crashing
         expect(results.length).toBeGreaterThan(0);
         expect(totalTime).toBeLessThan(60000); // Should complete within 1 minute
-
       } catch (error) {
         console.error('Stress test failed:', error);
         throw error;

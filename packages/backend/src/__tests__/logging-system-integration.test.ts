@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { LogManagementService } from '../services/log-management.service';
 import { Logger, requestLogger } from '../services/logger.service';
 import { PathHandler } from '../services/path-handler.service';
-import { LogManagementService } from '../services/log-management.service';
 
 describe('Logging System Integration Tests', () => {
   let testLogDir: string;
@@ -13,7 +13,7 @@ describe('Logging System Integration Tests', () => {
 
   beforeEach(async () => {
     testLogDir = path.join(process.cwd(), 'test-logging-integration');
-    
+
     // Clean up and create test directory
     try {
       await fs.rm(testLogDir, { recursive: true, force: true });
@@ -27,43 +27,43 @@ describe('Logging System Integration Tests', () => {
       level: 'DEBUG',
       outputs: [
         { type: 'console', config: { colorize: false } },
-        { 
-          type: 'file', 
-          config: { 
+        {
+          type: 'file',
+          config: {
             path: path.join(testLogDir, 'test.log'),
             maxSize: '1MB',
             maxFiles: 3,
-            rotateDaily: false
-          }
-        }
+            rotateDaily: false,
+          },
+        },
       ],
       format: 'JSON',
       includeStackTrace: true,
-      redactSensitiveData: true
+      redactSensitiveData: true,
     });
 
     pathHandler = new PathHandler();
-    
+
     logManagement = new LogManagementService({
       logDirectory: testLogDir,
       retentionPolicy: {
         maxAge: 7,
         maxSize: '10MB',
         maxFiles: 5,
-        cleanupInterval: 1
+        cleanupInterval: 1,
       },
       monitoringEnabled: true,
       alertThresholds: {
         diskUsage: 80,
         fileSize: '5MB',
-        errorRate: 5
-      }
+        errorRate: 5,
+      },
     });
   });
 
   afterEach(async () => {
     await logManagement?.stop();
-    
+
     // Clean up test directory
     try {
       await fs.rm(testLogDir, { recursive: true, force: true });
@@ -88,21 +88,29 @@ describe('Logging System Integration Tests', () => {
       const result = await pathHandler.validatePath(testPath);
 
       // Log path validation result
-      logger.info('Path validation completed', {
-        path: testPath,
-        isValid: result.isValid,
-        exists: result.metadata.exists
-      }, 'path-handler', requestId);
+      logger.info(
+        'Path validation completed',
+        {
+          path: testPath,
+          isValid: result.isValid,
+          exists: result.metadata.exists,
+        },
+        'path-handler',
+        requestId
+      );
 
       // Verify correlation by checking log file
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
 
       expect(logLines.length).toBeGreaterThanOrEqual(2);
 
       // Parse log entries and verify request ID correlation
-      const logEntries = logLines.map(line => JSON.parse(line));
-      
+      const logEntries = logLines.map((line) => JSON.parse(line));
+
       for (const entry of logEntries) {
         expect(entry.requestId).toBe(requestId);
         expect(entry.component).toBe('path-handler');
@@ -118,41 +126,74 @@ describe('Logging System Integration Tests', () => {
       logger.setRequestId(requestId);
 
       // Simulate multi-service workflow
-      logger.info('Starting repository analysis workflow', { requestId }, 'workflow-manager', requestId);
+      logger.info(
+        'Starting repository analysis workflow',
+        { requestId },
+        'workflow-manager',
+        requestId
+      );
 
       // Path validation service
       const repoPath = path.join(testLogDir, 'test-repo');
       await fs.mkdir(repoPath, { recursive: true });
-      
+
       logger.debug('Validating repository path', { path: repoPath }, 'path-handler', requestId);
       const pathResult = await pathHandler.validatePath(repoPath);
-      logger.info('Path validation result', { 
-        isValid: pathResult.isValid,
-        exists: pathResult.metadata.exists 
-      }, 'path-handler', requestId);
+      logger.info(
+        'Path validation result',
+        {
+          isValid: pathResult.isValid,
+          exists: pathResult.metadata.exists,
+        },
+        'path-handler',
+        requestId
+      );
 
       // Permission checking
-      logger.debug('Checking repository permissions', { path: repoPath }, 'path-handler', requestId);
+      logger.debug(
+        'Checking repository permissions',
+        { path: repoPath },
+        'path-handler',
+        requestId
+      );
       const permResult = await pathHandler.checkPermissions(repoPath);
-      logger.info('Permission check result', {
-        canRead: permResult.canRead,
-        canWrite: permResult.canWrite
-      }, 'path-handler', requestId);
+      logger.info(
+        'Permission check result',
+        {
+          canRead: permResult.canRead,
+          canWrite: permResult.canWrite,
+        },
+        'path-handler',
+        requestId
+      );
 
       // Log management service
       logger.debug('Performing log cleanup', {}, 'log-management', requestId);
       const cleanupResult = await logManagement.performCleanup();
-      logger.info('Log cleanup completed', {
-        filesRemoved: cleanupResult.filesRemoved,
-        spaceFreed: cleanupResult.spaceFreed
-      }, 'log-management', requestId);
+      logger.info(
+        'Log cleanup completed',
+        {
+          filesRemoved: cleanupResult.filesRemoved,
+          spaceFreed: cleanupResult.spaceFreed,
+        },
+        'log-management',
+        requestId
+      );
 
-      logger.info('Repository analysis workflow completed', { requestId }, 'workflow-manager', requestId);
+      logger.info(
+        'Repository analysis workflow completed',
+        { requestId },
+        'workflow-manager',
+        requestId
+      );
 
       // Verify all logs have the same request ID
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
       // All entries should have the same request ID
       for (const entry of logEntries) {
@@ -160,7 +201,7 @@ describe('Logging System Integration Tests', () => {
       }
 
       // Should have logs from different components
-      const components = [...new Set(logEntries.map(e => e.component))];
+      const components = [...new Set(logEntries.map((e) => e.component))];
       expect(components).toContain('workflow-manager');
       expect(components).toContain('path-handler');
       expect(components).toContain('log-management');
@@ -177,32 +218,46 @@ describe('Logging System Integration Tests', () => {
         // Attempt to validate non-existent path
         const invalidPath = '/completely/invalid/path/that/does/not/exist';
         logger.debug('Validating invalid path', { path: invalidPath }, 'path-handler', requestId);
-        
+
         const result = await pathHandler.validatePath(invalidPath);
-        
+
         if (!result.isValid) {
-          logger.warn('Path validation failed', {
-            path: invalidPath,
-            errors: result.errors.map(e => ({ code: e.code, message: e.message }))
-          }, 'path-handler', requestId);
+          logger.warn(
+            'Path validation failed',
+            {
+              path: invalidPath,
+              errors: result.errors.map((e) => ({ code: e.code, message: e.message })),
+            },
+            'path-handler',
+            requestId
+          );
         }
 
         // Simulate downstream error
         throw new Error('Simulated downstream error');
       } catch (error) {
-        logger.error('Error in workflow', error as Error, {
-          step: 'path-validation',
-          originalPath: '/completely/invalid/path/that/does/not/exist'
-        }, 'test-runner', requestId);
+        logger.error(
+          'Error in workflow',
+          error as Error,
+          {
+            step: 'path-validation',
+            originalPath: '/completely/invalid/path/that/does/not/exist',
+          },
+          'test-runner',
+          requestId
+        );
       }
 
       // Verify error correlation
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
       // Find error entry
-      const errorEntry = logEntries.find(e => e.level === 'ERROR');
+      const errorEntry = logEntries.find((e) => e.level === 'ERROR');
       expect(errorEntry).toBeDefined();
       expect(errorEntry?.requestId).toBe(requestId);
       expect(errorEntry?.error).toBeDefined();
@@ -226,18 +281,18 @@ describe('Logging System Integration Tests', () => {
             config: {
               endpoint: 'https://logs.example.com/api/logs',
               apiKey: 'test-api-key',
-              format: 'JSON'
-            }
-          }
+              format: 'JSON',
+            },
+          },
         ],
         format: 'JSON',
         includeStackTrace: true,
-        redactSensitiveData: true
+        redactSensitiveData: true,
       });
 
       // Mock HTTP transport to capture what would be sent
       const sentLogs: any[] = [];
-      
+
       // Note: In a real test, we would mock the HTTP transport
       // For this test, we'll verify the logger configuration
       const config = externalLogger.getConfig();
@@ -257,11 +312,11 @@ describe('Logging System Integration Tests', () => {
             type: 'external',
             config: {
               endpoint: 'https://unreachable.example.com/logs',
-              format: 'JSON'
-            }
-          }
+              format: 'JSON',
+            },
+          },
         ],
-        format: 'JSON'
+        format: 'JSON',
       });
 
       // Log an error - should not throw even if external service is unreachable
@@ -276,7 +331,7 @@ describe('Logging System Integration Tests', () => {
         password: 'secret123',
         apiKey: 'api-key-456',
         token: 'bearer-token-789',
-        normalData: 'this is fine'
+        normalData: 'this is fine',
       };
 
       logger.info('Processing user data', sensitiveData);
@@ -303,10 +358,15 @@ describe('Logging System Integration Tests', () => {
       for (let i = 0; i < logCount; i++) {
         logPromises.push(
           Promise.resolve().then(() => {
-            logger.info(`Load test message ${i}`, {
-              iteration: i,
-              timestamp: new Date().toISOString()
-            }, 'load-test', requestId);
+            logger.info(
+              `Load test message ${i}`,
+              {
+                iteration: i,
+                timestamp: new Date().toISOString(),
+              },
+              'load-test',
+              requestId
+            );
           })
         );
       }
@@ -319,8 +379,11 @@ describe('Logging System Integration Tests', () => {
 
       // Verify logs were written
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+
       expect(logLines.length).toBeGreaterThanOrEqual(logCount);
     });
 
@@ -337,11 +400,16 @@ describe('Logging System Integration Tests', () => {
         for (let i = 0; i < logsPerComponent; i++) {
           promises.push(
             Promise.resolve().then(() => {
-              logger.info(`Message ${i} from ${component}`, {
-                componentIndex,
-                messageIndex: i,
-                timestamp: new Date().toISOString()
-              }, component, requestId);
+              logger.info(
+                `Message ${i} from ${component}`,
+                {
+                  componentIndex,
+                  messageIndex: i,
+                  timestamp: new Date().toISOString(),
+                },
+                component,
+                requestId
+              );
             })
           );
         }
@@ -356,11 +424,14 @@ describe('Logging System Integration Tests', () => {
 
       // Verify all logs were written with correct correlation
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
       // Should have logs from all components
-      const loggedComponents = [...new Set(logEntries.map(e => e.component))];
+      const loggedComponents = [...new Set(logEntries.map((e) => e.component))];
       for (const component of components) {
         expect(loggedComponents).toContain(component);
       }
@@ -382,11 +453,11 @@ describe('Logging System Integration Tests', () => {
               path: path.join(testLogDir, 'rotating.log'),
               maxSize: '1KB', // Very small to trigger rotation quickly
               maxFiles: 3,
-              rotateDaily: false
-            }
-          }
+              rotateDaily: false,
+            },
+          },
         ],
-        format: 'JSON'
+        format: 'JSON',
       });
 
       const startTime = Date.now();
@@ -396,7 +467,7 @@ describe('Logging System Integration Tests', () => {
       for (let i = 0; i < logCount; i++) {
         rotatingLogger.info(`Rotation test message ${i}`, {
           iteration: i,
-          data: 'x'.repeat(100) // Add some bulk to trigger rotation
+          data: 'x'.repeat(100), // Add some bulk to trigger rotation
         });
       }
 
@@ -407,8 +478,8 @@ describe('Logging System Integration Tests', () => {
 
       // Check that rotation occurred (multiple log files should exist)
       const files = await fs.readdir(testLogDir);
-      const logFiles = files.filter(f => f.includes('rotating') && f.endsWith('.log'));
-      
+      const logFiles = files.filter((f) => f.includes('rotating') && f.endsWith('.log'));
+
       // Should have created rotated files
       expect(logFiles.length).toBeGreaterThan(1);
     });
@@ -421,7 +492,7 @@ describe('Logging System Integration Tests', () => {
         numberField: 42,
         booleanField: true,
         arrayField: [1, 2, 3],
-        objectField: { nested: 'value' }
+        objectField: { nested: 'value' },
       };
 
       logger.info('JSON format test', testData);
@@ -429,24 +500,27 @@ describe('Logging System Integration Tests', () => {
       logger.error('Error message', new Error('Test error'), { context: 'test' });
 
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
 
       // Each line should be valid JSON
       for (const line of logLines) {
         expect(() => JSON.parse(line)).not.toThrow();
-        
+
         const entry = JSON.parse(line);
-        
+
         // Verify required fields
         expect(entry.timestamp).toBeDefined();
         expect(entry.level).toBeDefined();
         expect(entry.component).toBeDefined();
         expect(entry.requestId).toBeDefined();
         expect(entry.message).toBeDefined();
-        
+
         // Verify timestamp format
         expect(new Date(entry.timestamp).toISOString()).toBe(entry.timestamp);
-        
+
         // Verify level is uppercase
         expect(['DEBUG', 'INFO', 'WARN', 'ERROR']).toContain(entry.level);
       }
@@ -459,7 +533,7 @@ describe('Logging System Integration Tests', () => {
 
       logger.error('Error occurred during test', testError, {
         context: 'unit-test',
-        operation: 'error-logging'
+        operation: 'error-logging',
       });
 
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
@@ -482,7 +556,7 @@ describe('Logging System Integration Tests', () => {
         newlines: 'String with\nnewlines\nand\ttabs',
         backslashes: 'Path\\with\\backslashes',
         nullValue: null,
-        undefinedValue: undefined
+        undefinedValue: undefined,
       };
 
       logger.info('Special characters test', specialData);
@@ -506,22 +580,25 @@ describe('Logging System Integration Tests', () => {
       logger.error('Error message', new Error('Test'), { errorData: false });
 
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
       // All entries should have consistent structure
       const requiredFields = ['timestamp', 'level', 'component', 'requestId', 'message'];
-      
+
       for (const entry of logEntries) {
         for (const field of requiredFields) {
           expect(entry[field]).toBeDefined();
         }
-        
+
         // Metadata should be an object if present
         if (entry.metadata) {
           expect(typeof entry.metadata).toBe('object');
         }
-        
+
         // Error should have proper structure if present
         if (entry.error) {
           expect(entry.error.name).toBeDefined();
@@ -530,7 +607,7 @@ describe('Logging System Integration Tests', () => {
       }
 
       // Verify different log levels are present
-      const levels = logEntries.map(e => e.level);
+      const levels = logEntries.map((e) => e.level);
       expect(levels).toContain('DEBUG');
       expect(levels).toContain('INFO');
       expect(levels).toContain('WARN');
@@ -549,13 +626,13 @@ describe('Logging System Integration Tests', () => {
         headers: {
           'content-type': 'application/json',
           'user-agent': 'test-client/1.0',
-          'authorization': 'Bearer secret-token'
+          authorization: 'Bearer secret-token',
         },
         body: { path: '/test/repo', options: { deep: true } },
         get: (header: string) => mockReq.headers[header.toLowerCase()],
         ip: '127.0.0.1',
         connection: { remoteAddress: '127.0.0.1' },
-        socket: { remoteAddress: '127.0.0.1' }
+        socket: { remoteAddress: '127.0.0.1' },
       };
 
       const mockRes = {
@@ -564,10 +641,10 @@ describe('Logging System Integration Tests', () => {
         json: vi.fn(),
         getHeaders: () => ({
           'content-type': 'application/json',
-          'x-response-time': '150ms'
+          'x-response-time': '150ms',
         }),
         on: vi.fn(),
-        requestId: ''
+        requestId: '',
       };
 
       // Mock next function
@@ -590,21 +667,24 @@ describe('Logging System Integration Tests', () => {
 
       // Simulate response completion
       mockRes.json({ success: true, data: 'test' });
-      finishHandlers.forEach(handler => handler());
+      finishHandlers.forEach((handler) => handler());
 
       expect(mockNext).toHaveBeenCalled();
       expect(mockReq.requestId).toBeDefined();
 
       // Verify logs were created
       const logContent = await fs.readFile(path.join(testLogDir, 'test.log'), 'utf-8');
-      const logLines = logContent.trim().split('\n').filter(line => line.trim());
-      const logEntries = logLines.map(line => JSON.parse(line));
+      const logLines = logContent
+        .trim()
+        .split('\n')
+        .filter((line) => line.trim());
+      const logEntries = logLines.map((line) => JSON.parse(line));
 
       // Should have request start and completion logs
       expect(logEntries.length).toBeGreaterThanOrEqual(2);
 
-      const requestStart = logEntries.find(e => e.message.includes('HTTP Request Started'));
-      const requestComplete = logEntries.find(e => e.message.includes('HTTP Request Completed'));
+      const requestStart = logEntries.find((e) => e.message.includes('HTTP Request Started'));
+      const requestComplete = logEntries.find((e) => e.message.includes('HTTP Request Completed'));
 
       expect(requestStart).toBeDefined();
       expect(requestComplete).toBeDefined();

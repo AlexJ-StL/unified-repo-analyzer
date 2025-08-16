@@ -1,8 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
-import { LogManagementService, LogRetentionPolicy, LogAlert } from '../log-management.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  type LogAlert,
+  LogManagementService,
+  type LogRetentionPolicy,
+} from '../log-management.service';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -11,8 +15,6 @@ const unlink = promisify(fs.unlink);
 const access = promisify(fs.access);
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
-
-
 
 // Mock the logger service
 vi.mock('../logger.service', () => ({
@@ -39,7 +41,7 @@ describe('LogManagementService', () => {
   beforeEach(async () => {
     // Create a temporary test directory
     testLogDir = path.join(process.cwd(), 'test-logs');
-    
+
     try {
       await access(testLogDir);
       // Directory exists, clean it up
@@ -71,7 +73,7 @@ describe('LogManagementService', () => {
 
   afterEach(async () => {
     await service.stop();
-    
+
     // Clean up test directory
     try {
       const files = await promisify(fs.readdir)(testLogDir);
@@ -89,7 +91,7 @@ describe('LogManagementService', () => {
       // Create test log files with different ages
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - 10); // 10 days old
-      
+
       const recentDate = new Date();
       recentDate.setDate(recentDate.getDate() - 3); // 3 days old
 
@@ -102,14 +104,14 @@ describe('LogManagementService', () => {
       // Manually set file times (this is a simplified approach for testing)
       const oldTime = oldDate.getTime() / 1000;
       const recentTime = recentDate.getTime() / 1000;
-      
+
       fs.utimesSync(oldLogPath, oldTime, oldTime);
       fs.utimesSync(recentLogPath, recentTime, recentTime);
 
       const result = await service.performCleanup();
 
       expect(result.filesRemoved).toBeGreaterThan(0);
-      
+
       // Check that old file was removed
       try {
         await access(oldLogPath);
@@ -129,15 +131,15 @@ describe('LogManagementService', () => {
         const filePath = path.join(testLogDir, `test-${i}.log`);
         await writeFile(filePath, `log content ${i}`);
         filePaths.push(filePath);
-        
+
         // Add small delay to ensure different modification times
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
 
       const result = await service.performCleanup();
 
       expect(result.filesRemoved).toBe(3); // Should remove 3 files (8 - 5)
-      
+
       const remainingFiles = await promisify(fs.readdir)(testLogDir);
       expect(remainingFiles.length).toBe(5);
     });
@@ -145,18 +147,18 @@ describe('LogManagementService', () => {
     it('should remove files when total size exceeds maxSize', async () => {
       // Create files that exceed the maxSize (10MB)
       const largeContent = 'x'.repeat(3 * 1024 * 1024); // 3MB each
-      
+
       for (let i = 0; i < 5; i++) {
         const filePath = path.join(testLogDir, `large-${i}.log`);
         await writeFile(filePath, largeContent);
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
 
       const result = await service.performCleanup();
 
       expect(result.filesRemoved).toBeGreaterThan(0);
       expect(result.spaceFreed).toBeGreaterThan(0);
-      
+
       const stats = await service.getLogDirectoryStats();
       expect(stats.totalSize).toBeLessThan(10 * 1024 * 1024); // Should be under 10MB
     });
@@ -165,14 +167,14 @@ describe('LogManagementService', () => {
       // This test verifies that the cleanup method returns error information
       // when file deletion fails. We'll test this by creating a scenario
       // where cleanup would normally occur but simulate an error condition.
-      
+
       // Create a file that would be cleaned up
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - 10); // 10 days old
-      
+
       const filePath = path.join(testLogDir, 'test-error.log');
       await writeFile(filePath, 'test content');
-      
+
       // Set the file to be old enough to be cleaned up
       const oldTime = oldDate.getTime() / 1000;
       fs.utimesSync(filePath, oldTime, oldTime);
@@ -215,13 +217,13 @@ describe('LogManagementService', () => {
       for (let i = 0; i < 5; i++) {
         const filePath = path.join(testLogDir, `policy-test-${i}.log`);
         await writeFile(filePath, 'x'.repeat(500 * 1024)); // 500KB each
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
 
       const result = await service.performCleanup();
 
       expect(result.filesRemoved).toBeGreaterThan(0);
-      
+
       const remainingFiles = await promisify(fs.readdir)(testLogDir);
       expect(remainingFiles.length).toBeLessThanOrEqual(2);
     });
@@ -269,7 +271,7 @@ describe('LogManagementService', () => {
     it('should emit cleanup failed alert on error', async () => {
       // Test that the service can handle and report cleanup failures
       // This is a simplified test that verifies the alert mechanism works
-      
+
       let alertReceived = false;
       service.once('alert', (alert: LogAlert) => {
         alertReceived = true;
@@ -283,7 +285,7 @@ describe('LogManagementService', () => {
       service.emit('cleanup-failed', new Error('Test error'));
 
       // Give some time for the event to be processed
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       expect(alertReceived).toBe(true);
     });
@@ -297,9 +299,9 @@ describe('LogManagementService', () => {
       const file3Content = 'x'.repeat(3072); // 3KB
 
       await writeFile(path.join(testLogDir, 'file1.log'), file1Content);
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await writeFile(path.join(testLogDir, 'file2.log'), file2Content);
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await writeFile(path.join(testLogDir, 'file3.log'), file3Content);
 
       const stats = await service.getLogDirectoryStats();
@@ -345,10 +347,10 @@ describe('LogManagementService', () => {
 
     it('should not start service twice', async () => {
       await service.start();
-      
+
       // Starting again should not throw error
       await service.start();
-      
+
       expect(service['isRunning']).toBe(true);
     });
 
@@ -372,14 +374,14 @@ describe('LogManagementService', () => {
       const logFiles = await service.getLogFiles();
 
       expect(logFiles.length).toBeGreaterThan(0);
-      
+
       // Should include .log files
-      const logFilenames = logFiles.map(f => path.basename(f.path));
+      const logFilenames = logFiles.map((f) => path.basename(f.path));
       expect(logFilenames).toContain('app.log');
       expect(logFilenames).toContain('error.log.1');
       expect(logFilenames).toContain('app-2024-01-01.log');
       expect(logFilenames).toContain('combined.log');
-      
+
       // Should not include non-log files
       expect(logFilenames).not.toContain('config.json');
     });
@@ -397,15 +399,15 @@ describe('LogManagementService', () => {
 
       // Create files with different modification times
       await writeFile(path.join(testLogDir, 'first.log'), 'first');
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await writeFile(path.join(testLogDir, 'second.log'), 'second');
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await writeFile(path.join(testLogDir, 'third.log'), 'third');
 
       const logFiles = await service.getLogFiles();
 
       expect(logFiles.length).toBe(3);
-      
+
       // Should be sorted by modification time (newest first)
       expect(logFiles[0].path).toContain('third.log');
       expect(logFiles[1].path).toContain('second.log');
@@ -416,11 +418,11 @@ describe('LogManagementService', () => {
   describe('Size Parsing and Formatting', () => {
     it('should parse size strings correctly', async () => {
       const service = new LogManagementService();
-      
+
       // Test the private method through public interface
       const testPolicy = { maxSize: '5MB' };
       service.updateRetentionPolicy(testPolicy);
-      
+
       const config = service.getConfig();
       expect(config.retentionPolicy.maxSize).toBe('5MB');
     });

@@ -56,17 +56,23 @@ export declare class PathHandler {
   private readonly windowsReservedNames;
   private readonly windowsMaxPathLength;
   private readonly windowsMaxComponentLength;
-  
+
   constructor(platformOverride?: string);
-  
+
   static getInstance(): PathHandler;
   normalizePath(inputPath: string): string;
   resolveRelativePath(inputPath: string, basePath?: string): string;
   validatePath(inputPath: string): Promise<PathValidationResult>;
   checkPermissions(pathToCheck: string): Promise<PermissionResult>;
-  
-  private validatePathFormat(inputPath: string): { isValid: boolean; errors: PathError[]; warnings: PathWarning[] };
-  private checkPathExists(pathToCheck: string): Promise<{ exists: boolean; isDirectory: boolean; size?: number }>;
+
+  private validatePathFormat(inputPath: string): {
+    isValid: boolean;
+    errors: PathError[];
+    warnings: PathWarning[];
+  };
+  private checkPathExists(
+    pathToCheck: string
+  ): Promise<{ exists: boolean; isDirectory: boolean; size?: number }>;
   private isUNCPath(inputPath: string): boolean;
   private normalizeUNCPath(inputPath: string): string;
   private hasDriveLetter(inputPath: string): boolean;

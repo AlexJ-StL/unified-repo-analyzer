@@ -1,20 +1,22 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Logger, LoggerConfig, LogLevel } from '../logger.service.js';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { Logger, type LoggerConfig, LogLevel } from '../logger.service.js';
 
 describe('Logger Output Destinations', () => {
   describe('Console Output', () => {
     it('should create logger with console output', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
-        outputs: [{ 
-          type: 'console', 
-          config: { colorize: true } 
-        }],
+        outputs: [
+          {
+            type: 'console',
+            config: { colorize: true },
+          },
+        ],
         format: 'JSON',
         includeStackTrace: true,
         redactSensitiveData: true,
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs[0].type).toBe('console');
       expect((logger.getConfig().outputs[0].config as any).colorize).toBe(true);
@@ -23,12 +25,14 @@ describe('Logger Output Destinations', () => {
     it('should create logger with non-colorized console output', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
-        outputs: [{ 
-          type: 'console', 
-          config: { colorize: false } 
-        }],
+        outputs: [
+          {
+            type: 'console',
+            config: { colorize: false },
+          },
+        ],
       };
-      
+
       const logger = new Logger(config);
       expect((logger.getConfig().outputs[0].config as any).colorize).toBe(false);
     });
@@ -38,12 +42,14 @@ describe('Logger Output Destinations', () => {
     it('should create logger with file output configuration', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
-        outputs: [{ 
-          type: 'console', // Use console to avoid file system operations in tests
-          config: { colorize: false } 
-        }],
+        outputs: [
+          {
+            type: 'console', // Use console to avoid file system operations in tests
+            config: { colorize: false },
+          },
+        ],
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs[0].type).toBe('console');
     });
@@ -51,12 +57,14 @@ describe('Logger Output Destinations', () => {
     it('should handle file rotation configuration', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
-        outputs: [{ 
-          type: 'console', // Use console to avoid file system operations in tests
-          config: { colorize: false } 
-        }],
+        outputs: [
+          {
+            type: 'console', // Use console to avoid file system operations in tests
+            config: { colorize: false },
+          },
+        ],
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs).toHaveLength(1);
     });
@@ -66,12 +74,14 @@ describe('Logger Output Destinations', () => {
     it('should create logger with external output configuration', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
-        outputs: [{ 
-          type: 'console', // Use console to avoid network operations in tests
-          config: { colorize: false } 
-        }],
+        outputs: [
+          {
+            type: 'console', // Use console to avoid network operations in tests
+            config: { colorize: false },
+          },
+        ],
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs[0].type).toBe('console');
     });
@@ -82,20 +92,20 @@ describe('Logger Output Destinations', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
         outputs: [
-          { 
-            type: 'console', 
-            config: { colorize: true } 
+          {
+            type: 'console',
+            config: { colorize: true },
           },
-          { 
+          {
             type: 'console', // Use console instead of file for testing
-            config: { colorize: false } 
-          }
+            config: { colorize: false },
+          },
         ],
         format: 'JSON',
         includeStackTrace: true,
         redactSensitiveData: true,
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs).toHaveLength(2);
       expect(logger.getConfig().outputs[0].type).toBe('console');
@@ -106,19 +116,19 @@ describe('Logger Output Destinations', () => {
       const config: Partial<LoggerConfig> = {
         level: 'DEBUG',
         outputs: [
-          { 
-            type: 'console', 
-            config: { colorize: false } 
+          {
+            type: 'console',
+            config: { colorize: false },
           },
-          { 
-            type: 'console', 
-            config: { colorize: true } 
-          }
+          {
+            type: 'console',
+            config: { colorize: true },
+          },
         ],
       };
-      
+
       const logger = new Logger(config);
-      
+
       // Should not throw when logging to multiple destinations
       expect(() => {
         logger.info('Test message for multiple outputs', { test: 'data' });
@@ -132,7 +142,7 @@ describe('Logger Output Destinations', () => {
         level: 'INFO',
         outputs: [],
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs).toHaveLength(0);
     });
@@ -141,13 +151,13 @@ describe('Logger Output Destinations', () => {
       const config: Partial<LoggerConfig> = {
         level: 'INFO',
         outputs: [
-          { 
-            type: 'console', 
-            config: { colorize: true } 
-          }
+          {
+            type: 'console',
+            config: { colorize: true },
+          },
         ],
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().outputs).toHaveLength(1);
       expect(logger.getConfig().outputs[0].type).toBe('console');
@@ -161,7 +171,7 @@ describe('Logger Output Destinations', () => {
         outputs: [{ type: 'console', config: { colorize: false } }],
         format: 'JSON',
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().format).toBe('JSON');
     });
@@ -172,7 +182,7 @@ describe('Logger Output Destinations', () => {
         outputs: [{ type: 'console', config: { colorize: false } }],
         format: 'TEXT',
       };
-      
+
       const logger = new Logger(config);
       expect(logger.getConfig().format).toBe('TEXT');
     });

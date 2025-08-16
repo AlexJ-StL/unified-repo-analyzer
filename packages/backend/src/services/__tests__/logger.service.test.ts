@@ -1,5 +1,14 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Logger, LoggerConfig, LogLevel, requestLogger, logError, logPerformance, logSecurityEvent, logAnalysis } from '../logger.service.js';
+import { beforeEach, describe, expect, it } from 'vitest';
+import {
+  Logger,
+  type LoggerConfig,
+  type LogLevel,
+  logAnalysis,
+  logError,
+  logPerformance,
+  logSecurityEvent,
+  requestLogger,
+} from '../logger.service.js';
 
 describe('Logger Service', () => {
   let logger: Logger;
@@ -13,7 +22,7 @@ describe('Logger Service', () => {
       includeStackTrace: true,
       redactSensitiveData: true,
     };
-    
+
     logger = new Logger(testConfig, 'test-component');
   });
 
@@ -30,10 +39,10 @@ describe('Logger Service', () => {
         format: 'TEXT',
         includeStackTrace: false,
       };
-      
+
       const customLogger = new Logger(config);
       const actualConfig = customLogger.getConfig();
-      
+
       expect(actualConfig.level).toBe('ERROR');
       expect(actualConfig.format).toBe('TEXT');
       expect(actualConfig.includeStackTrace).toBe(false);
@@ -42,7 +51,7 @@ describe('Logger Service', () => {
     it('should generate unique request IDs', () => {
       const requestId1 = logger.getRequestId();
       const requestId2 = logger.getRequestId();
-      
+
       expect(requestId1).toBeDefined();
       expect(requestId2).toBeDefined();
       expect(requestId1).not.toBe(requestId2);
@@ -51,7 +60,7 @@ describe('Logger Service', () => {
     it('should set and get request ID', () => {
       const testRequestId = 'test-request-123';
       logger.setRequestId(testRequestId);
-      
+
       expect(logger.getRequestId()).toBe(testRequestId);
     });
 
@@ -60,10 +69,10 @@ describe('Logger Service', () => {
         level: 'WARN',
         format: 'TEXT',
       };
-      
+
       logger.updateConfig(newConfig);
       const updatedConfig = logger.getConfig();
-      
+
       expect(updatedConfig.level).toBe('WARN');
       expect(updatedConfig.format).toBe('TEXT');
     });
@@ -154,12 +163,14 @@ describe('Logger Service', () => {
     it('should handle file configuration without creating files', () => {
       const fileConfig = {
         level: 'INFO' as LogLevel,
-        outputs: [{
-          type: 'console' as const, // Use console instead of file to avoid file system operations
-          config: {
-            colorize: false,
-          }
-        }],
+        outputs: [
+          {
+            type: 'console' as const, // Use console instead of file to avoid file system operations
+            config: {
+              colorize: false,
+            },
+          },
+        ],
         format: 'JSON' as const,
         includeStackTrace: true,
         redactSensitiveData: true,
