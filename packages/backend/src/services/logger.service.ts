@@ -211,7 +211,7 @@ export class Logger {
   private extractPortFromEndpoint(endpoint: string): number {
     try {
       const url = new URL(endpoint);
-      return url.port ? Number.parseInt(url.port) : url.protocol === 'https:' ? 443 : 80;
+      return url.port ? Number.parseInt(url.port, 10) : url.protocol === 'https:' ? 443 : 80;
     } catch {
       return 80;
     }
@@ -230,7 +230,7 @@ export class Logger {
     const match = sizeStr.match(/^(\d+)(MB|KB|GB)?$/i);
     if (!match) return 10485760; // Default 10MB
 
-    const size = Number.parseInt(match[1]);
+    const size = Number.parseInt(match[1], 10);
     const unit = (match[2] || 'MB').toUpperCase();
 
     switch (unit) {

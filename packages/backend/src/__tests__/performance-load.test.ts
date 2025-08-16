@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LogManagementService } from '../services/log-management.service';
 import { Logger } from '../services/logger.service';
 import { PathHandler } from '../services/path-handler.service';
@@ -539,70 +539,64 @@ describe('Performance and Load Testing', () => {
       };
 
       const start = performance.now();
+      // Create test paths
+      const testPaths: string[] = [];
+      for (let i = 0; i < extremeLoad.pathValidations; i++) {
+        const testPath = path.join(testDir, `stress-test-${i}`);
+        await fs.mkdir(testPath, { recursive: true });
+        testPaths.push(testPath);
+      }
 
-      try {
-        // Create test paths
-        const testPaths: string[] = [];
-        for (let i = 0; i < extremeLoad.pathValidations; i++) {
-          const testPath = path.join(testDir, `stress-test-${i}`);
-          await fs.mkdir(testPath, { recursive: true });
-          testPaths.push(testPath);
-        }
+      // Create concurrent operations
+      const operations: Promise<any>[] = [];
 
-        // Create concurrent operations
-        const operations: Promise<any>[] = [];
+      // Path validation operations
+      for (let i = 0; i < extremeLoad.pathValidations; i += extremeLoad.concurrentOperations) {
+        const batch = testPaths.slice(i, i + extremeLoad.concurrentOperations);
+        operations.push(Promise.all(batch.map((testPath) => pathHandler.validatePath(testPath))));
+      }
 
-        // Path validation operations
-        for (let i = 0; i < extremeLoad.pathValidations; i += extremeLoad.concurrentOperations) {
-          const batch = testPaths.slice(i, i + extremeLoad.concurrentOperations);
-          operations.push(Promise.all(batch.map((testPath) => pathHandler.validatePath(testPath))));
-        }
-
-        // Logging operations
-        for (let i = 0; i < extremeLoad.logMessages; i += extremeLoad.concurrentOperations) {
-          operations.push(
-            Promise.all(
-              Array.from(
-                { length: Math.min(extremeLoad.concurrentOperations, extremeLoad.logMessages - i) },
-                (_, j) => {
-                  const messageIndex = i + j;
-                  return Promise.resolve().then(() => {
-                    logger.info(
-                      `Stress test message ${messageIndex}`,
-                      {
-                        messageIndex,
-                        timestamp: new Date().toISOString(),
-                        data: `Stress test data ${messageIndex}`,
-                      },
-                      'stress-test'
-                    );
-                  });
-                }
-              )
+      // Logging operations
+      for (let i = 0; i < extremeLoad.logMessages; i += extremeLoad.concurrentOperations) {
+        operations.push(
+          Promise.all(
+            Array.from(
+              { length: Math.min(extremeLoad.concurrentOperations, extremeLoad.logMessages - i) },
+              (_, j) => {
+                const messageIndex = i + j;
+                return Promise.resolve().then(() => {
+                  logger.info(
+                    `Stress test message ${messageIndex}`,
+                    {
+                      messageIndex,
+                      timestamp: new Date().toISOString(),
+                      data: `Stress test data ${messageIndex}`,
+                    },
+                    'stress-test'
+                  );
+                });
+              }
             )
-          );
-        }
+          )
+        );
+      }
 
-        // Execute all operations
-        const results = await Promise.all(operations);
+      // Execute all operations
+      const results = await Promise.all(operations);
 
-        const end = performance.now();
-        const totalTime = end - start;
+      const end = performance.now();
+      const totalTime = end - start;
 
-        console.log(`Stress test completed:
+      console.log(`Stress test completed:
           Path validations: ${extremeLoad.pathValidations}
           Log messages: ${extremeLoad.logMessages}
           Concurrent operations: ${extremeLoad.concurrentOperations}
           Total time: ${totalTime.toFixed(2)}ms
           Operations per second: ${(((extremeLoad.pathValidations + extremeLoad.logMessages) / totalTime) * 1000).toFixed(0)}`);
 
-        // Should complete without crashing
-        expect(results.length).toBeGreaterThan(0);
-        expect(totalTime).toBeLessThan(60000); // Should complete within 1 minute
-      } catch (error) {
-        console.error('Stress test failed:', error);
-        throw error;
-      }
+      // Should complete without crashing
+      expect(results.length).toBeGreaterThan(0);
+      expect(totalTime).toBeLessThan(60000); // Should complete within 1 minute
     });
   });
 });

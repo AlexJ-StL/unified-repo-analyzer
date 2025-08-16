@@ -165,7 +165,7 @@ describe('Logging Integration Tests', () => {
 
       try {
         await readFileWithErrorHandling(testFile);
-      } catch (error) {
+      } catch (_error) {
         // Expected to fail
       }
 
@@ -538,7 +538,7 @@ describe('Logging Integration Tests', () => {
 
       try {
         await readFileWithErrorHandling(nonExistentFile);
-      } catch (error) {
+      } catch (_error) {
         // Expected to fail
       }
 

@@ -7,14 +7,11 @@ import {
   InformationCircleIcon,
   XCircleIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
-import type React from "react";
-import { useState } from "react";
-import {
-  errorMessageService,
-  type UserFriendlyError,
-} from "../../services/errorMessages";
-import type { PathError, PathWarning } from "../../services/pathValidation";
+} from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useState } from 'react';
+import { errorMessageService, type UserFriendlyError } from '../../services/errorMessages';
+import type { PathError, PathWarning } from '../../services/pathValidation';
 
 interface EnhancedErrorDisplayProps {
   errors?: PathError[];
@@ -36,7 +33,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
   originalPath,
   onRetry,
   onDismiss,
-  className = "",
+  className = '',
   showTechnicalDetails = true,
   showSuggestions = true,
   compact = false,
@@ -48,11 +45,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
   const displayError =
     userFriendlyError ||
     (errors.length > 0
-      ? errorMessageService.createPathErrorMessage(
-          errors,
-          warnings,
-          originalPath
-        )
+      ? errorMessageService.createPathErrorMessage(errors, warnings, originalPath)
       : null);
 
   // Create warning message if we have warnings but no errors
@@ -76,11 +69,11 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
 
   const getIcon = () => {
     switch (displayMessage.severity) {
-      case "error":
+      case 'error':
         return <XCircleIcon className={`h-5 w-5 ${colors.icon}`} />;
-      case "warning":
+      case 'warning':
         return <ExclamationTriangleIcon className={`h-5 w-5 ${colors.icon}`} />;
-      case "info":
+      case 'info':
         return <InformationCircleIcon className={`h-5 w-5 ${colors.icon}`} />;
       default:
         return <XCircleIcon className={`h-5 w-5 ${colors.icon}`} />;
@@ -89,25 +82,19 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
 
   if (compact) {
     return (
-      <div
-        className={`${colors.bg} ${colors.border} border rounded-md p-3 ${className}`}
-      >
+      <div className={`${colors.bg} ${colors.border} border rounded-md p-3 ${className}`}>
         <div className="flex items-start">
           <div className="flex-shrink-0">{getIcon()}</div>
           <div className="ml-3 flex-1">
-            <p className={`text-sm font-medium ${colors.text}`}>
-              {displayMessage.title}
-            </p>
-            <p className={`text-sm ${colors.text} mt-1`}>
-              {displayMessage.message}
-            </p>
+            <p className={`text-sm font-medium ${colors.text}`}>{displayMessage.title}</p>
+            <p className={`text-sm ${colors.text} mt-1`}>{displayMessage.message}</p>
           </div>
           {onDismiss && (
             <div className="ml-auto pl-3">
               <button
                 type="button"
                 onClick={handleDismiss}
-                className={`${colors.bg} rounded-md p-1.5 ${colors.icon} hover:${colors.text} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-${colors.bg.split("-")[1]}-50`}
+                className={`${colors.bg} rounded-md p-1.5 ${colors.icon} hover:${colors.text} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-${colors.bg.split('-')[1]}-50`}
               >
                 <XMarkIcon className="h-4 w-4" />
               </button>
@@ -119,24 +106,18 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
   }
 
   return (
-    <div
-      className={`${colors.bg} ${colors.border} border rounded-md p-4 ${className}`}
-    >
+    <div className={`${colors.bg} ${colors.border} border rounded-md p-4 ${className}`}>
       <div className="flex">
         <div className="flex-shrink-0">{getIcon()}</div>
 
         <div className="ml-3 flex-1">
           {/* Title and message */}
-          <h3 className={`text-sm font-medium ${colors.text}`}>
-            {displayMessage.title}
-          </h3>
+          <h3 className={`text-sm font-medium ${colors.text}`}>{displayMessage.title}</h3>
           <div className={`mt-2 text-sm ${colors.text}`}>
             <p>{displayMessage.message}</p>
 
             {displayMessage.details && (
-              <p className="mt-1 text-xs opacity-75">
-                {displayMessage.details}
-              </p>
+              <p className="mt-1 text-xs opacity-75">{displayMessage.details}</p>
             )}
           </div>
 
@@ -150,12 +131,8 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
           {/* Suggestions */}
           {showSuggestions && displayMessage.suggestions.length > 0 && (
             <div className="mt-3">
-              <h4 className={`text-sm font-medium ${colors.text}`}>
-                Suggestions:
-              </h4>
-              <ul
-                className={`mt-1 text-sm ${colors.text} list-disc list-inside space-y-1`}
-              >
+              <h4 className={`text-sm font-medium ${colors.text}`}>Suggestions:</h4>
+              <ul className={`mt-1 text-sm ${colors.text} list-disc list-inside space-y-1`}>
                 {displayMessage.suggestions.map((suggestion, index) => (
                   <li key={index}>{suggestion}</li>
                 ))}
@@ -164,29 +141,25 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
           )}
 
           {/* Platform-specific tips */}
-          {displayMessage.category === "path" && (
+          {displayMessage.category === 'path' && (
             <div className="mt-3">
               <button
                 type="button"
                 onClick={() => setShowDetails(!showDetails)}
                 className={`text-sm ${colors.text} hover:underline focus:outline-none`}
               >
-                {showDetails ? "Hide" : "Show"} platform-specific tips
+                {showDetails ? 'Hide' : 'Show'} platform-specific tips
               </button>
 
               {showDetails && (
                 <div className="mt-2">
-                  <h5 className={`text-xs font-medium ${colors.text} mb-1`}>
-                    Path Format Tips:
-                  </h5>
+                  <h5 className={`text-xs font-medium ${colors.text} mb-1`}>Path Format Tips:</h5>
                   <ul
                     className={`text-xs ${colors.text} list-disc list-inside space-y-1 opacity-75`}
                   >
-                    {errorMessageService
-                      .getPlatformSpecificSuggestions()
-                      .tips.map((tip, index) => (
-                        <li key={index}>{tip}</li>
-                      ))}
+                    {errorMessageService.getPlatformSpecificSuggestions().tips.map((tip, index) => (
+                      <li key={index}>{tip}</li>
+                    ))}
                   </ul>
                 </div>
               )}
@@ -208,59 +181,50 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
           )}
 
           {/* Technical details */}
-          {showTechnicalDetails &&
-            (errors.length > 0 || warnings.length > 0) && (
-              <details className="mt-3">
-                <summary
-                  className={`text-sm font-medium ${colors.text} cursor-pointer`}
-                >
-                  Technical Details
-                </summary>
-                <div className={`mt-2 text-xs ${colors.text} opacity-75`}>
-                  {errors.length > 0 && (
-                    <div>
-                      <strong>Errors ({errors.length}):</strong>
-                      <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
-                        {errors.map((error, index) => (
-                          <li key={index}>
-                            <code className="bg-black bg-opacity-10 px-1 rounded">
-                              {error.code}
-                            </code>
-                            : {error.message}
-                            {error.details && (
-                              <div className="ml-4 mt-1 text-gray-600">
-                                {error.details}
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+          {showTechnicalDetails && (errors.length > 0 || warnings.length > 0) && (
+            <details className="mt-3">
+              <summary className={`text-sm font-medium ${colors.text} cursor-pointer`}>
+                Technical Details
+              </summary>
+              <div className={`mt-2 text-xs ${colors.text} opacity-75`}>
+                {errors.length > 0 && (
+                  <div>
+                    <strong>Errors ({errors.length}):</strong>
+                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
+                      {errors.map((error, index) => (
+                        <li key={index}>
+                          <code className="bg-black bg-opacity-10 px-1 rounded">{error.code}</code>:{' '}
+                          {error.message}
+                          {error.details && (
+                            <div className="ml-4 mt-1 text-gray-600">{error.details}</div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                  {warnings.length > 0 && (
-                    <div className={errors.length > 0 ? "mt-3" : ""}>
-                      <strong>Warnings ({warnings.length}):</strong>
-                      <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
-                        {warnings.map((warning, index) => (
-                          <li key={index}>
-                            <code className="bg-black bg-opacity-10 px-1 rounded">
-                              {warning.code}
-                            </code>
-                            : {warning.message}
-                            {warning.details && (
-                              <div className="ml-4 mt-1 text-gray-600">
-                                {warning.details}
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </details>
-            )}
+                {warnings.length > 0 && (
+                  <div className={errors.length > 0 ? 'mt-3' : ''}>
+                    <strong>Warnings ({warnings.length}):</strong>
+                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
+                      {warnings.map((warning, index) => (
+                        <li key={index}>
+                          <code className="bg-black bg-opacity-10 px-1 rounded">
+                            {warning.code}
+                          </code>
+                          : {warning.message}
+                          {warning.details && (
+                            <div className="ml-4 mt-1 text-gray-600">{warning.details}</div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </details>
+          )}
         </div>
 
         {/* Action buttons */}
@@ -273,12 +237,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                 className={`${colors.bg} rounded-md p-1.5 ${colors.icon} hover:${colors.text} focus:outline-none focus:ring-2 focus:ring-offset-2`}
                 title="Retry"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

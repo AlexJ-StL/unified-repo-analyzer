@@ -39,10 +39,10 @@ describe('PerformanceMonitor', () => {
       const timing = monitor.endOperation(operationId, true);
 
       expect(timing).toBeDefined();
-      expect(timing!.operation).toBe(operationName);
-      expect(timing!.duration).toBeGreaterThan(40);
-      expect(timing!.success).toBe(true);
-      expect(timing!.metadata).toEqual({
+      expect(timing?.operation).toBe(operationName);
+      expect(timing?.duration).toBeGreaterThan(40);
+      expect(timing?.success).toBe(true);
+      expect(timing?.metadata).toEqual({
         operation: operationName,
         test: 'metadata',
       });
@@ -59,8 +59,8 @@ describe('PerformanceMonitor', () => {
       const timing = monitor.endOperation(operationId, false, 'Test error');
 
       expect(timing).toBeDefined();
-      expect(timing!.success).toBe(false);
-      expect(timing!.error).toBe('Test error');
+      expect(timing?.success).toBe(false);
+      expect(timing?.error).toBe('Test error');
     });
 
     it('should return null for unknown operations', () => {
@@ -174,9 +174,9 @@ describe('PerformanceMonitor', () => {
       const baseline = baselines.find((b) => b.operation === operationName);
 
       expect(baseline).toBeDefined();
-      expect(baseline!.sampleCount).toBe(5);
-      expect(baseline!.averageDuration).toBeGreaterThan(15);
-      expect(baseline!.averageDuration).toBeLessThan(30);
+      expect(baseline?.sampleCount).toBe(5);
+      expect(baseline?.averageDuration).toBeGreaterThan(15);
+      expect(baseline?.averageDuration).toBeLessThan(30);
     });
   });
 

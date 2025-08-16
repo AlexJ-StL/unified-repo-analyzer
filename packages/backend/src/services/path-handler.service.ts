@@ -118,7 +118,6 @@ export interface PathCacheStats {
 export class PathHandler {
   private static instance: PathHandler;
   private readonly isWindows: boolean;
-  private readonly pathSeparator: string;
 
   // Path validation cache
   private pathCache: CacheService<PathValidationResult>;
@@ -157,7 +156,6 @@ export class PathHandler {
 
   // Default timeout settings
   private readonly defaultTimeoutMs = 5000; // 5 seconds
-  private readonly progressUpdateIntervalMs = 100; // 100ms
 
   constructor(platformOverride?: string, cacheConfig?: Partial<PathCacheConfig>) {
     this.isWindows = (platformOverride || platform()) === 'win32';
@@ -570,7 +568,7 @@ export class PathHandler {
       try {
         stats = await fs.stat(pathToCheck);
         pathExists = true;
-      } catch (error) {
+      } catch (_error) {
         result.errors.push({
           code: 'PATH_NOT_FOUND',
           message: 'Path does not exist',
@@ -636,7 +634,7 @@ export class PathHandler {
     try {
       await fs.access(pathToCheck, fs.constants.R_OK);
       result.canRead = true;
-    } catch (error) {
+    } catch (_error) {
       result.canRead = false;
       if (this.isWindows) {
         result.errors.push({
@@ -651,7 +649,7 @@ export class PathHandler {
     try {
       await fs.access(pathToCheck, fs.constants.W_OK);
       result.canWrite = true;
-    } catch (error) {
+    } catch (_error) {
       result.canWrite = false;
       if (this.isWindows) {
         result.errors.push({
@@ -666,7 +664,7 @@ export class PathHandler {
     try {
       await fs.access(pathToCheck, fs.constants.X_OK);
       result.canExecute = true;
-    } catch (error) {
+    } catch (_error) {
       result.canExecute = false;
       // Execute permission is less critical, so we don't add it as an error
     }
@@ -1088,7 +1086,7 @@ export class PathHandler {
    * Normalize drive letter to uppercase
    */
   private normalizeDriveLetter(inputPath: string): string {
-    return inputPath.replace(/^([A-Za-z]):/, (match, letter) => `${letter.toUpperCase()}:`);
+    return inputPath.replace(/^([A-Za-z]):/, (_match, letter) => `${letter.toUpperCase()}:`);
   }
 
   /**

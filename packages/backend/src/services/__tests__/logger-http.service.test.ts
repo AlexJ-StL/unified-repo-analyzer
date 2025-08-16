@@ -151,7 +151,7 @@ describe('HTTP Request/Response Logging', () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate sending response
-      const originalSend = mockRes.send;
+      const _originalSend = mockRes.send;
       mockRes.send(JSON.stringify(responseData));
 
       // Simulate response finish
@@ -165,7 +165,7 @@ describe('HTTP Request/Response Logging', () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate JSON response
-      const originalJson = mockRes.json;
+      const _originalJson = mockRes.json;
       mockRes.json(responseData);
 
       // Simulate response finish
@@ -175,7 +175,7 @@ describe('HTTP Request/Response Logging', () => {
     });
 
     it('should handle large response bodies', () => {
-      const largeResponse = { data: 'x'.repeat(1000) };
+      const _largeResponse = { data: 'x'.repeat(1000) };
       mockRes.statusCode = 200;
       requestLogger(mockReq, mockRes, mockNext);
 

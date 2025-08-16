@@ -66,8 +66,8 @@ router.get('/range', (req, res) => {
       });
     }
 
-    const startTime = Number.parseInt(start as string);
-    const endTime = Number.parseInt(end as string);
+    const startTime = Number.parseInt(start as string, 10);
+    const endTime = Number.parseInt(end as string, 10);
     const metricName = metric as string;
 
     const metrics = metricsService.getMetricsInRange(startTime, endTime, metricName);

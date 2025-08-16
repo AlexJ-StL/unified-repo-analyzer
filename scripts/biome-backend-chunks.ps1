@@ -34,20 +34,20 @@ $processedChunks = 0
 foreach ($chunk in $backendChunks) {
     Write-Host "📁 Processing: $chunk" -ForegroundColor Green
     
-    # Build biome command
-    $biomeArgs = @("check", $chunk, "--max-diagnostics=$MaxDiagnostics")
+    # Build biome command string
+    $biomeCmd = "bun biome check `"$chunk`" --max-diagnostics=$MaxDiagnostics"
     
     if ($Write) {
-        $biomeArgs += "--write"
+        $biomeCmd += " --write"
     }
     
     if ($Unsafe) {
-        $biomeArgs += "--unsafe"
+        $biomeCmd += " --unsafe"
     }
     
     try {
         # Run biome on this chunk
-        $result = & bun biome @biomeArgs 2>&1
+        $result = Invoke-Expression "$biomeCmd 2>&1"
         
         if ($LASTEXITCODE -eq 0) {
             Write-Host "✅ $chunk - No issues found" -ForegroundColor Green
@@ -55,17 +55,16 @@ foreach ($chunk in $backendChunks) {
             Write-Host "⚠️  $chunk - Issues found (exit code: $LASTEXITCODE)" -ForegroundColor Yellow
             
             # Extract error/warning counts from output if possible
-            $errorMatch = $result | Select-String "Found (\d+) errors"
-            $warningMatch = $result | Select-String "Found (\d+) warnings"
+            $resultString = $result -join "`n"
             
-            if ($errorMatch) {
-                $chunkErrors = [int]$errorMatch.Matches[0].Groups[1].Value
+            if ($resultString -match "Found (\d+) errors") {
+                $chunkErrors = [int]$matches[1]
                 $totalErrors += $chunkErrors
                 Write-Host "   Errors: $chunkErrors" -ForegroundColor Red
             }
             
-            if ($warningMatch) {
-                $chunkWarnings = [int]$warningMatch.Matches[0].Groups[1].Value
+            if ($resultString -match "Found (\d+) warnings") {
+                $chunkWarnings = [int]$matches[1]
                 $totalWarnings += $chunkWarnings
                 Write-Host "   Warnings: $chunkWarnings" -ForegroundColor Yellow
             }

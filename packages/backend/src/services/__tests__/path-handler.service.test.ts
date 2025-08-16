@@ -20,7 +20,7 @@ vi.mock('../logger.service.js', () => ({
 }));
 
 const mockFs = fs as any;
-const mockPlatform = platform as any;
+const _mockPlatform = platform as any;
 
 describe('PathHandler Service', () => {
   let pathHandler: PathHandler;
@@ -165,7 +165,7 @@ describe('PathHandler Service', () => {
 
     it('should detect paths that are too long', async () => {
       const handler = new PathHandler('win32');
-      const longPath = 'C:\\' + 'a'.repeat(300);
+      const longPath = `C:\\${'a'.repeat(300)}`;
       const result = await handler.validatePath(longPath);
 
       expect(result.isValid).toBe(false);
@@ -205,7 +205,7 @@ describe('PathHandler Service', () => {
 
     it('should warn about very long paths on Unix systems', async () => {
       const handler = new PathHandler('linux');
-      const veryLongPath = '/home/user/' + 'a'.repeat(5000);
+      const veryLongPath = `/home/user/${'a'.repeat(5000)}`;
       const result = await handler.validatePath(veryLongPath);
 
       expect(result.warnings.some((w) => w.code === 'VERY_LONG_PATH')).toBe(true);
@@ -282,7 +282,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should check read permissions', async () => {
-      mockFs.access.mockImplementation((path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: any, mode: any) => {
         if (mode === fs.constants.R_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -295,7 +295,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should check write permissions', async () => {
-      mockFs.access.mockImplementation((path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: any, mode: any) => {
         if (mode === fs.constants.W_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -308,7 +308,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should check execute permissions', async () => {
-      mockFs.access.mockImplementation((path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: any, mode: any) => {
         if (mode === fs.constants.X_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -382,7 +382,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should detect read-only files on Windows', async () => {
-      mockFs.access.mockImplementation((path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: any, mode: any) => {
         if (mode === fs.constants.W_OK) return Promise.reject(new Error('Permission denied'));
         return Promise.resolve();
       });
@@ -399,7 +399,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should provide detailed error messages for Windows permission issues', async () => {
-      mockFs.access.mockImplementation((path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: any, _mode: any) => {
         return Promise.reject(new Error('Access denied'));
       });
 

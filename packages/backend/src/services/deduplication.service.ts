@@ -198,7 +198,7 @@ export class DeduplicationService {
 
 // Create singleton instance
 export const deduplicationService = new DeduplicationService(
-  Number.parseInt(process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString())
+  Number.parseInt(process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString(), 10)
 );
 
 export default deduplicationService;

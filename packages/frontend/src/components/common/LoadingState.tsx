@@ -2,44 +2,44 @@
  * Loading state component with progress indicators
  */
 
-import type React from "react";
+import type React from 'react';
 
 interface LoadingStateProps {
   message?: string;
   progress?: number;
   stage?: string;
   showProgress?: boolean;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 const LoadingState: React.FC<LoadingStateProps> = ({
-  message = "Loading...",
+  message = 'Loading...',
   progress,
   stage,
   showProgress = false,
-  size = "md",
-  className = "",
+  size = 'md',
+  className = '',
 }) => {
   const getSizeClasses = () => {
     switch (size) {
-      case "sm":
+      case 'sm':
         return {
-          spinner: "h-4 w-4",
-          text: "text-xs",
-          container: "p-2",
+          spinner: 'h-4 w-4',
+          text: 'text-xs',
+          container: 'p-2',
         };
-      case "lg":
+      case 'lg':
         return {
-          spinner: "h-8 w-8",
-          text: "text-base",
-          container: "p-6",
+          spinner: 'h-8 w-8',
+          text: 'text-base',
+          container: 'p-6',
         };
       default:
         return {
-          spinner: "h-5 w-5",
-          text: "text-sm",
-          container: "p-4",
+          spinner: 'h-5 w-5',
+          text: 'text-sm',
+          container: 'p-4',
         };
     }
   };
@@ -47,9 +47,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
   const sizeClasses = getSizeClasses();
 
   return (
-    <div
-      className={`flex items-center justify-center ${sizeClasses.container} ${className}`}
-    >
+    <div className={`flex items-center justify-center ${sizeClasses.container} ${className}`}>
       <div className="flex flex-col items-center space-y-3">
         {/* Spinner */}
         <div className="relative">
@@ -75,7 +73,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
           </svg>
 
           {/* Progress ring overlay */}
-          {showProgress && typeof progress === "number" && (
+          {showProgress && typeof progress === 'number' && (
             <svg
               className={`absolute inset-0 ${sizeClasses.spinner} transform -rotate-90`}
               viewBox="0 0 24 24"
@@ -106,23 +104,17 @@ const LoadingState: React.FC<LoadingStateProps> = ({
 
         {/* Message and stage */}
         <div className="text-center">
-          <p className={`${sizeClasses.text} text-gray-600 font-medium`}>
-            {message}
-          </p>
+          <p className={`${sizeClasses.text} text-gray-600 font-medium`}>{message}</p>
 
-          {stage && (
-            <p className={`${sizeClasses.text} text-gray-500 mt-1`}>{stage}</p>
-          )}
+          {stage && <p className={`${sizeClasses.text} text-gray-500 mt-1`}>{stage}</p>}
 
-          {showProgress && typeof progress === "number" && (
-            <p className={`${sizeClasses.text} text-gray-500 mt-1`}>
-              {Math.round(progress)}%
-            </p>
+          {showProgress && typeof progress === 'number' && (
+            <p className={`${sizeClasses.text} text-gray-500 mt-1`}>{Math.round(progress)}%</p>
           )}
         </div>
 
         {/* Progress bar (alternative to ring) */}
-        {showProgress && typeof progress === "number" && size !== "sm" && (
+        {showProgress && typeof progress === 'number' && size !== 'sm' && (
           <div className="w-full max-w-xs bg-gray-200 rounded-full h-2">
             <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"

@@ -565,7 +565,7 @@ describe('ErrorMessageService', () => {
       const result = errorMessageService.createPathErrorMessage(errors, warnings, path);
 
       expect(result.details).toBeDefined();
-      expect(result.details!.length).toBeGreaterThan(10);
+      expect(result.details?.length).toBeGreaterThan(10);
       expect(result.details).toContain('searched');
     });
 

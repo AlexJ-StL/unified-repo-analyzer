@@ -140,7 +140,7 @@ describe('Path Integration Tests', () => {
 
     it('should reject path that is too long', async () => {
       // Create a path longer than 260 characters
-      const longPath = 'C:\\' + 'a'.repeat(300);
+      const longPath = `C:\\${'a'.repeat(300)}`;
 
       const response = await request(app)
         .post('/api/path/validate')
@@ -432,7 +432,7 @@ describe('Path Integration Tests', () => {
     });
 
     it('should handle very long paths gracefully', async () => {
-      const veryLongPath = 'C:\\' + 'VeryLongDirectoryName'.repeat(20);
+      const veryLongPath = `C:\\${'VeryLongDirectoryName'.repeat(20)}`;
 
       const response = await request(app)
         .post('/api/path/validate')
@@ -573,7 +573,7 @@ describe('PathHandler Service Unit Tests', () => {
 
     it('should validate path length limits', async () => {
       const shortPath = 'C:\\Test';
-      const longPath = 'C:\\' + 'a'.repeat(300);
+      const longPath = `C:\\${'a'.repeat(300)}`;
 
       const shortResult = await pathHandler.validatePath(shortPath);
       // May be invalid due to non-existence, but not due to length

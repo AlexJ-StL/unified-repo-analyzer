@@ -2,10 +2,10 @@
  * End-to-end integration tests for complete analysis workflow with path handling
  */
 
+import fs from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import express from 'express';
-import fs from 'fs/promises';
-import { tmpdir } from 'os';
-import path from 'path';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import routes from '../routes';
@@ -28,9 +28,7 @@ describe('Complete Analysis Workflow Integration Tests', () => {
     // Cleanup temporary directory
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
-    } catch (error) {
-      console.warn('Failed to cleanup temp directory:', error);
-    }
+    } catch (_error) {}
   });
 
   beforeEach(async () => {
@@ -254,7 +252,7 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('error');
       expect(response.body).toHaveProperty('technicalDetails');
 
-      if (response.body.technicalDetails && response.body.technicalDetails.errors) {
+      if (response.body.technicalDetails?.errors) {
         const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
         expect(errorCodes).toContain('INVALID_CHARACTERS');
       }
@@ -277,14 +275,14 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('error');
       expect(response.body).toHaveProperty('technicalDetails');
 
-      if (response.body.technicalDetails && response.body.technicalDetails.errors) {
+      if (response.body.technicalDetails?.errors) {
         const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
         expect(errorCodes).toContain('RESERVED_NAME');
       }
     });
 
     it('should handle very long paths', async () => {
-      const longPath = 'C:\\' + 'VeryLongDirectoryName'.repeat(20);
+      const longPath = `C:\\${'VeryLongDirectoryName'.repeat(20)}`;
 
       const response = await request(app)
         .post('/api/analyze')
@@ -300,7 +298,7 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('error');
       expect(response.body).toHaveProperty('technicalDetails');
 
-      if (response.body.technicalDetails && response.body.technicalDetails.errors) {
+      if (response.body.technicalDetails?.errors) {
         const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
         expect(errorCodes).toContain('PATH_TOO_LONG');
       }
@@ -352,7 +350,7 @@ module.exports = { add, multiply };`
         testRepoPath,
         testRepoPath.replace(/\//g, '\\'),
         testRepoPath + path.sep, // With trailing separator
-        testRepoPath.replace(/\//g, '\\') + '\\', // With trailing separator
+        `${testRepoPath.replace(/\//g, '\\')}\\`, // With trailing separator
       ];
 
       const response = await request(app)
@@ -410,7 +408,7 @@ module.exports = { add, multiply };`
     });
 
     it('should handle concurrent analysis requests', async () => {
-      const requests = Array.from({ length: 3 }, (_, i) =>
+      const requests = Array.from({ length: 3 }, (_, _i) =>
         request(app)
           .post('/api/analyze')
           .send({

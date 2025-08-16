@@ -9,10 +9,10 @@ describe('Platform-Specific Integration Tests', () => {
   let pathHandler: PathHandler;
   let logger: Logger;
   let testDir: string;
-  let originalPlatform: string;
+  let _originalPlatform: string;
 
   beforeEach(async () => {
-    originalPlatform = platform();
+    _originalPlatform = platform();
     testDir = path.join(process.cwd(), 'test-platform-integration');
 
     // Clean up and create test directory
@@ -87,7 +87,7 @@ describe('Platform-Specific Integration Tests', () => {
     });
 
     it('should handle Windows path length limits', async () => {
-      const longPath = 'C:\\' + 'a'.repeat(300); // Exceeds 260 character limit
+      const longPath = `C:\\${'a'.repeat(300)}`; // Exceeds 260 character limit
       const result = await pathHandler.validatePath(longPath);
 
       expect(result.errors.some((e) => e.code === 'PATH_TOO_LONG')).toBe(true);
@@ -162,7 +162,7 @@ describe('Platform-Specific Integration Tests', () => {
     });
 
     it('should handle very long Unix paths', async () => {
-      const longPath = '/' + 'a'.repeat(5000);
+      const longPath = `/${'a'.repeat(5000)}`;
       const result = await pathHandler.validatePath(longPath);
 
       expect(result.warnings.some((w) => w.code === 'VERY_LONG_PATH')).toBe(true);
@@ -238,7 +238,7 @@ describe('Platform-Specific Integration Tests', () => {
       pathHandler = new PathHandler();
 
       // Mock a slow file system operation
-      const originalStat = fs.stat;
+      const _originalStat = fs.stat;
       vi.spyOn(fs, 'stat').mockImplementation(
         () => new Promise((resolve) => setTimeout(resolve, 2000))
       );
@@ -285,7 +285,7 @@ describe('Platform-Specific Integration Tests', () => {
 
       const progressUpdates: Array<{ stage: string; percentage: number }> = [];
 
-      const result = await pathHandler.validatePath(testDir, {
+      const _result = await pathHandler.validatePath(testDir, {
         onProgress: (progress) => {
           progressUpdates.push({
             stage: progress.stage,
@@ -383,7 +383,7 @@ describe('Platform-Specific Integration Tests', () => {
         { path: 'C:\\folder\\CON', expectedError: 'RESERVED_NAME' },
         { path: 'C:\\folder\\file<name', expectedError: 'INVALID_CHARACTERS' },
         { path: '1:\\invalid', expectedError: 'INVALID_DRIVE_LETTER' },
-        { path: 'C:\\' + 'a'.repeat(300), expectedError: 'PATH_TOO_LONG' },
+        { path: `C:\\${'a'.repeat(300)}`, expectedError: 'PATH_TOO_LONG' },
       ];
 
       for (const { path: testPath, expectedError } of invalidInputs) {
@@ -430,7 +430,7 @@ describe('Platform-Specific Integration Tests', () => {
 
       // Mock logger to capture log entries
       const logEntries: Array<{ level: string; message: string; metadata?: any }> = [];
-      const mockLogger = {
+      const _mockLogger = {
         debug: (message: string, metadata?: any) =>
           logEntries.push({ level: 'debug', message, metadata }),
         info: (message: string, metadata?: any) =>

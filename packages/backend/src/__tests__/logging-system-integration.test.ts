@@ -291,7 +291,7 @@ describe('Logging System Integration Tests', () => {
       });
 
       // Mock HTTP transport to capture what would be sent
-      const sentLogs: any[] = [];
+      const _sentLogs: any[] = [];
 
       // Note: In a real test, we would mock the HTTP transport
       // For this test, we'll verify the logger configuration

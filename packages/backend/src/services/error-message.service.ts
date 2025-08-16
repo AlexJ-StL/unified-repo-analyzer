@@ -48,7 +48,7 @@ export class ErrorMessageService {
    */
   public createPathErrorMessage(
     errors: PathError[],
-    warnings: PathWarning[],
+    _warnings: PathWarning[],
     path: string
   ): ErrorMessageTemplate {
     // Determine the primary error type

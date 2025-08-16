@@ -1,11 +1,9 @@
-import { useState } from "react";
-import PathInput from "../components/common/PathInput";
-import MainLayout from "../components/layout/MainLayout";
+import { useState } from 'react';
+import PathInput from '../components/common/PathInput';
+import MainLayout from '../components/layout/MainLayout';
 
 const SettingsPage = () => {
-  const [cacheDirectory, setCacheDirectory] = useState(
-    "~/.repo-analyzer/cache"
-  );
+  const [cacheDirectory, setCacheDirectory] = useState('~/.repo-analyzer/cache');
   const [isCacheDirectoryValid, setIsCacheDirectoryValid] = useState(true);
 
   return (
@@ -15,9 +13,7 @@ const SettingsPage = () => {
 
         <div className="space-y-8">
           <div>
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              General Settings
-            </h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">General Settings</h2>
             <div className="space-y-4">
               <div>
                 <label
@@ -62,10 +58,7 @@ const SettingsPage = () => {
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label
-                  htmlFor="auto-index"
-                  className="ml-2 block text-sm text-gray-900"
-                >
+                <label htmlFor="auto-index" className="ml-2 block text-sm text-gray-900">
                   Automatically index new repositories
                 </label>
               </div>
@@ -73,9 +66,7 @@ const SettingsPage = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              LLM Provider Settings
-            </h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">LLM Provider Settings</h2>
             <div className="space-y-4">
               <div>
                 <label
@@ -96,10 +87,7 @@ const SettingsPage = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="api-key"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label htmlFor="api-key" className="block text-sm font-medium text-gray-700 mb-1">
                   API Key
                 </label>
                 <input
@@ -130,9 +118,7 @@ const SettingsPage = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              File System Settings
-            </h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">File System Settings</h2>
             <div className="space-y-4">
               <div>
                 <label
@@ -148,18 +134,14 @@ const SettingsPage = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="node_modules/&#10;.git/&#10;*.log"
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  Enter patterns to ignore, one per line
-                </p>
+                <p className="mt-1 text-sm text-gray-500">Enter patterns to ignore, one per line</p>
               </div>
 
               <PathInput
                 label="Cache Directory"
                 value={cacheDirectory}
                 onChange={setCacheDirectory}
-                onValidationChange={(isValid) =>
-                  setIsCacheDirectoryValid(isValid)
-                }
+                onValidationChange={(isValid) => setIsCacheDirectoryValid(isValid)}
                 placeholder="~/.repo-analyzer/cache"
                 showFormatHints={true}
                 validateOnChange={true}

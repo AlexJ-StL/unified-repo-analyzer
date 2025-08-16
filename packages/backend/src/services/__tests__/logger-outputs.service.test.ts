@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { Logger, type LoggerConfig, LogLevel } from '../logger.service.js';
+import { describe, expect, it } from 'vitest';
+import { Logger, type LoggerConfig } from '../logger.service.js';
 
 describe('Logger Output Destinations', () => {
   describe('Console Output', () => {

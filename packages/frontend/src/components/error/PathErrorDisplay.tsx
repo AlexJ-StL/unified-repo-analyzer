@@ -1,5 +1,5 @@
-import type React from "react";
-import type { PathErrorResponse } from "../../services/api";
+import type React from 'react';
+import type { PathErrorResponse } from '../../services/api';
 
 interface PathErrorDisplayProps {
   error: PathErrorResponse;
@@ -12,12 +12,10 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
   error,
   onRetry,
   onDismiss,
-  className = "",
+  className = '',
 }) => {
   return (
-    <div
-      className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}
-    >
+    <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
       <div className="flex">
         <div className="flex-shrink-0">
           <svg
@@ -39,21 +37,17 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
           <div className="mt-2 text-sm text-red-700">
             <p>{error.message}</p>
 
-            {error.details && (
-              <p className="mt-1 text-xs text-red-600">{error.details}</p>
-            )}
+            {error.details && <p className="mt-1 text-xs text-red-600">{error.details}</p>}
 
             {error.path && (
               <div className="mt-2 p-2 bg-red-100 rounded text-xs font-mono">
                 <span className="text-red-600">Path:</span> {error.path}
-                {error.normalizedPath &&
-                  error.normalizedPath !== error.path && (
-                    <>
-                      <br />
-                      <span className="text-red-600">Normalized:</span>{" "}
-                      {error.normalizedPath}
-                    </>
-                  )}
+                {error.normalizedPath && error.normalizedPath !== error.path && (
+                  <>
+                    <br />
+                    <span className="text-red-600">Normalized:</span> {error.normalizedPath}
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -88,45 +82,35 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
                 Technical Details
               </summary>
               <div className="mt-2 text-xs text-red-600">
-                {error.technicalDetails.errors &&
-                  error.technicalDetails.errors.length > 0 && (
-                    <div>
-                      <strong>Errors:</strong>
-                      <ul className="list-disc list-inside ml-2">
-                        {error.technicalDetails.errors.map((err, index) => (
-                          <li key={index}>
-                            <code>{err.code}</code>: {err.message}
-                            {err.details && (
-                              <div className="ml-4 text-gray-600">
-                                {err.details}
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                {error.technicalDetails.errors && error.technicalDetails.errors.length > 0 && (
+                  <div>
+                    <strong>Errors:</strong>
+                    <ul className="list-disc list-inside ml-2">
+                      {error.technicalDetails.errors.map((err, index) => (
+                        <li key={index}>
+                          <code>{err.code}</code>: {err.message}
+                          {err.details && <div className="ml-4 text-gray-600">{err.details}</div>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                {error.technicalDetails.warnings &&
-                  error.technicalDetails.warnings.length > 0 && (
-                    <div className="mt-2">
-                      <strong>Warnings:</strong>
-                      <ul className="list-disc list-inside ml-2">
-                        {error.technicalDetails.warnings.map(
-                          (warning, index) => (
-                            <li key={index}>
-                              <code>{warning.code}</code>: {warning.message}
-                              {warning.details && (
-                                <div className="ml-4 text-gray-600">
-                                  {warning.details}
-                                </div>
-                              )}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                {error.technicalDetails.warnings && error.technicalDetails.warnings.length > 0 && (
+                  <div className="mt-2">
+                    <strong>Warnings:</strong>
+                    <ul className="list-disc list-inside ml-2">
+                      {error.technicalDetails.warnings.map((warning, index) => (
+                        <li key={index}>
+                          <code>{warning.code}</code>: {warning.message}
+                          {warning.details && (
+                            <div className="ml-4 text-gray-600">{warning.details}</div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </details>
           )}
@@ -141,12 +125,7 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
                 onClick={onRetry}
                 title="Retry"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -164,11 +143,7 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
                 onClick={onDismiss}
                 title="Dismiss"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"

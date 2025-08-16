@@ -13,8 +13,8 @@ const mkdir = promisify(fs.mkdir);
 const rmdir = promisify(fs.rmdir);
 const unlink = promisify(fs.unlink);
 const access = promisify(fs.access);
-const stat = promisify(fs.stat);
-const readdir = promisify(fs.readdir);
+const _stat = promisify(fs.stat);
+const _readdir = promisify(fs.readdir);
 
 // Mock the logger service
 vi.mock('../logger.service', () => ({
@@ -81,7 +81,7 @@ describe('LogManagementService', () => {
         await unlink(path.join(testLogDir, file));
       }
       await rmdir(testLogDir);
-    } catch (error) {
+    } catch (_error) {
       // Ignore cleanup errors
     }
   });
@@ -336,13 +336,13 @@ describe('LogManagementService', () => {
 
   describe('Service Lifecycle', () => {
     it('should start and stop service correctly', async () => {
-      expect(service['isRunning']).toBe(false);
+      expect(service.isRunning).toBe(false);
 
       await service.start();
-      expect(service['isRunning']).toBe(true);
+      expect(service.isRunning).toBe(true);
 
       await service.stop();
-      expect(service['isRunning']).toBe(false);
+      expect(service.isRunning).toBe(false);
     });
 
     it('should not start service twice', async () => {
@@ -351,13 +351,13 @@ describe('LogManagementService', () => {
       // Starting again should not throw error
       await service.start();
 
-      expect(service['isRunning']).toBe(true);
+      expect(service.isRunning).toBe(true);
     });
 
     it('should handle stop when not running', async () => {
       // Should not throw error when stopping a service that's not running
       await service.stop();
-      expect(service['isRunning']).toBe(false);
+      expect(service.isRunning).toBe(false);
     });
   });
 

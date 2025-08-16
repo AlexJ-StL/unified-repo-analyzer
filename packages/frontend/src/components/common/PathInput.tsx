@@ -2,24 +2,18 @@
  * Enhanced path input component with real-time validation
  */
 
-import { FolderIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
-import type React from "react";
-import { useCallback, useEffect, useState } from "react";
-import {
-  type PathValidationResult,
-  pathValidationService,
-} from "../../services/pathValidation";
-import EnhancedErrorDisplay from "../error/EnhancedErrorDisplay";
-import LoadingState from "./LoadingState";
+import { FolderIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { type PathValidationResult, pathValidationService } from '../../services/pathValidation';
+import EnhancedErrorDisplay from '../error/EnhancedErrorDisplay';
+import LoadingState from './LoadingState';
 
 interface PathInputProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  onValidationChange?: (
-    isValid: boolean,
-    result?: PathValidationResult
-  ) => void;
+  onValidationChange?: (isValid: boolean, result?: PathValidationResult) => void;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -39,15 +33,14 @@ const PathInput: React.FC<PathInputProps> = ({
   placeholder,
   required = false,
   disabled = false,
-  className = "",
+  className = '',
   showFormatHints = true,
   validateOnChange = true,
   validateExistence = true,
   validatePermissions = true,
   timeoutMs = 5000,
 }) => {
-  const [validationResult, setValidationResult] =
-    useState<PathValidationResult | null>(null);
+  const [validationResult, setValidationResult] = useState<PathValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [showHints, setShowHints] = useState(false);
   const [validationProgress, setValidationProgress] = useState<{
@@ -57,8 +50,7 @@ const PathInput: React.FC<PathInputProps> = ({
   } | null>(null);
 
   // Debounced validation
-  const [validationTimeout, setValidationTimeout] =
-    useState<NodeJS.Timeout | null>(null);
+  const [validationTimeout, setValidationTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const validatePath = useCallback(
     async (pathToValidate: string) => {
@@ -70,9 +62,9 @@ const PathInput: React.FC<PathInputProps> = ({
 
       setIsValidating(true);
       setValidationProgress({
-        stage: "initializing",
+        stage: 'initializing',
         percentage: 0,
-        message: "Starting path validation...",
+        message: 'Starting path validation...',
       });
 
       try {
@@ -95,8 +87,8 @@ const PathInput: React.FC<PathInputProps> = ({
           isValid: false,
           errors: [
             {
-              code: "VALIDATION_ERROR",
-              message: "Failed to validate path",
+              code: 'VALIDATION_ERROR',
+              message: 'Failed to validate path',
               details: error instanceof Error ? error.message : String(error),
             },
           ],
@@ -157,26 +149,22 @@ const PathInput: React.FC<PathInputProps> = ({
   // Determine input styling based on validation state
   const getInputStyling = () => {
     if (isValidating) {
-      return "border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500";
+      return 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500';
     }
     if (validationResult) {
       if (validationResult.isValid) {
-        return "border-green-300 focus:border-green-500 focus:ring-green-500";
-      } else {
-        return "border-red-300 focus:border-red-500 focus:ring-red-500";
+        return 'border-green-300 focus:border-green-500 focus:ring-green-500';
       }
+      return 'border-red-300 focus:border-red-500 focus:ring-red-500';
     }
-    return "border-gray-300 focus:border-blue-500 focus:ring-blue-500";
+    return 'border-gray-300 focus:border-blue-500 focus:ring-blue-500';
   };
 
   return (
     <div className={`space-y-2 ${className}`}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <label
-          htmlFor={`path-input-${label}`}
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor={`path-input-${label}`} className="block text-sm font-medium text-gray-700">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -206,7 +194,7 @@ const PathInput: React.FC<PathInputProps> = ({
             block w-full px-3 py-2 text-sm rounded-md shadow-sm
             placeholder-gray-400 focus:outline-none focus:ring-1
             ${getInputStyling()}
-            ${disabled ? "bg-gray-50 text-gray-500 cursor-not-allowed" : "bg-white"}
+            ${disabled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : 'bg-white'}
           `}
         />
 
@@ -216,7 +204,7 @@ const PathInput: React.FC<PathInputProps> = ({
           onClick={() => {
             // In a real implementation, this would open a file dialog
             // For now, just show a placeholder message
-            alert("File browser not implemented in demo");
+            alert('File browser not implemented in demo');
           }}
           disabled={disabled}
           className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed"
@@ -243,11 +231,7 @@ const PathInput: React.FC<PathInputProps> = ({
           {/* Success message */}
           {validationResult.isValid && (
             <div className="flex items-center text-sm text-green-600">
-              <svg
-                className="h-4 w-4 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -255,18 +239,16 @@ const PathInput: React.FC<PathInputProps> = ({
                 />
               </svg>
               Path is valid
-              {validationResult.normalizedPath &&
-                validationResult.normalizedPath !== value && (
-                  <span className="ml-2 text-xs text-gray-500">
-                    (normalized: {validationResult.normalizedPath})
-                  </span>
-                )}
+              {validationResult.normalizedPath && validationResult.normalizedPath !== value && (
+                <span className="ml-2 text-xs text-gray-500">
+                  (normalized: {validationResult.normalizedPath})
+                </span>
+              )}
             </div>
           )}
 
           {/* Enhanced error and warning display */}
-          {(validationResult.errors.length > 0 ||
-            validationResult.warnings.length > 0) && (
+          {(validationResult.errors.length > 0 || validationResult.warnings.length > 0) && (
             <EnhancedErrorDisplay
               errors={validationResult.errors}
               warnings={validationResult.warnings}
@@ -282,23 +264,11 @@ const PathInput: React.FC<PathInputProps> = ({
           {validationResult.isValid && validationResult.metadata.exists && (
             <div className="text-xs text-gray-600 bg-gray-50 rounded p-2">
               <div className="grid grid-cols-2 gap-2">
-                <div>
-                  Type:{" "}
-                  {validationResult.metadata.isDirectory ? "Directory" : "File"}
-                </div>
-                <div>
-                  Readable:{" "}
-                  {validationResult.metadata.permissions.read ? "Yes" : "No"}
-                </div>
-                <div>
-                  Writable:{" "}
-                  {validationResult.metadata.permissions.write ? "Yes" : "No"}
-                </div>
+                <div>Type: {validationResult.metadata.isDirectory ? 'Directory' : 'File'}</div>
+                <div>Readable: {validationResult.metadata.permissions.read ? 'Yes' : 'No'}</div>
+                <div>Writable: {validationResult.metadata.permissions.write ? 'Yes' : 'No'}</div>
                 {validationResult.metadata.size !== undefined && (
-                  <div>
-                    Size: {(validationResult.metadata.size / 1024).toFixed(1)}{" "}
-                    KB
-                  </div>
+                  <div>Size: {(validationResult.metadata.size / 1024).toFixed(1)} KB</div>
                 )}
               </div>
             </div>
