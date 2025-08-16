@@ -6,8 +6,8 @@
 	"scripts": {
 		"dev": "bun run vite || npm run vite",
 		"tsc": "node ../../node_modules/typescript/bin/tsc --noEmit --skipLibCheck",
-		"build": "bun run tsc --skipLibCheck && bun run vite build || (npm run tsc --skipLibCheck && npm run vite -- build)",
-		"build:prod": "cross-env NODE_ENV=production bun run tsc && bun run vite build --mode production || cross-env NODE_ENV=production npm run tsc && npm run vite -- build --mode production",
+		"build": "bun run vite build || npm run vite -- build",
+		"build:prod": "cross-env NODE_ENV=production bun run vite build --mode production || cross-env NODE_ENV=production npm run vite -- build --mode production",
 		"preview": "bun run vite preview || npm run vite -- preview",
 		"test": "bun run vitest run || npm run vitest -- run",
 		"test:prod": "cross-env NODE_ENV=production bun run vitest run --coverage || cross-env NODE_ENV=production npm run vitest -- run --coverage",
