@@ -40,13 +40,11 @@
 		"test:platform": "vitest run tests/integration/path-handler-platform.test.ts --config tests/integration/vitest.config.ts",
 		"test:e2e": "vitest run tests/integration/path-handler-e2e.test.ts --config tests/integration/vitest.config.ts",
 		"test:performance": "vitest run tests/integration/path-handler-performance.test.ts --config tests/integration/vitest.config.ts",
-
 		"lint": "bunx biome check unified-repo-analyzer --reporter summary --max-diagnostics 500",
 		"lint:fix": "bunx biome check unified-repo-analyzer --write --reporter summary --max-diagnostics 500",
 		"lint:unsafe": "bunx biome check unified-repo-analyzer --write --unsafe --reporter summary --max-diagnostics 500",
 		"lint:folder": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/biome-folder.ps1",
 		"lint:report": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/biome-report.ps1",
-
 		"format": "biome format --write .",
 		"check": "biome check .",
 		"clean": "bun run --cwd packages/backend clean || npm run clean --workspace @unified-repo-analyzer/backend && bun run --cwd packages/frontend clean || npm run clean --workspace @unified-repo-analyzer/frontend && bun run --cwd packages/cli clean || npm run clean --workspace @unified-repo-analyzer/cli && bun run --cwd packages/shared clean || npm run clean --workspace @unified-repo-analyzer/shared",
@@ -89,7 +87,7 @@
 		"bun": ">=1.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.1.2",
+		"@biomejs/biome": "^2.2.0",
 		"cross-env": "^7.0.3",
 		"jsdom": "^24.0.0",
 		"typescript": "^5.3.3"

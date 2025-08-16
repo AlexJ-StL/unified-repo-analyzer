@@ -36,18 +36,18 @@ export interface LogAlert {
 
 export declare class LogManagementService extends EventEmitter {
   constructor(config?: Partial<LogManagementConfig>);
-  
+
   start(): Promise<void>;
   stop(): Promise<void>;
-  
+
   performCleanup(): Promise<{
     filesRemoved: number;
     spaceFreed: number;
     errors: string[];
   }>;
-  
+
   getLogFiles(): Promise<LogFileInfo[]>;
-  
+
   getLogDirectoryStats(): Promise<{
     totalFiles: number;
     totalSize: number;
@@ -55,7 +55,7 @@ export declare class LogManagementService extends EventEmitter {
     newestFile: Date | null;
     averageFileSize: number;
   }>;
-  
+
   performMonitoring(): Promise<void>;
   updateRetentionPolicy(policy: Partial<LogRetentionPolicy>): void;
   getConfig(): LogManagementConfig;

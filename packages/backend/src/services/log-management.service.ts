@@ -1,9 +1,9 @@
+import { EventEmitter } from 'node:events';
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { EventEmitter } from 'node:events';
-import { logger } from './logger.service';
 import { env } from '../config/environment';
+import { logger } from './logger.service';
 
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
@@ -52,7 +52,7 @@ export class LogManagementService extends EventEmitter {
 
   constructor(config?: Partial<LogManagementConfig>) {
     super();
-    
+
     this.config = {
       logDirectory: env.LOG_DIR || path.join(process.cwd(), 'logs'),
       retentionPolicy: {
@@ -75,12 +75,16 @@ export class LogManagementService extends EventEmitter {
 
   private setupEventHandlers(): void {
     this.on('alert', (alert: LogAlert) => {
-      logger.warn(`Log Management Alert: ${alert.type}`, {
-        severity: alert.severity,
-        message: alert.message,
-        details: alert.details,
-        timestamp: alert.timestamp,
-      }, 'log-management');
+      logger.warn(
+        `Log Management Alert: ${alert.type}`,
+        {
+          severity: alert.severity,
+          message: alert.message,
+          details: alert.details,
+          timestamp: alert.timestamp,
+        },
+        'log-management'
+      );
     });
 
     this.on('cleanup-completed', (stats: any) => {
@@ -108,22 +112,25 @@ export class LogManagementService extends EventEmitter {
     try {
       // Ensure log directory exists
       await this.ensureLogDirectory();
-      
+
       // Start cleanup timer
       this.startCleanupTimer();
-      
+
       // Start monitoring if enabled
       if (this.config.monitoringEnabled) {
         this.startMonitoring();
       }
 
       this.isRunning = true;
-      logger.info('Log management service started', {
-        logDirectory: this.config.logDirectory,
-        retentionPolicy: this.config.retentionPolicy,
-        monitoringEnabled: this.config.monitoringEnabled,
-      }, 'log-management');
-
+      logger.info(
+        'Log management service started',
+        {
+          logDirectory: this.config.logDirectory,
+          retentionPolicy: this.config.retentionPolicy,
+          monitoringEnabled: this.config.monitoringEnabled,
+        },
+        'log-management'
+      );
     } catch (error) {
       logger.error('Failed to start log management service', error as Error, {}, 'log-management');
       throw error;
@@ -168,9 +175,13 @@ export class LogManagementService extends EventEmitter {
     };
 
     try {
-      logger.info('Starting log cleanup', {
-        retentionPolicy: this.config.retentionPolicy,
-      }, 'log-management');
+      logger.info(
+        'Starting log cleanup',
+        {
+          retentionPolicy: this.config.retentionPolicy,
+        },
+        'log-management'
+      );
 
       const logFiles = await this.getLogFiles();
       const filesToRemove = await this.identifyFilesForRemoval(logFiles);
@@ -180,18 +191,27 @@ export class LogManagementService extends EventEmitter {
           await unlink(file.path);
           stats.filesRemoved++;
           stats.spaceFreed += file.size;
-          
-          logger.debug('Removed log file', {
-            path: file.path,
-            size: file.size,
-            age: file.age,
-          }, 'log-management');
+
+          logger.debug(
+            'Removed log file',
+            {
+              path: file.path,
+              size: file.size,
+              age: file.age,
+            },
+            'log-management'
+          );
         } catch (error) {
           const errorMsg = `Failed to remove ${file.path}: ${(error as Error).message}`;
           stats.errors.push(errorMsg);
-          logger.error('Failed to remove log file', error as Error, {
-            path: file.path,
-          }, 'log-management');
+          logger.error(
+            'Failed to remove log file',
+            error as Error,
+            {
+              path: file.path,
+            },
+            'log-management'
+          );
         }
       }
 
@@ -205,7 +225,6 @@ export class LogManagementService extends EventEmitter {
 
       this.emit('cleanup-completed', cleanupStats);
       return stats;
-
     } catch (error) {
       this.emit('cleanup-failed', error);
       throw error;
@@ -222,15 +241,15 @@ export class LogManagementService extends EventEmitter {
 
       for (const file of files) {
         const filePath = path.join(this.config.logDirectory, file);
-        
+
         try {
           const stats = await stat(filePath);
-          
+
           // Only include actual log files (not directories or other files)
           if (stats.isFile() && this.isLogFile(file)) {
             const now = new Date();
             const age = Math.floor((now.getTime() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24));
-            
+
             logFiles.push({
               path: filePath,
               size: stats.size,
@@ -240,18 +259,27 @@ export class LogManagementService extends EventEmitter {
             });
           }
         } catch (error) {
-          logger.warn('Failed to get stats for log file', {
-            file: filePath,
-            error: (error as Error).message,
-          }, 'log-management');
+          logger.warn(
+            'Failed to get stats for log file',
+            {
+              file: filePath,
+              error: (error as Error).message,
+            },
+            'log-management'
+          );
         }
       }
 
       return logFiles.sort((a, b) => b.modified.getTime() - a.modified.getTime());
     } catch (error) {
-      logger.error('Failed to read log directory', error as Error, {
-        directory: this.config.logDirectory,
-      }, 'log-management');
+      logger.error(
+        'Failed to read log directory',
+        error as Error,
+        {
+          directory: this.config.logDirectory,
+        },
+        'log-management'
+      );
       throw error;
     }
   }
@@ -267,7 +295,7 @@ export class LogManagementService extends EventEmitter {
     averageFileSize: number;
   }> {
     const logFiles = await this.getLogFiles();
-    
+
     if (logFiles.length === 0) {
       return {
         totalFiles: 0,
@@ -279,10 +307,14 @@ export class LogManagementService extends EventEmitter {
     }
 
     const totalSize = logFiles.reduce((sum, file) => sum + file.size, 0);
-    const oldestFile = logFiles.reduce((oldest, file) => 
-      !oldest || file.created < oldest ? file.created : oldest, null as Date | null);
-    const newestFile = logFiles.reduce((newest, file) => 
-      !newest || file.created > newest ? file.created : newest, null as Date | null);
+    const oldestFile = logFiles.reduce(
+      (oldest, file) => (!oldest || file.created < oldest ? file.created : oldest),
+      null as Date | null
+    );
+    const newestFile = logFiles.reduce(
+      (newest, file) => (!newest || file.created > newest ? file.created : newest),
+      null as Date | null
+    );
 
     return {
       totalFiles: logFiles.length,
@@ -308,21 +340,20 @@ export class LogManagementService extends EventEmitter {
       await this.checkFileSizes(logFiles);
 
       // Check for large files that might indicate issues
-      const largeFiles = logFiles.filter(file => 
-        file.size > this.parseSizeToBytes(this.config.alertThresholds.fileSize)
+      const largeFiles = logFiles.filter(
+        (file) => file.size > this.parseSizeToBytes(this.config.alertThresholds.fileSize)
       );
 
       if (largeFiles.length > 0) {
         this.emitAlert('FILE_SIZE', 'MEDIUM', 'Large log files detected', {
           count: largeFiles.length,
-          files: largeFiles.map(f => ({
+          files: largeFiles.map((f) => ({
             path: f.path,
             size: this.formatBytes(f.size),
             age: f.age,
           })),
         });
       }
-
     } catch (error) {
       logger.error('Log monitoring failed', error as Error, {}, 'log-management');
     }
@@ -337,9 +368,13 @@ export class LogManagementService extends EventEmitter {
       ...policy,
     };
 
-    logger.info('Log retention policy updated', {
-      newPolicy: this.config.retentionPolicy,
-    }, 'log-management');
+    logger.info(
+      'Log retention policy updated',
+      {
+        newPolicy: this.config.retentionPolicy,
+      },
+      'log-management'
+    );
 
     // Restart cleanup timer with new interval if it changed
     if (policy.cleanupInterval && this.cleanupTimer) {
@@ -359,9 +394,13 @@ export class LogManagementService extends EventEmitter {
       await access(this.config.logDirectory);
     } catch {
       fs.mkdirSync(this.config.logDirectory, { recursive: true });
-      logger.info('Created log directory', {
-        directory: this.config.logDirectory,
-      }, 'log-management');
+      logger.info(
+        'Created log directory',
+        {
+          directory: this.config.logDirectory,
+        },
+        'log-management'
+      );
     }
   }
 
@@ -372,14 +411,18 @@ export class LogManagementService extends EventEmitter {
 
     const intervalMs = this.config.retentionPolicy.cleanupInterval * 60 * 60 * 1000;
     this.cleanupTimer = setInterval(() => {
-      this.performCleanup().catch(error => {
+      this.performCleanup().catch((error) => {
         logger.error('Scheduled cleanup failed', error, {}, 'log-management');
       });
     }, intervalMs);
 
-    logger.debug('Cleanup timer started', {
-      intervalHours: this.config.retentionPolicy.cleanupInterval,
-    }, 'log-management');
+    logger.debug(
+      'Cleanup timer started',
+      {
+        intervalHours: this.config.retentionPolicy.cleanupInterval,
+      },
+      'log-management'
+    );
   }
 
   private startMonitoring(): void {
@@ -390,14 +433,18 @@ export class LogManagementService extends EventEmitter {
     // Monitor every 5 minutes
     const monitoringInterval = 5 * 60 * 1000;
     this.monitoringTimer = setInterval(() => {
-      this.performMonitoring().catch(error => {
+      this.performMonitoring().catch((error) => {
         logger.error('Log monitoring failed', error, {}, 'log-management');
       });
     }, monitoringInterval);
 
-    logger.debug('Log monitoring started', {
-      intervalMinutes: 5,
-    }, 'log-management');
+    logger.debug(
+      'Log monitoring started',
+      {
+        intervalMinutes: 5,
+      },
+      'log-management'
+    );
   }
 
   private async identifyFilesForRemoval(logFiles: LogFileInfo[]): Promise<LogFileInfo[]> {
@@ -408,11 +455,11 @@ export class LogManagementService extends EventEmitter {
     const sortedFiles = [...logFiles].sort((a, b) => a.modified.getTime() - b.modified.getTime());
 
     // Remove files older than maxAge
-    const maxAgeFiles = sortedFiles.filter(file => file.age > policy.maxAge);
+    const maxAgeFiles = sortedFiles.filter((file) => file.age > policy.maxAge);
     filesToRemove.push(...maxAgeFiles);
 
     // Remove excess files beyond maxFiles limit
-    const remainingFiles = sortedFiles.filter(file => !filesToRemove.includes(file));
+    const remainingFiles = sortedFiles.filter((file) => !filesToRemove.includes(file));
     if (remainingFiles.length > policy.maxFiles) {
       const excessFiles = remainingFiles.slice(0, remainingFiles.length - policy.maxFiles);
       filesToRemove.push(...excessFiles);
@@ -420,7 +467,7 @@ export class LogManagementService extends EventEmitter {
 
     // Remove files if total size exceeds maxSize
     const maxSizeBytes = this.parseSizeToBytes(policy.maxSize);
-    const finalRemainingFiles = sortedFiles.filter(file => !filesToRemove.includes(file));
+    const finalRemainingFiles = sortedFiles.filter((file) => !filesToRemove.includes(file));
     let totalSize = finalRemainingFiles.reduce((sum, file) => sum + file.size, 0);
 
     if (totalSize > maxSizeBytes) {
@@ -449,36 +496,38 @@ export class LogManagementService extends EventEmitter {
       /rejections\.log/,
     ];
 
-    return logExtensions.some(ext => filename.endsWith(ext)) ||
-           logPatterns.some(pattern => pattern.test(filename));
+    return (
+      logExtensions.some((ext) => filename.endsWith(ext)) ||
+      logPatterns.some((pattern) => pattern.test(filename))
+    );
   }
 
   private parseSizeToBytes(sizeStr: string): number {
     const match = sizeStr.match(/^(\d+(?:\.\d+)?)(B|KB|MB|GB|TB)?$/i);
     if (!match) return 0;
-    
-    const size = parseFloat(match[1]);
+
+    const size = Number.parseFloat(match[1]);
     const unit = (match[2] || 'B').toUpperCase();
-    
+
     const multipliers: Record<string, number> = {
-      'B': 1,
-      'KB': 1024,
-      'MB': 1024 * 1024,
-      'GB': 1024 * 1024 * 1024,
-      'TB': 1024 * 1024 * 1024 * 1024,
+      B: 1,
+      KB: 1024,
+      MB: 1024 * 1024,
+      GB: 1024 * 1024 * 1024,
+      TB: 1024 * 1024 * 1024 * 1024,
     };
-    
+
     return Math.floor(size * (multipliers[unit] || 1));
   }
 
   private formatBytes(bytes: number): string {
     if (bytes === 0) return '0 B';
-    
+
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+
+    return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   }
 
   private async checkDiskUsage(stats: any): Promise<void> {
@@ -504,12 +553,12 @@ export class LogManagementService extends EventEmitter {
 
   private async checkFileSizes(logFiles: LogFileInfo[]): Promise<void> {
     const maxFileSize = this.parseSizeToBytes(this.config.alertThresholds.fileSize);
-    const largeFiles = logFiles.filter(file => file.size > maxFileSize);
+    const largeFiles = logFiles.filter((file) => file.size > maxFileSize);
 
     if (largeFiles.length > 0) {
       this.emitAlert('FILE_SIZE', 'MEDIUM', 'Large log files detected', {
         threshold: this.config.alertThresholds.fileSize,
-        largeFiles: largeFiles.map(file => ({
+        largeFiles: largeFiles.map((file) => ({
           path: file.path,
           size: this.formatBytes(file.size),
           age: `${file.age} days`,
@@ -541,7 +590,7 @@ export const logManagementService = new LogManagementService();
 
 // Auto-start in production
 if (env.NODE_ENV === 'production') {
-  logManagementService.start().catch(error => {
+  logManagementService.start().catch((error) => {
     logger.error('Failed to start log management service', error, {}, 'log-management');
   });
 }

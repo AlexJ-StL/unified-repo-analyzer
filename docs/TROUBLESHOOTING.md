@@ -460,6 +460,299 @@ Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
    tracert server
    ```
 
+## Code Quality and Linting Issues
+
+### Biome Configuration Problems
+
+#### Issue: "The configuration file has errors" in VSCode
+
+**Symptoms:**
+- VSCode shows "The configuration file has errors. Biome will report only parsing errors until the configuration is fixed"
+- Biome extension not working properly
+- No linting or formatting happening
+
+**Diagnosis:**
+```bash
+# Check if Biome is installed globally
+biome --version
+
+# Test configuration file validity
+biome check biome.json
+
+# Check for version mismatches
+bunx biome --version  # Project version
+biome --version       # Global version
+```
+
+**Solutions:**
+1. **Install Biome globally:**
+   ```bash
+   npm install -g @biomejs/biome
+   # or
+   bun install -g @biomejs/biome
+   ```
+
+2. **Fix version mismatches:**
+   ```bash
+   # Update project to match global version
+   bun add -D @biomejs/biome@latest
+   
+   # Or update global to match project
+   npm install -g @biomejs/biome@2.1.2
+   ```
+
+3. **Remove conflicting VSCode settings:**
+   ```json
+   // Remove this from global VSCode settings if present
+   // "biome.configurationPath": "${workspaceFolder}/biome.json"
+   ```
+
+4. **Run Biome migration if needed:**
+   ```bash
+   biome migrate --write
+   ```
+
+#### Issue: Biome Freezes on Large Codebases
+
+**Symptoms:**
+- `bun biome check --write` freezes and never completes
+- High CPU usage with no progress
+- Application becomes unresponsive during linting
+
+**Solutions:**
+1. **Use the chunked processing script:**
+   ```bash
+   # Check only (safe)
+   powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1
+   
+   # Auto-fix safe issues
+   powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write
+   
+   # Include unsafe fixes (review carefully)
+   powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write -Unsafe
+   ```
+
+2. **Process packages individually:**
+   ```bash
+   # Process each package separately
+   bun biome check packages/shared --write --max-diagnostics=50
+   bun biome check packages/frontend --write --max-diagnostics=50
+   bun biome check packages/cli --write --max-diagnostics=50
+   
+   # Use the chunked script for backend
+   powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write
+   ```
+
+3. **Limit diagnostic output:**
+   ```bash
+   # Reduce diagnostic count to prevent overwhelming output
+   bun biome check . --max-diagnostics=20
+   ```
+
+4. **Use targeted file patterns:**
+   ```bash
+   # Process specific file types only
+   bun biome check "packages/**/*.ts" --write
+   bun biome check "packages/**/*.tsx" --write
+   ```
+
+#### Issue: Biome Binary Not Found
+
+**Symptoms:**
+- "Unable to find the Biome binary" in VSCode output
+- Extension fails to start
+- No linting or formatting available
+
+**Solutions:**
+1. **Install Biome globally:**
+   ```bash
+   npm install -g @biomejs/biome
+   ```
+
+2. **Configure VSCode to use project binary:**
+   ```json
+   // In .vscode/settings.json
+   {
+     "biome.lspBin": "./node_modules/@biomejs/biome/bin/biome"
+   }
+   ```
+
+3. **Add to PATH (Windows):**
+   ```powershell
+   # Add npm global bin to PATH
+   $npmPath = npm config get prefix
+   $env:PATH += ";$npmPath"
+   ```
+
+4. **Restart VSCode after installation:**
+   - Close VSCode completely
+   - Reopen the workspace
+   - Check Biome extension status
+
+### Performance Optimization for Large Projects
+
+#### Issue: Slow Linting Performance
+
+**Symptoms:**
+- Biome takes a very long time to complete
+- High memory usage during linting
+- System becomes unresponsive
+
+**Solutions:**
+1. **Optimize Biome configuration:**
+   ```json
+   // In biome.json
+   {
+     "files": {
+       "maxSize": 1048576,  // 1MB limit
+       "ignoreUnknown": true,
+       "experimentalScannerIgnores": [
+         "**/node_modules/**",
+         "**/dist/**",
+         "**/build/**",
+         "**/.cache/**"
+       ]
+     }
+   }
+   ```
+
+2. **Use the chunked processing approach:**
+   ```bash
+   # Add to package.json scripts
+   {
+     "scripts": {
+       "lint:chunks": "powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1",
+       "lint:chunks:fix": "powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write",
+       "lint:safe": "bun biome check packages/shared packages/frontend packages/cli --write"
+     }
+   }
+   ```
+
+3. **Exclude problematic directories:**
+   ```json
+   // In biome.json
+   {
+     "files": {
+       "experimentalScannerIgnores": [
+         "**/node_modules/**",
+         "**/dist/**",
+         "**/build/**",
+         "**/coverage/**",
+         "**/.next/**",
+         "**/out/**",
+         "**/.cache/**",
+         "**/logs/**",
+         "**/temp/**"
+       ]
+     }
+   }
+   ```
+
+### Integration Issues
+
+#### Issue: Biome Conflicts with Other Tools
+
+**Symptoms:**
+- Formatting conflicts between Biome and Prettier
+- Linting rule conflicts with ESLint
+- Build process failures
+
+**Solutions:**
+1. **Disable conflicting tools:**
+   ```json
+   // In .vscode/settings.json
+   {
+     "editor.defaultFormatter": "biomejs.biome",
+     "prettier.enable": false,
+     "eslint.enable": false
+   }
+   ```
+
+2. **Configure file-specific formatters:**
+   ```json
+   {
+     "[typescript]": {
+       "editor.defaultFormatter": "biomejs.biome"
+     },
+     "[json]": {
+       "editor.defaultFormatter": "biomejs.biome"
+     },
+     "[jsonc]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     }
+   }
+   ```
+
+3. **Update build scripts:**
+   ```json
+   // In package.json
+   {
+     "scripts": {
+       "lint": "bun biome check .",
+       "lint:fix": "bun biome check . --write",
+       "format": "bun biome format . --write",
+       "check": "bun biome check . && bun run type-check"
+     }
+   }
+   ```
+
+### Common Biome Error Patterns
+
+| Error Pattern             | Cause                                 | Solution                                     |
+| ------------------------- | ------------------------------------- | -------------------------------------------- |
+| `noExplicitAny`           | Using `any` type                      | Replace with specific types or use `unknown` |
+| `noUnusedVariables`       | Unused variables                      | Remove or prefix with underscore             |
+| `noConsole`               | Console statements in production code | Use proper logging or remove                 |
+| `useNodejsImportProtocol` | Missing `node:` prefix                | Add `node:` prefix to Node.js imports        |
+| `noNonNullAssertion`      | Using `!` operator                    | Use optional chaining `?.` instead           |
+
+### Biome Configuration Best Practices
+
+1. **Gradual adoption:**
+   ```bash
+   # Start with formatting only
+   bun biome format . --write
+   
+   # Then add safe linting
+   bun biome check . --write
+   
+   # Finally add unsafe fixes (review carefully)
+   bun biome check . --write --unsafe
+   ```
+
+2. **Use appropriate diagnostic limits:**
+   ```bash
+   # For development
+   bun biome check . --max-diagnostics=50
+   
+   # For CI/CD
+   bun biome check . --max-diagnostics=0  # Show all
+   ```
+
+3. **Configure ignore patterns properly:**
+   ```json
+   {
+     "files": {
+       "experimentalScannerIgnores": [
+         "**/.bun/**",
+         "**/node_modules/**",
+         "**/dist/**",
+         "**/build/**"
+       ]
+     },
+     "overrides": [
+       {
+         "includes": ["**/__tests__/**", "**/*.test.ts"],
+         "linter": {
+           "rules": {
+             "suspicious": { "noExplicitAny": "warn" }
+           }
+         }
+       }
+     ]
+   }
+   ```
+
 ## Getting Help
 
 ### Log Analysis

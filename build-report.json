@@ -1,90 +1,90 @@
 {
-  "timestamp": "2025-08-13T08:06:59.934Z",
+  "timestamp": "2025-08-15T23:46:45.932Z",
   "success": true,
-  "duration": 46112.1982,
+  "duration": 30241.552299999996,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
       "success": true,
       "exitCode": 0,
-      "duration": 5822.5134,
-      "stdout": "Bundled 20 modules in 243ms\n\n  index.js      164.26 KB  (entry point)\n  index.js.map  0.33 MB    (source map)\n\nBundled 18 modules in 87ms\n\n  browser.js      136.1 KB  (entry point)\n  browser.js.map  0.28 MB   (source map)\n\n",
+      "duration": 5037.6864,
+      "stdout": "Bundled 26 modules in 293ms\n\n  index.js      232.38 KB  (entry point)\n  index.js.map  0.47 MB    (source map)\n\nBundled 18 modules in 70ms\n\n  browser.js      136.1 KB  (entry point)\n  browser.js.map  0.28 MB   (source map)\n\n",
       "stderr": "$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/backend": {
       "success": true,
       "exitCode": 0,
-      "duration": 6970.2783,
-      "stdout": "Bundled 642 modules in 6238ms\n\n  index.js      3.27 MB  (entry point)\n  index.js.map  5.67 MB  (source map)\n\n",
+      "duration": 5167.879900000001,
+      "stdout": "Bundled 652 modules in 4670ms\n\n  index.js      3.60 MB  (entry point)\n  index.js.map  6.35 MB  (source map)\n\n",
       "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/cli": {
       "success": true,
       "exitCode": 0,
-      "duration": 3787.749599999999,
-      "stdout": "Bundled 305 modules in 3004ms\n\n  index.js      1.45 MB  (entry point)\n  index.js.map  2.79 MB  (source map)\n\n",
+      "duration": 2761.1008,
+      "stdout": "Bundled 305 modules in 2276ms\n\n  index.js      1.49 MB  (entry point)\n  index.js.map  2.88 MB  (source map)\n\n",
       "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/frontend": {
       "success": true,
       "exitCode": 0,
-      "duration": 29531.6569,
-      "stdout": "\u001b[36mvite v7.1.1 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1304 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-D0ucJzeB.css             \u001b[39m\u001b[1m\u001b[2m 34.69 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.14 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-DovTsKEo.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-DsQH-uf6.js   \u001b[39m\u001b[1m\u001b[2m  4.28 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.90 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-BgeB68g6.js       \u001b[39m\u001b[1m\u001b[2m  5.08 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-CgINkq6M.js   \u001b[39m\u001b[1m\u001b[2m 22.72 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.40 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-D13n0D3Z.js  \u001b[39m\u001b[1m\u001b[2m 37.22 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.47 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-CItvQPU4.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.73 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-DVMr866o.js                \u001b[39m\u001b[1m\u001b[2m 42.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.41 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-CDJ_sT9g.js              \u001b[39m\u001b[1m\u001b[2m177.39 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.65 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-XMwbBs2h.js        \u001b[39m\u001b[1m\u001b[2m321.14 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 87.33 kB\u001b[22m\n\u001b[32m✓ built in 13.21s\u001b[39m\n",
+      "duration": 17274.885199999997,
+      "stdout": "\u001b[36mvite v7.1.1 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1310 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-BkYCd7hj.css             \u001b[39m\u001b[1m\u001b[2m 37.51 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.39 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-BvvUNX4J.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DQRJcab0.js     \u001b[39m\u001b[1m\u001b[2m  4.05 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.81 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-C0Vp0Y_a.js   \u001b[39m\u001b[1m\u001b[2m  4.28 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.90 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-DtSFxvQ1.js       \u001b[39m\u001b[1m\u001b[2m  5.06 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.26 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-BDKr0zgp.js                \u001b[39m\u001b[1m\u001b[2m  7.85 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.71 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-COChOLI_.js   \u001b[39m\u001b[1m\u001b[2m 22.79 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.43 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-DJqQQib4.js          \u001b[39m\u001b[1m\u001b[2m 34.63 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 10.05 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-NIGUFBhG.js              \u001b[39m\u001b[1m\u001b[2m 35.41 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 14.19 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-B-dlhH_-.js  \u001b[39m\u001b[1m\u001b[2m 37.25 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.48 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-DGflMiri.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.73 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-CaQ7DI-3.js              \u001b[39m\u001b[1m\u001b[2m177.52 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.71 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-BhUdG9Mw.js        \u001b[39m\u001b[1m\u001b[2m325.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 88.39 kB\u001b[22m\n\u001b[32m✓ built in 7.00s\u001b[39m\n",
       "stderr": "$ bun run tsc --skipLibCheck && bun run vite build || (npm run tsc --skipLibCheck && bun run vite -- build)\n$ node ../../node_modules/typescript/bin/tsc --noEmit --skipLibCheck --skipLibCheck\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-08-13T08:06:13.562Z",
+      "timestamp": "2025-08-15T23:46:15.463Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-08-13T08:06:13.816Z",
+      "timestamp": "2025-08-15T23:46:15.686Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-08-13T08:06:19.636Z",
+      "timestamp": "2025-08-15T23:46:20.722Z",
       "level": "success",
-      "message": "Command completed successfully in 5823ms",
+      "message": "Command completed successfully in 5038ms",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-08-13T08:06:19.640Z",
+      "timestamp": "2025-08-15T23:46:20.723Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-08-13T08:06:26.610Z",
+      "timestamp": "2025-08-15T23:46:25.891Z",
       "level": "success",
-      "message": "Command completed successfully in 6970ms",
+      "message": "Command completed successfully in 5168ms",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-08-13T08:06:26.612Z",
+      "timestamp": "2025-08-15T23:46:25.893Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-08-13T08:06:30.400Z",
+      "timestamp": "2025-08-15T23:46:28.654Z",
       "level": "success",
-      "message": "Command completed successfully in 3788ms",
+      "message": "Command completed successfully in 2761ms",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-08-13T08:06:30.401Z",
+      "timestamp": "2025-08-15T23:46:28.656Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/frontend"
     },
     {
-      "timestamp": "2025-08-13T08:06:59.933Z",
+      "timestamp": "2025-08-15T23:46:45.930Z",
       "level": "success",
-      "message": "Command completed successfully in 29532ms",
+      "message": "Command completed successfully in 17275ms",
       "package": "@unified-repo-analyzer/frontend"
     }
   ],

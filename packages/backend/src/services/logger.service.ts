@@ -1,7 +1,7 @@
+import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import winston from 'winston';
-import { randomUUID } from 'node:crypto';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { env } from '../config/environment';
 
@@ -64,7 +64,7 @@ export class Logger {
   private config: LoggerConfig;
   private defaultComponent: string;
 
-  constructor(config?: Partial<LoggerConfig>, component: string = 'unified-repo-analyzer') {
+  constructor(config?: Partial<LoggerConfig>, component = 'unified-repo-analyzer') {
     this.defaultComponent = component;
     this.config = {
       level: 'INFO',
@@ -141,12 +141,12 @@ export class Logger {
           logEntry.error = {
             name: info.error?.name || 'Error',
             message: info.error?.message || info.message,
-            stack: this.config.includeStackTrace ? (info.stack || info.error?.stack) : undefined,
+            stack: this.config.includeStackTrace ? info.stack || info.error?.stack : undefined,
             code: info.error?.code,
           };
         }
 
-        return this.config.format === 'JSON' 
+        return this.config.format === 'JSON'
           ? JSON.stringify(logEntry)
           : this.formatTextLog(logEntry);
       })
@@ -155,7 +155,7 @@ export class Logger {
 
   private createConsoleTransport(config: ConsoleConfig): winston.transport {
     return new winston.transports.Console({
-      format: config.colorize 
+      format: config.colorize
         ? winston.format.combine(winston.format.colorize(), this.createLogFormat())
         : this.createLogFormat(),
       level: this.config.level.toLowerCase(),
@@ -164,7 +164,7 @@ export class Logger {
 
   private createFileTransport(config: FileConfig): winston.transport {
     const maxSizeBytes = this.parseSize(config.maxSize);
-    
+
     if (config.rotateDaily) {
       // Use DailyRotateFile for daily rotation
       return new DailyRotateFile({
@@ -177,15 +177,14 @@ export class Logger {
         createSymlink: true,
         symlinkName: config.path,
       });
-    } else {
-      return new winston.transports.File({
-        filename: config.path,
-        format: this.createLogFormat(),
-        maxsize: maxSizeBytes,
-        maxFiles: config.maxFiles,
-        tailable: true,
-      });
     }
+    return new winston.transports.File({
+      filename: config.path,
+      format: this.createLogFormat(),
+      maxsize: maxSizeBytes,
+      maxFiles: config.maxFiles,
+      tailable: true,
+    });
   }
 
   private createExternalTransport(config: ExternalConfig): winston.transport {
@@ -195,10 +194,8 @@ export class Logger {
       port: this.extractPortFromEndpoint(config.endpoint),
       path: this.extractPathFromEndpoint(config.endpoint),
       ssl: config.endpoint.startsWith('https'),
-      format: config.format === 'JSON' 
-        ? winston.format.json()
-        : winston.format.simple(),
-      headers: config.apiKey ? { 'Authorization': `Bearer ${config.apiKey}` } : undefined,
+      format: config.format === 'JSON' ? winston.format.json() : winston.format.simple(),
+      headers: config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : undefined,
     });
   }
 
@@ -214,7 +211,7 @@ export class Logger {
   private extractPortFromEndpoint(endpoint: string): number {
     try {
       const url = new URL(endpoint);
-      return url.port ? parseInt(url.port) : (url.protocol === 'https:' ? 443 : 80);
+      return url.port ? Number.parseInt(url.port) : url.protocol === 'https:' ? 443 : 80;
     } catch {
       return 80;
     }
@@ -232,29 +229,33 @@ export class Logger {
   private parseSize(sizeStr: string): number {
     const match = sizeStr.match(/^(\d+)(MB|KB|GB)?$/i);
     if (!match) return 10485760; // Default 10MB
-    
-    const size = parseInt(match[1]);
+
+    const size = Number.parseInt(match[1]);
     const unit = (match[2] || 'MB').toUpperCase();
-    
+
     switch (unit) {
-      case 'KB': return size * 1024;
-      case 'MB': return size * 1024 * 1024;
-      case 'GB': return size * 1024 * 1024 * 1024;
-      default: return size;
+      case 'KB':
+        return size * 1024;
+      case 'MB':
+        return size * 1024 * 1024;
+      case 'GB':
+        return size * 1024 * 1024 * 1024;
+      default:
+        return size;
     }
   }
 
   private formatTextLog(entry: LogEntry): string {
     let log = `${entry.timestamp} [${entry.level}] [${entry.component}] [${entry.requestId}]: ${entry.message}`;
-    
+
     if (entry.metadata && Object.keys(entry.metadata).length > 0) {
       log += ` ${JSON.stringify(entry.metadata)}`;
     }
-    
+
     if (entry.error?.stack) {
       log += `\n${entry.error.stack}`;
     }
-    
+
     return log;
   }
 
@@ -267,7 +268,7 @@ export class Logger {
     const sanitized = { ...metadata };
 
     for (const key of Object.keys(sanitized)) {
-      if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive))) {
+      if (sensitiveKeys.some((sensitive) => key.toLowerCase().includes(sensitive))) {
         sanitized[key] = '[REDACTED]';
       }
     }
@@ -280,19 +281,40 @@ export class Logger {
   }
 
   // Public logging methods
-  debug(message: string, metadata?: Record<string, any>, component?: string, requestId?: string): void {
+  debug(
+    message: string,
+    metadata?: Record<string, any>,
+    component?: string,
+    requestId?: string
+  ): void {
     this.winston.debug(message, { metadata, component, requestId });
   }
 
-  info(message: string, metadata?: Record<string, any>, component?: string, requestId?: string): void {
+  info(
+    message: string,
+    metadata?: Record<string, any>,
+    component?: string,
+    requestId?: string
+  ): void {
     this.winston.info(message, { metadata, component, requestId });
   }
 
-  warn(message: string, metadata?: Record<string, any>, component?: string, requestId?: string): void {
+  warn(
+    message: string,
+    metadata?: Record<string, any>,
+    component?: string,
+    requestId?: string
+  ): void {
     this.winston.warn(message, { metadata, component, requestId });
   }
 
-  error(message: string, error?: Error, metadata?: Record<string, any>, component?: string, requestId?: string): void {
+  error(
+    message: string,
+    error?: Error,
+    metadata?: Record<string, any>,
+    component?: string,
+    requestId?: string
+  ): void {
     this.winston.error(message, { error, metadata, component, requestId });
   }
 
@@ -327,30 +349,28 @@ const defaultLoggerConfig: Partial<LoggerConfig> = {
 
 // Configure outputs based on environment
 if (env.NODE_ENV === 'development') {
-  defaultLoggerConfig.outputs = [
-    { type: 'console', config: { colorize: true } }
-  ];
+  defaultLoggerConfig.outputs = [{ type: 'console', config: { colorize: true } }];
 } else {
   defaultLoggerConfig.outputs = [
     { type: 'console', config: { colorize: false } },
-    { 
-      type: 'file', 
-      config: { 
+    {
+      type: 'file',
+      config: {
         path: path.join(env.LOG_DIR, 'combined.log'),
         maxSize: '10MB',
         maxFiles: 10,
-        rotateDaily: false
-      }
+        rotateDaily: false,
+      },
     },
-    { 
-      type: 'file', 
-      config: { 
+    {
+      type: 'file',
+      config: {
         path: path.join(env.LOG_DIR, 'error.log'),
         maxSize: '10MB',
         maxFiles: 5,
-        rotateDaily: false
-      }
-    }
+        rotateDaily: false,
+      },
+    },
   ];
 }
 
@@ -367,9 +387,9 @@ const legacyLogger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 });
 
 // Enhanced HTTP request/response logging middleware
@@ -377,7 +397,7 @@ export const requestLogger = (req: any, res: any, next: any) => {
   const requestId = randomUUID();
   logger.setRequestId(requestId);
   req.requestId = requestId;
-  
+
   const start = Date.now();
   const startTime = new Date().toISOString();
 
@@ -406,14 +426,14 @@ export const requestLogger = (req: any, res: any, next: any) => {
   let responseSize = 0;
 
   // Override res.send to capture response body
-  res.send = function(body: any) {
+  res.send = function (body: any) {
     responseBody = body;
     responseSize = Buffer.isBuffer(body) ? body.length : Buffer.byteLength(body || '', 'utf8');
     return originalSend.call(this, body);
   };
 
   // Override res.json to capture JSON response
-  res.json = function(obj: any) {
+  res.json = function (obj: any) {
     responseBody = obj;
     const jsonString = JSON.stringify(obj);
     responseSize = Buffer.byteLength(jsonString, 'utf8');
@@ -423,7 +443,7 @@ export const requestLogger = (req: any, res: any, next: any) => {
   res.on('finish', () => {
     const duration = Date.now() - start;
     const endTime = new Date().toISOString();
-    
+
     const responseData = {
       requestId,
       method: req.method,
@@ -470,62 +490,68 @@ export const requestLogger = (req: any, res: any, next: any) => {
 // Helper functions for data sanitization
 function sanitizeHeaders(headers: any): Record<string, any> {
   if (!headers) return {};
-  
+
   const sanitized = { ...headers };
-  const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'x-auth-token', 'x-access-token'];
-  
+  const sensitiveHeaders = [
+    'authorization',
+    'cookie',
+    'x-api-key',
+    'x-auth-token',
+    'x-access-token',
+  ];
+
   for (const key of Object.keys(sanitized)) {
     if (sensitiveHeaders.includes(key.toLowerCase())) {
       sanitized[key] = '[REDACTED]';
     }
   }
-  
+
   return sanitized;
 }
 
 function sanitizeQueryParams(query: any): Record<string, any> {
   if (!query) return {};
-  
+
   const sanitized = { ...query };
   const sensitiveParams = ['password', 'token', 'apikey', 'secret', 'auth'];
-  
+
   for (const key of Object.keys(sanitized)) {
-    if (sensitiveParams.some(param => key.toLowerCase().includes(param))) {
+    if (sensitiveParams.some((param) => key.toLowerCase().includes(param))) {
       sanitized[key] = '[REDACTED]';
     }
   }
-  
+
   return sanitized;
 }
 
 function sanitizeRequestBody(body: any): any {
   if (!body) return null;
-  
+
   // Don't log large bodies
   const bodyString = typeof body === 'string' ? body : JSON.stringify(body);
   if (bodyString.length > 1000) {
     return `[BODY TOO LARGE: ${bodyString.length} characters]`;
   }
-  
+
   if (typeof body === 'object') {
     const sanitized = { ...body };
     const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth', 'credential'];
-    
+
     for (const key of Object.keys(sanitized)) {
-      if (sensitiveFields.some(field => key.toLowerCase().includes(field))) {
+      if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
         sanitized[key] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
-  
+
   return body;
 }
 
 function sanitizeResponseBody(body: any, statusCode: number): any {
   if (!body) return null;
-  
+
   // Don't log response bodies for successful requests to avoid noise
   if (statusCode >= 200 && statusCode < 300) {
     const bodyString = typeof body === 'string' ? body : JSON.stringify(body);
@@ -533,21 +559,21 @@ function sanitizeResponseBody(body: any, statusCode: number): any {
       return `[RESPONSE BODY: ${bodyString.length} characters]`;
     }
   }
-  
+
   // For error responses, include more details but sanitize sensitive data
   if (statusCode >= 400 && typeof body === 'object') {
     const sanitized = { ...body };
     const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth'];
-    
+
     for (const key of Object.keys(sanitized)) {
-      if (sensitiveFields.some(field => key.toLowerCase().includes(field))) {
+      if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
         sanitized[key] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
-  
+
   return body;
 }
 
@@ -569,7 +595,7 @@ function getStatusText(statusCode: number): string {
     503: 'Service Unavailable',
     504: 'Gateway Timeout',
   };
-  
+
   return statusTexts[statusCode] || 'Unknown';
 }
 
@@ -585,14 +611,22 @@ export const logPerformance = (
   metadata?: Record<string, any>,
   component?: string
 ) => {
-  logger.info(`Performance: ${operation}`, {
-    duration: `${duration}ms`,
-    ...metadata,
-  }, component || 'performance');
+  logger.info(
+    `Performance: ${operation}`,
+    {
+      duration: `${duration}ms`,
+      ...metadata,
+    },
+    component || 'performance'
+  );
 };
 
 // Security event logging
-export const logSecurityEvent = (event: string, details: Record<string, any>, component?: string) => {
+export const logSecurityEvent = (
+  event: string,
+  details: Record<string, any>,
+  component?: string
+) => {
   logger.warn(`Security Event: ${event}`, details, component || 'security');
 };
 
@@ -605,7 +639,7 @@ export const logAnalysis = (
 ) => {
   const message = `Analysis ${status}: ${repoPath}`;
   const comp = component || 'analysis';
-  
+
   if (status === 'failed') {
     logger.error(message, undefined, metadata, comp);
   } else {

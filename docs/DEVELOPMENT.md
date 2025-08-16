@@ -93,6 +93,40 @@ Key features configured:
 - ES5 trailing commas
 - Comprehensive linting rules
 
+#### Large Codebase Handling
+
+For large projects like the backend package, use the chunked processing script to avoid freezing:
+
+```bash
+# Check only (reports issues without fixing)
+powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1
+
+# Auto-fix safe issues
+powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write
+
+# Include unsafe fixes (review changes carefully)
+powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write -Unsafe
+
+# Increase diagnostic limit
+powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -MaxDiagnostics 100
+```
+
+**Package-specific commands:**
+```bash
+# Small packages (safe to run directly)
+bun biome check packages/shared --write
+bun biome check packages/frontend --write  
+bun biome check packages/cli --write
+
+# Large backend package (use chunked script)
+powershell -ExecutionPolicy Bypass -File scripts/biome-backend-chunks.ps1 -Write
+```
+
+**Troubleshooting:**
+- If Biome freezes: Use chunked processing script
+- If "configuration file has errors": Check global vs project Biome versions
+- If binary not found: Install globally with `npm install -g @biomejs/biome`
+
 ### Testing: Bun Test
 
 Uses Bun's built-in test runner for fast execution:
