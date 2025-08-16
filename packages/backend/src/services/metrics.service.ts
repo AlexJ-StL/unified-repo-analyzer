@@ -64,10 +64,10 @@ class MetricsService {
       this.collectSystemMetrics();
     }, 30000);
 
-    // Log metrics summary every 5 minutes
+    // Log metrics summary every 30 minutes (reduced for testing)
     setInterval(() => {
       this.logMetricsSummary();
-    }, 300000);
+    }, 1800000);
   }
 
   private collectSystemMetrics(): void {
