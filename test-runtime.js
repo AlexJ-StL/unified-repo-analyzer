@@ -26,8 +26,8 @@ async function testAPIs() {
       options: {
         timeoutMs: 5000,
         validateExistence: true,
-        validatePermissions: true
-      }
+        validatePermissions: true,
+      },
     });
     console.log('✅ Path validation working');
     console.log('   Path is valid:', pathResponse.data.isValid);
@@ -47,8 +47,8 @@ async function testAPIs() {
       ...prefsResponse.data,
       ui: {
         ...prefsResponse.data.ui,
-        theme: 'dark'
-      }
+        theme: 'dark',
+      },
     };
     const updateResponse = await axios.put(`${API_BASE}/config/preferences`, updatedPrefs);
     console.log('✅ Settings update working');
@@ -60,17 +60,16 @@ async function testAPIs() {
     console.log('- ✅ Settings persistence is working');
     console.log('- ✅ Path validation (file browsing) is working');
     console.log('- ✅ Configuration management is working');
-
   } catch (error) {
     console.error('\n❌ Runtime test failed:', error.message);
-    
+
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Response data:', error.response.data);
     } else if (error.request) {
       console.error('No response received. Is the backend running?');
     }
-    
+
     console.log('\nTroubleshooting steps:');
     console.log('1. Ensure backend is running on port 3000');
     console.log('2. Check if frontend is running and can connect');

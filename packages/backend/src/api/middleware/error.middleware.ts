@@ -1,21 +1,20 @@
 /**
- * Error handling middleware
+ * Enhanced error handling middleware
  */
 
 import type { NextFunction, Request, Response } from 'express';
+import logger from '../../services/logger.service.js';
+import {
+  createEnhancedError,
+  createErrorResponse,
+  type EnhancedError,
+  ErrorCategory,
+  ErrorSeverity,
+  handleError,
+} from '../../utils/error-handler.js';
 
 /**
- * Error response interface
- */
-interface ErrorResponse {
-  status: number;
-  message: string;
-  stack?: string;
-  errors?: any[];
-}
-
-/**
- * Custom API error class
+ * Legacy API error class for backward compatibility
  */
 export class ApiError extends Error {
   status: number;
@@ -32,47 +31,140 @@ export class ApiError extends Error {
 
 /**
  * Not found error handler
- *
- * @param req - Express request
- * @param res - Express response
- * @param next - Express next function
  */
 export const notFound = (req: Request, _res: Response, next: NextFunction): void => {
-  const error = new ApiError(404, `Not Found - ${req.originalUrl}`);
+  const error = createEnhancedError(
+    ErrorCategory.NOT_FOUND,
+    ErrorSeverity.LOW,
+    `Resource not found: ${req.originalUrl}`,
+    404,
+    {
+      method: req.method,
+      url: req.originalUrl,
+      userAgent: req.get('User-Agent'),
+    },
+    req.headers['x-request-id'] as string
+  );
+
   next(error);
 };
 
 /**
- * General error handler
- *
- * @param err - Error object
- * @param req - Express request
- * @param res - Express response
- * @param next - Express next function
+ * Enhanced error handler with comprehensive logging and user-friendly responses
  */
 export const errorHandler = (
-  err: Error | ApiError,
-  _req: Request,
+  err: Error | ApiError | EnhancedError,
+  req: Request,
   res: Response,
   _next: NextFunction
 ): void => {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
-  const error: ErrorResponse = {
-    status: err instanceof ApiError ? err.status : 500,
-    message: err.message || 'Internal Server Error',
+  // Handle legacy ApiError
+  if (err instanceof ApiError) {
+    const enhancedError = createEnhancedError(
+      ErrorCategory.VALIDATION,
+      ErrorSeverity.LOW,
+      err.message,
+      err.status,
+      { errors: err.errors },
+      req.headers['x-request-id'] as string
+    );
+
+    const processedError = handleError(enhancedError, req);
+    const response = createErrorResponse(processedError, isDevelopment);
+
+    return res.status(processedError.statusCode).json(response);
+  }
+
+  // Handle enhanced errors or convert regular errors
+  const processedError = handleError(err, req);
+  const response = createErrorResponse(processedError, isDevelopment);
+
+  // Add request correlation for debugging
+  if (req.headers['x-request-id']) {
+    res.setHeader('X-Request-ID', req.headers['x-request-id']);
+  }
+
+  // Set appropriate cache headers for error responses
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  res.status(processedError.statusCode).json(response);
+};
+
+/**
+ * Async error wrapper for route handlers
+ */
+export const asyncHandler = (fn: Function) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
   };
+};
 
-  // Add stack trace in development
-  if (isDevelopment) {
-    error.stack = err.stack;
+/**
+ * Validation error handler for express-validator
+ */
+export const handleValidationErrors = (req: Request, _res: Response, next: NextFunction) => {
+  const { validationResult } = require('express-validator');
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const error = createEnhancedError(
+      ErrorCategory.VALIDATION,
+      ErrorSeverity.LOW,
+      'Request validation failed',
+      400,
+      {
+        validationErrors: errors.array(),
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      },
+      req.headers['x-request-id'] as string
+    );
+
+    return next(error);
   }
 
-  // Add validation errors if available
-  if (err instanceof ApiError && err.errors) {
-    error.errors = err.errors;
-  }
+  next();
+};
 
-  // Send error response
-  res.status(error.status).json(error);
+/**
+ * Rate limiting error handler
+ */
+export const rateLimitHandler = (req: Request, _res: Response, next: NextFunction) => {
+  const error = createEnhancedError(
+    ErrorCategory.RATE_LIMIT,
+    ErrorSeverity.MEDIUM,
+    'Rate limit exceeded',
+    429,
+    {
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+    },
+    req.headers['x-request-id'] as string
+  );
+
+  next(error);
+};
+
+/**
+ * Request timeout handler
+ */
+export const timeoutHandler = (req: Request, _res: Response, next: NextFunction) => {
+  const error = createEnhancedError(
+    ErrorCategory.TIMEOUT,
+    ErrorSeverity.MEDIUM,
+    'Request timeout',
+    408,
+    {
+      method: req.method,
+      url: req.originalUrl,
+    },
+    req.headers['x-request-id'] as string
+  );
+
+  next(error);
 };
