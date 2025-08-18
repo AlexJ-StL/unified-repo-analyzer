@@ -2,7 +2,11 @@
  * Analysis controller
  */
 
-import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import path from 'node:path';
+import type {
+  AnalysisOptions,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { AnalysisEngine } from '../../core/AnalysisEngine';
@@ -30,6 +34,7 @@ const defaultOptions: AnalysisOptions = {
  */
 export const analyzeRepository = async (req: Request, res: Response): Promise<void> => {
   const requestId = (req.headers['x-request-id'] as string) || `req-${Date.now()}`;
+  let progressInterval: NodeJS.Timeout | undefined;
 
   try {
     // Validate request
@@ -44,13 +49,14 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       return;
     }
 
-    const { path, options = {} } = req.body;
+    const { path: rawPath, options = {} } = req.body;
+    logger.info('Received path', { rawPath });
 
     // Check if path is missing or invalid before calling PathHandler
-    if (!path || typeof path !== 'string' || path.trim() === '') {
+    if (!rawPath || typeof rawPath !== 'string' || rawPath.trim() === '') {
       logger.warn('Repository path validation failed', {
         requestId,
-        path,
+        path: rawPath,
         errors: [{ code: 'INVALID_INPUT', message: 'Path must be a non-empty string' }],
         warnings: [],
       });
@@ -59,7 +65,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
         error: 'Invalid Repository Path',
         message: 'Repository path is required and must be a non-empty string.',
         details: 'The path parameter is missing, empty, or not a string.',
-        path,
+        path: rawPath,
         suggestions: [
           'Provide a valid repository path',
           'Ensure the path is a non-empty string',
@@ -78,16 +84,21 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       return;
     }
 
+    // Resolve path to absolute path if it's relative
+    const projectRoot = process.env.PROJECT_ROOT || process.cwd();
+    const resolvedPath = path.isAbsolute(rawPath) ? rawPath : path.resolve(projectRoot, rawPath);
+    logger.info('Resolved path', { resolvedPath });
+
     logger.info('Starting repository analysis', {
       requestId,
-      path,
+      path: resolvedPath,
       options,
     });
 
     // Step 1: Validate and normalize the path using PathHandler
-    logger.debug('Validating repository path', { requestId, path });
+    logger.debug('Validating repository path', { requestId, path: resolvedPath });
 
-    const pathValidationResult = await pathHandler.validatePath(path, {
+    const pathValidationResult = await pathHandler.validatePath(resolvedPath, {
       timeoutMs: 10000, // 10 seconds timeout for path validation
       onProgress: (progress) => {
         logger.debug('Path validation progress', {
@@ -104,12 +115,12 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       const userFriendlyError = errorMessageService.createPathErrorMessage(
         pathValidationResult.errors,
         pathValidationResult.warnings,
-        path
+        resolvedPath
       );
 
       logger.warn('Repository path validation failed', {
         requestId,
-        path,
+        path: resolvedPath,
         errors: pathValidationResult.errors,
         warnings: pathValidationResult.warnings,
       });
@@ -118,7 +129,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
         error: userFriendlyError.title,
         message: userFriendlyError.message,
         details: userFriendlyError.details,
-        path,
+        path: resolvedPath,
         suggestions: userFriendlyError.suggestions,
         learnMoreUrl: userFriendlyError.learnMoreUrl,
         technicalDetails: {
@@ -134,12 +145,12 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       const userFriendlyError = errorMessageService.createPathErrorMessage(
         [{ code: 'PATH_NOT_FOUND', message: 'Path does not exist' }],
         pathValidationResult.warnings,
-        path
+        resolvedPath
       );
 
       logger.warn('Repository path does not exist', {
         requestId,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
       });
 
@@ -147,7 +158,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
         error: userFriendlyError.title,
         message: userFriendlyError.message,
         details: userFriendlyError.details,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
         suggestions: userFriendlyError.suggestions,
         learnMoreUrl: userFriendlyError.learnMoreUrl,
@@ -160,12 +171,12 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       const userFriendlyError = errorMessageService.createPathErrorMessage(
         [{ code: 'NOT_DIRECTORY', message: 'Path is not a directory' }],
         pathValidationResult.warnings,
-        path
+        resolvedPath
       );
 
       logger.warn('Repository path is not a directory', {
         requestId,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
       });
 
@@ -173,7 +184,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
         error: userFriendlyError.title,
         message: userFriendlyError.message,
         details: userFriendlyError.details,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
         suggestions: userFriendlyError.suggestions,
         learnMoreUrl: userFriendlyError.learnMoreUrl,
@@ -191,12 +202,12 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
           },
         ],
         pathValidationResult.warnings,
-        path
+        resolvedPath
       );
 
       logger.warn('Insufficient read permissions for repository path', {
         requestId,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
         permissions: pathValidationResult.metadata.permissions,
       });
@@ -205,7 +216,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
         error: userFriendlyError.title,
         message: userFriendlyError.message,
         details: userFriendlyError.details,
-        path,
+        path: resolvedPath,
         normalizedPath: pathValidationResult.normalizedPath,
         suggestions: userFriendlyError.suggestions,
         learnMoreUrl: userFriendlyError.learnMoreUrl,
@@ -214,11 +225,27 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     }
 
     // Use the normalized path for analysis
-    const normalizedPath = pathValidationResult.normalizedPath!;
+    const normalizedPath = pathValidationResult.normalizedPath;
+    if (!normalizedPath) {
+      logger.error(
+        `Path validation succeeded but normalized path is null. RequestId: ${requestId}, OriginalPath: ${resolvedPath}`
+      );
+
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'Path validation succeeded but normalized path is unavailable',
+        suggestions: [
+          'Try again with a different path',
+          'Check system permissions',
+          'Contact support if the issue persists',
+        ],
+      });
+      return;
+    }
 
     logger.info('Path validation successful', {
       requestId,
-      originalPath: path,
+      originalPath: resolvedPath,
       normalizedPath,
       metadata: pathValidationResult.metadata,
       warnings: pathValidationResult.warnings,
@@ -245,7 +272,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     };
 
     // Start progress updates
-    const progressInterval = setInterval(() => {
+    progressInterval = setInterval(() => {
       io.to(clientId).emit('analysis-progress', progressTracker);
     }, 1000);
 
@@ -267,13 +294,15 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     io.to(clientId).emit('analysis-progress', progressTracker);
 
     // Clear progress interval
-    clearInterval(progressInterval);
+    if (progressInterval) {
+      clearInterval(progressInterval);
+    }
 
     logger.info('Repository analysis completed successfully', {
       requestId,
       normalizedPath,
       analysisId: analysis.id,
-      fileCount: analysis.files?.length || 0,
+      fileCount: analysis.fileCount,
     });
 
     // Generate exports if requested in options
@@ -305,17 +334,15 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
             size: exports[format]?.size,
           });
         } catch (exportError) {
-          logger.error('Export generation failed', {
-            requestId,
-            format,
-            error: exportError instanceof Error ? exportError.message : String(exportError),
-          });
+          logger.error(
+            `Export generation failed: ${exportError instanceof Error ? exportError.message : String(exportError)}. RequestId: ${requestId}, Format: ${format}`
+          );
         }
       }
 
       // Add exports to the response
       (
-        analysis as {
+        analysis as RepositoryAnalysis & {
           exports?: Record<string, { content: string; size: number } | null>;
         }
       ).exports = exports;
@@ -325,18 +352,15 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     res.status(200).json(analysis);
   } catch (error) {
     // Clear progress interval on error
-    if (typeof progressInterval !== 'undefined') {
+    if (progressInterval) {
       clearInterval(progressInterval);
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    logger.error('Repository analysis failed', {
-      requestId,
-      path: req.body.path,
-      error: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined,
-    });
+    logger.error(
+      `Repository analysis failed: ${errorMessage}. RequestId: ${requestId}, Path: ${req.body.path}, Stack: ${error instanceof Error ? error.stack : undefined}`
+    );
 
     // Check for specific error types and provide appropriate responses
     if (error instanceof Error) {
@@ -486,34 +510,37 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
       originalPath: string;
       normalizedPath?: string;
       isValid: boolean;
-      errors: any[];
-      warnings: any[];
+      errors: Array<{ code: string; message: string; details?: string }>;
+      warnings: Array<{ code: string; message: string }>;
     }> = [];
 
     const validPaths: string[] = [];
     const invalidPaths: Array<{
       path: string;
-      errors: any[];
-      warnings: any[];
+      errors: Array<{ code: string; message: string; details?: string; suggestions?: string[] }>;
+      warnings: Array<{ code: string; message: string }>;
     }> = [];
+
+    const projectRoot = process.env.PROJECT_ROOT || process.cwd();
 
     // Validate each path
     for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
+      const rawPath = paths[i];
+      const resolvedPath = path.isAbsolute(rawPath) ? rawPath : path.resolve(projectRoot, rawPath);
 
       try {
         logger.debug(`Validating path ${i + 1}/${paths.length}`, {
           requestId,
-          path,
+          path: resolvedPath,
         });
 
-        const validationResult = await pathHandler.validatePath(path, {
+        const validationResult = await pathHandler.validatePath(resolvedPath, {
           timeoutMs: 5000, // 5 seconds timeout per path
           onProgress: (progress) => {
             logger.debug('Path validation progress', {
               requestId,
               pathIndex: i + 1,
-              path,
+              path: resolvedPath,
               stage: progress.stage,
               percentage: progress.percentage,
             });
@@ -521,7 +548,7 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
         });
 
         const pathResult = {
-          originalPath: path,
+          originalPath: rawPath,
           normalizedPath: validationResult.normalizedPath,
           isValid:
             validationResult.isValid &&
@@ -561,20 +588,18 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
           }
 
           invalidPaths.push({
-            path,
+            path: rawPath,
             errors: pathErrors,
             warnings: validationResult.warnings,
           });
         }
       } catch (error) {
-        logger.error('Path validation failed with exception', {
-          requestId,
-          path,
-          error: error instanceof Error ? error.message : String(error),
-        });
+        logger.error(
+          `Path validation failed with exception: ${error instanceof Error ? error.message : String(error)}. RequestId: ${requestId}, Path: ${resolvedPath}`
+        );
 
         pathValidationResults.push({
-          originalPath: path,
+          originalPath: rawPath,
           isValid: false,
           errors: [
             {
@@ -587,7 +612,7 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
         });
 
         invalidPaths.push({
-          path,
+          path: rawPath,
           errors: [
             {
               code: 'VALIDATION_ERROR',
@@ -756,12 +781,9 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
             size: exports[format]?.size,
           });
         } catch (exportError) {
-          logger.error('Batch export generation failed', {
-            requestId,
-            batchId,
-            format,
-            error: exportError instanceof Error ? exportError.message : String(exportError),
-          });
+          logger.error(
+            `Batch export generation failed: ${exportError instanceof Error ? exportError.message : String(exportError)}. RequestId: ${requestId}, BatchId: ${batchId}, Format: ${format}`
+          );
         }
       }
 
@@ -789,12 +811,9 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    logger.error('Batch repository analysis failed', {
-      requestId,
-      pathCount: req.body.paths?.length || 0,
-      error: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined,
-    });
+    logger.error(
+      `Batch repository analysis failed: ${errorMessage}. RequestId: ${requestId}, PathCount: ${req.body.paths?.length || 0}, Stack: ${error instanceof Error ? error.stack : undefined}`
+    );
 
     // Check for specific error types
     if (error instanceof Error) {
