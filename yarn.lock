@@ -1250,7 +1250,7 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz"
   integrity sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==
 
-"@unified-repo-analyzer/backend@packages/backend":
+"@unified-repo-analyzer/backend@^workspace:packages/backend":
   version "workspace:packages/backend"
   resolved "workspace:packages/backend"
   devDependencies:
@@ -1280,7 +1280,7 @@
     winston-daily-rotate-file "^5.0.0"
     zod "^3.22.4"
 
-"@unified-repo-analyzer/cli@packages/cli":
+"@unified-repo-analyzer/cli@^workspace:packages/cli":
   version "workspace:packages/cli"
   resolved "workspace:packages/cli"
   devDependencies:
@@ -1299,7 +1299,7 @@
     ora "^5.4.1"
     undici "^6.0.0"
 
-"@unified-repo-analyzer/frontend@packages/frontend":
+"@unified-repo-analyzer/frontend@^workspace:packages/frontend":
   version "workspace:packages/frontend"
   resolved "workspace:packages/frontend"
   devDependencies:
@@ -1332,7 +1332,7 @@
     socket.io-client "^4.7.5"
     zustand "^4.5.2"
 
-"@unified-repo-analyzer/shared@packages/shared", "@unified-repo-analyzer/shared@workspace:*":
+"@unified-repo-analyzer/shared@^workspace:packages/shared", "@unified-repo-analyzer/shared@workspace:*":
   version "workspace:packages/shared"
   resolved "workspace:packages/shared"
   devDependencies:
@@ -5032,15 +5032,15 @@ tslib@^2.1.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tsx@^4.20.4:
+tsx@^4.20.4, tsx@^4.8.1:
   version "4.20.4"
   resolved "https://registry.npmjs.org/tsx/-/tsx-4.20.4.tgz"
   integrity sha512-yyxBKfORQ7LuRt/BQKBXrpcq59ZvSW0XxwfjAt3w2/8PmdxaFzijtMhTawprSHhpzeM5BgU2hXHG3lklIERZXg==
+  optionalDependencies:
+    fsevents "~2.3.3"
   dependencies:
     esbuild "~0.25.0"
     get-tsconfig "^4.7.5"
-  optionalDependencies:
-    fsevents "~2.3.3"
 
 type-fest@^0.21.3:
   version "0.21.3"

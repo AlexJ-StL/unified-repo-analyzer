@@ -6,7 +6,7 @@
 	"types": "dist/index.d.ts",
 	"type": "module",
 	"scripts": {
-		"dev": "bun --watch src/index.ts || npm run dev:node",
+		"dev": "cross-env LOG_LEVEL=debug bun --watch src/index.ts || npm run dev:node",
 		"dev:node": "ts-node src/index.ts",
 		"build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
 		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.prod.json",
