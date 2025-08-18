@@ -8,17 +8,19 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import axios from 'axios';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { AnalysisEngine } from '../core/AnalysisEngine.js';
-import { ClaudeProvider } from '../providers/ClaudeProvider.js';
 import { logger } from '../services/logger.service.js';
 import { readFileWithErrorHandling, traverseDirectory } from '../utils/fileSystem.js';
 
+vi.mock('axios');
+
 describe('Logging Integration Tests', () => {
   let tempDir: string;
-  let logSpy: any;
-  let errorSpy: any;
-  let debugSpy: any;
+  let logSpy: Mock;
+  let errorSpy: Mock;
+  let debugSpy: Mock;
 
   beforeEach(async () => {
     // Create temporary directory for tests
@@ -33,6 +35,7 @@ describe('Logging Integration Tests', () => {
     logSpy.mockClear();
     errorSpy.mockClear();
     debugSpy.mockClear();
+    vi.clearAllMocks();
   });
 
   afterEach(async () => {
@@ -204,9 +207,13 @@ describe('Logging Integration Tests', () => {
 
       const analysisEngine = new AnalysisEngine();
       const options: AnalysisOptions = {
-        mode: 'basic',
-        includeContent: false,
-        maxFileSize: 1024 * 1024, // 1MB
+        mode: 'quick',
+        maxFiles: 100,
+        maxLinesPerFile: 1000,
+        includeLLMAnalysis: false,
+        llmProvider: 'none',
+        outputFormats: ['json'],
+        includeTree: false,
       };
 
       // Perform analysis
@@ -217,11 +224,8 @@ describe('Logging Integration Tests', () => {
         'Starting repository analysis',
         expect.objectContaining({
           repositoryPath: testRepo,
-          analysisMode: 'basic',
-          options: expect.objectContaining({
-            includeContent: false,
-            maxFileSize: 1024 * 1024,
-          }),
+          analysisMode: 'quick',
+          options: expect.any(Object),
         }),
         'analysis-engine',
         expect.any(String)
@@ -258,7 +262,7 @@ describe('Logging Integration Tests', () => {
           fileCount: expect.any(Number),
           totalSize: expect.any(Number),
           processingTime: expect.stringMatching(/\d+ms/),
-          analysisMode: 'basic',
+          analysisMode: 'quick',
           cacheHit: false,
         }),
         'analysis-engine',
@@ -268,15 +272,20 @@ describe('Logging Integration Tests', () => {
       // Verify results
       expect(result).toBeDefined();
       expect(result.fileCount).toBeGreaterThan(0);
-      expect(result.metadata.analysisMode).toBe('basic');
+      expect(result.metadata.analysisMode).toBe('quick');
     });
 
     it('should log analysis errors with classification', async () => {
       const nonExistentRepo = path.join(tempDir, 'non-existent-repo');
       const analysisEngine = new AnalysisEngine();
       const options: AnalysisOptions = {
-        mode: 'basic',
-        includeContent: false,
+        mode: 'quick',
+        maxFiles: 100,
+        maxLinesPerFile: 1000,
+        includeLLMAnalysis: false,
+        llmProvider: 'none',
+        outputFormats: ['json'],
+        includeTree: false,
       };
 
       // Attempt to analyze non-existent repository
@@ -288,7 +297,7 @@ describe('Logging Integration Tests', () => {
         expect.any(Error),
         expect.objectContaining({
           repositoryPath: nonExistentRepo,
-          analysisMode: 'basic',
+          analysisMode: 'quick',
           duration: expect.stringMatching(/\d+ms/),
           errorId: expect.any(String),
           errorCode: expect.any(String),
@@ -301,26 +310,20 @@ describe('Logging Integration Tests', () => {
 
   describe('LLM Provider Logging', () => {
     it('should log LLM provider interactions', async () => {
-      // Mock axios to avoid actual API calls
-      const mockAxios = vi.doMock('axios', () => ({
-        default: {
-          post: vi.fn().mockResolvedValue({
-            data: {
-              completion: 'This is a test response from Claude.',
-              stop_reason: 'stop_sequence',
-              usage: {
-                prompt_tokens: 50,
-                completion_tokens: 20,
-                total_tokens: 70,
-              },
-            },
-          }),
-          isAxiosError: vi.fn().mockReturnValue(false),
+      (axios.post as Mock).mockResolvedValue({
+        data: {
+          completion: 'This is a test response from Claude.',
+          stop_reason: 'stop_sequence',
+          usage: {
+            prompt_tokens: 50,
+            completion_tokens: 20,
+            total_tokens: 70,
+          },
         },
-      }));
+      });
+      (axios.isAxiosError as Mock).mockReturnValue(false);
 
-      const { default: axios } = await mockAxios;
-
+      const { ClaudeProvider } = await import('../providers/ClaudeProvider.js');
       const claudeProvider = new ClaudeProvider({
         apiKey: 'test-api-key',
         model: 'claude-3-sonnet-20240229',
@@ -385,21 +388,15 @@ describe('Logging Integration Tests', () => {
     });
 
     it('should log LLM provider errors with classification', async () => {
-      // Mock axios to simulate API error
-      const mockAxios = vi.doMock('axios', () => ({
-        default: {
-          post: vi.fn().mockRejectedValue({
-            response: {
-              status: 401,
-              data: { error: 'Invalid API key' },
-            },
-          }),
-          isAxiosError: vi.fn().mockReturnValue(true),
+      (axios.post as Mock).mockRejectedValue({
+        response: {
+          status: 401,
+          data: { error: 'Invalid API key' },
         },
-      }));
+      });
+      (axios.isAxiosError as Mock).mockReturnValue(true);
 
-      await mockAxios;
-
+      const { ClaudeProvider } = await import('../providers/ClaudeProvider.js');
       const claudeProvider = new ClaudeProvider({
         apiKey: 'invalid-api-key',
         model: 'claude-3-sonnet-20240229',
@@ -494,35 +491,26 @@ describe('Logging Integration Tests', () => {
 
   describe('Log Content Validation', () => {
     it('should redact sensitive information from logs', async () => {
-      // This test verifies that sensitive data is not logged
-      // We'll check that API keys and other sensitive data are redacted
+      (axios.post as Mock).mockResolvedValue({
+        data: {
+          completion: 'Test response',
+          stop_reason: 'stop_sequence',
+          usage: {
+            prompt_tokens: 10,
+            completion_tokens: 5,
+            total_tokens: 15,
+          },
+        },
+      });
+      (axios.isAxiosError as Mock).mockReturnValue(false);
 
+      const { ClaudeProvider } = await import('../providers/ClaudeProvider.js');
       const claudeProvider = new ClaudeProvider({
         apiKey: 'sk-test-secret-api-key-12345',
         model: 'claude-3-sonnet-20240229',
         maxTokens: 1000,
         temperature: 0.7,
       });
-
-      // Mock axios to avoid actual API calls
-      const mockAxios = vi.doMock('axios', () => ({
-        default: {
-          post: vi.fn().mockResolvedValue({
-            data: {
-              completion: 'Test response',
-              stop_reason: 'stop_sequence',
-              usage: {
-                prompt_tokens: 10,
-                completion_tokens: 5,
-                total_tokens: 15,
-              },
-            },
-          }),
-          isAxiosError: vi.fn().mockReturnValue(false),
-        },
-      }));
-
-      await mockAxios;
 
       await claudeProvider.analyze('Test prompt');
 
