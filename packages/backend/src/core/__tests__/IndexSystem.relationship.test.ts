@@ -2,7 +2,7 @@
  * Tests for IndexSystem relationship functionality
  */
 
-import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { CombinationSuggestion, RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { IndexSystem } from '../IndexSystem';
 
@@ -154,7 +154,7 @@ describe('IndexSystem Relationship Functionality', () => {
     beforeEach(async () => {
       // Add test repositories to the index
       const repositories = [
-        createMockAnalysis('frontend-1', 'React Frontend', ['javascript', 'typescript'], ['react']),
+        createMockAnalysis('frontend-1', 'React Frontend application', ['javascript', 'typescript'], ['react']),
         createMockAnalysis(
           'backend-1',
           'Express Backend',
@@ -167,7 +167,7 @@ describe('IndexSystem Relationship Functionality', () => {
           ['javascript', 'typescript'],
           ['react-native']
         ),
-        createMockAnalysis('library-1', 'Utility Library', ['javascript'], ['npm']),
+        createMockAnalysis('library-1', 'utility-library', ['javascript'], ['npm']),
         createMockAnalysis('service-1', 'Microservice A', ['javascript'], ['express']),
         createMockAnalysis('service-2', 'Microservice B', ['javascript'], ['express']),
       ];
@@ -184,7 +184,7 @@ describe('IndexSystem Relationship Functionality', () => {
       expect(suggestions.length).toBeGreaterThan(0);
 
       const fullStackSuggestion = suggestions.find(
-        (s) => s.repositories.includes('frontend-1') && s.repositories.includes('backend-1')
+        (s: CombinationSuggestion) => s.repositories.includes('frontend-1') && s.repositories.includes('backend-1')
       );
 
       expect(fullStackSuggestion).toBeDefined();
@@ -199,7 +199,7 @@ describe('IndexSystem Relationship Functionality', () => {
       expect(suggestions.length).toBeGreaterThan(0);
 
       const microservicesSuggestion = suggestions.find(
-        (s) => s.repositories.includes('service-1') && s.repositories.includes('service-2')
+        (s: CombinationSuggestion) => s.repositories.includes('service-1') && s.repositories.includes('service-2')
       );
 
       expect(microservicesSuggestion).toBeDefined();
@@ -213,7 +213,7 @@ describe('IndexSystem Relationship Functionality', () => {
       expect(suggestions.length).toBeGreaterThan(0);
 
       const librarySuggestion = suggestions.find(
-        (s) => s.repositories.includes('library-1') && s.repositories.includes('frontend-1')
+        (s: CombinationSuggestion) => s.repositories.includes('library-1') && s.repositories.includes('frontend-1')
       );
 
       expect(librarySuggestion).toBeDefined();
