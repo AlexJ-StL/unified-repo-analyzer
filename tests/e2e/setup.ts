@@ -2,12 +2,12 @@
  * End-to-end test setup and utilities
  */
 
-import { type ChildProcess, spawn } from 'node:child_process';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { promisify } from 'node:util';
-import axios from 'axios';
-import type { AnalysisResult, PerformanceStats } from './types';
+import { type ChildProcess, spawn } from "node:child_process";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import axios from "axios";
+import type { AnalysisResult, PerformanceStats } from "./types";
 
 const sleep = promisify(setTimeout);
 
@@ -30,12 +30,12 @@ export interface TestRepository {
  */
 export async function startTestServer(port = 3001): Promise<TestServer> {
   // Create necessary directories for the backend
-  const backendDir = join(__dirname, '../../packages/backend');
-  const dataDir = join(backendDir, 'data');
-  const cacheDir = join(backendDir, 'data/cache');
-  const indexDir = join(backendDir, 'data/index');
-  const logDir = join(backendDir, 'logs');
-  const backupDir = join(backendDir, 'backups');
+  const backendDir = join(__dirname, "../../packages/backend");
+  const dataDir = join(backendDir, "data");
+  const cacheDir = join(backendDir, "data/cache");
+  const indexDir = join(backendDir, "data/index");
+  const logDir = join(backendDir, "logs");
+  const backupDir = join(backendDir, "backups");
 
   // Ensure directories exist
   await mkdir(dataDir, { recursive: true });
@@ -44,19 +44,19 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
   await mkdir(logDir, { recursive: true });
   await mkdir(backupDir, { recursive: true });
 
-  const serverProcess = spawn('bun', ['src/index.ts'], {
+  const serverProcess = spawn("bun", ["src/index.ts"], {
     cwd: backendDir,
     env: {
       ...process.env,
       PORT: port.toString(),
-      NODE_ENV: 'test',
+      NODE_ENV: "test",
       DATA_DIR: dataDir,
       CACHE_DIR: cacheDir,
       INDEX_DIR: indexDir,
       LOG_DIR: logDir,
       PROJECT_ROOT: process.cwd(),
     },
-    stdio: 'inherit',
+    stdio: "inherit",
     shell: true,
   });
 
@@ -67,14 +67,14 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
   let lastError: unknown = null;
 
   // Capture server output for debugging
-  let _serverOutput = '';
-  let _serverError = '';
+  let _serverOutput = "";
+  let _serverError = "";
 
-  serverProcess.stdout?.on('data', (data) => {
+  serverProcess.stdout?.on("data", (data) => {
     _serverOutput += data.toString();
   });
 
-  serverProcess.stderr?.on('data', (data) => {
+  serverProcess.stderr?.on("data", (data) => {
     _serverError += data.toString();
   });
 
@@ -87,10 +87,10 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
       retries--;
       if (retries === 0) {
         serverProcess.kill();
-        let errorMessage = 'Unknown';
+        let errorMessage = "Unknown";
         if (lastError instanceof Error) {
           errorMessage = lastError.message;
-        } else if (typeof lastError === 'string') {
+        } else if (typeof lastError === "string") {
           errorMessage = lastError;
         } else if (lastError) {
           errorMessage = JSON.stringify(lastError);
@@ -111,7 +111,7 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
       serverProcess.kill();
       // Wait for process to exit
       await new Promise((resolve) => {
-        serverProcess.on('exit', resolve);
+        serverProcess.on("exit", resolve);
       });
     },
   };
@@ -124,7 +124,11 @@ export async function createTestRepository(
   name: string,
   files: Record<string, string>
 ): Promise<TestRepository> {
-  const testDir = join(__dirname, '../../packages/backend/temp-test-repos', name);
+  const testDir = join(
+    __dirname,
+    "../../packages/backend/temp-test-repos",
+    name
+  );
 
   // Create directory structure
   await mkdir(testDir, { recursive: true });
@@ -132,7 +136,7 @@ export async function createTestRepository(
   // Create files
   for (const [filePath, content] of Object.entries(files)) {
     const fullPath = join(testDir, filePath);
-    const dir = join(fullPath, '..');
+    const dir = join(fullPath, "..");
     await mkdir(dir, { recursive: true });
     await writeFile(fullPath, content);
   }
@@ -160,10 +164,10 @@ export async function waitForAnalysis(
   while (Date.now() - startTime < timeout) {
     try {
       const response = await axios.get(`${baseUrl}/api/analysis/${analysisId}`);
-      if (response.data.status === 'completed') {
+      if (response.data.status === "completed") {
         return response.data;
       }
-      if (response.data.status === 'failed') {
+      if (response.data.status === "failed") {
         throw new Error(`Analysis failed: ${response.data.error}`);
       }
     } catch (error) {
@@ -174,7 +178,7 @@ export async function waitForAnalysis(
     await sleep(1000);
   }
 
-  throw new Error('Analysis timeout');
+  throw new Error("Analysis timeout");
 }
 
 /**
@@ -182,15 +186,15 @@ export async function waitForAnalysis(
  */
 export const TEST_REPOSITORIES = {
   simpleJavaScript: {
-    'package.json': JSON.stringify({
-      name: 'test-js-project',
-      version: '1.0.0',
+    "package.json": JSON.stringify({
+      name: "test-js-project",
+      version: "1.0.0",
       dependencies: {
-        express: '^4.18.0',
-        lodash: '^4.17.21',
+        express: "^4.18.0",
+        lodash: "^4.17.21",
       },
     }),
-    'index.js': "
+    "index.js": `
 const express = require('express');
 const _ = require('lodash');
 
@@ -203,116 +207,112 @@ app.get('/', (_req, res) => {
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
-",
-    'README.md': '# Test JavaScript Project\n\nA simple Express.js application for testing.',
+`,
+    "README.md":
+      "# Test JavaScript Project\n\nA simple Express.js application for testing.",
   },
 
-  reactTypeScript:
-{
-  ('package.json');
-  : JSON.stringify(
-      name: 'test-react-app',
-      version: '1.0.0',
-      dependencies: 
-        react: '^18.0.0',
-        'react-dom': '^18.0.0',
-        '@types/react': '^18.0.0',,),
-    'tsconfig.json': JSON.stringify(
-        target: 'es5',
-        lib: ['dom', 'dom.iterable', 'es6'],
+  reactTypeScript: {
+    "package.json": JSON.stringify({
+      name: "test-react-app",
+      version: "1.0.0",
+      dependencies: {
+        react: "^18.0.0",
+        "react-dom": "^18.0.0",
+        "@types/react": "^18.0.0",
+      },
+    }),
+    "tsconfig.json": JSON.stringify({
+      compilerOptions: {
+        target: "es5",
+        lib: ["dom", "dom.iterable", "esnext"],
         allowJs: true,
         skipLibCheck: true,
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
         strict: true,
         forceConsistentCasingInFileNames: true,
-        moduleResolution: 'node',
+        moduleResolution: "node",
         resolveJsonModule: true,
         isolatedModules: true,
         noEmit: true,
-        jsx: 'react-jsx',,),
-    'src/App.tsx': "
+        jsx: "react-jsx",
+      },
+    }),
+    "src/App.tsx": `
+import React from 'react';
 
-  interface Props {
-    title: string;
-  }
+interface Props {
+  title: string;
+}
 
-  const _App: React.FC<Props> = ({ title }) => {
-    return (
-    <div className=\
-    "App\">
-      <h1>title</h1>
+const App: React.FC<Props> = ({ title }) => {
+  return (
+    <div className="App">
+      <h1>{title}</h1>
       <p>Welcome to the test React application</p>
     </div>
-  )
-  };
+  );
+};
 
-  export default App;
-  ",
-    'src/index.tsx': "
-  import React from 'react';
-  import ReactDOM from 'react-dom/client';
-  import App from './App';
+export default App;
+`,
+    "src/index.tsx": `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-  const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-  root.render(<App title=\"Test App\" />);
-",
-    'README.md':
-      '# Test React TypeScript Project\n\nA React application with TypeScript for testing.',
-}
-,
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(<App title="Test App" />);
+`,
+    "README.md":
+      "# Test React TypeScript Project\n\nA React application with TypeScript for testing.",
+  },
 
-  pythonProject:
-{
-  ('requirements.txt');
-  : 'flask==2.3.0\nrequests==2.31.0',
-    'app.py': "
-from flask
-  import Flask,
-  jsonify;
-  import requests
+  pythonProject: {
+    "requirements.txt": "flask==2.3.0\nrequests==2.31.0",
+    "app.py": `
+from flask import Flask, jsonify
+import requests
 
-app
-  = Flask(__name__)
+app = Flask(__name__)
 
-  @app.route('/')
-  def;
-  hello();
-  :
+@app.route('/')
+def hello():
   return jsonify({'message': 'Hello from Python!'})
 
-  @app.route('/data')
-  def;
-  get_data();
-  :
-    # Simulate API call
-    response = requests.get('https://api.example.com/data')
-  return jsonify(response.json())
+@app.route('/data')
+def get_data():
+    try:
+        response = requests.get('https://api.example.com/data')
+        response.raise_for_status()
+        return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
 
-  if __name__ === '__main__'
-  :
+if __name__ == '__main__':
     app.run(debug=True)
-",
-    'utils.py': "
+`,
+    "utils.py": `
 def format_response(data):
-    \"\"\"Format API response data\"\""
-  return {
+    """Format API response data"""
+    return {
         'status': 'success',
         'data': data,
         'timestamp': '2024-01-01T00:00:00Z'
     }
 
-  class DataProcessor:
-    def __init__(_self, _config):
+class DataProcessor:
+    def __init__(self, config):
         self.config = config
     
-    def process(_self, _data):
+    def process(self, data):
         return format_response(data)
-",
-    'README.md': '# Test Python Project\n\nA Flask application for testing Python analysis.',
-  }
-  ,
-}
+`,
+    "README.md":
+      "# Test Python Project\n\nA Flask application for testing Python analysis.",
+  },
+};
 
 /**
  * Performance test utilities
