@@ -19,8 +19,10 @@
       "**/.next/**",
       "**/out/**",
       "**/.cache/**",
+      "**/temp/**",
       "packages/**/dist/**",
-      "packages/**/build/**"
+      "packages/**/build/**",
+      "packages/**/temp/**"
     ]
   },
   "linter": {
@@ -105,7 +107,9 @@
         "**/coverage/**",
         "**/.next/**",
         "**/out/**",
-        "**/.cache/**"
+        "**/.cache/**",
+        "**/temp/**",
+        "**/packages/**/temp/**"
       ],
       "linter": { "enabled": false },
       "formatter": { "enabled": false }
