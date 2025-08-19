@@ -4,7 +4,6 @@
 
 import { type ChildProcess, spawn } from 'node:child_process';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import axios from 'axios';
@@ -45,7 +44,7 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
   await mkdir(logDir, { recursive: true });
   await mkdir(backupDir, { recursive: true });
 
-  const serverProcess = spawn('bun', ['run', 'dev'], {
+  const serverProcess = spawn('bun', ['src/index.ts'], {
     cwd: backendDir,
     env: {
       ...process.env,
@@ -55,9 +54,9 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
       CACHE_DIR: cacheDir,
       INDEX_DIR: indexDir,
       LOG_DIR: logDir,
-      BACKUP_DIR: backupDir,
+      PROJECT_ROOT: process.cwd(),
     },
-    stdio: 'pipe',
+    stdio: 'inherit',
     shell: true,
   });
 
@@ -88,8 +87,16 @@ export async function startTestServer(port = 3001): Promise<TestServer> {
       retries--;
       if (retries === 0) {
         serverProcess.kill();
+        let errorMessage = 'Unknown';
+        if (lastError instanceof Error) {
+          errorMessage = lastError.message;
+        } else if (typeof lastError === 'string') {
+          errorMessage = lastError;
+        } else if (lastError) {
+          errorMessage = JSON.stringify(lastError);
+        }
         throw new Error(
-          `Server failed to start within timeout. Last error: ${lastError?.message || 'Unknown'}`
+          `Server failed to start within timeout. Last error: ${errorMessage}\nServer stdout: ${_serverOutput}\nServer stderr: ${_serverError}`
         );
       }
       await sleep(1000);
@@ -117,7 +124,7 @@ export async function createTestRepository(
   name: string,
   files: Record<string, string>
 ): Promise<TestRepository> {
-  const testDir = join(tmpdir(), 'unified-repo-analyzer-test', name);
+  const testDir = join(__dirname, '../../packages/backend/temp-test-repos', name);
 
   // Create directory structure
   await mkdir(testDir, { recursive: true });
@@ -183,35 +190,34 @@ export const TEST_REPOSITORIES = {
         lodash: '^4.17.21',
       },
     }),
-    'index.js': `
+    'index.js': "
 const express = require('express');
 const _ = require('lodash');
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({ message: 'Hello World' });
 });
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
-`,
+",
     'README.md': '# Test JavaScript Project\n\nA simple Express.js application for testing.',
   },
 
-  reactTypeScript: {
-    'package.json': JSON.stringify({
+  reactTypeScript:
+{
+  ('package.json');
+  : JSON.stringify(
       name: 'test-react-app',
       version: '1.0.0',
-      dependencies: {
+      dependencies: 
         react: '^18.0.0',
         'react-dom': '^18.0.0',
-        '@types/react': '^18.0.0',
-      },
-    }),
-    'tsconfig.json': JSON.stringify({
-      compilerOptions: {
+        '@types/react': '^18.0.0',,),
+    'tsconfig.json': JSON.stringify(
         target: 'es5',
         lib: ['dom', 'dom.iterable', 'es6'],
         allowJs: true,
@@ -224,79 +230,89 @@ app.listen(3000, () => {
         resolveJsonModule: true,
         isolatedModules: true,
         noEmit: true,
-        jsx: 'react-jsx',
-      },
-    }),
-    'src/App.tsx': `
-import React from 'react';
+        jsx: 'react-jsx',,),
+    'src/App.tsx': "
 
-interface Props {
-  title: string;
-}
+  interface Props {
+    title: string;
+  }
 
-const App: React.FC<Props> = ({ title }) => {
-  return (
-    <div className="App">
-      <h1>{title}</h1>
+  const _App: React.FC<Props> = ({ title }) => {
+    return (
+    <div className=\
+    "App\">
+      <h1>title</h1>
       <p>Welcome to the test React application</p>
     </div>
-  );
-};
+  )
+  };
 
-export default App;
-`,
-    'src/index.tsx': `
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+  export default App;
+  ",
+    'src/index.tsx': "
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+  import App from './App';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(<App title="Test App" />);
-`,
+  const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+  root.render(<App title=\"Test App\" />);
+",
     'README.md':
       '# Test React TypeScript Project\n\nA React application with TypeScript for testing.',
-  },
+}
+,
 
-  pythonProject: {
-    'requirements.txt': 'flask==2.3.0\nrequests==2.31.0',
-    'app.py': `
-from flask import Flask, jsonify
-import requests
+  pythonProject:
+{
+  ('requirements.txt');
+  : 'flask==2.3.0\nrequests==2.31.0',
+    'app.py': "
+from flask
+  import Flask,
+  jsonify;
+  import requests
 
-app = Flask(__name__)
+app
+  = Flask(__name__)
 
-@app.route('/')
-def hello():
-    return jsonify({'message': 'Hello from Python!'})
+  @app.route('/')
+  def;
+  hello();
+  :
+  return jsonify({'message': 'Hello from Python!'})
 
-@app.route('/data')
-def get_data():
+  @app.route('/data')
+  def;
+  get_data();
+  :
     # Simulate API call
     response = requests.get('https://api.example.com/data')
-    return jsonify(response.json())
+  return jsonify(response.json())
 
-if __name__ == '__main__':
+  if __name__ === '__main__'
+  :
     app.run(debug=True)
-`,
-    'utils.py': `
+",
+    'utils.py': "
 def format_response(data):
-    """Format API response data"""
-    return {
+    \"\"\"Format API response data\"\""
+  return {
         'status': 'success',
         'data': data,
         'timestamp': '2024-01-01T00:00:00Z'
     }
 
-class DataProcessor:
-    def __init__(self, config):
+  class DataProcessor:
+    def __init__(_self, _config):
         self.config = config
     
-    def process(self, data):
+    def process(_self, _data):
         return format_response(data)
-`,
+",
     'README.md': '# Test Python Project\n\nA Flask application for testing Python analysis.',
-  },
-};
+  }
+  ,
+}
 
 /**
  * Performance test utilities
