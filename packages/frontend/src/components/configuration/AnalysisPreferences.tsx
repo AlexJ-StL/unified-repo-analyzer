@@ -91,7 +91,7 @@ const AnalysisPreferences: React.FC = () => {
           <input
             type="number"
             value={preferences.analysis.maxFiles}
-            onChange={(e) => handleUpdate({ maxFiles: Number.parseInt(e.target.value) })}
+            onChange={(e) => handleUpdate({ maxFiles: Number.parseInt(e.target.value, 10) })}
             min="1"
             max="10000"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -105,7 +105,7 @@ const AnalysisPreferences: React.FC = () => {
           <input
             type="number"
             value={preferences.analysis.maxLinesPerFile}
-            onChange={(e) => handleUpdate({ maxLinesPerFile: Number.parseInt(e.target.value) })}
+            onChange={(e) => handleUpdate({ maxLinesPerFile: Number.parseInt(e.target.value, 10) })}
             min="100"
             max="50000"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -121,7 +121,7 @@ const AnalysisPreferences: React.FC = () => {
             value={Math.round(preferences.analysis.maxFileSize / (1024 * 1024))}
             onChange={(e) =>
               handleUpdate({
-                maxFileSize: Number.parseInt(e.target.value) * 1024 * 1024,
+                maxFileSize: Number.parseInt(e.target.value, 10) * 1024 * 1024,
               })
             }
             min="1"
@@ -137,7 +137,7 @@ const AnalysisPreferences: React.FC = () => {
           <input
             type="number"
             value={preferences.analysis.cacheTTL}
-            onChange={(e) => handleUpdate({ cacheTTL: Number.parseInt(e.target.value) })}
+            onChange={(e) => handleUpdate({ cacheTTL: Number.parseInt(e.target.value, 10) })}
             min="1"
             max="168"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"

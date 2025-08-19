@@ -3,7 +3,6 @@
  */
 
 import type { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import logger from '../../services/logger.service';
 import { pathHandler } from '../../services/path-handler.service';
 

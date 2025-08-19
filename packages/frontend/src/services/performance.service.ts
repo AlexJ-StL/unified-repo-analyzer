@@ -358,7 +358,7 @@ export class PerformanceService {
     const averageApiDuration =
       totalApiCalls > 0 ? apiMetrics.reduce((sum, m) => sum + m.value, 0) / totalApiCalls : 0;
     const apiErrors = apiMetrics.filter((m) => {
-      const status = Number.parseInt(m.tags?.status || '200');
+      const status = Number.parseInt(m.tags?.status || '200', 10);
       return status >= 400;
     }).length;
     const apiErrorRate = totalApiCalls > 0 ? (apiErrors / totalApiCalls) * 100 : 0;

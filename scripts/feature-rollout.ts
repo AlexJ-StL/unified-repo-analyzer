@@ -2,14 +2,14 @@
 
 /**
  * Gradual Feature Rollout Script
- * 
+ *
  * This script manages the gradual rollout of new Windows path handling and logging features.
  * It allows enabling features incrementally to minimize risk and ensure stability.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as readline from 'readline';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as readline from 'node:readline';
 
 interface FeatureFlag {
   name: string;
@@ -37,7 +37,7 @@ class FeatureRolloutManager {
   constructor() {
     this.projectRoot = path.resolve(__dirname, '..');
     this.configPath = path.join(this.projectRoot, '.env');
-    
+
     this.features = [
       // Path Handling Features
       {
@@ -46,7 +46,7 @@ class FeatureRolloutManager {
         envVar: 'ENABLE_PATH_NORMALIZATION',
         defaultValue: 'true',
         riskLevel: 'low',
-        category: 'path-handling'
+        category: 'path-handling',
       },
       {
         name: 'windows-long-path-support',
@@ -54,7 +54,7 @@ class FeatureRolloutManager {
         envVar: 'WINDOWS_LONG_PATH_SUPPORT',
         defaultValue: 'false',
         riskLevel: 'medium',
-        category: 'path-handling'
+        category: 'path-handling',
       },
       {
         name: 'unc-path-support',
@@ -62,7 +62,7 @@ class FeatureRolloutManager {
         envVar: 'WINDOWS_UNC_PATH_SUPPORT',
         defaultValue: 'false',
         riskLevel: 'high',
-        category: 'path-handling'
+        category: 'path-handling',
       },
       {
         name: 'path-validation-caching',
@@ -71,7 +71,7 @@ class FeatureRolloutManager {
         defaultValue: 'true',
         dependencies: ['windows-path-normalization'],
         riskLevel: 'low',
-        category: 'performance'
+        category: 'performance',
       },
       {
         name: 'advanced-permission-checking',
@@ -80,7 +80,7 @@ class FeatureRolloutManager {
         defaultValue: 'false',
         dependencies: ['windows-path-normalization'],
         riskLevel: 'medium',
-        category: 'path-handling'
+        category: 'path-handling',
       },
 
       // Logging Features
@@ -90,7 +90,7 @@ class FeatureRolloutManager {
         envVar: 'LOG_FORMAT',
         defaultValue: 'TEXT',
         riskLevel: 'low',
-        category: 'logging'
+        category: 'logging',
       },
       {
         name: 'http-request-logging',
@@ -98,7 +98,7 @@ class FeatureRolloutManager {
         envVar: 'LOG_HTTP_REQUESTS',
         defaultValue: 'false',
         riskLevel: 'low',
-        category: 'logging'
+        category: 'logging',
       },
       {
         name: 'path-operation-logging',
@@ -107,7 +107,7 @@ class FeatureRolloutManager {
         defaultValue: 'false',
         dependencies: ['structured-logging'],
         riskLevel: 'low',
-        category: 'logging'
+        category: 'logging',
       },
       {
         name: 'sensitive-data-redaction',
@@ -116,7 +116,7 @@ class FeatureRolloutManager {
         defaultValue: 'true',
         dependencies: ['structured-logging'],
         riskLevel: 'low',
-        category: 'logging'
+        category: 'logging',
       },
       {
         name: 'log-rotation',
@@ -124,7 +124,7 @@ class FeatureRolloutManager {
         envVar: 'LOG_ROTATE_DAILY',
         defaultValue: 'false',
         riskLevel: 'low',
-        category: 'logging'
+        category: 'logging',
       },
 
       // Performance and Monitoring Features
@@ -134,7 +134,7 @@ class FeatureRolloutManager {
         envVar: 'LOG_PERFORMANCE_METRICS',
         defaultValue: 'false',
         riskLevel: 'low',
-        category: 'performance'
+        category: 'performance',
       },
       {
         name: 'slow-operation-detection',
@@ -143,7 +143,7 @@ class FeatureRolloutManager {
         defaultValue: 'false',
         dependencies: ['performance-metrics'],
         riskLevel: 'low',
-        category: 'performance'
+        category: 'performance',
       },
       {
         name: 'memory-usage-monitoring',
@@ -152,7 +152,7 @@ class FeatureRolloutManager {
         defaultValue: 'false',
         dependencies: ['performance-metrics'],
         riskLevel: 'medium',
-        category: 'monitoring'
+        category: 'monitoring',
       },
       {
         name: 'external-logging',
@@ -161,19 +161,15 @@ class FeatureRolloutManager {
         defaultValue: 'false',
         dependencies: ['structured-logging', 'sensitive-data-redaction'],
         riskLevel: 'high',
-        category: 'logging'
-      }
+        category: 'logging',
+      },
     ];
 
     this.rolloutStages = [
       {
         name: 'stage-1-basic',
         description: 'Basic path handling and logging improvements',
-        features: [
-          'windows-path-normalization',
-          'structured-logging',
-          'sensitive-data-redaction'
-        ]
+        features: ['windows-path-normalization', 'structured-logging', 'sensitive-data-redaction'],
       },
       {
         name: 'stage-2-enhanced',
@@ -184,8 +180,8 @@ class FeatureRolloutManager {
           'path-operation-logging',
           'log-rotation',
           'path-validation-caching',
-          'performance-metrics'
-        ]
+          'performance-metrics',
+        ],
       },
       {
         name: 'stage-3-advanced',
@@ -195,18 +191,15 @@ class FeatureRolloutManager {
           'windows-long-path-support',
           'advanced-permission-checking',
           'slow-operation-detection',
-          'memory-usage-monitoring'
-        ]
+          'memory-usage-monitoring',
+        ],
       },
       {
         name: 'stage-4-enterprise',
         description: 'Enterprise features with higher risk',
         prerequisites: ['stage-3-advanced'],
-        features: [
-          'unc-path-support',
-          'external-logging'
-        ]
-      }
+        features: ['unc-path-support', 'external-logging'],
+      },
     ];
   }
 
@@ -248,7 +241,6 @@ class FeatureRolloutManager {
       case 'reset':
         await this.resetToDefaults();
         break;
-      case 'interactive':
       default:
         await this.runInteractive();
         break;
@@ -259,27 +251,27 @@ class FeatureRolloutManager {
     console.log('📋 Available Features');
     console.log('====================\n');
 
-    const categories = [...new Set(this.features.map(f => f.category))];
-    
+    const categories = [...new Set(this.features.map((f) => f.category))];
+
     for (const category of categories) {
       console.log(`\n📁 ${category.toUpperCase().replace('-', ' ')}`);
       console.log('─'.repeat(40));
-      
-      const categoryFeatures = this.features.filter(f => f.category === category);
-      
+
+      const categoryFeatures = this.features.filter((f) => f.category === category);
+
       for (const feature of categoryFeatures) {
         const status = await this.getFeatureStatus(feature);
         const statusIcon = status.enabled ? '✅' : '❌';
         const riskIcon = this.getRiskIcon(feature.riskLevel);
-        
+
         console.log(`${statusIcon} ${riskIcon} ${feature.name}`);
         console.log(`   ${feature.description}`);
         console.log(`   Environment: ${feature.envVar}=${status.value}`);
-        
+
         if (feature.dependencies) {
           console.log(`   Dependencies: ${feature.dependencies.join(', ')}`);
         }
-        
+
         console.log();
       }
     }
@@ -290,41 +282,45 @@ class FeatureRolloutManager {
     console.log('==========================\n');
 
     const currentConfig = await this.loadCurrentConfig();
-    
+
     // Show rollout stages
     console.log('🎯 Rollout Stages:');
     for (const stage of this.rolloutStages) {
       const stageStatus = await this.getStageStatus(stage);
       const statusIcon = stageStatus.completed ? '✅' : stageStatus.partial ? '🔄' : '❌';
-      
+
       console.log(`${statusIcon} ${stage.name}: ${stage.description}`);
-      console.log(`   Progress: ${stageStatus.enabledCount}/${stageStatus.totalCount} features enabled`);
-      
+      console.log(
+        `   Progress: ${stageStatus.enabledCount}/${stageStatus.totalCount} features enabled`
+      );
+
       if (stageStatus.partial) {
-        const disabledFeatures = stage.features.filter(fname => {
-          const feature = this.features.find(f => f.name === fname);
+        const disabledFeatures = stage.features.filter((fname) => {
+          const feature = this.features.find((f) => f.name === fname);
           return feature && !this.isFeatureEnabled(feature, currentConfig);
         });
         console.log(`   Remaining: ${disabledFeatures.join(', ')}`);
       }
-      
+
       console.log();
     }
 
     // Show feature summary by category
     console.log('\n📈 Features by Category:');
-    const categories = [...new Set(this.features.map(f => f.category))];
-    
+    const categories = [...new Set(this.features.map((f) => f.category))];
+
     for (const category of categories) {
-      const categoryFeatures = this.features.filter(f => f.category === category);
-      const enabledCount = categoryFeatures.filter(f => this.isFeatureEnabled(f, currentConfig)).length;
-      
+      const categoryFeatures = this.features.filter((f) => f.category === category);
+      const enabledCount = categoryFeatures.filter((f) =>
+        this.isFeatureEnabled(f, currentConfig)
+      ).length;
+
       console.log(`${category}: ${enabledCount}/${categoryFeatures.length} enabled`);
     }
   }
 
   private async enableFeature(featureName: string): Promise<void> {
-    const feature = this.features.find(f => f.name === featureName);
+    const feature = this.features.find((f) => f.name === featureName);
     if (!feature) {
       console.log(`❌ Feature not found: ${featureName}`);
       return;
@@ -337,15 +333,15 @@ class FeatureRolloutManager {
     // Check dependencies
     if (feature.dependencies) {
       const currentConfig = await this.loadCurrentConfig();
-      const missingDeps = feature.dependencies.filter(depName => {
-        const dep = this.features.find(f => f.name === depName);
+      const missingDeps = feature.dependencies.filter((depName) => {
+        const dep = this.features.find((f) => f.name === depName);
         return dep && !this.isFeatureEnabled(dep, currentConfig);
       });
 
       if (missingDeps.length > 0) {
         console.log(`⚠️  Missing dependencies: ${missingDeps.join(', ')}`);
         const enableDeps = await this.askConfirmation('Enable dependencies automatically?');
-        
+
         if (enableDeps) {
           for (const depName of missingDeps) {
             await this.enableFeature(depName);
@@ -363,7 +359,7 @@ class FeatureRolloutManager {
   }
 
   private async disableFeature(featureName: string): Promise<void> {
-    const feature = this.features.find(f => f.name === featureName);
+    const feature = this.features.find((f) => f.name === featureName);
     if (!feature) {
       console.log(`❌ Feature not found: ${featureName}`);
       return;
@@ -372,20 +368,20 @@ class FeatureRolloutManager {
     console.log(`🔧 Disabling feature: ${feature.name}`);
 
     // Check if other features depend on this one
-    const dependentFeatures = this.features.filter(f => 
-      f.dependencies && f.dependencies.includes(featureName)
-    );
+    const dependentFeatures = this.features.filter((f) => f.dependencies?.includes(featureName));
 
     if (dependentFeatures.length > 0) {
       const currentConfig = await this.loadCurrentConfig();
-      const enabledDependents = dependentFeatures.filter(f => 
+      const enabledDependents = dependentFeatures.filter((f) =>
         this.isFeatureEnabled(f, currentConfig)
       );
 
       if (enabledDependents.length > 0) {
-        console.log(`⚠️  This feature is required by: ${enabledDependents.map(f => f.name).join(', ')}`);
+        console.log(
+          `⚠️  This feature is required by: ${enabledDependents.map((f) => f.name).join(', ')}`
+        );
         const disableDependents = await this.askConfirmation('Disable dependent features?');
-        
+
         if (disableDependents) {
           for (const dep of enabledDependents) {
             await this.disableFeature(dep.name);
@@ -403,7 +399,7 @@ class FeatureRolloutManager {
   }
 
   private async enableStage(stageName: string): Promise<void> {
-    const stage = this.rolloutStages.find(s => s.name === stageName);
+    const stage = this.rolloutStages.find((s) => s.name === stageName);
     if (!stage) {
       console.log(`❌ Stage not found: ${stageName}`);
       return;
@@ -415,13 +411,13 @@ class FeatureRolloutManager {
     // Check prerequisites
     if (stage.prerequisites) {
       for (const prereqName of stage.prerequisites) {
-        const prereqStage = this.rolloutStages.find(s => s.name === prereqName);
+        const prereqStage = this.rolloutStages.find((s) => s.name === prereqName);
         if (prereqStage) {
           const prereqStatus = await this.getStageStatus(prereqStage);
           if (!prereqStatus.completed) {
             console.log(`⚠️  Prerequisite stage not completed: ${prereqName}`);
             const enablePrereq = await this.askConfirmation('Enable prerequisite stage?');
-            
+
             if (enablePrereq) {
               await this.enableStage(prereqName);
             } else {
@@ -435,9 +431,9 @@ class FeatureRolloutManager {
 
     // Enable all features in the stage
     console.log(`\n🔧 Enabling ${stage.features.length} features...`);
-    
+
     for (const featureName of stage.features) {
-      const feature = this.features.find(f => f.name === featureName);
+      const feature = this.features.find((f) => f.name === featureName);
       if (feature) {
         console.log(`   Enabling: ${feature.name}`);
         await this.updateFeatureConfig(feature, 'true');
@@ -449,8 +445,10 @@ class FeatureRolloutManager {
 
   private async resetToDefaults(): Promise<void> {
     console.log('🔄 Resetting all features to default values...');
-    
-    const confirm = await this.askConfirmation('This will reset all feature flags to their default values. Continue?');
+
+    const confirm = await this.askConfirmation(
+      'This will reset all feature flags to their default values. Continue?'
+    );
     if (!confirm) {
       console.log('❌ Reset cancelled');
       return;
@@ -486,19 +484,25 @@ class FeatureRolloutManager {
         case '2':
           await this.showStatus();
           break;
-        case '3': {
-          const enableFeature = await this.askInput('Enter feature name to enable: ');
-          await this.enableFeature(enableFeature);
-          break;
-        } {
-        case '4':
-          const disableFeature = await this.askInput('Enter feature name to disable: ');
-          await 
-        }this.dis {ableFeature(disableFeature);
-          break;
-        case '5':
-          const 
-        }stage = await this.askInput('Enter stage name to enable: ');
+        case '3':
+          {
+            const enableFeature = await this.askInput('Enter feature name to enable: ');
+            await this.enableFeature(enableFeature);
+            break;
+          }
+          {
+            case '4':
+            const _disableFeature = await this.askInput('Enter feature name to disable: ');
+            await
+          }
+          this.dis;
+          {
+            ableFeature(disableFeature);
+            break;
+            case '5':
+            const
+          }
+          stage = await this.askInput('Enter stage name to enable: ');
           await this.enableStage(stage);
           break;
         case '6':
@@ -511,25 +515,29 @@ class FeatureRolloutManager {
           console.log('❌ Invalid choice');
       }
 
-      console.log('\n' + '─'.repeat(50) + '\n');
+      console.log(`\n${'─'.repeat(50)}\n`);
     }
   }
 
-  private async getFeatureStatus(feature: FeatureFlag): Promise<{ enabled: boolean; value: string }> {
+  private async getFeatureStatus(
+    feature: FeatureFlag
+  ): Promise<{ enabled: boolean; value: string }> {
     const config = await this.loadCurrentConfig();
     const value = config[feature.envVar] || feature.defaultValue;
     const enabled = this.isFeatureEnabled(feature, config);
-    
+
     return { enabled, value };
   }
 
-  private async getStageStatus(stage: RolloutStage): Promise<{ completed: boolean; partial: boolean; enabledCount: number; totalCount: number }> {
+  private async getStageStatus(
+    stage: RolloutStage
+  ): Promise<{ completed: boolean; partial: boolean; enabledCount: number; totalCount: number }> {
     const config = await this.loadCurrentConfig();
     const totalCount = stage.features.length;
     let enabledCount = 0;
 
     for (const featureName of stage.features) {
-      const feature = this.features.find(f => f.name === featureName);
+      const feature = this.features.find((f) => f.name === featureName);
       if (feature && this.isFeatureEnabled(feature, config)) {
         enabledCount++;
       }
@@ -539,18 +547,18 @@ class FeatureRolloutManager {
       completed: enabledCount === totalCount,
       partial: enabledCount > 0 && enabledCount < totalCount,
       enabledCount,
-      totalCount
+      totalCount,
     };
   }
 
   private isFeatureEnabled(feature: FeatureFlag, config: Record<string, string>): boolean {
     const value = config[feature.envVar] || feature.defaultValue;
-    
+
     // Handle different value types
     if (feature.envVar === 'LOG_FORMAT') {
       return value === 'JSON';
     }
-    
+
     return value === 'true';
   }
 
@@ -562,7 +570,7 @@ class FeatureRolloutManager {
     const content = fs.readFileSync(this.configPath, 'utf-8');
     const config: Record<string, string> = {};
 
-    content.split('\n').forEach(line => {
+    content.split('\n').forEach((line) => {
       line = line.trim();
       if (line && !line.startsWith('#')) {
         const [key, ...valueParts] = line.split('=');
@@ -586,16 +594,16 @@ class FeatureRolloutManager {
     lines.push('');
 
     // Write configuration grouped by category
-    const categories = [...new Set(this.features.map(f => f.category))];
-    
+    const categories = [...new Set(this.features.map((f) => f.category))];
+
     for (const category of categories) {
-      const categoryFeatures = this.features.filter(f => f.category === category);
-      const categoryKeys = categoryFeatures.map(f => f.envVar);
-      const categoryConfig = categoryKeys.filter(key => config[key] !== undefined);
-      
+      const categoryFeatures = this.features.filter((f) => f.category === category);
+      const categoryKeys = categoryFeatures.map((f) => f.envVar);
+      const categoryConfig = categoryKeys.filter((key) => config[key] !== undefined);
+
       if (categoryConfig.length > 0) {
         lines.push(`# ${category.toUpperCase().replace('-', ' ')} FEATURES`);
-        categoryConfig.forEach(key => {
+        categoryConfig.forEach((key) => {
           lines.push(`${key}=${config[key]}`);
         });
         lines.push('');
@@ -603,12 +611,12 @@ class FeatureRolloutManager {
     }
 
     // Write remaining configuration
-    const usedKeys = new Set(this.features.map(f => f.envVar));
-    const remainingKeys = Object.keys(config).filter(key => !usedKeys.has(key));
-    
+    const usedKeys = new Set(this.features.map((f) => f.envVar));
+    const remainingKeys = Object.keys(config).filter((key) => !usedKeys.has(key));
+
     if (remainingKeys.length > 0) {
       lines.push('# OTHER CONFIGURATION');
-      remainingKeys.forEach(key => {
+      remainingKeys.forEach((key) => {
         lines.push(`${key}=${config[key]}`);
       });
       lines.push('');
@@ -619,17 +627,21 @@ class FeatureRolloutManager {
 
   private getRiskIcon(riskLevel: string): string {
     switch (riskLevel) {
-      case 'low': return '🟢';
-      case 'medium': return '🟡';
-      case 'high': return '🔴';
-      default: return '⚪';
+      case 'low':
+        return '🟢';
+      case 'medium':
+        return '🟡';
+      case 'high':
+        return '🔴';
+      default:
+        return '⚪';
     }
   }
 
   private async askConfirmation(question: string): Promise<boolean> {
     const rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
 
     return new Promise((resolve) => {
@@ -643,7 +655,7 @@ class FeatureRolloutManager {
   private async askInput(question: string): Promise<string> {
     const rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
 
     return new Promise((resolve) => {
@@ -658,8 +670,7 @@ class FeatureRolloutManager {
 // Run the feature rollout manager if this script is executed directly
 if (require.main === module) {
   const manager = new FeatureRolloutManager();
-  manager.run().catch(error => {
-    console.error('Feature rollout failed:', error);
+  manager.run().catch((_error) => {
     process.exit(1);
   });
 }

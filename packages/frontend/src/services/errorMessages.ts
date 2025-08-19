@@ -674,7 +674,7 @@ class ErrorMessageService {
   /**
    * Get platform-specific error guidance for specific error codes
    */
-  getPlatformSpecificErrorGuidance(errorCode: string, path?: string): string[] {
+  getPlatformSpecificErrorGuidance(errorCode: string, _path?: string): string[] {
     const isWindows = navigator.platform.toLowerCase().includes('win');
     const isMac = navigator.platform.toLowerCase().includes('mac');
 

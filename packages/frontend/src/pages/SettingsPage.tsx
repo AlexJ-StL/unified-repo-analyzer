@@ -4,7 +4,7 @@ import MainLayout from '../components/layout/MainLayout';
 
 const SettingsPage = () => {
   const [cacheDirectory, setCacheDirectory] = useState('~/.repo-analyzer/cache');
-  const [isCacheDirectoryValid, setIsCacheDirectoryValid] = useState(true);
+  const [_isCacheDirectoryValid, setIsCacheDirectoryValid] = useState(true);
 
   return (
     <MainLayout>

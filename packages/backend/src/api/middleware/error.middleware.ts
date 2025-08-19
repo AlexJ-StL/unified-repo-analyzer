@@ -3,7 +3,6 @@
  */
 
 import type { NextFunction, Request, Response } from 'express';
-import logger from '../../services/logger.service.js';
 import {
   createEnhancedError,
   createErrorResponse,

@@ -4,8 +4,7 @@
  * Works across all platforms and terminals
  */
 
-import { spawn } from 'child_process';
-import path from 'path';
+import { spawn } from 'node:child_process';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -82,13 +81,13 @@ async function processChunk(chunk) {
         const warningMatch = combinedOutput.match(/Found (\d+) warnings/);
 
         if (errorMatch) {
-          const chunkErrors = Number.parseInt(errorMatch[1]);
+          const chunkErrors = Number.parseInt(errorMatch[1], 10);
           totalErrors += chunkErrors;
           console.log(`   Errors: ${chunkErrors}`);
         }
 
         if (warningMatch) {
-          const chunkWarnings = Number.parseInt(warningMatch[1]);
+          const chunkWarnings = Number.parseInt(warningMatch[1], 10);
           totalWarnings += chunkWarnings;
           console.log(`   Warnings: ${chunkWarnings}`);
         }

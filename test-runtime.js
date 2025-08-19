@@ -61,13 +61,8 @@ async function testAPIs() {
     console.log('- ✅ Path validation (file browsing) is working');
     console.log('- ✅ Configuration management is working');
   } catch (error) {
-    console.error('\n❌ Runtime test failed:', error.message);
-
     if (error.response) {
-      console.error('Response status:', error.response.status);
-      console.error('Response data:', error.response.data);
     } else if (error.request) {
-      console.error('No response received. Is the backend running?');
     }
 
     console.log('\nTroubleshooting steps:');

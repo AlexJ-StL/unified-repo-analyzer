@@ -2,7 +2,7 @@
  * Integration tests for PathInput component with real-time validation
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { pathValidationService } from '../../services/pathValidation';
@@ -190,7 +190,7 @@ describe('PathInput Integration Tests', () => {
       });
 
       // Resolve validation
-      resolveValidation!({
+      resolveValidation?.({
         isValid: true,
         normalizedPath: 'C:\\Users\\Test',
         errors: [],
@@ -507,7 +507,7 @@ describe('PathInput Integration Tests', () => {
       });
 
       // Resolve with success
-      resolveValidation!({
+      resolveValidation?.({
         isValid: true,
         normalizedPath: 'C:\\Test',
         errors: [],

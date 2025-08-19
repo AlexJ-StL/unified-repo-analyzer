@@ -41,7 +41,9 @@ describe('Accessibility Tests', () => {
 
       // Check for proper heading structure (h1 -> h2 -> h3, etc.)
       const headings = screen.getAllByRole('heading');
-      const headingLevels = headings.map((heading) => Number.parseInt(heading.tagName.charAt(1)));
+      const headingLevels = headings.map((heading) =>
+        Number.parseInt(heading.tagName.charAt(1), 10)
+      );
 
       // Should start with h1
       expect(headingLevels[0]).toBe(1);
@@ -297,9 +299,9 @@ describe('Accessibility Tests', () => {
       buttons.forEach((button) => {
         const computedStyle = window.getComputedStyle(button);
         const minHeight =
-          Number.parseInt(computedStyle.minHeight) || Number.parseInt(computedStyle.height);
+          Number.parseInt(computedStyle.minHeight, 10) || Number.parseInt(computedStyle.height, 10);
         const minWidth =
-          Number.parseInt(computedStyle.minWidth) || Number.parseInt(computedStyle.width);
+          Number.parseInt(computedStyle.minWidth, 10) || Number.parseInt(computedStyle.width, 10);
 
         // WCAG recommends minimum 44px touch targets
         expect(minHeight).toBeGreaterThanOrEqual(44);

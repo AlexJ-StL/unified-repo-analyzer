@@ -69,8 +69,7 @@ const parseEnvironment = () => {
     return environmentSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const warningMessages = error.errors.map((err) => `${err.path.join('.')}: ${err.message}`);
-      console.warn('Environment validation warnings:\n' + warningMessages.join('\n'));
+      const _warningMessages = error.errors.map((err) => `${err.path.join('.')}: ${err.message}`);
       // Return the default values
       return environmentSchema.parse({});
     }
@@ -113,8 +112,7 @@ export const validateProductionConfig = (): void => {
   if (missingSecrets.length > 0) {
     throw new Error(
       `Missing required secrets for production: ${missingSecrets.join(', ')}
-` +
-        'Please ensure all required environment variables are set.'
+Please ensure all required environment variables are set.`
     );
   }
 

@@ -2,7 +2,7 @@
  * Comprehensive error handling utilities
  */
 
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import logger from '../services/logger.service.js';
 
 /**
@@ -407,7 +407,7 @@ export async function withRetry<T>(
       }
 
       // Calculate delay with exponential backoff
-      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
+      const delay = Math.min(baseDelay * 2 ** (attempt - 1), maxDelay);
 
       logger.warn(`Operation failed, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`, {
         error: enhancedError.technicalMessage,

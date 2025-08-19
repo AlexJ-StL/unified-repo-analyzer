@@ -348,24 +348,18 @@ export class RecoverySystem extends EventEmitter {
    * Execute with fail-fast strategy
    */
   private async executeFailFast<T>(
-    operationName: string,
+    _operationName: string,
     operation: () => Promise<T>
   ): Promise<RecoveryResult<T>> {
     const startTime = Date.now();
-
-    try {
-      const result = await operation();
-      return {
-        success: true,
-        result,
-        strategy: RecoveryStrategy.FAIL_FAST,
-        attempts: 1,
-        totalDuration: Date.now() - startTime,
-      };
-    } catch (error) {
-      // Immediately fail without any recovery attempts
-      throw error;
-    }
+    const result = await operation();
+    return {
+      success: true,
+      result,
+      strategy: RecoveryStrategy.FAIL_FAST,
+      attempts: 1,
+      totalDuration: Date.now() - startTime,
+    };
   }
 
   /**
@@ -470,7 +464,7 @@ export class RecoverySystem extends EventEmitter {
    */
   private getOrCreateCircuitBreaker(
     operationName: string,
-    config: RecoveryConfig
+    _config: RecoveryConfig
   ): CircuitBreakerState {
     if (!this.circuitBreakers.has(operationName)) {
       this.circuitBreakers.set(operationName, {
@@ -488,7 +482,7 @@ export class RecoverySystem extends EventEmitter {
   private startHealthMonitoring(): void {
     // Check component health every 30 seconds
     setInterval(() => {
-      for (const [name, component] of this.componentHealth.entries()) {
+      for (const [_name, _component] of this.componentHealth.entries()) {
         // Skip if no health check function is available
         // In a real implementation, you'd store the health check functions
       }
@@ -527,7 +521,7 @@ export const recoverySystem = new RecoverySystem();
  * Decorator for automatic recovery
  */
 export function withRecovery(config: RecoveryConfig) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return (target: any, propertyName: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {

@@ -196,7 +196,7 @@ const LLMProviderPreferences: React.FC = () => {
                   value={provider.maxTokens}
                   onChange={(e) =>
                     updateProvider(providerId, {
-                      maxTokens: Number.parseInt(e.target.value),
+                      maxTokens: Number.parseInt(e.target.value, 10),
                     })
                   }
                   min="1000"

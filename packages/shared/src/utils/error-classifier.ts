@@ -432,8 +432,8 @@ export class ErrorClassifier {
    */
   private determineSeverity(
     code: ErrorCode,
-    category: ErrorCategory,
-    context: Partial<ErrorContext>
+    _category: ErrorCategory,
+    _context: Partial<ErrorContext>
   ): ErrorSeverity {
     // Critical errors
     if (
@@ -490,7 +490,7 @@ export class ErrorClassifier {
   /**
    * Generate user-friendly error title
    */
-  private generateErrorTitle(code: ErrorCode, category: ErrorCategory): string {
+  private generateErrorTitle(code: ErrorCode, _category: ErrorCategory): string {
     const titleMap: Record<ErrorCode, string> = {
       [ErrorCode.PATH_NOT_FOUND]: 'Repository Path Not Found',
       [ErrorCode.PATH_INVALID_FORMAT]: 'Invalid Path Format',
@@ -729,7 +729,7 @@ export class ErrorClassifier {
   /**
    * Get learn more URL for specific error codes
    */
-  private getLearnMoreUrl(code: ErrorCode, category: ErrorCategory): string | undefined {
+  private getLearnMoreUrl(code: ErrorCode, _category: ErrorCategory): string | undefined {
     const urlMap: Partial<Record<ErrorCode, string>> = {
       [ErrorCode.PATH_INVALID_FORMAT]:
         'https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file',

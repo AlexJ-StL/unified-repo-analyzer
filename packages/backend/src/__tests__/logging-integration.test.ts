@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared';
 import axios from 'axios';
-import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { AnalysisEngine } from '../core/AnalysisEngine.js';
 import { logger } from '../services/logger.service.js';
 import { readFileWithErrorHandling, traverseDirectory } from '../utils/fileSystem.js';

@@ -251,11 +251,11 @@ describe('Error Classification System', () => {
         const correlation = errorClassifier.getCorrelatedErrors(correlationId);
 
         expect(correlation).not.toBeNull();
-        expect(correlation!.correlationId).toBe(correlationId);
-        expect(correlation!.relatedErrors).toHaveLength(2);
-        expect(correlation!.relatedErrors.map((e) => e.id)).toContain(error1.id);
-        expect(correlation!.relatedErrors.map((e) => e.id)).toContain(error2.id);
-        expect(correlation!.timeline).toHaveLength(2);
+        expect(correlation?.correlationId).toBe(correlationId);
+        expect(correlation?.relatedErrors).toHaveLength(2);
+        expect(correlation?.relatedErrors.map((e) => e.id)).toContain(error1.id);
+        expect(correlation?.relatedErrors.map((e) => e.id)).toContain(error2.id);
+        expect(correlation?.timeline).toHaveLength(2);
       });
 
       it('should determine root cause correctly', () => {
@@ -264,11 +264,11 @@ describe('Error Classification System', () => {
 
         // Create a critical error first
         const criticalError = errorClassifier.classifyError('System resource exhausted', context);
-        const mediumError = errorClassifier.classifyError('Path too long', context);
+        const _mediumError = errorClassifier.classifyError('Path too long', context);
 
         const correlation = errorClassifier.getCorrelatedErrors(correlationId);
 
-        expect(correlation!.rootCause?.id).toBe(criticalError.id);
+        expect(correlation?.rootCause?.id).toBe(criticalError.id);
       });
     });
 
@@ -521,17 +521,17 @@ describe('Error Classification System', () => {
       const baseContext: Partial<ErrorContext> = { correlationId };
 
       // Simulate multiple related errors
-      const pathError = errorClassifier.classifyError('Path not found', {
+      const _pathError = errorClassifier.classifyError('Path not found', {
         ...baseContext,
         path: '/missing/repo',
       });
 
-      const permissionError = errorClassifier.classifyError('Permission denied', {
+      const _permissionError = errorClassifier.classifyError('Permission denied', {
         ...baseContext,
         path: '/restricted/repo',
       });
 
-      const networkError = errorClassifier.classifyError('Network timeout', {
+      const _networkError = errorClassifier.classifyError('Network timeout', {
         ...baseContext,
         url: 'https://api.example.com',
       });
@@ -539,10 +539,10 @@ describe('Error Classification System', () => {
       // Get correlation
       const correlation = errorClassifier.getCorrelatedErrors(correlationId);
       expect(correlation).not.toBeNull();
-      expect(correlation!.relatedErrors).toHaveLength(3);
+      expect(correlation?.relatedErrors).toHaveLength(3);
 
       // Create summary
-      const summary = errorFormatter.formatErrorSummary(correlation!.relatedErrors, {
+      const summary = errorFormatter.formatErrorSummary(correlation?.relatedErrors, {
         useColors: false,
       });
       expect(summary).toContain('Error Summary (3 errors)');

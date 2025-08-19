@@ -3,20 +3,15 @@
  * Handles loading, validation, and runtime updates of logging configuration
  */
 
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import {
   CONFIG_SCHEMA,
   type ConfigUpdateResult,
-  ConfigValidationError,
   type ConfigValidationResult,
-  ConfigValidationWarning,
   DEFAULT_LOGGER_CONFIG,
   FILE_SIZE_UNITS,
   type FileSizeUnit,
   type LoggerConfig,
-  LogLevel,
-  LogOutput,
-  LogOutputType,
 } from '../types/logging-config.js';
 
 export class ConfigurationManager extends EventEmitter {
@@ -51,17 +46,14 @@ export class ConfigurationManager extends EventEmitter {
         const validationResult = this.validateConfiguration(configData);
 
         if (!validationResult.isValid) {
-          console.warn('Configuration validation failed, using defaults:', validationResult.errors);
           this.currentConfig = { ...DEFAULT_LOGGER_CONFIG };
         } else {
           this.currentConfig = this.mergeWithDefaults(configData);
         }
 
         if (validationResult.warnings.length > 0) {
-          console.warn('Configuration warnings:', validationResult.warnings);
         }
-      } catch (error) {
-        console.error('Failed to load configuration, using defaults:', error);
+      } catch (_error) {
         this.currentConfig = { ...DEFAULT_LOGGER_CONFIG };
       }
     } else {
@@ -246,7 +238,7 @@ export class ConfigurationManager extends EventEmitter {
 
   // Private methods
 
-  private async readConfigurationFile(path: string): Promise<any> {
+  private async readConfigurationFile(_path: string): Promise<any> {
     // Simulate reading configuration file
     // In real implementation, this would use fs.readFile
     return new Promise((resolve) => {

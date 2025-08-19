@@ -106,7 +106,7 @@ const WorkspaceManager: React.FC = () => {
     setFormData({ name: '', path: '' });
   };
 
-  const selectDirectory = async () => {
+  const _selectDirectory = async () => {
     // In a real implementation, this would use the file system API
     showToast({
       type: 'info',

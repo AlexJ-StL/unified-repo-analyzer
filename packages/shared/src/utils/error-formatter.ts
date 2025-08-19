@@ -7,7 +7,6 @@
 import { platform } from 'node:os';
 import {
   type ClassifiedError,
-  ErrorCategory,
   ErrorCode,
   type ErrorResponse,
   ErrorSeverity,
@@ -154,17 +153,17 @@ export class ErrorFormatter {
     lines.push('');
 
     // Error details
-    lines.push(this.colorize('Error ID:', this.colors.gray, opts.useColors) + ` ${error.id}`);
-    lines.push(this.colorize('Code:', this.colors.gray, opts.useColors) + ` ${error.code}`);
-    lines.push(this.colorize('Category:', this.colors.gray, opts.useColors) + ` ${error.category}`);
-    lines.push(this.colorize('Severity:', this.colors.gray, opts.useColors) + ` ${error.severity}`);
+    lines.push(`${this.colorize('Error ID:', this.colors.gray, opts.useColors)} ${error.id}`);
+    lines.push(`${this.colorize('Code:', this.colors.gray, opts.useColors)} ${error.code}`);
+    lines.push(`${this.colorize('Category:', this.colors.gray, opts.useColors)} ${error.category}`);
+    lines.push(`${this.colorize('Severity:', this.colors.gray, opts.useColors)} ${error.severity}`);
     lines.push(
-      this.colorize('Time:', this.colors.gray, opts.useColors) + ` ${error.timestamp.toISOString()}`
+      `${this.colorize('Time:', this.colors.gray, opts.useColors)} ${error.timestamp.toISOString()}`
     );
 
     if (error.context.path) {
       lines.push(
-        this.colorize('Path:', this.colors.gray, opts.useColors) + ` ${error.context.path}`
+        `${this.colorize('Path:', this.colors.gray, opts.useColors)} ${error.context.path}`
       );
     }
 
@@ -204,11 +203,11 @@ export class ErrorFormatter {
         const priority = suggestion.priority ? ` (${suggestion.priority})` : '';
         const actionText = `${index + 1}. ${suggestion.action}${priority}`;
         lines.push(this.colorize(actionText, this.colors.yellow, opts.useColors));
-        lines.push(this.wrapText(suggestion.description, opts.maxWidth || 80, indent + '   '));
+        lines.push(this.wrapText(suggestion.description, opts.maxWidth || 80, `${indent}   `));
 
         if (suggestion.command) {
           const commandText = `Command: ${suggestion.command}`;
-          lines.push(this.colorize(indent + '   ' + commandText, this.colors.cyan, opts.useColors));
+          lines.push(this.colorize(`${indent}   ${commandText}`, this.colors.cyan, opts.useColors));
         }
 
         if (index < suggestions.length - 1) {
@@ -221,7 +220,7 @@ export class ErrorFormatter {
     if (opts.includeLearnMore && error.learnMoreUrl) {
       lines.push('');
       lines.push(
-        this.colorize('📖 Learn More:', this.colors.blue, opts.useColors) + ` ${error.learnMoreUrl}`
+        `${this.colorize('📖 Learn More:', this.colors.blue, opts.useColors)} ${error.learnMoreUrl}`
       );
     }
 
@@ -451,29 +450,29 @@ export class ErrorFormatter {
   private formatContextForConsole(
     context: any,
     indent: string,
-    options: ConsoleFormattingOptions
+    _options: ConsoleFormattingOptions
   ): string[] {
     const lines: string[] = [];
     const sanitized = this.sanitizeContext(context);
 
     // Display relevant context information
     if (sanitized.platform) {
-      lines.push(indent + `Platform: ${sanitized.platform}`);
+      lines.push(`${indent}Platform: ${sanitized.platform}`);
     }
     if (sanitized.nodeVersion) {
-      lines.push(indent + `Node.js: ${sanitized.nodeVersion}`);
+      lines.push(`${indent}Node.js: ${sanitized.nodeVersion}`);
     }
     if (sanitized.method && sanitized.url) {
-      lines.push(indent + `Request: ${sanitized.method} ${sanitized.url}`);
+      lines.push(`${indent}Request: ${sanitized.method} ${sanitized.url}`);
     }
     if (sanitized.statusCode) {
-      lines.push(indent + `Status: ${sanitized.statusCode}`);
+      lines.push(`${indent}Status: ${sanitized.statusCode}`);
     }
     if (sanitized.duration) {
-      lines.push(indent + `Duration: ${sanitized.duration}ms`);
+      lines.push(`${indent}Duration: ${sanitized.duration}ms`);
     }
     if (sanitized.provider) {
-      lines.push(indent + `Provider: ${sanitized.provider}`);
+      lines.push(`${indent}Provider: ${sanitized.provider}`);
     }
 
     return lines;

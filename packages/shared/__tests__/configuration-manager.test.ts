@@ -4,12 +4,7 @@
  */
 
 import { ConfigurationManager } from '../src/services/ConfigurationManager.js';
-import {
-  ConfigUpdateResult,
-  ConfigValidationResult,
-  DEFAULT_LOGGER_CONFIG,
-  type LoggerConfig,
-} from '../src/types/logging-config.js';
+import { DEFAULT_LOGGER_CONFIG, type LoggerConfig } from '../src/types/logging-config.js';
 import { ConfigValidator } from '../src/utils/config-validator.js';
 
 describe('ConfigurationManager', () => {

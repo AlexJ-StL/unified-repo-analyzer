@@ -359,7 +359,7 @@ export class EnhancedLogger {
 
   private sanitizeString(str: string): string {
     // Remove potential passwords, tokens, etc.
-    return str.replace(/(password|token|key|secret)=[\w\-\.]+/gi, '$1=[REDACTED]');
+    return str.replace(/(password|token|key|secret)=[\w\-.]+/gi, '$1=[REDACTED]');
   }
 
   private sanitizeObject(obj: any): any {
@@ -418,7 +418,7 @@ setInterval(
  * Decorator for automatic operation logging
  */
 export function logOperation(operationType: string) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return (_target: any, propertyName: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {

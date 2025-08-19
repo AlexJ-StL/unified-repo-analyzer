@@ -2,7 +2,7 @@
  * Tests for error message service
  */
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { errorMessageService } from '../errorMessages';
 import type { PathError, PathWarning } from '../pathValidation';
 
@@ -202,9 +202,9 @@ describe('ErrorMessageService', () => {
       const result = errorMessageService.createWarningMessage(warnings);
 
       expect(result).not.toBeNull();
-      expect(result!.title).toBe('Long Path Warning');
-      expect(result!.severity).toBe('warning');
-      expect(result!.category).toBe('path');
+      expect(result?.title).toBe('Long Path Warning');
+      expect(result?.severity).toBe('warning');
+      expect(result?.category).toBe('path');
     });
 
     it('should return null for empty warnings array', () => {
@@ -224,9 +224,9 @@ describe('ErrorMessageService', () => {
       const result = errorMessageService.createWarningMessage(warnings);
 
       expect(result).not.toBeNull();
-      expect(result!.title).toBe('Warning');
-      expect(result!.message).toBe('Some unknown warning');
-      expect(result!.severity).toBe('warning');
+      expect(result?.title).toBe('Warning');
+      expect(result?.message).toBe('Some unknown warning');
+      expect(result?.severity).toBe('warning');
     });
   });
 
@@ -519,10 +519,10 @@ describe('ErrorMessageService', () => {
 
       const result = errorMessageService.createWarningMessage(warnings);
       expect(result).not.toBeNull();
-      expect(result!.title).toBe('Very Long Path Warning');
-      expect(result!.severity).toBe('warning');
-      expect(result!.category).toBe('path');
-      expect(result!.suggestions.length).toBeGreaterThan(0);
+      expect(result?.title).toBe('Very Long Path Warning');
+      expect(result?.severity).toBe('warning');
+      expect(result?.category).toBe('path');
+      expect(result?.suggestions.length).toBeGreaterThan(0);
     });
 
     it('should provide platform-specific guidance for new error codes', () => {

@@ -3,18 +3,11 @@
  * Provides detailed validation for logging configuration
  */
 
-import {
-  ConfigValidationError,
-  type ConfigValidationResult,
-  ConfigValidationWarning,
-  ConsoleConfig,
-  ExternalConfig,
-  FileConfig,
-  type LogFormat,
-  LoggerConfig,
-  type LogLevel,
-  LogOutput,
-  type LogOutputType,
+import type {
+  ConfigValidationResult,
+  LogFormat,
+  LogLevel,
+  LogOutputType,
 } from '../types/logging-config.js';
 
 export class ConfigValidator {
