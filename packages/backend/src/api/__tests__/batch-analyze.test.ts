@@ -17,7 +17,7 @@ describe('Batch Analysis API', () => {
   let httpServer: any;
   let _io: Server;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset mocks
     vi.clearAllMocks();
 

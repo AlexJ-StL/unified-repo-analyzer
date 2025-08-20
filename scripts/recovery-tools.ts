@@ -580,7 +580,8 @@ class RecoveryTools {
     error?: string;
   }> {
     return new Promise((resolve) => {
-      const child = spawn(command, args, {
+      const executable = command === 'bun' || command === 'bunx' ? this.bunExecutablePath : command;
+      const child = spawn(executable, args, {
         cwd: options.cwd || this.projectRoot,
         stdio: 'pipe',
       });
@@ -636,9 +637,7 @@ class RecoveryTools {
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const action = args[0];
-  const projectRoot = args.find((arg) => !arg.startsWith('--')) || process.cwd();
-
-  const recovery = new RecoveryTools(projectRoot);
+  const recovery = new RecoveryTools(process.cwd());
 
   let result: RecoveryResult;
 

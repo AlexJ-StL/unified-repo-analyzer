@@ -199,8 +199,12 @@ config/local.*
 config/production.*
 config/staging.*
 
+# AI Coding Assistant Folders & Docs
 # Kiro Files
 .kiro/
+# Gemini CLI and Code Assistant
+# .gemini
+docs/GEMINI_PROJECT_STABILIZATION_PLAN.md
 
 # Docker / K8s
 # Keep .dockerignore and actual Dockerfiles tracked; ignore overlays and dev files

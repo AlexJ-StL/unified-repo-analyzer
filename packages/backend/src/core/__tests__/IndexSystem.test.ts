@@ -16,7 +16,7 @@ describe('IndexSystem', () => {
     indexSystem = new IndexSystem(tempIndexPath);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Clean up temporary index file
     try {
       const fs = await import('node:fs');
