@@ -55,10 +55,6 @@ bun-debug.log*
 
 # IDE / Editor
 .vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
 .idea/
 .vscode-test/
 .vscode-test-result/
