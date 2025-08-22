@@ -15,7 +15,6 @@ import {
   EnhancedLogger,
   ErrorAnalyzer,
   ErrorCategory,
-  ErrorHandler,
   ErrorSeverity,
 } from '../packages/shared/src/utils/error-handling.js';
 
@@ -53,7 +52,6 @@ class BuildDoctor {
 
   constructor(projectRoot: string = process.cwd()) {
     this.projectRoot = resolve(projectRoot);
-    this.errorHandler = ErrorHandler.getInstance();
   }
 
   /**
@@ -880,7 +878,7 @@ class BuildDoctor {
           resolve({
             success: false,
             exitCode: null,
-            duration: options.timeout!,
+            duration: options.timeout || 0,
             error: `Command timed out after ${options.timeout}ms`,
           });
         }, options.timeout);

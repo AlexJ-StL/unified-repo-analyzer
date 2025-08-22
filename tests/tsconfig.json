@@ -3,9 +3,10 @@
   "compilerOptions": {
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "vitest/globals"],
     "typeRoots": ["../types", "../node_modules/@types"],
-    "strict": true
+    "strict": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
 }

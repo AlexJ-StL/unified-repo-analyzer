@@ -2,9 +2,13 @@
  * Global test setup configuration
  */
 
+/// <reference types="vitest" />
+/// <reference types="node" />
+
+import '@testing-library/jest-dom/vitest';
 import { join } from 'node:path';
 import { config } from 'dotenv';
-import { afterAll, afterEach, beforeAll, beforeEach, expect } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
 
 // Load test environment variables
 config({ path: join(__dirname, '../.env.test') });
@@ -32,18 +36,10 @@ beforeAll(async () => {
 
   // Setup DOM environment if jsdom is available
   if (typeof window !== 'undefined') {
-    // Import and setup jest-dom matchers for frontend tests
-    try {
-      const { default: jestDom } = await import('@testing-library/jest-dom');
-      expect.extend(jestDom);
-    } catch (_error) {
-      // jest-dom not available, skip
-    }
-
     // Mock window.matchMedia for frontend tests
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: (query: string) => ({
+      value: (query: string): MediaQueryList => ({
         matches: false,
         media: query,
         onchange: null,
@@ -51,7 +47,7 @@ beforeAll(async () => {
         removeListener: () => {},
         addEventListener: () => {},
         removeEventListener: () => {},
-        dispatchEvent: () => {},
+        dispatchEvent: jest.fn(),
       }),
     });
 
@@ -60,18 +56,18 @@ beforeAll(async () => {
       observe() {}
       unobserve() {}
       disconnect() {}
-    };
+    } as unknown as typeof ResizeObserver;
 
     // Mock IntersectionObserver
     global.IntersectionObserver = class IntersectionObserver {
       observe() {}
-      unobserve() {}
-      disconnect() {}
-    };
+      unobserve = () => {};
+      disconnect = () => {};
+    } as unknown as typeof IntersectionObserver;
 
     // Mock requestAnimationFrame
     global.requestAnimationFrame = (callback: FrameRequestCallback) => {
-      return setTimeout(callback, 16);
+      return setTimeout(() => callback(16), 16) as unknown as number;
     };
 
     global.cancelAnimationFrame = (id: number) => {
@@ -105,3 +101,13 @@ afterEach(() => {
 
 // Global test utilities
 // Custom assertions can be added here if needed
+
+// Type declarations for global scope
+declare global {
+  interface Global {
+    ResizeObserver: typeof ResizeObserver;
+    IntersectionObserver: typeof IntersectionObserver;
+    requestAnimationFrame: (callback: FrameRequestCallback) => number;
+    cancelAnimationFrame: (id: number) => void;
+  }
+}
