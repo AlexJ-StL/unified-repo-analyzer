@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
-import { env } from "../config/environment";
-import logger from "./logger.service";
+import type { NextFunction, Request, Response } from 'express';
+import { env } from '../config/environment';
+import logger from './logger.service';
 
 interface Metric {
   name: string;
@@ -75,21 +75,17 @@ class MetricsService {
     const cpuUsage = process.cpuUsage();
     const uptime = process.uptime();
 
-    this.recordMetric("memory_heap_used", memoryUsage.heapUsed);
-    this.recordMetric("memory_heap_total", memoryUsage.heapTotal);
-    this.recordMetric("memory_rss", memoryUsage.rss);
-    this.recordMetric("memory_external", memoryUsage.external);
-    this.recordMetric("cpu_user", cpuUsage.user);
-    this.recordMetric("cpu_system", cpuUsage.system);
-    this.recordMetric("uptime", uptime);
-    this.recordMetric("active_connections", this.activeConnections);
+    this.recordMetric('memory_heap_used', memoryUsage.heapUsed);
+    this.recordMetric('memory_heap_total', memoryUsage.heapTotal);
+    this.recordMetric('memory_rss', memoryUsage.rss);
+    this.recordMetric('memory_external', memoryUsage.external);
+    this.recordMetric('cpu_user', cpuUsage.user);
+    this.recordMetric('cpu_system', cpuUsage.system);
+    this.recordMetric('uptime', uptime);
+    this.recordMetric('active_connections', this.activeConnections);
   }
 
-  recordMetric(
-    name: string,
-    value: number,
-    labels?: Record<string, string>
-  ): void {
+  recordMetric(name: string, value: number, labels?: Record<string, string>): void {
     if (!env.ENABLE_METRICS) return;
 
     const metric: Metric = {
@@ -133,24 +129,20 @@ class MetricsService {
     deduplicated: boolean
   ): void {
     this.recordAnalysisMetric(!cacheHit, processingTime, 1);
-    this.recordMetric("analysis_files_processed", fileCount, {
+    this.recordMetric('analysis_files_processed', fileCount, {
       mode,
       cacheHit: cacheHit.toString(),
     });
-    this.recordMetric("analysis_total_size", totalSize, {
+    this.recordMetric('analysis_total_size', totalSize, {
       mode,
       cacheHit: cacheHit.toString(),
     });
     if (deduplicated) {
-      this.recordMetric("analysis_deduplicated", 1, { mode });
+      this.recordMetric('analysis_deduplicated', 1, { mode });
     }
   }
 
-  recordRequestMetric(
-    method: string,
-    statusCode: number,
-    responseTime: number
-  ): void {
+  recordRequestMetric(method: string, statusCode: number, responseTime: number): void {
     if (!env.ENABLE_METRICS) return;
 
     this.requestMetrics.totalRequests++;
@@ -169,18 +161,14 @@ class MetricsService {
       this.requestMetrics.responseTimeHistogram.reduce((a, b) => a + b, 0) /
       this.requestMetrics.responseTimeHistogram.length;
 
-    this.recordMetric("http_requests_total", 1, {
+    this.recordMetric('http_requests_total', 1, {
       method,
       status: statusCode.toString(),
     });
-    this.recordMetric("http_request_duration", responseTime, { method });
+    this.recordMetric('http_request_duration', responseTime, { method });
   }
 
-  recordAnalysisMetric(
-    success: boolean,
-    duration: number,
-    repositoryCount = 1
-  ): void {
+  recordAnalysisMetric(success: boolean, duration: number, repositoryCount = 1): void {
     if (!env.ENABLE_METRICS) return;
 
     this.analysisMetrics.totalAnalyses++;
@@ -201,19 +189,19 @@ class MetricsService {
       this.analysisMetrics.analysisTimeHistogram.reduce((a, b) => a + b, 0) /
       this.analysisMetrics.analysisTimeHistogram.length;
 
-    this.recordMetric("analysis_total", 1, { success: success.toString() });
-    this.recordMetric("analysis_duration", duration);
-    this.recordMetric("repositories_processed", repositoryCount);
+    this.recordMetric('analysis_total', 1, { success: success.toString() });
+    this.recordMetric('analysis_duration', duration);
+    this.recordMetric('repositories_processed', repositoryCount);
   }
 
   incrementActiveConnections(): void {
     this.activeConnections++;
-    this.recordMetric("active_connections", this.activeConnections);
+    this.recordMetric('active_connections', this.activeConnections);
   }
 
   decrementActiveConnections(): void {
     this.activeConnections = Math.max(0, this.activeConnections - 1);
-    this.recordMetric("active_connections", this.activeConnections);
+    this.recordMetric('active_connections', this.activeConnections);
   }
 
   getStats(): Record<string, any> {
@@ -224,11 +212,7 @@ class MetricsService {
     return this.getMetrics();
   }
 
-  getMetricsInRange(
-    startTime: number,
-    endTime: number,
-    metricName?: string
-  ): Metric[] {
+  getMetricsInRange(startTime: number, endTime: number, metricName?: string): Metric[] {
     const result: Metric[] = [];
 
     for (const [name, metrics] of this.metrics.entries()) {
@@ -256,17 +240,17 @@ class MetricsService {
     };
 
     for (const metric of filteredMetrics) {
-      if (metric.name === "http_requests_total") {
+      if (metric.name === 'http_requests_total') {
         requestMetrics.totalRequests += metric.value;
         if (metric.labels) {
-          const status = parseInt(metric.labels.status) || 200;
-          const method = metric.labels.method || "GET";
+          const status = Number.parseInt(metric.labels.status) || 200;
+          const method = metric.labels.method || 'GET';
           requestMetrics.requestsByStatus[status] =
             (requestMetrics.requestsByStatus[status] || 0) + 1;
           requestMetrics.requestsByMethod[method] =
             (requestMetrics.requestsByMethod[method] || 0) + 1;
         }
-      } else if (metric.name === "http_request_duration") {
+      } else if (metric.name === 'http_request_duration') {
         requestMetrics.responseTimeHistogram.push(metric.value);
       }
     }
@@ -280,10 +264,7 @@ class MetricsService {
     return requestMetrics;
   }
 
-  getAnalysisMetricsInRange(
-    startTime: number,
-    endTime: number
-  ): AnalysisMetrics {
+  getAnalysisMetricsInRange(startTime: number, endTime: number): AnalysisMetrics {
     const filteredMetrics = this.getMetricsInRange(startTime, endTime);
     const analysisMetrics: AnalysisMetrics = {
       totalAnalyses: 0,
@@ -295,16 +276,16 @@ class MetricsService {
     };
 
     for (const metric of filteredMetrics) {
-      if (metric.name === "analysis_total") {
+      if (metric.name === 'analysis_total') {
         analysisMetrics.totalAnalyses += metric.value;
-        if (metric.labels?.success === "true") {
+        if (metric.labels?.success === 'true') {
           analysisMetrics.successfulAnalyses += metric.value;
         } else {
           analysisMetrics.failedAnalyses += metric.value;
         }
-      } else if (metric.name === "analysis_duration") {
+      } else if (metric.name === 'analysis_duration') {
         analysisMetrics.analysisTimeHistogram.push(metric.value);
-      } else if (metric.name === "repositories_processed") {
+      } else if (metric.name === 'repositories_processed') {
         analysisMetrics.repositoriesProcessed += metric.value;
       }
     }
@@ -336,9 +317,7 @@ class MetricsService {
           {
             current: metrics[metrics.length - 1]?.value || 0,
             count: metrics.length,
-            average:
-              metrics.reduce((sum, m) => sum + m.value, 0) / metrics.length ||
-              0,
+            average: metrics.reduce((sum, m) => sum + m.value, 0) / metrics.length || 0,
           },
         ])
       ),
@@ -347,7 +326,7 @@ class MetricsService {
 
   private logMetricsSummary(): void {
     const metrics = this.getMetrics();
-    logger.info("Metrics Summary", {
+    logger.info('Metrics Summary', {
       uptime: `${Math.floor(metrics.system.uptime / 60)} minutes`,
       totalRequests: metrics.requests.totalRequests,
       averageResponseTime: `${metrics.requests.averageResponseTime.toFixed(2)}ms`,
@@ -368,13 +347,13 @@ class MetricsService {
       const startTime = Date.now();
       this.incrementActiveConnections();
 
-      res.on("finish", () => {
+      res.on('finish', () => {
         const responseTime = Date.now() - startTime;
         this.recordRequestMetric(req.method, res.statusCode, responseTime);
         this.decrementActiveConnections();
       });
 
-      res.on("close", () => {
+      res.on('close', () => {
         this.decrementActiveConnections();
       });
 
@@ -391,27 +370,26 @@ class MetricsService {
   // Prometheus-style metrics endpoint
   prometheusHandler = (_req: Request, res: Response): void => {
     const metrics = this.getMetrics();
-    let output = "";
+    let output = '';
 
     // Convert metrics to Prometheus format
-    output += "# HELP http_requests_total Total number of HTTP requests\n";
-    output += "# TYPE http_requests_total counter\n";
+    output += '# HELP http_requests_total Total number of HTTP requests\n';
+    output += '# TYPE http_requests_total counter\n';
     output += `http_requests_total ${metrics.requests.totalRequests}\n\n`;
 
-    output +=
-      "# HELP http_request_duration_seconds HTTP request duration in seconds\n";
-    output += "# TYPE http_request_duration_seconds histogram\n";
+    output += '# HELP http_request_duration_seconds HTTP request duration in seconds\n';
+    output += '# TYPE http_request_duration_seconds histogram\n';
     output += `http_request_duration_seconds ${metrics.requests.averageResponseTime / 1000}\n\n`;
 
-    output += "# HELP analysis_total Total number of repository analyses\n";
-    output += "# TYPE analysis_total counter\n";
+    output += '# HELP analysis_total Total number of repository analyses\n';
+    output += '# TYPE analysis_total counter\n';
     output += `analysis_total ${metrics.analysis.totalAnalyses}\n\n`;
 
-    output += "# HELP memory_usage_bytes Memory usage in bytes\n";
-    output += "# TYPE memory_usage_bytes gauge\n";
+    output += '# HELP memory_usage_bytes Memory usage in bytes\n';
+    output += '# TYPE memory_usage_bytes gauge\n';
     output += `memory_usage_bytes ${metrics.system.memoryUsage.heapUsed}\n\n`;
 
-    res.set("Content-Type", "text/plain");
+    res.set('Content-Type', 'text/plain');
     res.send(output);
   };
 

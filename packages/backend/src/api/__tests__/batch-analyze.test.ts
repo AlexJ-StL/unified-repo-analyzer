@@ -2,17 +2,17 @@
  * Tests for batch analysis API endpoint
  */
 
-import { createServer } from "node:http";
-import express from "express";
-import { Server } from "socket.io";
-import request from "supertest";
-import { vi, describe, test, expect, beforeEach, afterEach } from "vitest";
-import { AnalysisEngine } from "../../core/AnalysisEngine";
+import { createServer } from 'node:http';
+import express from 'express';
+import { Server } from 'socket.io';
+import request from 'supertest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { AnalysisEngine } from '../../core/AnalysisEngine';
 
 // Mock dependencies
-vi.mock("../../core/AnalysisEngine");
+vi.mock('../../core/AnalysisEngine');
 
-describe("Batch Analysis API", () => {
+describe('Batch Analysis API', () => {
   let app: express.Application;
   let httpServer: any;
   let _io: Server;
@@ -39,14 +39,12 @@ describe("Batch Analysis API", () => {
     };
 
     // Mock AnalysisEngine
-    (
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any
-    ).mockImplementation(
+    (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any).mockImplementation(
       async (paths, _options, _concurrency, progressCallback) => {
         // Call progress callback a few times to simulate progress
         if (progressCallback) {
           progressCallback({
-            batchId: "test-batch",
+            batchId: 'test-batch',
             status: {
               total: paths.length,
               completed: 0,
@@ -59,7 +57,7 @@ describe("Batch Analysis API", () => {
           });
 
           progressCallback({
-            batchId: "test-batch",
+            batchId: 'test-batch',
             status: {
               total: paths.length,
               completed: paths.length,
@@ -74,13 +72,13 @@ describe("Batch Analysis API", () => {
 
         // Return mock batch result
         return {
-          id: "test-batch",
+          id: 'test-batch',
           repositories: paths.map((path) => ({
-            id: `repo-${path.replace(/\//g, "-")}`,
+            id: `repo-${path.replace(/\//g, '-')}`,
             path,
-            name: path.split("/").pop(),
-            language: "JavaScript",
-            languages: ["JavaScript", "TypeScript"],
+            name: path.split('/').pop(),
+            language: 'JavaScript',
+            languages: ['JavaScript', 'TypeScript'],
             frameworks: [],
             fileCount: 100,
             directoryCount: 10,
@@ -90,7 +88,7 @@ describe("Batch Analysis API", () => {
             structure: {
               directories: [],
               keyFiles: [],
-              tree: "mock-tree",
+              tree: 'mock-tree',
             },
             codeAnalysis: {
               functionCount: 0,
@@ -99,8 +97,8 @@ describe("Batch Analysis API", () => {
               complexity: {
                 cyclomaticComplexity: 0,
                 maintainabilityIndex: 0,
-                technicalDebt: "Low",
-                codeQuality: "good",
+                technicalDebt: 'Low',
+                codeQuality: 'good',
               },
               patterns: [],
             },
@@ -110,18 +108,18 @@ describe("Batch Analysis API", () => {
               frameworks: [],
             },
             insights: {
-              executiveSummary: "",
-              technicalBreakdown: "",
+              executiveSummary: '',
+              technicalBreakdown: '',
               recommendations: [],
               potentialIssues: [],
             },
             metadata: {
-              analysisMode: "standard",
+              analysisMode: 'standard',
               processingTime: 0,
             },
           })),
           combinedInsights: {
-            commonalities: ["Common language: JavaScript"],
+            commonalities: ['Common language: JavaScript'],
             differences: [],
             integrationOpportunities: [],
           },
@@ -140,8 +138,8 @@ describe("Batch Analysis API", () => {
     );
 
     // Import routes
-    const { default: analyzeRoutes } = await import("../routes/analyze");
-    app.use("/api/analyze", analyzeRoutes);
+    const { default: analyzeRoutes } = await import('../routes/analyze');
+    app.use('/api/analyze', analyzeRoutes);
   });
 
   afterEach(() => {
@@ -150,13 +148,13 @@ describe("Batch Analysis API", () => {
     }
   });
 
-  test("should return 400 for invalid request", async () => {
+  test('should return 400 for invalid request', async () => {
     const response = await request(app)
-      .post("/api/analyze/batch")
+      .post('/api/analyze/batch')
       .send({
         // Missing paths
         options: {
-          mode: "quick",
+          mode: 'quick',
         },
       });
 
@@ -164,13 +162,13 @@ describe("Batch Analysis API", () => {
     expect(response.body.errors).toBeDefined();
   });
 
-  test("should analyze multiple repositories", async () => {
+  test('should analyze multiple repositories', async () => {
     const response = await request(app)
-      .post("/api/analyze/batch")
+      .post('/api/analyze/batch')
       .send({
-        paths: ["/path/to/repo1", "/path/to/repo2", "/path/to/repo3"],
+        paths: ['/path/to/repo1', '/path/to/repo2', '/path/to/repo3'],
         options: {
-          mode: "quick",
+          mode: 'quick',
           maxFiles: 10,
           maxLinesPerFile: 100,
           includeLLMAnalysis: false,
@@ -186,12 +184,10 @@ describe("Batch Analysis API", () => {
     expect(response.body.status.progress).toBe(100);
 
     // Verify that analyzeMultipleRepositoriesWithQueue was called with correct parameters
-    expect(
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue
-    ).toHaveBeenCalledWith(
-      ["/path/to/repo1", "/path/to/repo2", "/path/to/repo3"],
+    expect(AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue).toHaveBeenCalledWith(
+      ['/path/to/repo1', '/path/to/repo2', '/path/to/repo3'],
       expect.objectContaining({
-        mode: "quick",
+        mode: 'quick',
         maxFiles: 10,
         maxLinesPerFile: 100,
         includeLLMAnalysis: false,
@@ -201,23 +197,23 @@ describe("Batch Analysis API", () => {
     );
   });
 
-  test("should handle errors during batch analysis", async () => {
+  test('should handle errors during batch analysis', async () => {
     // Mock analyzeMultipleRepositoriesWithQueue to throw an error
-    (
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any
-    ).mockRejectedValueOnce(new Error("Batch analysis failed"));
+    (AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as any).mockRejectedValueOnce(
+      new Error('Batch analysis failed')
+    );
 
     const response = await request(app)
-      .post("/api/analyze/batch")
+      .post('/api/analyze/batch')
       .send({
-        paths: ["/path/to/repo1", "/path/to/repo2"],
+        paths: ['/path/to/repo1', '/path/to/repo2'],
         options: {
-          mode: "quick",
+          mode: 'quick',
         },
       });
 
     expect(response.status).toBe(500);
-    expect(response.body.error).toBe("Failed to analyze repositories");
-    expect(response.body.message).toBe("Batch analysis failed");
+    expect(response.body.error).toBe('Failed to analyze repositories');
+    expect(response.body.message).toBe('Batch analysis failed');
   });
 });

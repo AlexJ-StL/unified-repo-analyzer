@@ -3,7 +3,7 @@
  */
 
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdvancedAnalyzer } from '../advancedAnalyzer';
 
 // Mock file system operations
@@ -18,6 +18,9 @@ vi.mock('fs', () => ({
 }));
 
 const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem');
+
+// Cast the mock function to have proper mock methods
+const _mockReadFileWithMockMethods = mockReadFile as any;
 
 describe('AdvancedAnalyzer', () => {
   let analyzer: AdvancedAnalyzer;
@@ -135,7 +138,7 @@ describe('AdvancedAnalyzer', () => {
         eval(userCode);
       `;
 
-      mockReadFile.mockResolvedValue(mockJavaScriptContent);
+      (mockReadFile as any).mockResolvedValue(mockJavaScriptContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -176,7 +179,7 @@ describe('AdvancedAnalyzer', () => {
     });
 
     it('should handle files with no content gracefully', async () => {
-      mockReadFile.mockResolvedValue('');
+      (mockReadFile as any).mockResolvedValue('');
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -186,7 +189,7 @@ describe('AdvancedAnalyzer', () => {
     });
 
     it('should handle file read errors gracefully', async () => {
-      mockReadFile.mockRejectedValue(new Error('File not found'));
+      (mockReadFile as any).mockRejectedValue(new Error('File not found'));
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -207,7 +210,7 @@ describe('AdvancedAnalyzer', () => {
         const privateKey = "-----BEGIN PRIVATE KEY-----";
       `;
 
-      mockReadFile.mockResolvedValue(contentWithSecrets);
+      (mockReadFile as any).mockResolvedValue(contentWithSecrets);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -232,7 +235,7 @@ describe('AdvancedAnalyzer', () => {
         const sql = "SELECT * FROM orders WHERE status = " + status + " AND user_id = " + userId;
       `;
 
-      mockReadFile.mockResolvedValue(contentWithSQLInjection);
+      (mockReadFile as any).mockResolvedValue(contentWithSQLInjection);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -250,7 +253,7 @@ describe('AdvancedAnalyzer', () => {
         eval(userCode);
       `;
 
-      mockReadFile.mockResolvedValue(contentWithXSS);
+      (mockReadFile as any).mockResolvedValue(contentWithXSS);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -262,7 +265,7 @@ describe('AdvancedAnalyzer', () => {
 
     it('should calculate security score correctly', async () => {
       // Test with no vulnerabilities
-      mockReadFile.mockResolvedValue('const safeCode = "hello world";');
+      (mockReadFile as any).mockResolvedValue('const safeCode = "hello world";');
 
       let result = await analyzer.analyzeRepository(mockAnalysis);
       expect(result.security.securityScore).toBe(100);
@@ -272,7 +275,7 @@ describe('AdvancedAnalyzer', () => {
         const password = "hardcoded123";
         document.innerHTML = userInput;
       `;
-      mockReadFile.mockResolvedValue(vulnerableContent);
+      (mockReadFile as any).mockResolvedValue(vulnerableContent);
 
       result = await analyzer.analyzeRepository(mockAnalysis);
       expect(result.security.securityScore).toBeLessThan(100);
@@ -304,7 +307,7 @@ describe('AdvancedAnalyzer', () => {
         }
       `;
 
-      mockReadFile.mockResolvedValue(complexContent);
+      (mockReadFile as any).mockResolvedValue(complexContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -330,7 +333,7 @@ describe('AdvancedAnalyzer', () => {
         // const evenMoreOldCode = "and this";
       `;
 
-      mockReadFile.mockResolvedValue(smellContent);
+      (mockReadFile as any).mockResolvedValue(smellContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -360,7 +363,7 @@ describe('AdvancedAnalyzer', () => {
         const duplicatedLine = "this line appears multiple times";
       `;
 
-      mockReadFile.mockResolvedValue(debtContent);
+      (mockReadFile as any).mockResolvedValue(debtContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -389,7 +392,7 @@ describe('AdvancedAnalyzer', () => {
         }
       `;
 
-      mockReadFile.mockResolvedValue(maintainableContent);
+      (mockReadFile as any).mockResolvedValue(maintainableContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -414,7 +417,7 @@ describe('AdvancedAnalyzer', () => {
         },
       };
 
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(mvcAnalysis);
 
@@ -435,7 +438,7 @@ describe('AdvancedAnalyzer', () => {
         },
       };
 
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(layeredAnalysis);
 
@@ -463,7 +466,7 @@ describe('AdvancedAnalyzer', () => {
         },
       };
 
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(componentAnalysis);
 
@@ -512,7 +515,7 @@ describe('AdvancedAnalyzer', () => {
         }
       `;
 
-      mockReadFile.mockResolvedValue(patternContent);
+      (mockReadFile as any).mockResolvedValue(patternContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -523,7 +526,7 @@ describe('AdvancedAnalyzer', () => {
     });
 
     it('should calculate maintainability score', async () => {
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -537,7 +540,7 @@ describe('AdvancedAnalyzer', () => {
         fileCount: 150, // Large project
       };
 
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(largeAnalysis);
 
@@ -554,7 +557,7 @@ describe('AdvancedAnalyzer', () => {
     it('should integrate with main analysis engine', async () => {
       // This test would verify that the advanced analyzer is properly integrated
       // with the main AnalysisEngine class
-      mockReadFile.mockResolvedValue('const simpleCode = "test";');
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "test";');
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 
@@ -581,7 +584,7 @@ describe('AdvancedAnalyzer', () => {
           // Missing opening brace
       `;
 
-      mockReadFile.mockResolvedValue(malformedContent);
+      (mockReadFile as any).mockResolvedValue(malformedContent);
 
       const result = await analyzer.analyzeRepository(mockAnalysis);
 

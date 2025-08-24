@@ -2,10 +2,10 @@
  * Path validation controller
  */
 
-import type { Request, Response } from "express";
-import { validationResult } from "express-validator";
-import logger from "../../services/logger.service";
-import { pathHandler } from "../../services/path-handler.service";
+import type { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import logger from '../../services/logger.service';
+import { pathHandler } from '../../services/path-handler.service';
 
 /**
  * Validate a path using PathHandler service
@@ -13,18 +13,14 @@ import { pathHandler } from "../../services/path-handler.service";
  * @param req - Express request
  * @param res - Express response
  */
-export const validatePath = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const requestId =
-    (req.headers["x-request-id"] as string) || `req-${Date.now()}`;
+export const validatePath = async (req: Request, res: Response): Promise<void> => {
+  const requestId = (req.headers['x-request-id'] as string) || `req-${Date.now()}`;
 
   try {
     // Validate request
     const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
-      logger.warn("Path validation request validation failed", {
+      logger.warn('Path validation request validation failed', {
         requestId,
         errors: validationErrors.array(),
         path: req.body.path,
@@ -36,8 +32,8 @@ export const validatePath = async (
     const { path, options = {} } = req.body;
 
     // Check if path is missing or invalid
-    if (!path || typeof path !== "string" || path.trim() === "") {
-      logger.warn("Path validation failed - invalid input", {
+    if (!path || typeof path !== 'string' || path.trim() === '') {
+      logger.warn('Path validation failed - invalid input', {
         requestId,
         path,
       });
@@ -46,9 +42,9 @@ export const validatePath = async (
         isValid: false,
         errors: [
           {
-            code: "INVALID_INPUT",
-            message: "Path must be a non-empty string",
-            suggestions: ["Provide a valid path"],
+            code: 'INVALID_INPUT',
+            message: 'Path must be a non-empty string',
+            suggestions: ['Provide a valid path'],
           },
         ],
         warnings: [],
@@ -61,7 +57,7 @@ export const validatePath = async (
       return;
     }
 
-    logger.info("Starting path validation", {
+    logger.info('Starting path validation', {
       requestId,
       path,
       options,
@@ -71,7 +67,7 @@ export const validatePath = async (
     const pathValidationResult = await pathHandler.validatePath(path, {
       timeoutMs: options.timeoutMs || 10000,
       onProgress: (progress) => {
-        logger.debug("Path validation progress", {
+        logger.debug('Path validation progress', {
           requestId,
           stage: progress.stage,
           percentage: progress.percentage,
@@ -80,7 +76,7 @@ export const validatePath = async (
       },
     });
 
-    logger.info("Path validation completed", {
+    logger.info('Path validation completed', {
       requestId,
       path,
       isValid: pathValidationResult.isValid,
@@ -94,7 +90,7 @@ export const validatePath = async (
     const errorMessage = error instanceof Error ? error.message : String(error);
 
     logger.error(
-      "Path validation failed",
+      'Path validation failed',
       error instanceof Error ? error : new Error(errorMessage),
       {
         requestId,
@@ -104,18 +100,18 @@ export const validatePath = async (
 
     // Check for specific error types
     if (error instanceof Error) {
-      if (error.name === "TimeoutError") {
+      if (error.name === 'TimeoutError') {
         res.status(408).json({
           isValid: false,
           errors: [
             {
-              code: "TIMEOUT_ERROR",
-              message: "Path validation timed out",
+              code: 'TIMEOUT_ERROR',
+              message: 'Path validation timed out',
               details: errorMessage,
               suggestions: [
-                "Try with a shorter path",
-                "Check if the path is on a slow network drive",
-                "Increase timeout settings",
+                'Try with a shorter path',
+                'Check if the path is on a slow network drive',
+                'Increase timeout settings',
               ],
             },
           ],
@@ -129,13 +125,13 @@ export const validatePath = async (
         return;
       }
 
-      if (error.name === "AbortError") {
+      if (error.name === 'AbortError') {
         res.status(499).json({
           isValid: false,
           errors: [
             {
-              code: "OPERATION_CANCELLED",
-              message: "Path validation was cancelled",
+              code: 'OPERATION_CANCELLED',
+              message: 'Path validation was cancelled',
               details: errorMessage,
             },
           ],
@@ -154,13 +150,13 @@ export const validatePath = async (
       isValid: false,
       errors: [
         {
-          code: "VALIDATION_ERROR",
-          message: "Path validation failed",
+          code: 'VALIDATION_ERROR',
+          message: 'Path validation failed',
           details: errorMessage,
           suggestions: [
-            "Check if the path format is correct",
-            "Ensure the path is accessible",
-            "Try again with a different path",
+            'Check if the path format is correct',
+            'Ensure the path is accessible',
+            'Try again with a different path',
           ],
         },
       ],
@@ -180,77 +176,72 @@ export const validatePath = async (
  * @param req - Express request
  * @param res - Express response
  */
-export const getPathFormatInfo = async (
-  _req: Request,
-  res: Response
-): Promise<void> => {
+export const getPathFormatInfo = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const isWindows = process.platform === "win32";
+    const isWindows = process.platform === 'win32';
 
     const formatInfo = {
       platform: process.platform,
       isWindows,
-      pathSeparator: isWindows ? "\\" : "/",
+      pathSeparator: isWindows ? '\\' : '/',
       examples: isWindows
         ? [
-            "C:\\Users\\Username\\Documents\\MyProject",
-            "C:/Users/Username/Documents/MyProject",
-            "\\\\server\\share\\folder",
-            ".\\relative\\path",
-            "..\\parent\\directory",
+            'C:\\Users\\Username\\Documents\\MyProject',
+            'C:/Users/Username/Documents/MyProject',
+            '\\\\server\\share\\folder',
+            '.\\relative\\path',
+            '..\\parent\\directory',
           ]
         : [
-            "/home/username/Documents/MyProject",
-            "/Users/username/Documents/MyProject",
-            "./relative/path",
-            "../parent/directory",
-            "~/Documents/MyProject",
+            '/home/username/Documents/MyProject',
+            '/Users/username/Documents/MyProject',
+            './relative/path',
+            '../parent/directory',
+            '~/Documents/MyProject',
           ],
       tips: isWindows
         ? [
-            "Use either forward slashes (/) or backslashes (\\)",
-            "Drive letters should be followed by a colon (C:)",
-            "UNC paths start with \\\\ for network locations",
-            "Avoid reserved names like CON, PRN, AUX, NUL",
-            "Maximum path length is 260 characters (unless long paths are enabled)",
+            'Use either forward slashes (/) or backslashes (\\)',
+            'Drive letters should be followed by a colon (C:)',
+            'UNC paths start with \\\\ for network locations',
+            'Avoid reserved names like CON, PRN, AUX, NUL',
+            'Maximum path length is 260 characters (unless long paths are enabled)',
           ]
         : [
-            "Paths are case-sensitive",
-            "Use forward slashes (/) as path separators",
-            "Paths starting with / are absolute",
-            "Paths starting with ./ or ../ are relative",
-            "~ represents the home directory",
+            'Paths are case-sensitive',
+            'Use forward slashes (/) as path separators',
+            'Paths starting with / are absolute',
+            'Paths starting with ./ or ../ are relative',
+            '~ represents the home directory',
           ],
       reservedNames: isWindows
         ? [
-            "CON",
-            "PRN",
-            "AUX",
-            "NUL",
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4",
-            "COM5",
-            "COM6",
-            "COM7",
-            "COM8",
-            "COM9",
-            "LPT1",
-            "LPT2",
-            "LPT3",
-            "LPT4",
-            "LPT5",
-            "LPT6",
-            "LPT7",
-            "LPT8",
-            "LPT9",
+            'CON',
+            'PRN',
+            'AUX',
+            'NUL',
+            'COM1',
+            'COM2',
+            'COM3',
+            'COM4',
+            'COM5',
+            'COM6',
+            'COM7',
+            'COM8',
+            'COM9',
+            'LPT1',
+            'LPT2',
+            'LPT3',
+            'LPT4',
+            'LPT5',
+            'LPT6',
+            'LPT7',
+            'LPT8',
+            'LPT9',
           ]
         : [],
       maxPathLength: isWindows ? 260 : 4096,
-      invalidCharacters: isWindows
-        ? ["<", ">", ":", '"', "|", "?", "*"]
-        : ["\0"],
+      invalidCharacters: isWindows ? ['<', '>', ':', '"', '|', '?', '*'] : ['\0'],
     };
 
     res.status(200).json(formatInfo);
@@ -258,7 +249,7 @@ export const getPathFormatInfo = async (
     const errorMessage = error instanceof Error ? error.message : String(error);
 
     logger.error(
-      "Failed to get path format info",
+      'Failed to get path format info',
       error instanceof Error ? error : new Error(errorMessage),
       {
         errorMessage,
@@ -266,7 +257,7 @@ export const getPathFormatInfo = async (
     );
 
     res.status(500).json({
-      error: "Failed to get path format information",
+      error: 'Failed to get path format information',
       message: errorMessage,
     });
   }

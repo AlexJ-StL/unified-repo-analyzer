@@ -7,6 +7,7 @@ import type {
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { IndexSystem } from '../IndexSystem';
 
 describe('IndexSystem Relationship Functionality', () => {

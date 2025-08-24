@@ -1,11 +1,11 @@
-import { createHash } from "node:crypto";
+import { createHash } from 'node:crypto';
 import type {
   AnalysisOptions,
   BatchAnalysisResult,
   RepositoryAnalysis,
-} from "@unified-repo-analyzer/shared/src/types/analysis";
-import { LRUCache } from "lru-cache";
-import { logger } from "../utils/logger";
+} from '@unified-repo-analyzer/shared/src/types/analysis';
+import { LRUCache } from 'lru-cache';
+import { logger } from '../utils/logger';
 
 export interface CacheOptions {
   ttl?: number; // Time to live in milliseconds
@@ -45,30 +45,25 @@ export class CacheService<T = unknown> {
   generateKey(...inputs: unknown[]): string {
     const serialized = inputs
       .map((input) => {
-        if (typeof input === "object" && input !== null) {
+        if (typeof input === 'object' && input !== null) {
           try {
             return JSON.stringify(input, Object.keys(input).sort());
           } catch (error) {
-            logger.warn(
-              `Failed to serialize input for cache key generation: ${error}`
-            );
-            return "[unserializable-object]";
+            logger.warn(`Failed to serialize input for cache key generation: ${error}`);
+            return '[unserializable-object]';
           }
         }
-        if (typeof input === "symbol") {
+        if (typeof input === 'symbol') {
           return input.toString();
         }
-        if (typeof input === "function") {
-          return "[function]";
+        if (typeof input === 'function') {
+          return '[function]';
         }
         return String(input);
       })
-      .join("|");
+      .join('|');
 
-    return createHash("sha256")
-      .update(serialized)
-      .digest("hex")
-      .substring(0, 16);
+    return createHash('sha256').update(serialized).digest('hex').substring(0, 16);
   }
 
   /**
@@ -132,7 +127,7 @@ export class CacheService<T = unknown> {
    */
   clear(): void {
     this.cache.clear();
-    logger.info("Cache cleared");
+    logger.info('Cache cleared');
   }
 
   /**
@@ -153,11 +148,7 @@ export class CacheService<T = unknown> {
   /**
    * Get or set pattern - if key exists return it, otherwise compute and cache
    */
-  async getOrSet<R>(
-    key: string,
-    factory: () => Promise<R> | R,
-    ttl?: number
-  ): Promise<R> {
+  async getOrSet<R>(key: string, factory: () => Promise<R> | R, ttl?: number): Promise<R> {
     const existing = this.get(key);
     if (existing !== undefined) {
       return existing as R;
@@ -182,9 +173,7 @@ export class CacheService<T = unknown> {
       }
     }
 
-    logger.info(
-      `Invalidated ${count} cache entries matching pattern: ${pattern}`
-    );
+    logger.info(`Invalidated ${count} cache entries matching pattern: ${pattern}`);
     return count;
   }
 
@@ -208,9 +197,7 @@ export class CacheService<T = unknown> {
   /**
    * Get cache entries that are about to expire
    */
-  getExpiringEntries(
-    withinMs = 60000
-  ): Array<{ key: string; expiresIn: number }> {
+  getExpiringEntries(withinMs = 60000): Array<{ key: string; expiresIn: number }> {
     const now = Date.now();
     const expiring: Array<{ key: string; expiresIn: number }> = [];
 
@@ -230,9 +217,7 @@ export class CacheService<T = unknown> {
 /**
  * Enhanced cache service with repository-specific methods
  */
-export class EnhancedCacheService extends CacheService<
-  RepositoryAnalysis | BatchAnalysisResult
-> {
+export class EnhancedCacheService extends CacheService<RepositoryAnalysis | BatchAnalysisResult> {
   /**
    * Cache analysis result with repository-specific key
    */
@@ -260,9 +245,7 @@ export class EnhancedCacheService extends CacheService<
   ): Promise<RepositoryAnalysis | null> {
     const key = this.generateAnalysisKey(repoPath, options);
     const result = this.get(key);
-    return result && typeof result === "object" && "path" in result
-      ? result
-      : null;
+    return result && typeof result === 'object' && 'path' in result ? result : null;
   }
 
   /**
@@ -287,16 +270,14 @@ export class EnhancedCacheService extends CacheService<
   ): Promise<BatchAnalysisResult | null> {
     const key = this.generateBatchKey(repoPaths, options);
     const result = this.get(key);
-    return result && typeof result === "object" && "repositories" in result
-      ? result
-      : null;
+    return result && typeof result === 'object' && 'repositories' in result ? result : null;
   }
 
   /**
    * Invalidate all cache entries for a specific repository
    */
   invalidateRepository(repoPath: string): number {
-    const pathHash = createHash("md5").update(repoPath).digest("hex");
+    const pathHash = createHash('md5').update(repoPath).digest('hex');
     return this.invalidatePattern(`.*${pathHash}.*`);
   }
 
@@ -313,29 +294,21 @@ export class EnhancedCacheService extends CacheService<
   prune(): void {
     // For LRU cache with TTL, expired entries are automatically cleaned up
     // This method is provided for API compatibility but doesn't need to do much
-    logger.info(
-      "Cache pruning completed (LRU cache handles TTL automatically)"
-    );
+    logger.info('Cache pruning completed (LRU cache handles TTL automatically)');
   }
 
   /**
    * Generate analysis cache key
    */
-  private generateAnalysisKey(
-    repoPath: string,
-    options: AnalysisOptions
-  ): string {
-    return this.generateKey("analysis", repoPath, options);
+  private generateAnalysisKey(repoPath: string, options: AnalysisOptions): string {
+    return this.generateKey('analysis', repoPath, options);
   }
 
   /**
    * Generate batch analysis cache key
    */
-  private generateBatchKey(
-    repoPaths: string[],
-    options: AnalysisOptions
-  ): string {
-    return this.generateKey("batch", repoPaths.sort(), options);
+  private generateBatchKey(repoPaths: string[], options: AnalysisOptions): string {
+    return this.generateKey('batch', repoPaths.sort(), options);
   }
 }
 

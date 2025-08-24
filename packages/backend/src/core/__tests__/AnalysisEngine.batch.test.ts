@@ -3,7 +3,7 @@
  */
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { AnalysisEngine } from '../AnalysisEngine';
 
 // Mock dependencies

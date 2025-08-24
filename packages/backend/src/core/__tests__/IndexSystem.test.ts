@@ -4,6 +4,7 @@
 
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { v4 as uuidv4 } from 'uuid';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { IndexSystem } from '../IndexSystem';
 
 describe('IndexSystem', () => {
@@ -262,96 +263,97 @@ describe('IndexSystem', () => {
       await expect(indexSystem.suggestCombinations(['non-existent-id'])).rejects.toThrow();
     });
   });
-});
-describe('tag management', () => {
-  let repoId: string;
 
-  beforeEach(async () => {
-    // Add a test repository
-    const analysis = createMockAnalysis('test-repo');
-    await indexSystem.addRepository(analysis);
-    repoId = analysis.id;
+  describe('tag management', () => {
+    let repoId: string;
+
+    beforeEach(async () => {
+      // Add a test repository
+      const analysis = createMockAnalysis('test-repo');
+      await indexSystem.addRepository(analysis);
+      repoId = analysis.id;
+    });
+
+    it('should add a tag to a repository', async () => {
+      await indexSystem.addRepositoryTag(repoId, 'test-tag', 'test-category', '#ff0000');
+
+      const index = indexSystem.getIndex();
+      expect(index.repositories[0].tags).toContain('test-tag');
+
+      // Check that tag was added to global tags
+      const tags = indexSystem.getTags();
+      const testTag = tags.find((tag) => tag.name === 'test-tag');
+      expect(testTag).toBeDefined();
+      expect(testTag?.category).toBe('test-category');
+      expect(testTag?.color).toBe('#ff0000');
+    });
+
+    it('should remove a tag from a repository', async () => {
+      // Add tag first
+      await indexSystem.addRepositoryTag(repoId, 'test-tag');
+
+      // Then remove it
+      await indexSystem.removeRepositoryTag(repoId, 'test-tag');
+
+      const index = indexSystem.getIndex();
+      expect(index.repositories[0].tags).not.toContain('test-tag');
+    });
+
+    it('should add a global tag', async () => {
+      const newTag = await indexSystem.addTag('global-tag', 'global-category', '#00ff00');
+
+      expect(newTag.name).toBe('global-tag');
+      expect(newTag.category).toBe('global-category');
+      expect(newTag.color).toBe('#00ff00');
+
+      const tags = indexSystem.getTags();
+      expect(tags).toContainEqual(
+        expect.objectContaining({
+          name: 'global-tag',
+          category: 'global-category',
+          color: '#00ff00',
+        })
+      );
+    });
+
+    it('should remove a global tag and from all repositories', async () => {
+      // Add tag to repository
+      await indexSystem.addRepositoryTag(repoId, 'global-tag');
+
+      // Get tag ID
+      const tags = indexSystem.getTags();
+      const tagId = tags.find((tag) => tag.name === 'global-tag')?.id;
+
+      if (!tagId) {
+        throw new Error('Tag ID not found');
+      }
+
+      // Remove global tag
+      await indexSystem.removeTag(tagId);
+
+      // Check that tag was removed from repository
+      const index = indexSystem.getIndex();
+      expect(index.repositories[0].tags).not.toContain('global-tag');
+
+      // Check that tag was removed from global tags
+      const updatedTags = indexSystem.getTags();
+      expect(updatedTags.find((tag) => tag.id === tagId)).toBeUndefined();
+    });
   });
 
-  it('should add a tag to a repository', async () => {
-    await indexSystem.addRepositoryTag(repoId, 'test-tag', 'test-category', '#ff0000');
+  describe('persistence', () => {
+    it('should save and load index from disk', async () => {
+      // Add a repository
+      const analysis = createMockAnalysis('persistence-test');
+      await indexSystem.addRepository(analysis);
 
-    const index = indexSystem.getIndex();
-    expect(index.repositories[0].tags).toContain('test-tag');
+      // Create a new index system with the same path
+      const newIndexSystem = new IndexSystem(tempIndexPath);
 
-    // Check that tag was added to global tags
-    const tags = indexSystem.getTags();
-    const testTag = tags.find((tag) => tag.name === 'test-tag');
-    expect(testTag).toBeDefined();
-    expect(testTag?.category).toBe('test-category');
-    expect(testTag?.color).toBe('#ff0000');
-  });
-
-  it('should remove a tag from a repository', async () => {
-    // Add tag first
-    await indexSystem.addRepositoryTag(repoId, 'test-tag');
-
-    // Then remove it
-    await indexSystem.removeRepositoryTag(repoId, 'test-tag');
-
-    const index = indexSystem.getIndex();
-    expect(index.repositories[0].tags).not.toContain('test-tag');
-  });
-
-  it('should add a global tag', async () => {
-    const newTag = await indexSystem.addTag('global-tag', 'global-category', '#00ff00');
-
-    expect(newTag.name).toBe('global-tag');
-    expect(newTag.category).toBe('global-category');
-    expect(newTag.color).toBe('#00ff00');
-
-    const tags = indexSystem.getTags();
-    expect(tags).toContainEqual(
-      expect.objectContaining({
-        name: 'global-tag',
-        category: 'global-category',
-        color: '#00ff00',
-      })
-    );
-  });
-
-  it('should remove a global tag and from all repositories', async () => {
-    // Add tag to repository
-    await indexSystem.addRepositoryTag(repoId, 'global-tag');
-
-    // Get tag ID
-    const tags = indexSystem.getTags();
-    const tagId = tags.find((tag) => tag.name === 'global-tag')?.id;
-
-    if (!tagId) {
-      throw new Error('Tag ID not found');
-    }
-
-    // Remove global tag
-    await indexSystem.removeTag(tagId);
-
-    // Check that tag was removed from repository
-    const index = indexSystem.getIndex();
-    expect(index.repositories[0].tags).not.toContain('global-tag');
-
-    // Check that tag was removed from global tags
-    const updatedTags = indexSystem.getTags();
-    expect(updatedTags.find((tag) => tag.id === tagId)).toBeUndefined();
-  });
-});
-
-describe('persistence', () => {
-  it('should save and load index from disk', async () => {
-    // Add a repository
-    const analysis = createMockAnalysis('persistence-test');
-    await indexSystem.addRepository(analysis);
-
-    // Create a new index system with the same path
-    const newIndexSystem = new IndexSystem(tempIndexPath);
-
-    // Check that repository was loaded
-    const index = newIndexSystem.getIndex();
-    expect(index.repositories.length).toBe(1);
-    expect(index.repositories[0].name).toBe('persistence-test');
+      // Check that repository was loaded
+      const index = newIndexSystem.getIndex();
+      expect(index.repositories.length).toBe(1);
+      expect(index.repositories[0].name).toBe('persistence-test');
+    });
   });
 });

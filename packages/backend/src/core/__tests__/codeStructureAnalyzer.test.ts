@@ -2,6 +2,7 @@
  * Tests for code structure analyzer
  */
 
+import { describe, expect, test } from 'vitest';
 import { analyzeCodeStructure } from '../codeStructureAnalyzer';
 
 describe('Code Structure Analyzer', () => {

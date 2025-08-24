@@ -2,10 +2,10 @@
  * Performance monitoring middleware for Express
  */
 
-import { performance } from "node:perf_hooks";
-import type { NextFunction, Request, Response } from "express";
-import { metricsService } from "../../services/metrics.service";
-import { logger } from "../../utils/logger";
+import { performance } from 'node:perf_hooks';
+import type { NextFunction, Request, Response } from 'express';
+import { metricsService } from '../../services/metrics.service';
+import { logger } from '../../utils/logger';
 
 interface PerformanceRequest extends Request {
   startTime?: number;
@@ -24,16 +24,13 @@ export function performanceMiddleware() {
     // Log request start
     logger.debug(`Request started: ${req.method} ${req.path}`, {
       requestId: req.requestId,
-      userAgent: req.get("User-Agent"),
+      userAgent: req.get('User-Agent'),
       ip: req.ip,
     });
 
     // Override res.end to capture response metrics
     const originalEnd = res.end;
-    res.end = function (
-      chunk?: any,
-      encoding?: any
-    ): Response<any, Record<string, any>> {
+    res.end = function (chunk?: any, encoding?: any): Response<any, Record<string, any>> {
       const duration = performance.now() - (req.startTime || 0);
 
       // Record request metrics
@@ -44,7 +41,7 @@ export function performanceMiddleware() {
         requestId: req.requestId,
         statusCode: res.statusCode,
         duration: `${duration.toFixed(2)}ms`,
-        contentLength: res.get("Content-Length") || 0,
+        contentLength: res.get('Content-Length') || 0,
       });
 
       // Call original end method
@@ -61,11 +58,11 @@ export function performanceMiddleware() {
 export function performanceHeadersMiddleware() {
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
     // Add server timing header
-    res.on("finish", () => {
+    res.on('finish', () => {
       if (req.startTime) {
         const duration = performance.now() - req.startTime;
-        res.set("Server-Timing", `total;dur=${duration.toFixed(2)}`);
-        res.set("X-Response-Time", `${duration.toFixed(2)}ms`);
+        res.set('Server-Timing', `total;dur=${duration.toFixed(2)}`);
+        res.set('X-Response-Time', `${duration.toFixed(2)}ms`);
       }
     });
 
@@ -78,7 +75,7 @@ export function performanceHeadersMiddleware() {
  */
 export function slowRequestMiddleware(threshold = 1000) {
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
-    res.on("finish", () => {
+    res.on('finish', () => {
       if (req.startTime) {
         const duration = performance.now() - req.startTime;
 
@@ -91,7 +88,7 @@ export function slowRequestMiddleware(threshold = 1000) {
           });
 
           // Record slow request metric
-          metricsService.recordMetric("request.slow", duration, {
+          metricsService.recordMetric('request.slow', duration, {
             method: req.method,
             path: req.path,
             statusCode: res.statusCode.toString(),
@@ -111,7 +108,7 @@ export function memoryTrackingMiddleware() {
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
     const initialMemory = process.memoryUsage();
 
-    res.on("finish", () => {
+    res.on('finish', () => {
       const finalMemory = process.memoryUsage();
       const memoryDelta = {
         heapUsed: finalMemory.heapUsed - initialMemory.heapUsed,
@@ -133,14 +130,10 @@ export function memoryTrackingMiddleware() {
       }
 
       // Record memory metrics
-      metricsService.recordMetric(
-        "request.memory.heapUsed",
-        memoryDelta.heapUsed,
-        {
-          method: req.method,
-          path: req.path,
-        }
-      );
+      metricsService.recordMetric('request.memory.heapUsed', memoryDelta.heapUsed, {
+        method: req.method,
+        path: req.path,
+      });
     });
 
     next();
@@ -156,15 +149,14 @@ export function adaptiveRateLimitMiddleware() {
   const maxHistorySize = 100;
 
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
-    const clientId = req.ip || "unknown";
+    const clientId = req.ip || 'unknown';
     const now = Date.now();
     const windowMs = 60 * 1000; // 1 minute window
 
     // Calculate current system load based on recent response times
     const avgResponseTime =
       performanceHistory.length > 0
-        ? performanceHistory.reduce((sum, time) => sum + time, 0) /
-          performanceHistory.length
+        ? performanceHistory.reduce((sum, time) => sum + time, 0) / performanceHistory.length
         : 0;
 
     // Adjust rate limit based on system performance
@@ -187,10 +179,10 @@ export function adaptiveRateLimitMiddleware() {
         });
 
         return res.status(429).json({
-          error: "Too Many Requests",
+          error: 'Too Many Requests',
           retryAfter: Math.ceil((clientData.resetTime - now) / 1000),
           maxRequests,
-          currentLoad: avgResponseTime > 500 ? "high" : "normal",
+          currentLoad: avgResponseTime > 500 ? 'high' : 'normal',
         });
       }
       clientData.count++;
@@ -202,7 +194,7 @@ export function adaptiveRateLimitMiddleware() {
     }
 
     // Track response time for adaptive limiting
-    res.on("finish", () => {
+    res.on('finish', () => {
       if (req.startTime) {
         const responseTime = performance.now() - req.startTime;
         performanceHistory.push(responseTime);
@@ -223,22 +215,22 @@ export function adaptiveRateLimitMiddleware() {
 export function performanceCacheMiddleware() {
   return (req: PerformanceRequest, res: Response, next: NextFunction) => {
     // Set cache headers based on request type and system load
-    const isAnalysisRequest = req.path.includes("/api/analyze");
-    const isSearchRequest = req.path.includes("/api/search");
+    const isAnalysisRequest = req.path.includes('/api/analyze');
+    const isSearchRequest = req.path.includes('/api/search');
 
     if (isAnalysisRequest) {
       // Cache analysis results for longer periods
-      res.set("Cache-Control", "public, max-age=3600"); // 1 hour
+      res.set('Cache-Control', 'public, max-age=3600'); // 1 hour
     } else if (isSearchRequest) {
       // Cache search results for shorter periods
-      res.set("Cache-Control", "public, max-age=600"); // 10 minutes
+      res.set('Cache-Control', 'public, max-age=600'); // 10 minutes
     }
 
     // Add ETag for conditional requests
-    res.on("finish", () => {
-      if (res.statusCode === 200 && !res.get("ETag")) {
+    res.on('finish', () => {
+      if (res.statusCode === 200 && !res.get('ETag')) {
         const etag = `"${Date.now()}-${Math.random().toString(36).substr(2, 9)}"`;
-        res.set("ETag", etag);
+        res.set('ETag', etag);
       }
     });
 

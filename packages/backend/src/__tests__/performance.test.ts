@@ -2,38 +2,38 @@
  * Performance tests and benchmarks
  */
 
-import fs from "node:fs";
-import path from "node:path";
-import { performance } from "node:perf_hooks";
-import { promisify } from "node:util";
-import type { AnalysisOptions } from "@unified-repo-analyzer/shared/src/types/analysis";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { AnalysisEngine } from "../core/AnalysisEngine";
-import { analysisCache } from "../services/cache.service";
-import { deduplicationService } from "../services/deduplication.service";
-import { metricsService } from "../services/metrics.service";
+import fs from 'node:fs';
+import path from 'node:path';
+import { performance } from 'node:perf_hooks';
+import { promisify } from 'node:util';
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { AnalysisEngine } from '../core/AnalysisEngine';
+import { analysisCache } from '../services/cache.service';
+import { deduplicationService } from '../services/deduplication.service';
+import { metricsService } from '../services/metrics.service';
 
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 const rmdir = promisify(fs.rmdir);
 
-describe("Performance Tests", () => {
+describe('Performance Tests', () => {
   let testRepoPath: string;
   let analysisEngine: AnalysisEngine;
 
   const defaultOptions: AnalysisOptions = {
-    mode: "standard",
+    mode: 'standard',
     maxFiles: 100,
     maxLinesPerFile: 1000,
     includeLLMAnalysis: false,
-    llmProvider: "none",
-    outputFormats: ["json"],
+    llmProvider: 'none',
+    outputFormats: ['json'],
     includeTree: true,
   };
 
   beforeAll(async () => {
     // Create a test repository structure
-    testRepoPath = path.join(__dirname, "test-repo-perf");
+    testRepoPath = path.join(__dirname, 'test-repo-perf');
     await createTestRepository(testRepoPath);
 
     analysisEngine = new AnalysisEngine();
@@ -53,37 +53,27 @@ describe("Performance Tests", () => {
     metricsService.clear();
   });
 
-  describe("Cache Performance", () => {
-    it("should significantly improve performance on cache hit", async () => {
+  describe('Cache Performance', () => {
+    it('should significantly improve performance on cache hit', async () => {
       // First analysis (cache miss)
       const start1 = performance.now();
-      const result1 = await analysisEngine.analyzeRepository(
-        testRepoPath,
-        defaultOptions
-      );
+      const result1 = await analysisEngine.analyzeRepository(testRepoPath, defaultOptions);
       const duration1 = performance.now() - start1;
 
       // Second analysis (cache hit)
       const start2 = performance.now();
-      const result2 = await analysisEngine.analyzeRepository(
-        testRepoPath,
-        defaultOptions
-      );
+      const result2 = await analysisEngine.analyzeRepository(testRepoPath, defaultOptions);
       const duration2 = performance.now() - start2;
 
       // Cache hit should be significantly faster
       expect(duration2).toBeLessThan(duration1 * 0.5); // At least 2x faster
       expect(result1.id).toBe(result2.id); // Same result
 
-      console.log(
-        `Cache miss: ${duration1.toFixed(2)}ms, Cache hit: ${duration2.toFixed(2)}ms`
-      );
-      console.log(
-        `Performance improvement: ${(duration1 / duration2).toFixed(2)}x`
-      );
+      console.log(`Cache miss: ${duration1.toFixed(2)}ms, Cache hit: ${duration2.toFixed(2)}ms`);
+      console.log(`Performance improvement: ${(duration1 / duration2).toFixed(2)}x`);
     });
 
-    it("should handle cache operations efficiently", async () => {
+    it('should handle cache operations efficiently', async () => {
       const cacheOperations = 1000;
       const testData = Array.from({ length: cacheOperations }, (_, i) => ({
         key: `test-key-${i}`,
@@ -91,8 +81,8 @@ describe("Performance Tests", () => {
           id: `test-id-${i}`,
           path: `/test/path/${i}`,
           name: `Test Repository ${i}`,
-          language: "javascript",
-          languages: ["javascript"],
+          language: 'javascript',
+          languages: ['javascript'],
           frameworks: [],
           fileCount: 10,
           directoryCount: 2,
@@ -102,7 +92,7 @@ describe("Performance Tests", () => {
           structure: {
             directories: [],
             keyFiles: [],
-            tree: "",
+            tree: '',
           },
           codeAnalysis: {
             functionCount: 5,
@@ -111,8 +101,8 @@ describe("Performance Tests", () => {
             complexity: {
               cyclomaticComplexity: 1,
               maintainabilityIndex: 85,
-              technicalDebt: "low",
-              codeQuality: "good" as const,
+              technicalDebt: 'low',
+              codeQuality: 'good' as const,
             },
             patterns: [],
           },
@@ -122,13 +112,13 @@ describe("Performance Tests", () => {
             frameworks: [],
           },
           insights: {
-            executiveSummary: "Test summary",
-            technicalBreakdown: "Test breakdown",
+            executiveSummary: 'Test summary',
+            technicalBreakdown: 'Test breakdown',
             recommendations: [],
             potentialIssues: [],
           },
           metadata: {
-            analysisMode: "quick",
+            analysisMode: 'quick',
             processingTime: 100,
           },
         } as any,
@@ -160,20 +150,20 @@ describe("Performance Tests", () => {
       expect((cacheOperations / getDuration) * 1000).toBeGreaterThan(15000);
     });
 
-    it("should handle cache invalidation patterns efficiently", async () => {
+    it('should handle cache invalidation patterns efficiently', async () => {
       // Set up test data
-      const patterns = ["user:*", "repo:*", "analysis:*"];
+      const patterns = ['user:*', 'repo:*', 'analysis:*'];
       const keysPerPattern = 100;
 
       for (const pattern of patterns) {
-        const baseKey = pattern.replace("*", "");
+        const baseKey = pattern.replace('*', '');
         for (let i = 0; i < keysPerPattern; i++) {
           const testAnalysis = {
             id: `test-id-${baseKey}${i}`,
             path: `/test/path/${baseKey}${i}`,
             name: `Test Repository ${baseKey}${i}`,
-            language: "javascript",
-            languages: ["javascript"],
+            language: 'javascript',
+            languages: ['javascript'],
             frameworks: [],
             fileCount: 10,
             directoryCount: 2,
@@ -183,7 +173,7 @@ describe("Performance Tests", () => {
             structure: {
               directories: [],
               keyFiles: [],
-              tree: "",
+              tree: '',
             },
             codeAnalysis: {
               functionCount: 5,
@@ -192,8 +182,8 @@ describe("Performance Tests", () => {
               complexity: {
                 cyclomaticComplexity: 1,
                 maintainabilityIndex: 85,
-                technicalDebt: "low",
-                codeQuality: "good" as const,
+                technicalDebt: 'low',
+                codeQuality: 'good' as const,
               },
               patterns: [],
             },
@@ -203,13 +193,13 @@ describe("Performance Tests", () => {
               frameworks: [],
             },
             insights: {
-              executiveSummary: "Test summary",
-              technicalBreakdown: "Test breakdown",
+              executiveSummary: 'Test summary',
+              technicalBreakdown: 'Test breakdown',
               recommendations: [],
               potentialIssues: [],
             },
             metadata: {
-              analysisMode: "quick",
+              analysisMode: 'quick',
               processingTime: 100,
             },
           } as any;
@@ -224,23 +214,18 @@ describe("Performance Tests", () => {
       }
       const duration = performance.now() - startTime;
 
-      console.log(
-        `Pattern invalidation completed in: ${duration.toFixed(2)}ms`
-      );
+      console.log(`Pattern invalidation completed in: ${duration.toFixed(2)}ms`);
 
       // Should complete quickly
       expect(duration).toBeLessThan(100);
     });
 
-    it("should handle cache invalidation correctly", async () => {
+    it('should handle cache invalidation correctly', async () => {
       // First analysis
       await analysisEngine.analyzeRepository(testRepoPath, defaultOptions);
 
       // Verify cache hit
-      const cached = await analysisCache.getCachedAnalysis(
-        testRepoPath,
-        defaultOptions
-      );
+      const cached = await analysisCache.getCachedAnalysis(testRepoPath, defaultOptions);
       expect(cached).toBeTruthy();
 
       // Clear entire cache (more reliable than pattern invalidation for testing)
@@ -254,54 +239,42 @@ describe("Performance Tests", () => {
       expect(cachedAfterInvalidation).toBeNull();
     });
 
-    it("should respect TTL settings", async () => {
+    it('should respect TTL settings', async () => {
       // Create cache service with short TTL for testing
-      const { EnhancedCacheService } = await import(
-        "../services/cache.service"
-      );
+      const { EnhancedCacheService } = await import('../services/cache.service');
       const shortTtlCache = new EnhancedCacheService({
         ttl: 100, // 100ms TTL
       });
 
       await shortTtlCache.setCachedAnalysis(testRepoPath, defaultOptions, {
-        id: "test",
-        name: "test",
+        id: 'test',
+        name: 'test',
         path: testRepoPath,
       } as any);
 
       // Should be cached immediately
-      let cached = await shortTtlCache.getCachedAnalysis(
-        testRepoPath,
-        defaultOptions
-      );
+      let cached = await shortTtlCache.getCachedAnalysis(testRepoPath, defaultOptions);
       expect(cached).toBeTruthy();
 
       // Wait for TTL to expire
       await new Promise((resolve) => setTimeout(resolve, 150));
 
       // Should be expired
-      cached = await shortTtlCache.getCachedAnalysis(
-        testRepoPath,
-        defaultOptions
-      );
+      cached = await shortTtlCache.getCachedAnalysis(testRepoPath, defaultOptions);
       expect(cached).toBeNull();
     });
   });
 
-  describe("Deduplication Performance", () => {
-    it("should deduplicate concurrent identical requests", async () => {
+  describe('Deduplication Performance', () => {
+    it('should deduplicate concurrent identical requests', async () => {
       const promises: Array<
-        Promise<
-          import("@unified-repo-analyzer/shared/src/types/analysis").RepositoryAnalysis
-        >
+        Promise<import('@unified-repo-analyzer/shared/src/types/analysis').RepositoryAnalysis>
       > = [];
       const startTime = performance.now();
 
       // Start 5 concurrent identical requests
       for (let i = 0; i < 5; i++) {
-        promises.push(
-          analysisEngine.analyzeRepository(testRepoPath, defaultOptions)
-        );
+        promises.push(analysisEngine.analyzeRepository(testRepoPath, defaultOptions));
       }
 
       const results = await Promise.all(promises);
@@ -317,15 +290,13 @@ describe("Performance Tests", () => {
       const stats = deduplicationService.getStats();
       expect(stats.totalDeduplicated).toBeGreaterThanOrEqual(0); // Allow 0 if requests complete too quickly
 
-      console.log(
-        `Concurrent requests completed in: ${totalTime.toFixed(2)}ms`
-      );
-      console.log("Deduplication stats:", stats);
+      console.log(`Concurrent requests completed in: ${totalTime.toFixed(2)}ms`);
+      console.log('Deduplication stats:', stats);
     });
 
-    it("should handle different requests separately", async () => {
-      const options1 = { ...defaultOptions, mode: "quick" as const };
-      const options2 = { ...defaultOptions, mode: "comprehensive" as const };
+    it('should handle different requests separately', async () => {
+      const options1 = { ...defaultOptions, mode: 'quick' as const };
+      const options2 = { ...defaultOptions, mode: 'comprehensive' as const };
 
       const [result1, result2] = await Promise.all([
         analysisEngine.analyzeRepository(testRepoPath, options1),
@@ -333,13 +304,13 @@ describe("Performance Tests", () => {
       ]);
 
       // Results should be different due to different options
-      expect(result1.metadata.analysisMode).toBe("quick");
-      expect(result2.metadata.analysisMode).toBe("comprehensive");
+      expect(result1.metadata.analysisMode).toBe('quick');
+      expect(result2.metadata.analysisMode).toBe('comprehensive');
     });
   });
 
-  describe("Batch Processing Performance", () => {
-    it("should process multiple repositories efficiently", async () => {
+  describe('Batch Processing Performance', () => {
+    it('should process multiple repositories efficiently', async () => {
       // Create multiple test repositories
       const repoPaths: string[] = [];
       for (let i = 0; i < 3; i++) {
@@ -350,12 +321,11 @@ describe("Performance Tests", () => {
 
       try {
         const startTime = performance.now();
-        const batchResult =
-          await analysisEngine.analyzeMultipleRepositoriesWithQueue(
-            repoPaths,
-            defaultOptions,
-            2 // concurrency
-          );
+        const batchResult = await analysisEngine.analyzeMultipleRepositoriesWithQueue(
+          repoPaths,
+          defaultOptions,
+          2 // concurrency
+        );
         const totalTime = performance.now() - startTime;
 
         expect(batchResult.repositories).toHaveLength(3);
@@ -376,8 +346,8 @@ describe("Performance Tests", () => {
     });
   });
 
-  describe("Memory Usage", () => {
-    it("should not leak memory during repeated analyses", async () => {
+  describe('Memory Usage', () => {
+    it('should not leak memory during repeated analyses', async () => {
       const initialMemory = process.memoryUsage();
 
       // Perform multiple analyses
@@ -396,20 +366,14 @@ describe("Performance Tests", () => {
       // Memory increase should be reasonable (less than 50MB)
       expect(memoryIncrease).toBeLessThan(50 * 1024 * 1024);
 
-      console.log(
-        `Memory usage - Initial: ${(initialMemory.heapUsed / 1024 / 1024).toFixed(2)}MB`
-      );
-      console.log(
-        `Memory usage - Final: ${(finalMemory.heapUsed / 1024 / 1024).toFixed(2)}MB`
-      );
-      console.log(
-        `Memory increase: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`
-      );
+      console.log(`Memory usage - Initial: ${(initialMemory.heapUsed / 1024 / 1024).toFixed(2)}MB`);
+      console.log(`Memory usage - Final: ${(finalMemory.heapUsed / 1024 / 1024).toFixed(2)}MB`);
+      console.log(`Memory increase: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`);
     });
   });
 
-  describe("Metrics Collection Performance", () => {
-    it("should collect metrics without significant overhead", async () => {
+  describe('Metrics Collection Performance', () => {
+    it('should collect metrics without significant overhead', async () => {
       // Measure performance without metrics
       metricsService.destroy();
       const startWithoutMetrics = performance.now();
@@ -417,9 +381,7 @@ describe("Performance Tests", () => {
       const durationWithoutMetrics = performance.now() - startWithoutMetrics;
 
       // Re-enable metrics
-      const { default: metricsServiceModule } = await import(
-        "../services/metrics.service"
-      );
+      const { default: metricsServiceModule } = await import('../services/metrics.service');
       // The metrics service is already a singleton, so we don't need to create a new instance
 
       // Measure performance with metrics
@@ -429,9 +391,7 @@ describe("Performance Tests", () => {
 
       // Metrics overhead should be minimal (less than 10%)
       const overhead =
-        ((durationWithMetrics - durationWithoutMetrics) /
-          durationWithoutMetrics) *
-        100;
+        ((durationWithMetrics - durationWithoutMetrics) / durationWithoutMetrics) * 100;
       expect(overhead).toBeLessThan(10);
 
       console.log(`Without metrics: ${durationWithoutMetrics.toFixed(2)}ms`);
@@ -439,27 +399,21 @@ describe("Performance Tests", () => {
       console.log(`Overhead: ${overhead.toFixed(2)}%`);
     });
 
-    it("should handle high-frequency metric recording", async () => {
+    it('should handle high-frequency metric recording', async () => {
       const startTime = performance.now();
       const metricCount = 10000;
 
       // Record many metrics quickly
       for (let i = 0; i < metricCount; i++) {
-        metricsService.recordMetric(
-          `test.metric.${i % 100}`,
-          Math.random() * 1000,
-          {
-            iteration: i.toString(),
-          }
-        );
+        metricsService.recordMetric(`test.metric.${i % 100}`, Math.random() * 1000, {
+          iteration: i.toString(),
+        });
       }
 
       const duration = performance.now() - startTime;
       const metricsPerSecond = (metricCount / duration) * 1000;
 
-      console.log(
-        `Recorded ${metricCount} metrics in ${duration.toFixed(2)}ms`
-      );
+      console.log(`Recorded ${metricCount} metrics in ${duration.toFixed(2)}ms`);
       console.log(`Rate: ${metricsPerSecond.toFixed(0)} metrics/second`);
 
       // Should handle at least 10,000 metrics per second
@@ -467,10 +421,10 @@ describe("Performance Tests", () => {
     });
   });
 
-  describe("Large Repository Performance", () => {
-    it("should handle large repositories efficiently", async () => {
+  describe('Large Repository Performance', () => {
+    it('should handle large repositories efficiently', async () => {
       // Create a large test repository
-      const largeRepoPath = path.join(__dirname, "large-test-repo");
+      const largeRepoPath = path.join(__dirname, 'large-test-repo');
       await createLargeTestRepository(largeRepoPath);
 
       try {
@@ -488,9 +442,7 @@ describe("Performance Tests", () => {
         // Should complete within reasonable time (adjust based on your requirements)
         expect(duration).toBeLessThan(30000); // 30 seconds
 
-        console.log(
-          `Large repository analysis completed in: ${duration.toFixed(2)}ms`
-        );
+        console.log(`Large repository analysis completed in: ${duration.toFixed(2)}ms`);
         console.log(`Files analyzed: ${result.fileCount}`);
         console.log(
           `Performance: ${(result.fileCount / (duration / 1000)).toFixed(2)} files/second`
@@ -512,14 +464,14 @@ async function createTestRepository(repoPath: string): Promise<void> {
 
   // Create package.json
   await writeFile(
-    path.join(repoPath, "package.json"),
+    path.join(repoPath, 'package.json'),
     JSON.stringify(
       {
-        name: "test-repo",
-        version: "1.0.0",
+        name: 'test-repo',
+        version: '1.0.0',
         dependencies: {
-          react: "^18.0.0",
-          express: "^4.18.0",
+          react: '^18.0.0',
+          express: '^4.18.0',
         },
       },
       null,
@@ -528,12 +480,12 @@ async function createTestRepository(repoPath: string): Promise<void> {
   );
 
   // Create src directory with files
-  const srcPath = path.join(repoPath, "src");
+  const srcPath = path.join(repoPath, 'src');
   await mkdir(srcPath, { recursive: true });
 
   // Create JavaScript files
   await writeFile(
-    path.join(srcPath, "index.js"),
+    path.join(srcPath, 'index.js'),
     `
 const express = require('express');
 const app = express();
@@ -549,7 +501,7 @@ app.listen(3000, () => {
   );
 
   await writeFile(
-    path.join(srcPath, "utils.js"),
+    path.join(srcPath, 'utils.js'),
     `
 function formatDate(date) {
   return date.toISOString().split('T')[0];
@@ -566,7 +518,7 @@ module.exports = { formatDate, validateEmail };
 
   // Create TypeScript files
   await writeFile(
-    path.join(srcPath, "types.ts"),
+    path.join(srcPath, 'types.ts'),
     `
 export interface User {
   id: string;
@@ -587,7 +539,7 @@ export interface Repository {
 
   // Create README
   await writeFile(
-    path.join(repoPath, "README.md"),
+    path.join(repoPath, 'README.md'),
     `
 # Test Repository
 
@@ -610,16 +562,16 @@ async function createLargeTestRepository(repoPath: string): Promise<void> {
 
   // Create package.json
   await writeFile(
-    path.join(repoPath, "package.json"),
+    path.join(repoPath, 'package.json'),
     JSON.stringify(
       {
-        name: "large-test-repo",
-        version: "1.0.0",
+        name: 'large-test-repo',
+        version: '1.0.0',
         dependencies: {
-          react: "^18.0.0",
-          express: "^4.18.0",
-          lodash: "^4.17.21",
-          axios: "^1.0.0",
+          react: '^18.0.0',
+          express: '^4.18.0',
+          lodash: '^4.17.21',
+          axios: '^1.0.0',
         },
       },
       null,
@@ -628,14 +580,7 @@ async function createLargeTestRepository(repoPath: string): Promise<void> {
   );
 
   // Create multiple directories with files
-  const directories = [
-    "src",
-    "lib",
-    "utils",
-    "components",
-    "services",
-    "types",
-  ];
+  const directories = ['src', 'lib', 'utils', 'components', 'services', 'types'];
 
   for (const dir of directories) {
     const dirPath = path.join(repoPath, dir);
@@ -688,7 +633,7 @@ module.exports = { Class${i} };
 
   // Create README
   await writeFile(
-    path.join(repoPath, "README.md"),
+    path.join(repoPath, 'README.md'),
     `
 # Large Test Repository
 

@@ -2,6 +2,7 @@
  * Tests for token analyzer
  */
 
+import { describe, expect, test } from 'vitest';
 import { countTokens, sampleText } from '../tokenAnalyzer';
 
 describe('Token Analyzer', () => {
