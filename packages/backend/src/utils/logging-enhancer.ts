@@ -131,16 +131,11 @@ export class EnhancedLogger {
         result: this.sanitizeResult(result),
       });
     } else {
-      logger.error(`Operation failed: ${context.operationType}`, {
-        ...logData,
-        error: error
-          ? {
-              name: error.name,
-              message: error.message,
-              stack: error.stack,
-            }
-          : undefined,
-      });
+      logger.error(
+        `Operation failed: ${context.operationType}`,
+        error || new Error('Unknown error occurred'),
+        logData
+      );
     }
 
     // Clean up
@@ -160,7 +155,9 @@ export class EnhancedLogger {
   ): void {
     const context = this.operations.get(operationId);
     if (!context) {
-      logger.warn('Attempted to log progress for unknown operation', { operationId });
+      logger.warn('Attempted to log progress for unknown operation', {
+        operationId,
+      });
       return;
     }
 
@@ -194,14 +191,7 @@ export class EnhancedLogger {
     };
 
     if (error) {
-      logger.error('API request failed', {
-        ...logData,
-        error: {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-        },
-      });
+      logger.error('API request failed', error, logData);
     } else if (res.statusCode >= 400) {
       logger.warn('API request completed with error status', logData);
     } else {
@@ -228,14 +218,7 @@ export class EnhancedLogger {
     };
 
     if (error) {
-      logger.error('Database operation failed', {
-        ...logData,
-        error: {
-          name: error.name,
-          message: error.message,
-          code: (error as any).code,
-        },
-      });
+      logger.error('Database operation failed', error, logData);
     } else {
       logger.info('Database operation completed', logData);
     }
@@ -262,14 +245,7 @@ export class EnhancedLogger {
     };
 
     if (error) {
-      logger.error('External service call failed', {
-        ...logData,
-        error: {
-          name: error.name,
-          message: error.message,
-          code: (error as any).code,
-        },
-      });
+      logger.error('External service call failed', error, logData);
     } else if (statusCode && statusCode >= 400) {
       logger.warn('External service call completed with error status', logData);
     } else {
@@ -303,7 +279,7 @@ export class EnhancedLogger {
     switch (severity) {
       case 'CRITICAL':
       case 'HIGH':
-        logger.error(`Security event: ${eventType}`, logData);
+        logger.error(`Security event: ${eventType}`, undefined, logData);
         break;
       case 'MEDIUM':
         logger.warn(`Security event: ${eventType}`, logData);

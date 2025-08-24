@@ -314,10 +314,10 @@ function logError(
   // Log based on severity
   switch (error.severity) {
     case ErrorSeverity.CRITICAL:
-      logger.error(`CRITICAL ERROR: ${error.technicalMessage}`, logContext);
+      logger.error(`CRITICAL ERROR: ${error.technicalMessage}`, undefined, logContext);
       break;
     case ErrorSeverity.HIGH:
-      logger.error(`HIGH SEVERITY: ${error.technicalMessage}`, logContext);
+      logger.error(`HIGH SEVERITY: ${error.technicalMessage}`, undefined, logContext);
       break;
     case ErrorSeverity.MEDIUM:
       logger.warn(`MEDIUM SEVERITY: ${error.technicalMessage}`, logContext);

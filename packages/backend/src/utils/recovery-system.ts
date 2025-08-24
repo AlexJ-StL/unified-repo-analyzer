@@ -285,10 +285,15 @@ export class RecoverySystem extends EventEmitter {
       const threshold = config.circuitBreakerThreshold || 5;
       if (circuitBreaker.failures >= threshold) {
         circuitBreaker.state = 'OPEN';
-        logger.error(`Circuit breaker opened for ${operationName}`, {
-          failures: circuitBreaker.failures,
-          threshold,
-        });
+        logger.error(
+          `Circuit breaker opened for ${operationName}`,
+          createEnhancedError(
+            ErrorCategory.EXTERNAL_SERVICE,
+            ErrorSeverity.HIGH,
+            `Circuit breaker opened for ${operationName} after ${circuitBreaker.failures} failures (threshold: ${threshold})`,
+            503
+          )
+        );
       }
 
       throw error;

@@ -56,7 +56,7 @@ export const errorHandler = (
   req: Request,
   res: Response,
   _next: NextFunction
-): void => {
+): Response<any, Record<string, any>> => {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   // Handle legacy ApiError
@@ -90,7 +90,7 @@ export const errorHandler = (
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
 
-  res.status(processedError.statusCode).json(response);
+  return res.status(processedError.statusCode).json(response);
 };
 
 /**
