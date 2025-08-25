@@ -18,13 +18,14 @@ Write-Host "Processing Backend in Chunks..." -ForegroundColor Cyan
 
 foreach ($chunk in $chunks) {
     Write-Host "Processing: $chunk" -ForegroundColor Green
-    
+
     if ($Write) {
         & bun biome check $chunk --write --max-diagnostics=20
-    } else {
+    }
+    else {
         & bun biome check $chunk --max-diagnostics=20
     }
-    
+
     Write-Host ""
 }
 

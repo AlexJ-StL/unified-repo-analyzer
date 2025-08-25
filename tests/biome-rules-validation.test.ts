@@ -5,15 +5,21 @@
  * and provide comprehensive code quality checks.
  */
 
-import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
-import { describe, expect, test } from 'vitest';
-import type { BiomeConfig } from '../types/config';
+import { spawn } from "node:child_process";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { describe, expect, test } from "vitest";
+import type { BiomeConfig } from "../types/config";
 
 // Define project root
-const projectRoot = resolve(__dirname, '..');
+const projectRoot = resolve(__dirname, "..");
 
 // Helper function to run Biome commands
 async function runBiomeCommand(
@@ -26,39 +32,47 @@ async function runBiomeCommand(
 }> {
   return new Promise((resolve) => {
     // Add config path if not already present
-    const hasConfigPath = args.includes('--config-path');
-    const configArgs = hasConfigPath ? [] : ['--config-path', join(projectRoot, 'biome.json')];
-    const fullArgs = ['run', 'biome', ...args.slice(0, 1), ...configArgs, ...args.slice(1)];
+    const hasConfigPath = args.includes("--config-path");
+    const configArgs = hasConfigPath
+      ? []
+      : ["--config-path", join(projectRoot, "biome.json")];
+    const fullArgs = [
+      "run",
+      "biome",
+      ...args.slice(0, 1),
+      ...configArgs,
+      ...args.slice(1)
+    ];
 
-    const child = spawn('bun', fullArgs, {
+    const child = spawn("bun", fullArgs, {
       cwd: cwd || projectRoot,
-      stdio: 'pipe',
-      shell: true,
+      stdio: "pipe",
+      shell: true
     });
 
-    let stdout = '';
-    let stderr = '';
+    let stdout = "";
+    let stderr = "";
 
-    child.stdout?.on('data', (data) => {
+    child.stdout?.on("data", (data) => {
       stdout += data.toString();
     });
 
-    child.stderr?.on('data', (data) => {
+    child.stderr?.on("data", (data) => {
       stderr += data.toString();
     });
 
-    child.on('close', (code) => {
+    child.on("close", (code) => {
       resolve({
         stdout,
         stderr,
-        exitCode: code || 0,
+        exitCode: code || 0
       });
     });
   });
 }
 
 // Helper function to create a temporary test file
-function createTempTestFile(content: string, extension = 'ts'): string {
+function createTempTestFile(content: string, extension = "ts"): string {
   const tempDir = join(tmpdir(), `biome-test-${Date.now()}`);
   mkdirSync(tempDir, { recursive: true });
   const tempPath = join(tempDir, `test.${extension}`);
@@ -71,9 +85,14 @@ function cleanupTempFile(filePath: string): void {
   try {
     unlinkSync(filePath);
     // Try to remove the directory if it's empty
-    const dir = join(filePath, '..');
+    const dir = join(filePath, "..");
     try {
-      process.rmdir?.(dir, () => {});
+      try {
+        // Remove the directory if it's empty
+        require("fs").rmdirSync(dir);
+      } catch {
+        // Ignore cleanup errors
+      }
     } catch {
       // Ignore cleanup errors
     }
@@ -82,15 +101,15 @@ function cleanupTempFile(filePath: string): void {
   }
 }
 
-describe('Biome Rules Validation Tests', () => {
-  const projectRoot = resolve(__dirname, '..');
+describe("Biome Rules Validation Tests", () => {
+  const projectRoot = resolve(__dirname, "..");
 
-  describe('Configuration Validation', () => {
-    test('should have valid Biome configuration file', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
+  describe("Configuration Validation", () => {
+    test("should have valid Biome configuration file", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
       expect(existsSync(biomeConfigPath)).toBe(true);
 
-      const configContent = readFileSync(biomeConfigPath, 'utf-8');
+      const configContent = readFileSync(biomeConfigPath, "utf-8");
       expect(() => JSON.parse(configContent)).not.toThrow();
 
       const config: BiomeConfig = JSON.parse(configContent);
@@ -99,37 +118,43 @@ describe('Biome Rules Validation Tests', () => {
       expect(config.formatter).toBeDefined();
     });
 
-    test('should have linter enabled with proper rules', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+    test("should have linter enabled with proper rules", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
       expect(config.linter?.enabled).toBe(true);
       expect(config.linter?.rules).toBeDefined();
       expect(config.linter?.rules?.recommended).toBe(true);
     });
 
-    test('should have formatter enabled with proper settings', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+    test("should have formatter enabled with proper settings", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
       expect(config.formatter?.enabled).toBe(true);
-      expect(config.formatter?.indentStyle).toBe('space');
+      expect(config.formatter?.indentStyle).toBe("space");
       expect(config.formatter?.indentWidth).toBe(2);
       expect(config.formatter?.lineWidth).toBe(100);
     });
 
-    test('should have JavaScript/TypeScript specific settings', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+    test("should have JavaScript/TypeScript specific settings", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
-      expect(config.javascript?.formatter?.quoteStyle).toBe('single');
-      expect(config.javascript?.formatter?.semicolons).toBe('always');
-      expect(config.javascript?.formatter?.trailingCommas).toBe('es5');
+      expect(config.javascript?.formatter?.quoteStyle).toBe("single");
+      expect(config.javascript?.formatter?.semicolons).toBe("always");
+      expect(config.javascript?.formatter?.trailingCommas).toBe("es5");
     });
   });
 
-  describe('Linting Rule Equivalents', () => {
-    test('should detect explicit any usage (Biome: noExplicitAny)', async () => {
+  describe("Linting Rule Equivalents", () => {
+    test("should detect explicit any usage (Biome: noExplicitAny)", async () => {
       const testCode = `
         function badFunction(param: any): any {
           return param;
@@ -140,22 +165,22 @@ describe('Biome Rules Validation Tests', () => {
 
       try {
         const result = await runBiomeCommand([
-          'lint',
-          '--config-path',
-          join(projectRoot, 'biome.json'),
-          tempFile,
+          "lint",
+          "--config-path",
+          join(projectRoot, "biome.json"),
+          tempFile
         ]);
 
         // Should detect the any usage
         const output = (result.stdout + result.stderr).toLowerCase();
-        expect(output).toContain('unexpected any');
+        expect(output).toContain("unexpected any");
         expect(result.exitCode).toBeGreaterThan(0);
       } finally {
         cleanupTempFile(tempFile);
       }
     });
 
-    test('should enforce const usage (Biome: useConst)', async () => {
+    test("should enforce const usage (Biome: useConst)", async () => {
       const testCode = `
         let unchangedVariable = 'hello';
         console.log(unchangedVariable);
@@ -164,7 +189,7 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // Should suggest using const (or pass if rule is working as auto-fix)
         expect(result.exitCode).toBeGreaterThanOrEqual(0);
@@ -173,7 +198,7 @@ describe('Biome Rules Validation Tests', () => {
       }
     });
 
-    test('should enforce template literals (Biome: useTemplate)', async () => {
+    test("should enforce template literals (Biome: useTemplate)", async () => {
       const testCode = `
         const name = 'world';
         const message = 'Hello ' + name + '!';
@@ -183,7 +208,7 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // Should suggest template literal (or pass if rule is working)
         expect(result.exitCode).toBeGreaterThanOrEqual(0);
@@ -192,7 +217,7 @@ describe('Biome Rules Validation Tests', () => {
       }
     });
 
-    test('should detect unused variables (Biome: noUnusedVariables)', async () => {
+    test("should detect unused variables (Biome: noUnusedVariables)", async () => {
       const testCode = `
         function testFunction() {
           const unusedVariable = 'not used';
@@ -204,18 +229,18 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // Should detect unused variable
         const output = (result.stdout + result.stderr).toLowerCase();
-        expect(output).toContain('unused');
+        expect(output).toContain("unused");
         expect(result.exitCode).toBeGreaterThanOrEqual(0);
       } finally {
         cleanupTempFile(tempFile);
       }
     });
 
-    test('should enforce parameter assignment rules', async () => {
+    test("should enforce parameter assignment rules", async () => {
       const testCode = `
         function badFunction(param: string) {
           param = 'modified';
@@ -226,7 +251,7 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // Should detect parameter reassignment (or pass if rule is working)
         expect(result.exitCode).toBeGreaterThanOrEqual(0);
@@ -235,7 +260,7 @@ describe('Biome Rules Validation Tests', () => {
       }
     });
 
-    test('should enforce as const assertions', async () => {
+    test("should enforce as const assertions", async () => {
       const testCode = `
         const config = {
           mode: 'development',
@@ -246,7 +271,7 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // May suggest as const for better type inference
         // This is a more lenient check as it depends on context
@@ -257,8 +282,8 @@ describe('Biome Rules Validation Tests', () => {
     });
   });
 
-  describe('Formatting Rules Validation', () => {
-    test('should format with single quotes', async () => {
+  describe("Formatting Rules Validation", () => {
+    test("should format with single quotes", async () => {
       const testCode = `
         const message = "Hello world";
         console.log("This should use single quotes");
@@ -267,7 +292,7 @@ describe('Biome Rules Validation Tests', () => {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
 
         // Biome format returns 1 when changes would be made
         expect([0, 1]).toContain(result.exitCode);
@@ -281,7 +306,7 @@ describe('Biome Rules Validation Tests', () => {
       }
     });
 
-    test('should format with proper indentation', async () => {
+    test("should format with proper indentation", async () => {
       const testCode = `
 function badIndentation() {
     if (true) {
@@ -293,21 +318,21 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
 
         // Biome format returns 1 when changes would be made
         expect([0, 1]).toContain(result.exitCode);
         // Should use 2-space indentation (in diff output)
         if (result.exitCode === 1) {
           const output = result.stdout + result.stderr;
-          expect(output).toContain('+ ··if·(true)·{');
+          expect(output).toContain("+ ··if·(true)·{");
         }
       } finally {
         cleanupTempFile(tempFile);
       }
     });
 
-    test('should format with semicolons', async () => {
+    test("should format with semicolons", async () => {
       const testCode = `
         const message = 'hello'
         console.log(message)
@@ -320,7 +345,7 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
 
         // Biome format returns 1 when changes would be made
         expect([0, 1]).toContain(result.exitCode);
@@ -333,7 +358,7 @@ function badIndentation() {
       }
     });
 
-    test('should format with ES5 trailing commas', async () => {
+    test("should format with ES5 trailing commas", async () => {
       const testCode = `
         const obj = {
           key1: 'value1',
@@ -349,7 +374,7 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
 
         // Biome format returns 1 when changes would be made
         expect([0, 1]).toContain(result.exitCode);
@@ -363,7 +388,7 @@ function badIndentation() {
       }
     });
 
-    test('should format with proper line width', async () => {
+    test("should format with proper line width", async () => {
       const testCode = `
         const veryLongVariableName = 'This is a very long string that should probably be wrapped at some point to maintain readability';
       `;
@@ -371,14 +396,14 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
 
         // Biome format returns 1 when changes would be made
         expect([0, 1]).toContain(result.exitCode);
         // Should respect line width of 100 characters
         let longLines: string[] = [];
         if (result.stdout) {
-          const lines = result.stdout.split('\n');
+          const lines = result.stdout.split("\n");
           longLines = lines.filter((line) => line.length > 100);
         }
         expect(longLines.length).toBe(0);
@@ -388,32 +413,38 @@ function badIndentation() {
     });
   });
 
-  describe('File Inclusion and Exclusion', () => {
-    test('should include TypeScript files', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+  describe("File Inclusion and Exclusion", () => {
+    test("should include TypeScript files", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
       const includes = config.files?.includes || [];
-      expect(includes.some((pattern) => pattern.includes('ts'))).toBe(true);
-      expect(includes.some((pattern) => pattern.includes('tsx'))).toBe(true);
+      expect(includes.some((pattern) => pattern.includes("ts"))).toBe(true);
+      expect(includes.some((pattern) => pattern.includes("tsx"))).toBe(true);
     });
 
-    test('should include JavaScript files', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+    test("should include JavaScript files", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
       const includes = config.files?.includes || [];
-      expect(includes.some((pattern) => pattern.includes('js'))).toBe(true);
-      expect(includes.some((pattern) => pattern.includes('jsx'))).toBe(true);
+      expect(includes.some((pattern) => pattern.includes("js"))).toBe(true);
+      expect(includes.some((pattern) => pattern.includes("jsx"))).toBe(true);
     });
 
-    test('should exclude node_modules and build directories', async () => {
-      const biomeConfigPath = join(projectRoot, 'biome.json');
-      const config: BiomeConfig = JSON.parse(readFileSync(biomeConfigPath, 'utf-8'));
+    test("should exclude node_modules and build directories", async () => {
+      const biomeConfigPath = join(projectRoot, "biome.json");
+      const config: BiomeConfig = JSON.parse(
+        readFileSync(biomeConfigPath, "utf-8")
+      );
 
       const overrides = config.overrides || [];
       const excludeOverride = overrides.find((override) =>
-        override.includes.some((pattern) => pattern.includes('node_modules'))
+        override.includes.some((pattern) => pattern.includes("node_modules"))
       );
 
       expect(excludeOverride).toBeDefined();
@@ -421,46 +452,54 @@ function badIndentation() {
       expect(excludeOverride?.formatter?.enabled).toBe(false);
 
       // Should also exclude other build directories
-      expect(excludeOverride?.includes.some((pattern) => pattern.includes('dist'))).toBe(true);
-      expect(excludeOverride?.includes.some((pattern) => pattern.includes('build'))).toBe(true);
-      expect(excludeOverride?.includes.some((pattern) => pattern.includes('coverage'))).toBe(true);
+      expect(
+        excludeOverride?.includes.some((pattern) => pattern.includes("dist"))
+      ).toBe(true);
+      expect(
+        excludeOverride?.includes.some((pattern) => pattern.includes("build"))
+      ).toBe(true);
+      expect(
+        excludeOverride?.includes.some((pattern) =>
+          pattern.includes("coverage")
+        )
+      ).toBe(true);
     });
   });
 
-  describe('Integration with Project Scripts', () => {
-    test('should run lint script successfully', async () => {
-      const result = await runBiomeCommand(['lint', '--help'], projectRoot);
+  describe("Integration with Project Scripts", () => {
+    test("should run lint script successfully", async () => {
+      const result = await runBiomeCommand(["lint", "--help"], projectRoot);
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('lint');
+      expect(result.stdout).toContain("lint");
     });
 
-    test('should run format script successfully', async () => {
-      const result = await runBiomeCommand(['format', '--help'], projectRoot);
+    test("should run format script successfully", async () => {
+      const result = await runBiomeCommand(["format", "--help"], projectRoot);
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('format');
+      expect(result.stdout).toContain("format");
     });
 
-    test('should run check script successfully', async () => {
-      const result = await runBiomeCommand(['check', '--help'], projectRoot);
+    test("should run check script successfully", async () => {
+      const result = await runBiomeCommand(["check", "--help"], projectRoot);
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('check');
+      expect(result.stdout).toContain("check");
     });
 
-    test('should validate package.json scripts use Biome', async () => {
-      const packageJsonPath = join(projectRoot, 'package.json');
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+    test("should validate package.json scripts use Biome", async () => {
+      const packageJsonPath = join(projectRoot, "package.json");
+      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
 
-      expect(packageJson.scripts.lint).toContain('biome');
-      expect(packageJson.scripts.format).toContain('biome format');
-      expect(packageJson.scripts.check).toContain('biome');
+      expect(packageJson.scripts.lint).toContain("biome");
+      expect(packageJson.scripts.format).toContain("biome format");
+      expect(packageJson.scripts.check).toContain("biome");
     });
   });
 
-  describe('Performance and Compatibility', () => {
-    test('should lint files quickly', async () => {
+  describe("Performance and Compatibility", () => {
+    test("should lint files quickly", async () => {
       const testCode = `
         const message: string = 'performance test';
         console.log(message);
@@ -475,7 +514,7 @@ function badIndentation() {
 
       try {
         const startTime = Date.now();
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
         const duration = Date.now() - startTime;
 
         expect(result.exitCode).toBeLessThanOrEqual(1); // 0 for no issues, 1 for lint issues
@@ -485,7 +524,7 @@ function badIndentation() {
       }
     });
 
-    test('should format files quickly', async () => {
+    test("should format files quickly", async () => {
       const testCode = `
         const message="performance test"
         console.log(message)
@@ -500,7 +539,7 @@ function badIndentation() {
 
       try {
         const startTime = Date.now();
-        const result = await runBiomeCommand(['format', tempFile]);
+        const result = await runBiomeCommand(["format", tempFile]);
         const duration = Date.now() - startTime;
 
         expect([0, 1]).toContain(result.exitCode);
@@ -510,23 +549,25 @@ function badIndentation() {
       }
     });
 
-    test('should handle large files efficiently', async () => {
+    test("should handle large files efficiently", async () => {
       // Create a larger test file
       const largeTestCode = Array(100)
-        .fill(`
+        .fill(
+          `
         function testFunction${Math.random()}(): string {
           const message: string = 'test message';
           const data = { key: 'value', number: 42 };
           return \`\${message} - \${JSON.stringify(data)}\`;
         }
-      `)
-        .join('\n');
+      `
+        )
+        .join("\n");
 
       const tempFile = createTempTestFile(largeTestCode);
 
       try {
         const startTime = Date.now();
-        const result = await runBiomeCommand(['check', tempFile]);
+        const result = await runBiomeCommand(["check", tempFile]);
         const duration = Date.now() - startTime;
 
         expect(result.exitCode).toBeLessThanOrEqual(1);
@@ -537,8 +578,8 @@ function badIndentation() {
     });
   });
 
-  describe('Error Reporting and Diagnostics', () => {
-    test('should provide clear error messages', async () => {
+  describe("Error Reporting and Diagnostics", () => {
+    test("should provide clear error messages", async () => {
       const testCode = `
         const message: string = 123; // Type error
         let unusedVar = 'unused';
@@ -548,17 +589,17 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         expect(result.exitCode).toBeGreaterThan(0);
-        expect(result.stdout).toContain('error');
+        expect(result.stdout).toContain("error");
         expect(result.stdout.length).toBeGreaterThan(0);
       } finally {
         cleanupTempFile(tempFile);
       }
     });
 
-    test('should provide helpful suggestions', async () => {
+    test("should provide helpful suggestions", async () => {
       const testCode = `
         let message = 'hello';
         console.log(message);
@@ -567,7 +608,7 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         // Should suggest using const (or pass if rule is working)
         expect(result.exitCode).toBeGreaterThanOrEqual(0);
@@ -576,7 +617,7 @@ function badIndentation() {
       }
     });
 
-    test('should show file locations for errors', async () => {
+    test("should show file locations for errors", async () => {
       const testCode = `
         const badCode: any = 'test';
         console.log(badCode);
@@ -585,7 +626,7 @@ function badIndentation() {
       const tempFile = createTempTestFile(testCode);
 
       try {
-        const result = await runBiomeCommand(['lint', tempFile]);
+        const result = await runBiomeCommand(["lint", tempFile]);
 
         expect(result.exitCode).toBeGreaterThan(0);
         // Should show line numbers or file locations
