@@ -1,13 +1,12 @@
-
 const express = require('express');
 const _ = require('lodash');
 
 const app4 = express();
 
-app4.get('/', (req, res) => {
-  res.json({ 
+app4.get('/', (_req, res) => {
+  res.json({
     message: 'Hello from app 4',
-    data: _.range(1, 100)
+    data: _.range(1, 100),
   });
 });
 

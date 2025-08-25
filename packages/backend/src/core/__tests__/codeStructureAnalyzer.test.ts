@@ -12,15 +12,15 @@ describe('Code Structure Analyzer', () => {
         function hello(name) {
           return \`Hello, \${name}!\`;
         }
-        
+
         const greet = function(name) {
           return \`Greetings, \${name}!\`;
         };
-        
+
         const arrow = (name) => {
           return \`Hi, \${name}!\`;
         };
-        
+
         const obj = {
           sayHello: function(name) {
             return \`Hello from object, \${name}!\`;
@@ -43,12 +43,12 @@ describe('Code Structure Analyzer', () => {
           constructor(name) {
             this.name = name;
           }
-          
+
           greet() {
             return \`Hello, I'm \${this.name}!\`;
           }
         }
-        
+
         export class Employee extends Person {
           constructor(name, title) {
             super(name);
@@ -83,10 +83,10 @@ describe('Code Structure Analyzer', () => {
       const code = `
         def hello(name):
             return f"Hello, {name}!"
-        
+
         def greet(name):
             return f"Greetings, {name}!"
-            
+
         async def async_greet(name):
             return f"Async greetings, {name}!"
       `;
@@ -104,10 +104,10 @@ describe('Code Structure Analyzer', () => {
         class Person:
             def __init__(self, name):
                 self.name = name
-                
+
             def greet(self):
                 return f"Hello, I'm {self.name}!"
-        
+
         class Employee(Person):
             def __init__(self, name, title):
                 super().__init__(name)
@@ -143,11 +143,11 @@ describe('Code Structure Analyzer', () => {
             public String hello(String name) {
                 return "Hello, " + name + "!";
             }
-            
+
             private void greet(String name) {
                 System.out.println("Greetings, " + name + "!");
             }
-            
+
             protected static int calculate(int a, int b) throws Exception {
                 return a + b;
             }
@@ -165,18 +165,18 @@ describe('Code Structure Analyzer', () => {
     test('should detect class declarations', () => {
       const code = `
         package com.example;
-        
+
         public class Person {
             private String name;
-            
+
             public Person(String name) {
                 this.name = name;
             }
         }
-        
+
         class Employee extends Person {
             private String title;
-            
+
             public Employee(String name, String title) {
                 super(name);
                 this.title = title;
@@ -194,7 +194,7 @@ describe('Code Structure Analyzer', () => {
     test('should count import statements', () => {
       const code = `
         package com.example;
-        
+
         import java.util.List;
         import java.util.Map;
         import java.io.File;
@@ -213,11 +213,11 @@ describe('Code Structure Analyzer', () => {
         function hello() {
           console.log("Hello");
         }
-        
+
         class Example {
           constructor() {}
         }
-        
+
         import something from 'somewhere';
       `;
 
