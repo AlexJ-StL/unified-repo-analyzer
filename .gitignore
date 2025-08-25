@@ -129,6 +129,15 @@ Thumbs.db
 *.tar.gz
 *.zip
 
+# Additional files revealed by git clean
+.env.test
+backend.log
+package/dist/
+packages/backend/.env
+packages/backend/.env.production
+packages/backend/temp/
+upstash-context7-mcp-*.tgz
+
 # Platform / tooling
 .vercel
 .serverless/
