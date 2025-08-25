@@ -2,24 +2,24 @@
  * Advanced analysis features for code quality, security, and maintainability
  */
 
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from "node:fs/promises";
+import path from "node:path";
 import type {
   ArchitecturalPattern,
   ComplexityMetrics,
-  RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
-import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import { readFileWithErrorHandling } from '../utils/fileSystem';
+  RepositoryAnalysis
+} from "@unified-repo-analyzer/shared/src/types/analysis";
+import type { FileInfo } from "@unified-repo-analyzer/shared/src/types/repository";
+import { readFileWithErrorHandling } from "../utils/fileSystem";
 
-import { countTokens } from './tokenAnalyzer';
+import { countTokens } from "./tokenAnalyzer";
 
 /**
  * Security vulnerability information
  */
 export interface SecurityVulnerability {
   id: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
   type: string;
   description: string;
   file: string;
@@ -44,8 +44,8 @@ export interface FileQualityMetrics {
  * Technical debt information
  */
 export interface TechnicalDebt {
-  type: 'code_smell' | 'bug' | 'vulnerability' | 'duplication' | 'complexity';
-  severity: 'low' | 'medium' | 'high';
+  type: "code_smell" | "bug" | "vulnerability" | "duplication" | "complexity";
+  severity: "low" | "medium" | "high";
   description: string;
   file: string;
   line?: number;
@@ -97,23 +97,25 @@ export class AdvancedAnalyzer {
   /**
    * Performs comprehensive advanced analysis on a repository
    */
-  public async analyzeRepository(analysis: RepositoryAnalysis): Promise<AdvancedAnalysisResult> {
+  public async analyzeRepository(
+    analysis: RepositoryAnalysis
+  ): Promise<AdvancedAnalysisResult> {
     const result: AdvancedAnalysisResult = {
       codeQuality: {
         overallScore: 0,
         fileMetrics: [],
-        technicalDebt: [],
+        technicalDebt: []
       },
       security: {
         vulnerabilities: [],
         securityScore: 0,
-        recommendations: [],
+        recommendations: []
       },
       architecture: {
         patterns: [],
         recommendations: [],
-        maintainabilityScore: 0,
-      },
+        maintainabilityScore: 0
+      }
     };
 
     // Analyze code quality and complexity
@@ -158,16 +160,22 @@ export class AdvancedAnalyzer {
     }
 
     // Calculate overall quality score
-    const overallScore = this.calculateOverallQualityScore(fileMetrics, technicalDebt);
+    const overallScore = this.calculateOverallQualityScore(
+      fileMetrics,
+      technicalDebt
+    );
 
     result.codeQuality = {
       overallScore,
       fileMetrics,
-      technicalDebt,
+      technicalDebt
     };
 
     // Update analysis complexity metrics
-    analysis.codeAnalysis.complexity = this.calculateComplexityMetrics(fileMetrics, technicalDebt);
+    analysis.codeAnalysis.complexity = this.calculateComplexityMetrics(
+      fileMetrics,
+      technicalDebt
+    );
   }
 
   /**
@@ -177,11 +185,16 @@ export class AdvancedAnalyzer {
     fileInfo: FileInfo,
     content: string
   ): Promise<FileQualityMetrics> {
-    const lines = content.split('\n');
-    const linesOfCode = lines.filter((line) => line.trim() && !line.trim().startsWith('//')).length;
+    const lines = content.split("\n");
+    const linesOfCode = lines.filter(
+      (line) => line.trim() && !line.trim().startsWith("//")
+    ).length;
 
     // Calculate cyclomatic complexity
-    const cyclomaticComplexity = this.calculateCyclomaticComplexity(content, fileInfo.language);
+    const cyclomaticComplexity = this.calculateCyclomaticComplexity(
+      content,
+      fileInfo.language
+    );
 
     // Calculate maintainability index
     const maintainabilityIndex = this.calculateMaintainabilityIndex(
@@ -202,14 +215,17 @@ export class AdvancedAnalyzer {
       maintainabilityIndex,
       linesOfCode,
       duplicatedLines,
-      codeSmells,
+      codeSmells
     };
   }
 
   /**
    * Calculates cyclomatic complexity for a file
    */
-  private calculateCyclomaticComplexity(content: string, language: string): number {
+  private calculateCyclomaticComplexity(
+    content: string,
+    language: string
+  ): number {
     // Patterns for decision points that increase complexity
     const complexityPatterns = {
       javascript: [
@@ -222,7 +238,7 @@ export class AdvancedAnalyzer {
         /\bcatch\s*\(/g,
         /\?\s*.*\s*:/g, // ternary operator
         /&&/g,
-        /\|\|/g,
+        /\|\|/g
       ],
       python: [
         /\bif\s+/g,
@@ -232,7 +248,7 @@ export class AdvancedAnalyzer {
         /\btry\s*:/g,
         /\bexcept\s+/g,
         /\band\b/g,
-        /\bor\b/g,
+        /\bor\b/g
       ],
       java: [
         /\bif\s*\(/g,
@@ -244,11 +260,14 @@ export class AdvancedAnalyzer {
         /\bcatch\s*\(/g,
         /\?\s*.*\s*:/g,
         /&&/g,
-        /\|\|/g,
-      ],
+        /\|\|/g
+      ]
     };
 
-    const patterns = complexityPatterns[language.toLowerCase()] || complexityPatterns.javascript;
+    const patterns =
+      complexityPatterns[
+        language.toLowerCase() as keyof typeof complexityPatterns
+      ] || complexityPatterns.javascript;
     let complexity = 1; // Base complexity
 
     for (const pattern of patterns) {
@@ -271,7 +290,8 @@ export class AdvancedAnalyzer {
   ): number {
     // Simplified maintainability index calculation
     // Based on Halstead metrics and cyclomatic complexity
-    const halsteadVolume = Math.log2(countTokens(content)) * countTokens(content);
+    const halsteadVolume =
+      Math.log2(countTokens(content)) * countTokens(content);
     const maintainabilityIndex = Math.max(
       0,
       ((171 -
@@ -290,7 +310,7 @@ export class AdvancedAnalyzer {
    */
   private detectDuplicatedLines(content: string): number {
     const lines = content
-      .split('\n')
+      .split("\n")
       .map((line) => line.trim())
       .filter((line) => line);
     const lineCount = new Map<string, number>();
@@ -319,7 +339,7 @@ export class AdvancedAnalyzer {
    */
   private detectCodeSmells(content: string, language: string): string[] {
     const smells: string[] = [];
-    const lines = content.split('\n');
+    const lines = content.split("\n");
 
     // Long method detection
     const methods = this.extractMethods(content, language);
@@ -337,22 +357,22 @@ export class AdvancedAnalyzer {
     // Magic numbers
     const magicNumbers = content.match(/\b\d{2,}\b/g);
     if (magicNumbers && magicNumbers.length > 1) {
-      smells.push('Multiple magic numbers detected');
+      smells.push("Multiple magic numbers detected");
     }
 
     // Long parameter lists
     const longParameterLists = content.match(/\([^)]{50,}\)/g);
     if (longParameterLists) {
-      smells.push('Long parameter lists detected');
+      smells.push("Long parameter lists detected");
     }
 
     // Commented code
     const commentedCodeLines = lines.filter((line) => {
       const trimmed = line.trim();
-      return trimmed.startsWith('//') && /[a-zA-Z]{3,}/.test(trimmed);
+      return trimmed.startsWith("//") && /[a-zA-Z]{3,}/.test(trimmed);
     });
     if (commentedCodeLines.length > 5) {
-      smells.push('Commented code detected');
+      smells.push("Commented code detected");
     }
 
     // TODO/FIXME comments
@@ -372,16 +392,17 @@ export class AdvancedAnalyzer {
     language: string
   ): Array<{ name: string; lineCount: number }> {
     const methods: Array<{ name: string; lineCount: number }> = [];
-    const lines = content.split('\n');
+    const lines = content.split("\n");
 
     // Simple method extraction based on language patterns
     const methodPatterns = {
       javascript: /function\s+(\w+)\s*\(/g,
       python: /def\s+(\w+)\s*\(/g,
-      java: /(?:public|private|protected)?\s*[\w<>[\]]+\s+(\w+)\s*\([^)]*\)\s*{/g,
+      java: /(?:public|private|protected)?\s*[\w<>[\]]+\s+(\w+)\s*\([^)]*\)\s*{/g
     };
 
-    const pattern = methodPatterns[language.toLowerCase()] || methodPatterns.javascript;
+    const pattern =
+      methodPatterns[language.toLowerCase()] || methodPatterns.javascript;
     let match;
 
     while ((match = pattern.exec(content)) !== null) {
@@ -399,10 +420,10 @@ export class AdvancedAnalyzer {
           const line = lines[i];
 
           for (const char of line) {
-            if (char === '{') {
+            if (char === "{") {
               braceCount++;
               foundOpenBrace = true;
-            } else if (char === '}') {
+            } else if (char === "}") {
               braceCount--;
               if (foundOpenBrace && braceCount === 0) {
                 methodEnd = i;
@@ -418,7 +439,7 @@ export class AdvancedAnalyzer {
 
         methods.push({
           name: methodName,
-          lineCount: methodEnd - methodStart + 1,
+          lineCount: methodEnd - methodStart + 1
         });
       }
     }
@@ -431,13 +452,16 @@ export class AdvancedAnalyzer {
    */
   private getLineNumber(text: string, position: number): number {
     const textBefore = text.substring(0, position);
-    return textBefore.split('\n').length;
+    return textBefore.split("\n").length;
   }
 
   /**
    * Detects technical debt in code
    */
-  private async detectTechnicalDebt(fileInfo: FileInfo, content: string): Promise<TechnicalDebt[]> {
+  private async detectTechnicalDebt(
+    fileInfo: FileInfo,
+    content: string
+  ): Promise<TechnicalDebt[]> {
     const debt: TechnicalDebt[] = [];
 
     // Detect high complexity methods
@@ -445,26 +469,26 @@ export class AdvancedAnalyzer {
     for (const method of methods) {
       if (method.lineCount > 50) {
         debt.push({
-          type: 'complexity',
-          severity: 'high',
+          type: "complexity",
+          severity: "high",
           description: `Method ${method.name} is too long (${method.lineCount} lines)`,
           file: fileInfo.path,
           estimatedEffort: Math.ceil(method.lineCount / 20),
-          recommendation: 'Break down into smaller methods',
+          recommendation: "Break down into smaller methods"
         });
       }
     }
 
     // Also check for very long files as complexity debt
-    const fileLines = content.split('\n');
+    const fileLines = content.split("\n");
     if (fileLines.length > 100) {
       debt.push({
-        type: 'complexity',
-        severity: 'medium',
+        type: "complexity",
+        severity: "medium",
         description: `File is very long (${fileLines.length} lines)`,
         file: fileInfo.path,
         estimatedEffort: Math.ceil(fileLines.length / 50),
-        recommendation: 'Consider breaking file into smaller modules',
+        recommendation: "Consider breaking file into smaller modules"
       });
     }
 
@@ -472,29 +496,30 @@ export class AdvancedAnalyzer {
     const duplicatedLines = this.detectDuplicatedLines(content);
     if (duplicatedLines > 20) {
       debt.push({
-        type: 'duplication',
-        severity: 'medium',
+        type: "duplication",
+        severity: "medium",
         description: `${duplicatedLines} duplicated lines detected`,
         file: fileInfo.path,
         estimatedEffort: Math.ceil(duplicatedLines / 10),
-        recommendation: 'Extract common code into reusable functions',
+        recommendation: "Extract common code into reusable functions"
       });
     }
 
     // Detect TODO/FIXME comments
-    const lines = content.split('\n');
+    const lines = content.split("\n");
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (/TODO|FIXME|HACK|XXX/i.test(line)) {
-        const severity = /FIXME|HACK/i.test(line) ? 'medium' : 'low';
+        const severity = /FIXME|HACK/i.test(line) ? "medium" : "low";
         debt.push({
-          type: 'code_smell',
+          type: "code_smell",
           severity,
-          description: 'Unresolved TODO/FIXME comment',
+          description: "Unresolved TODO/FIXME comment",
           file: fileInfo.path,
           line: i + 1,
-          estimatedEffort: severity === 'medium' ? 2 : 1,
-          recommendation: 'Address the TODO/FIXME comment or remove if no longer relevant',
+          estimatedEffort: severity === "medium" ? 2 : 1,
+          recommendation:
+            "Address the TODO/FIXME comment or remove if no longer relevant"
         });
       }
     }
@@ -524,11 +549,13 @@ export class AdvancedAnalyzer {
 
     // Calculate average maintainability index
     const avgMaintainability =
-      validMetrics.reduce((sum, m) => sum + m.maintainabilityIndex, 0) / validMetrics.length;
+      validMetrics.reduce((sum, m) => sum + m.maintainabilityIndex, 0) /
+      validMetrics.length;
 
     // Calculate complexity penalty
     const avgComplexity =
-      validMetrics.reduce((sum, m) => sum + m.cyclomaticComplexity, 0) / validMetrics.length;
+      validMetrics.reduce((sum, m) => sum + m.cyclomaticComplexity, 0) /
+      validMetrics.length;
     const complexityPenalty = Math.min(avgComplexity / 10, 20);
 
     // Calculate technical debt penalty
@@ -538,7 +565,10 @@ export class AdvancedAnalyzer {
     }, 0);
 
     // Calculate final score (0-100)
-    const score = Math.max(0, avgMaintainability - complexityPenalty - debtPenalty);
+    const score = Math.max(
+      0,
+      avgMaintainability - complexityPenalty - debtPenalty
+    );
     return Math.round(score);
   }
 
@@ -553,40 +583,48 @@ export class AdvancedAnalyzer {
       return {
         cyclomaticComplexity: 0,
         maintainabilityIndex: 0,
-        technicalDebt: 'No files analyzed',
-        codeQuality: 'poor',
+        technicalDebt: "No files analyzed",
+        codeQuality: "poor"
       };
     }
 
     const avgComplexity =
-      fileMetrics.reduce((sum, m) => sum + m.cyclomaticComplexity, 0) / fileMetrics.length;
+      fileMetrics.reduce((sum, m) => sum + m.cyclomaticComplexity, 0) /
+      fileMetrics.length;
     const avgMaintainability =
-      fileMetrics.reduce((sum, m) => sum + m.maintainabilityIndex, 0) / fileMetrics.length;
+      fileMetrics.reduce((sum, m) => sum + m.maintainabilityIndex, 0) /
+      fileMetrics.length;
 
     // Calculate technical debt summary
-    const highDebt = technicalDebt.filter((d) => d.severity === 'high').length;
-    const mediumDebt = technicalDebt.filter((d) => d.severity === 'medium').length;
-    const lowDebt = technicalDebt.filter((d) => d.severity === 'low').length;
+    const highDebt = technicalDebt.filter((d) => d.severity === "high").length;
+    const mediumDebt = technicalDebt.filter(
+      (d) => d.severity === "medium"
+    ).length;
+    const lowDebt = technicalDebt.filter((d) => d.severity === "low").length;
 
     const debtSummary = `${highDebt} high, ${mediumDebt} medium, ${lowDebt} low priority items`;
 
     // Determine code quality
-    let codeQuality: 'excellent' | 'good' | 'fair' | 'poor';
+    let codeQuality: "excellent" | "good" | "fair" | "poor";
     if (avgMaintainability >= 80 && avgComplexity <= 5 && highDebt === 0) {
-      codeQuality = 'excellent';
-    } else if (avgMaintainability >= 60 && avgComplexity <= 10 && highDebt <= 2) {
-      codeQuality = 'good';
+      codeQuality = "excellent";
+    } else if (
+      avgMaintainability >= 60 &&
+      avgComplexity <= 10 &&
+      highDebt <= 2
+    ) {
+      codeQuality = "good";
     } else if (avgMaintainability >= 40 && avgComplexity <= 20) {
-      codeQuality = 'fair';
+      codeQuality = "fair";
     } else {
-      codeQuality = 'poor';
+      codeQuality = "poor";
     }
 
     return {
       cyclomaticComplexity: Math.round(avgComplexity),
       maintainabilityIndex: Math.round(avgMaintainability),
       technicalDebt: debtSummary,
-      codeQuality,
+      codeQuality
     };
   }
 
@@ -606,7 +644,10 @@ export class AdvancedAnalyzer {
         const filePath = path.join(analysis.path, fileInfo.path);
         const content = await readFileWithErrorHandling(filePath);
 
-        const fileVulns = await this.scanFileForVulnerabilities(fileInfo, content);
+        const fileVulns = await this.scanFileForVulnerabilities(
+          fileInfo,
+          content
+        );
         vulnerabilities.push(...fileVulns);
       } catch (_error) {}
     }
@@ -616,7 +657,9 @@ export class AdvancedAnalyzer {
     vulnerabilities.push(...packageJsonVulns);
 
     // Generate security recommendations
-    recommendations.push(...this.generateSecurityRecommendations(analysis, vulnerabilities));
+    recommendations.push(
+      ...this.generateSecurityRecommendations(analysis, vulnerabilities)
+    );
 
     // Calculate security score
     const securityScore = this.calculateSecurityScore(vulnerabilities);
@@ -624,7 +667,7 @@ export class AdvancedAnalyzer {
     result.security = {
       vulnerabilities,
       securityScore,
-      recommendations,
+      recommendations
     };
   }
 
@@ -636,7 +679,7 @@ export class AdvancedAnalyzer {
     content: string
   ): Promise<SecurityVulnerability[]> {
     const vulnerabilities: SecurityVulnerability[] = [];
-    const _lines = content.split('\n');
+    const _lines = content.split("\n");
 
     // Common security patterns to detect
     const securityPatterns = {
@@ -644,72 +687,74 @@ export class AdvancedAnalyzer {
       hardcodedSecrets: [
         {
           pattern: /password\s*=\s*["'][^"']+["']/gi,
-          type: 'Hardcoded Password',
+          type: "Hardcoded Password"
         },
         {
           pattern: /api[_-]?key\s*=\s*["'][^"']+["']/gi,
-          type: 'Hardcoded API Key',
+          type: "Hardcoded API Key"
         },
-        { pattern: /secret\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Secret' },
-        { pattern: /token\s*=\s*["'][^"']+["']/gi, type: 'Hardcoded Token' },
+        { pattern: /secret\s*=\s*["'][^"']+["']/gi, type: "Hardcoded Secret" },
+        { pattern: /token\s*=\s*["'][^"']+["']/gi, type: "Hardcoded Token" },
         {
           pattern: /private[_-]?key\s*=\s*["'][^"']+["']/gi,
-          type: 'Hardcoded Private Key',
-        },
+          type: "Hardcoded Private Key"
+        }
       ],
 
       // SQL Injection
       sqlInjection: [
         {
           pattern: /query\s*=\s*["'][^"']*\+/gi,
-          type: 'Potential SQL Injection',
+          type: "Potential SQL Injection"
         },
         {
           pattern: /execute\s*\(\s*["'][^"']*\+/gi,
-          type: 'Potential SQL Injection',
+          type: "Potential SQL Injection"
         },
-        { pattern: /SELECT\s+.*\+.*FROM/gi, type: 'Potential SQL Injection' },
+        { pattern: /SELECT\s+.*\+.*FROM/gi, type: "Potential SQL Injection" },
         {
           pattern: /["'][^"']*\+\s*\w+\s*\+[^"']*["']/gi,
-          type: 'Potential SQL Injection',
-        },
+          type: "Potential SQL Injection"
+        }
       ],
 
       // XSS vulnerabilities
       xss: [
         {
           pattern: /innerHTML\s*=\s*[^"'][^;]+/gi,
-          type: 'Potential XSS via innerHTML',
+          type: "Potential XSS via innerHTML"
         },
         {
           pattern: /document\.write\s*\(/gi,
-          type: 'Potential XSS via document.write',
+          type: "Potential XSS via document.write"
         },
-        { pattern: /eval\s*\(/gi, type: 'Dangerous eval() usage' },
+        { pattern: /eval\s*\(/gi, type: "Dangerous eval() usage" }
       ],
 
       // Insecure random
       insecureRandom: [
         {
           pattern: /Math\.random\(\)/gi,
-          type: 'Insecure Random Number Generation',
-        },
+          type: "Insecure Random Number Generation"
+        }
       ],
 
       // Insecure HTTP
-      insecureHttp: [{ pattern: /http:\/\/[^"'\s]+/gi, type: 'Insecure HTTP URL' }],
+      insecureHttp: [
+        { pattern: /http:\/\/[^"'\s]+/gi, type: "Insecure HTTP URL" }
+      ],
 
       // Command injection
       commandInjection: [
         {
           pattern: /exec\s*\(\s*[^"'][^)]*\+/gi,
-          type: 'Potential Command Injection',
+          type: "Potential Command Injection"
         },
         {
           pattern: /system\s*\(\s*[^"'][^)]*\+/gi,
-          type: 'Potential Command Injection',
-        },
-      ],
+          type: "Potential Command Injection"
+        }
+      ]
     };
 
     // Scan for each pattern type
@@ -720,15 +765,18 @@ export class AdvancedAnalyzer {
           const lineNumber = this.getLineNumber(content, match.index);
 
           // Determine severity based on vulnerability type
-          let severity: 'low' | 'medium' | 'high' | 'critical';
-          if (type.includes('SQL Injection') || type.includes('Command Injection')) {
-            severity = 'critical';
-          } else if (type.includes('XSS') || type.includes('Hardcoded')) {
-            severity = 'high';
-          } else if (type.includes('Insecure')) {
-            severity = 'medium';
+          let severity: "low" | "medium" | "high" | "critical";
+          if (
+            type.includes("SQL Injection") ||
+            type.includes("Command Injection")
+          ) {
+            severity = "critical";
+          } else if (type.includes("XSS") || type.includes("Hardcoded")) {
+            severity = "high";
+          } else if (type.includes("Insecure")) {
+            severity = "medium";
           } else {
-            severity = 'low';
+            severity = "low";
           }
 
           vulnerabilities.push({
@@ -738,7 +786,7 @@ export class AdvancedAnalyzer {
             description: `${type} detected in ${fileInfo.path}`,
             file: fileInfo.path,
             line: lineNumber,
-            recommendation: this.getSecurityRecommendation(type),
+            recommendation: this.getSecurityRecommendation(type)
           });
         }
       }
@@ -756,7 +804,7 @@ export class AdvancedAnalyzer {
     const vulnerabilities: SecurityVulnerability[] = [];
 
     // Check if package.json exists
-    const packageJsonPath = path.join(analysis.path, 'package.json');
+    const packageJsonPath = path.join(analysis.path, "package.json");
 
     try {
       if (await this.fileExists(packageJsonPath)) {
@@ -765,16 +813,16 @@ export class AdvancedAnalyzer {
 
         // Known vulnerable packages (simplified list)
         const knownVulnerablePackages = {
-          lodash: { versions: ['<4.17.21'], severity: 'medium' as const },
-          moment: { versions: ['<2.29.4'], severity: 'low' as const },
-          axios: { versions: ['<0.21.2'], severity: 'high' as const },
-          express: { versions: ['<4.18.2'], severity: 'medium' as const },
+          lodash: { versions: ["<4.17.21"], severity: "medium" as const },
+          moment: { versions: ["<2.29.4"], severity: "low" as const },
+          axios: { versions: ["<0.21.2"], severity: "high" as const },
+          express: { versions: ["<4.18.2"], severity: "medium" as const }
         };
 
         // Check dependencies
         const allDeps = {
           ...packageJson.dependencies,
-          ...packageJson.devDependencies,
+          ...packageJson.devDependencies
         };
 
         for (const [depName, version] of Object.entries(allDeps)) {
@@ -783,10 +831,10 @@ export class AdvancedAnalyzer {
             vulnerabilities.push({
               id: `dependency:${depName}:${version}`,
               severity: vulnInfo.severity,
-              type: 'Vulnerable Dependency',
+              type: "Vulnerable Dependency",
               description: `Potentially vulnerable dependency: ${depName}@${version}`,
-              file: 'package.json',
-              recommendation: `Update ${depName} to a secure version`,
+              file: "package.json",
+              recommendation: `Update ${depName} to a secure version`
             });
           }
         }
@@ -806,40 +854,47 @@ export class AdvancedAnalyzer {
     const recommendations: string[] = [];
 
     // General recommendations based on project type
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('express'))) {
-      recommendations.push('Use helmet.js for security headers');
-      recommendations.push('Implement rate limiting');
-      recommendations.push('Use HTTPS in production');
+    if (analysis.frameworks.some((f) => f.toLowerCase().includes("express"))) {
+      recommendations.push("Use helmet.js for security headers");
+      recommendations.push("Implement rate limiting");
+      recommendations.push("Use HTTPS in production");
     }
 
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('react'))) {
-      recommendations.push('Sanitize user inputs to prevent XSS');
-      recommendations.push('Use Content Security Policy (CSP)');
+    if (analysis.frameworks.some((f) => f.toLowerCase().includes("react"))) {
+      recommendations.push("Sanitize user inputs to prevent XSS");
+      recommendations.push("Use Content Security Policy (CSP)");
     }
 
     // Specific recommendations based on vulnerabilities
     const vulnTypes = new Set(vulnerabilities.map((v) => v.type));
 
-    if (vulnTypes.has('Hardcoded Password') || vulnTypes.has('Hardcoded API Key')) {
-      recommendations.push('Use environment variables for sensitive data');
-      recommendations.push('Implement proper secrets management');
+    if (
+      vulnTypes.has("Hardcoded Password") ||
+      vulnTypes.has("Hardcoded API Key")
+    ) {
+      recommendations.push("Use environment variables for sensitive data");
+      recommendations.push("Implement proper secrets management");
     }
 
-    if (vulnTypes.has('Potential SQL Injection')) {
-      recommendations.push('Use parameterized queries or ORM');
-      recommendations.push('Validate and sanitize all user inputs');
+    if (vulnTypes.has("Potential SQL Injection")) {
+      recommendations.push("Use parameterized queries or ORM");
+      recommendations.push("Validate and sanitize all user inputs");
     }
 
-    if (vulnTypes.has('Potential XSS via innerHTML')) {
-      recommendations.push('Use textContent instead of innerHTML when possible');
-      recommendations.push('Implement input validation and output encoding');
+    if (vulnTypes.has("Potential XSS via innerHTML")) {
+      recommendations.push(
+        "Use textContent instead of innerHTML when possible"
+      );
+      recommendations.push("Implement input validation and output encoding");
     }
 
     // Add dependency security recommendations
-    if (vulnerabilities.some((v) => v.type === 'Vulnerable Dependency')) {
-      recommendations.push('Regularly update dependencies');
-      recommendations.push('Use npm audit or yarn audit to check for vulnerabilities');
-      recommendations.push('Consider using automated dependency update tools');
+    if (vulnerabilities.some((v) => v.type === "Vulnerable Dependency")) {
+      recommendations.push("Regularly update dependencies");
+      recommendations.push(
+        "Use npm audit or yarn audit to check for vulnerabilities"
+      );
+      recommendations.push("Consider using automated dependency update tools");
     }
 
     return recommendations;
@@ -850,28 +905,38 @@ export class AdvancedAnalyzer {
    */
   private getSecurityRecommendation(type: string): string {
     const recommendations = {
-      'Hardcoded Password': 'Store passwords in environment variables or secure configuration',
-      'Hardcoded API Key': 'Store API keys in environment variables or secure vault',
-      'Hardcoded Secret': 'Use environment variables or secure secret management',
-      'Hardcoded Token': 'Store tokens securely and rotate regularly',
-      'Hardcoded Private Key': 'Store private keys in secure key management system',
-      'Potential SQL Injection': 'Use parameterized queries or prepared statements',
-      'Potential XSS via innerHTML': 'Use textContent or sanitize HTML content',
-      'Potential XSS via document.write': 'Avoid document.write or sanitize content',
-      'Dangerous eval() usage': 'Avoid eval() or use safer alternatives like JSON.parse',
-      'Insecure Random Number Generation': 'Use cryptographically secure random number generator',
-      'Insecure HTTP URL': 'Use HTTPS instead of HTTP for secure communication',
-      'Potential Command Injection': 'Validate and sanitize command inputs',
-      'Vulnerable Dependency': 'Update to a secure version of the dependency',
+      "Hardcoded Password":
+        "Store passwords in environment variables or secure configuration",
+      "Hardcoded API Key":
+        "Store API keys in environment variables or secure vault",
+      "Hardcoded Secret":
+        "Use environment variables or secure secret management",
+      "Hardcoded Token": "Store tokens securely and rotate regularly",
+      "Hardcoded Private Key":
+        "Store private keys in secure key management system",
+      "Potential SQL Injection":
+        "Use parameterized queries or prepared statements",
+      "Potential XSS via innerHTML": "Use textContent or sanitize HTML content",
+      "Potential XSS via document.write":
+        "Avoid document.write or sanitize content",
+      "Dangerous eval() usage":
+        "Avoid eval() or use safer alternatives like JSON.parse",
+      "Insecure Random Number Generation":
+        "Use cryptographically secure random number generator",
+      "Insecure HTTP URL": "Use HTTPS instead of HTTP for secure communication",
+      "Potential Command Injection": "Validate and sanitize command inputs",
+      "Vulnerable Dependency": "Update to a secure version of the dependency"
     };
 
-    return recommendations[type] || 'Review and address this security issue';
+    return recommendations[type] || "Review and address this security issue";
   }
 
   /**
    * Calculates security score based on vulnerabilities
    */
-  private calculateSecurityScore(vulnerabilities: SecurityVulnerability[]): number {
+  private calculateSecurityScore(
+    vulnerabilities: SecurityVulnerability[]
+  ): number {
     if (vulnerabilities.length === 0) return 100;
 
     // Weight vulnerabilities by severity
@@ -904,15 +969,20 @@ export class AdvancedAnalyzer {
     patterns.push(...(await this.detectCodePatterns(analysis)));
 
     // Generate architectural recommendations
-    recommendations.push(...this.generateArchitecturalRecommendations(analysis, patterns));
+    recommendations.push(
+      ...this.generateArchitecturalRecommendations(analysis, patterns)
+    );
 
     // Calculate maintainability score
-    const maintainabilityScore = this.calculateMaintainabilityScore(analysis, patterns);
+    const maintainabilityScore = this.calculateMaintainabilityScore(
+      analysis,
+      patterns
+    );
 
     result.architecture = {
       patterns,
       recommendations,
-      maintainabilityScore,
+      maintainabilityScore
     };
 
     // Update analysis with detected patterns
@@ -922,78 +992,85 @@ export class AdvancedAnalyzer {
   /**
    * Detects architectural patterns based on file structure
    */
-  private detectStructuralPatterns(analysis: RepositoryAnalysis): ArchitecturalPattern[] {
+  private detectStructuralPatterns(
+    analysis: RepositoryAnalysis
+  ): ArchitecturalPattern[] {
     const patterns: ArchitecturalPattern[] = [];
-    const directories = analysis.structure.directories.map((d) => d.path.toLowerCase());
+    const directories = analysis.structure.directories.map((d) =>
+      d.path.toLowerCase()
+    );
     const files = analysis.structure.keyFiles.map((f) => f.path.toLowerCase());
 
     // MVC Pattern
     const hasMVC =
-      directories.some((d) => d.includes('model')) &&
-      directories.some((d) => d.includes('view')) &&
-      directories.some((d) => d.includes('controller'));
+      directories.some((d) => d.includes("model")) &&
+      directories.some((d) => d.includes("view")) &&
+      directories.some((d) => d.includes("controller"));
 
     if (hasMVC) {
       patterns.push({
-        name: 'Model-View-Controller (MVC)',
+        name: "Model-View-Controller (MVC)",
         confidence: 0.8,
         description:
-          'Traditional MVC architecture with separate model, view, and controller layers',
+          "Traditional MVC architecture with separate model, view, and controller layers"
       });
     }
 
     // Layered Architecture
     const hasLayers =
-      directories.some((d) => d.includes('service')) &&
-      directories.some((d) => d.includes('repository')) &&
-      directories.some((d) => d.includes('controller'));
+      directories.some((d) => d.includes("service")) &&
+      directories.some((d) => d.includes("repository")) &&
+      directories.some((d) => d.includes("controller"));
 
     if (hasLayers) {
       patterns.push({
-        name: 'Layered Architecture',
+        name: "Layered Architecture",
         confidence: 0.7,
-        description: 'Layered architecture with service, repository, and controller layers',
+        description:
+          "Layered architecture with service, repository, and controller layers"
       });
     }
 
     // Microservices
     const hasMicroservices =
-      directories.filter((d) => d.includes('service')).length > 3 ||
-      files.some((f) => f.includes('docker')) ||
-      files.some((f) => f.includes('kubernetes'));
+      directories.filter((d) => d.includes("service")).length > 3 ||
+      files.some((f) => f.includes("docker")) ||
+      files.some((f) => f.includes("kubernetes"));
 
     if (hasMicroservices) {
       patterns.push({
-        name: 'Microservices',
+        name: "Microservices",
         confidence: 0.6,
-        description: 'Microservices architecture with multiple independent services',
+        description:
+          "Microservices architecture with multiple independent services"
       });
     }
 
     // Component-Based (React/Vue/Angular)
     const hasComponents =
-      directories.some((d) => d.includes('component')) ||
-      files.some((f) => f.includes('.component.'));
+      directories.some((d) => d.includes("component")) ||
+      files.some((f) => f.includes(".component."));
 
     if (hasComponents) {
       patterns.push({
-        name: 'Component-Based Architecture',
+        name: "Component-Based Architecture",
         confidence: 0.8,
-        description: 'Component-based architecture with reusable UI components',
+        description: "Component-based architecture with reusable UI components"
       });
     }
 
     // Plugin Architecture
     const hasPlugins =
-      directories.some((d) => d.includes('plugin')) ||
-      directories.some((d) => d.includes('extension')) ||
-      files.some((f) => f.includes('plugin'));
+      directories.some((d) => d.includes("plugin")) ||
+      directories.some((d) => d.includes("extension")) ||
+      files.some((f) => f.includes("plugin"));
 
     if (hasPlugins) {
       patterns.push({
-        name: 'Plugin Architecture',
+        name: "Plugin Architecture",
         confidence: 0.7,
-        description: 'Plugin-based architecture allowing extensibility through plugins',
+        description:
+          "Plugin-based architecture allowing extensibility through plugins"
       });
     }
 
@@ -1003,45 +1080,59 @@ export class AdvancedAnalyzer {
   /**
    * Detects patterns based on frameworks used
    */
-  private detectFrameworkPatterns(analysis: RepositoryAnalysis): ArchitecturalPattern[] {
+  private detectFrameworkPatterns(
+    analysis: RepositoryAnalysis
+  ): ArchitecturalPattern[] {
     const patterns: ArchitecturalPattern[] = [];
     const frameworks = analysis.frameworks.map((f) => f.toLowerCase());
 
     // REST API
     if (
-      frameworks.some((f) => f.includes('express') || f.includes('fastify') || f.includes('koa'))
+      frameworks.some(
+        (f) =>
+          f.includes("express") || f.includes("fastify") || f.includes("koa")
+      )
     ) {
       patterns.push({
-        name: 'REST API',
+        name: "REST API",
         confidence: 0.9,
-        description: 'RESTful API architecture using HTTP methods and resources',
+        description: "RESTful API architecture using HTTP methods and resources"
       });
     }
 
     // Single Page Application
-    if (frameworks.some((f) => f.includes('react') || f.includes('vue') || f.includes('angular'))) {
+    if (
+      frameworks.some(
+        (f) => f.includes("react") || f.includes("vue") || f.includes("angular")
+      )
+    ) {
       patterns.push({
-        name: 'Single Page Application (SPA)',
+        name: "Single Page Application (SPA)",
         confidence: 0.9,
-        description: 'Single page application with client-side routing and state management',
+        description:
+          "Single page application with client-side routing and state management"
       });
     }
 
     // Server-Side Rendering
-    if (frameworks.some((f) => f.includes('next') || f.includes('nuxt') || f.includes('gatsby'))) {
+    if (
+      frameworks.some(
+        (f) => f.includes("next") || f.includes("nuxt") || f.includes("gatsby")
+      )
+    ) {
       patterns.push({
-        name: 'Server-Side Rendering (SSR)',
+        name: "Server-Side Rendering (SSR)",
         confidence: 0.8,
-        description: 'Server-side rendering for improved performance and SEO',
+        description: "Server-side rendering for improved performance and SEO"
       });
     }
 
     // GraphQL
-    if (frameworks.some((f) => f.includes('graphql') || f.includes('apollo'))) {
+    if (frameworks.some((f) => f.includes("graphql") || f.includes("apollo"))) {
       patterns.push({
-        name: 'GraphQL API',
+        name: "GraphQL API",
         confidence: 0.9,
-        description: 'GraphQL API with flexible query language and type system',
+        description: "GraphQL API with flexible query language and type system"
       });
     }
 
@@ -1051,7 +1142,9 @@ export class AdvancedAnalyzer {
   /**
    * Detects patterns from code analysis
    */
-  private async detectCodePatterns(analysis: RepositoryAnalysis): Promise<ArchitecturalPattern[]> {
+  private async detectCodePatterns(
+    analysis: RepositoryAnalysis
+  ): Promise<ArchitecturalPattern[]> {
     const patterns: ArchitecturalPattern[] = [];
     let singletonCount = 0;
     let factoryCount = 0;
@@ -1080,7 +1173,9 @@ export class AdvancedAnalyzer {
         }
 
         // Observer pattern
-        const observerMatches = content.match(/addEventListener|subscribe|notify|observer/gi);
+        const observerMatches = content.match(
+          /addEventListener|subscribe|notify|observer/gi
+        );
         if (observerMatches && observerMatches.length > 0) {
           observerCount += observerMatches.length;
         }
@@ -1090,25 +1185,25 @@ export class AdvancedAnalyzer {
     // Add patterns based on detection counts
     if (singletonCount > 0) {
       patterns.push({
-        name: 'Singleton Pattern',
+        name: "Singleton Pattern",
         confidence: Math.min(singletonCount * 0.3, 0.9),
-        description: 'Singleton pattern ensuring single instance of classes',
+        description: "Singleton pattern ensuring single instance of classes"
       });
     }
 
     if (factoryCount > 0) {
       patterns.push({
-        name: 'Factory Pattern',
+        name: "Factory Pattern",
         confidence: Math.min(factoryCount * 0.2, 0.8),
-        description: 'Factory pattern for object creation abstraction',
+        description: "Factory pattern for object creation abstraction"
       });
     }
 
     if (observerCount > 2) {
       patterns.push({
-        name: 'Observer Pattern',
+        name: "Observer Pattern",
         confidence: Math.min(observerCount * 0.1, 0.8),
-        description: 'Observer pattern for event-driven communication',
+        description: "Observer pattern for event-driven communication"
       });
     }
 
@@ -1126,39 +1221,53 @@ export class AdvancedAnalyzer {
     const patternNames = patterns.map((p) => p.name.toLowerCase());
 
     // Recommendations based on project size and complexity
-    if (analysis.fileCount > 100 && !patternNames.some((p) => p.includes('layered'))) {
-      recommendations.push('Consider implementing layered architecture for better organization');
+    if (
+      analysis.fileCount > 100 &&
+      !patternNames.some((p) => p.includes("layered"))
+    ) {
+      recommendations.push(
+        "Consider implementing layered architecture for better organization"
+      );
     }
 
-    if (analysis.fileCount > 50 && !patternNames.some((p) => p.includes('component'))) {
-      recommendations.push('Consider component-based architecture for better reusability');
+    if (
+      analysis.fileCount > 50 &&
+      !patternNames.some((p) => p.includes("component"))
+    ) {
+      recommendations.push(
+        "Consider component-based architecture for better reusability"
+      );
     }
 
     // Framework-specific recommendations
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('react'))) {
-      if (!patternNames.some((p) => p.includes('component'))) {
-        recommendations.push('Implement proper component hierarchy and state management');
+    if (analysis.frameworks.some((f) => f.toLowerCase().includes("react"))) {
+      if (!patternNames.some((p) => p.includes("component"))) {
+        recommendations.push(
+          "Implement proper component hierarchy and state management"
+        );
       }
-      recommendations.push('Consider using React hooks for state management');
+      recommendations.push("Consider using React hooks for state management");
     }
 
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('express'))) {
-      if (!patternNames.some((p) => p.includes('rest'))) {
-        recommendations.push('Follow REST API conventions for better maintainability');
+    if (analysis.frameworks.some((f) => f.toLowerCase().includes("express"))) {
+      if (!patternNames.some((p) => p.includes("rest"))) {
+        recommendations.push(
+          "Follow REST API conventions for better maintainability"
+        );
       }
-      recommendations.push('Implement proper error handling middleware');
+      recommendations.push("Implement proper error handling middleware");
     }
 
     // General architectural recommendations
     if (patterns.length < 2) {
       recommendations.push(
-        'Consider implementing more architectural patterns for better structure'
+        "Consider implementing more architectural patterns for better structure"
       );
     }
 
-    recommendations.push('Maintain clear separation of concerns');
-    recommendations.push('Follow SOLID principles in design');
-    recommendations.push('Implement proper dependency injection');
+    recommendations.push("Maintain clear separation of concerns");
+    recommendations.push("Follow SOLID principles in design");
+    recommendations.push("Implement proper dependency injection");
 
     return recommendations;
   }
@@ -1173,7 +1282,12 @@ export class AdvancedAnalyzer {
     let score = 50; // Base score
 
     // Bonus for good architectural patterns
-    const goodPatterns = ['layered architecture', 'component-based', 'mvc', 'rest api'];
+    const goodPatterns = [
+      "layered architecture",
+      "component-based",
+      "mvc",
+      "rest api"
+    ];
     const detectedGoodPatterns = patterns.filter((p) =>
       goodPatterns.some((gp) => p.name.toLowerCase().includes(gp))
     );
@@ -1189,7 +1303,7 @@ export class AdvancedAnalyzer {
     }
 
     // Bonus for modern frameworks
-    const modernFrameworks = ['react', 'vue', 'angular', 'next', 'express'];
+    const modernFrameworks = ["react", "vue", "angular", "next", "express"];
     const hasModernFramework = analysis.frameworks.some((f) =>
       modernFrameworks.some((mf) => f.toLowerCase().includes(mf))
     );
@@ -1216,7 +1330,7 @@ export class AdvancedAnalyzer {
       if (trends.length > 0) {
         result.trends = {
           data: trends,
-          insights: this.generateTrendInsights(trends),
+          insights: this.generateTrendInsights(trends)
         };
       }
     } catch (_error) {}
@@ -1225,7 +1339,9 @@ export class AdvancedAnalyzer {
   /**
    * Extracts trend data from git history
    */
-  private async extractTrendsFromGitHistory(_repoPath: string): Promise<RepositoryTrend[]> {
+  private async extractTrendsFromGitHistory(
+    _repoPath: string
+  ): Promise<RepositoryTrend[]> {
     // This is a simplified implementation
     // In practice, you would use git commands to analyze history
     const trends: RepositoryTrend[] = [];
@@ -1242,7 +1358,7 @@ export class AdvancedAnalyzer {
     const insights: string[] = [];
 
     if (trends.length < 2) {
-      return ['Insufficient data for trend analysis'];
+      return ["Insufficient data for trend analysis"];
     }
 
     // Analyze trends (simplified)
@@ -1250,15 +1366,17 @@ export class AdvancedAnalyzer {
     const previous = trends[trends.length - 2];
 
     if (latest.linesOfCode > previous.linesOfCode * 1.2) {
-      insights.push('Rapid code growth detected - consider refactoring');
+      insights.push("Rapid code growth detected - consider refactoring");
     }
 
     if (latest.complexity > previous.complexity * 1.1) {
-      insights.push('Increasing complexity trend - focus on simplification');
+      insights.push("Increasing complexity trend - focus on simplification");
     }
 
     if (latest.vulnerabilities > previous.vulnerabilities) {
-      insights.push('Security vulnerabilities increasing - prioritize security review');
+      insights.push(
+        "Security vulnerabilities increasing - prioritize security review"
+      );
     }
 
     return insights;
