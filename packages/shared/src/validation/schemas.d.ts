@@ -1,7 +1,7 @@
 /**
  * Zod validation schemas for data models
  */
-import { z } from 'zod';
+import { z } from "zod";
 export declare const functionInfoSchema: z.ZodObject<
   {
     name: z.ZodString;
@@ -9,7 +9,7 @@ export declare const functionInfoSchema: z.ZodObject<
     parameters: z.ZodArray<z.ZodString>;
     description: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const classInfoSchema: z.ZodObject<
   {
@@ -18,7 +18,7 @@ export declare const classInfoSchema: z.ZodObject<
     methods: z.ZodArray<z.ZodString>;
     description: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const fileInfoSchema: z.ZodObject<
   {
@@ -36,7 +36,7 @@ export declare const fileInfoSchema: z.ZodObject<
           parameters: z.ZodArray<z.ZodString>;
           description: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     classes: z.ZodArray<
@@ -47,13 +47,13 @@ export declare const fileInfoSchema: z.ZodObject<
           methods: z.ZodArray<z.ZodString>;
           description: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     description: z.ZodOptional<z.ZodString>;
     useCase: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const directoryInfoSchema: z.ZodObject<
   {
@@ -62,19 +62,16 @@ export declare const directoryInfoSchema: z.ZodObject<
     subdirectories: z.ZodNumber;
     role: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const dependencySchema: z.ZodObject<
   {
     name: z.ZodString;
     version: z.ZodString;
-    type: z.ZodEnum<{
-      development: 'development';
-      production: 'production';
-    }>;
+    type: z.ZodEnum<["development", "production"]>;
     description: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const frameworkSchema: z.ZodObject<
   {
@@ -82,29 +79,19 @@ export declare const frameworkSchema: z.ZodObject<
     version: z.ZodOptional<z.ZodString>;
     confidence: z.ZodNumber;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const analysisOptionsSchema: z.ZodObject<
   {
-    mode: z.ZodEnum<{
-      standard: 'standard';
-      quick: 'quick';
-      comprehensive: 'comprehensive';
-    }>;
+    mode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
     maxFiles: z.ZodNumber;
     maxLinesPerFile: z.ZodNumber;
     includeLLMAnalysis: z.ZodBoolean;
     llmProvider: z.ZodString;
-    outputFormats: z.ZodArray<
-      z.ZodEnum<{
-        html: 'html';
-        json: 'json';
-        markdown: 'markdown';
-      }>
-    >;
+    outputFormats: z.ZodArray<z.ZodEnum<["html", "json", "markdown"]>>;
     includeTree: z.ZodBoolean;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const tokenUsageSchema: z.ZodObject<
   {
@@ -112,21 +99,16 @@ export declare const tokenUsageSchema: z.ZodObject<
     completion: z.ZodNumber;
     total: z.ZodNumber;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const complexityMetricsSchema: z.ZodObject<
   {
     cyclomaticComplexity: z.ZodNumber;
     maintainabilityIndex: z.ZodNumber;
     technicalDebt: z.ZodString;
-    codeQuality: z.ZodEnum<{
-      good: 'good';
-      poor: 'poor';
-      excellent: 'excellent';
-      fair: 'fair';
-    }>;
+    codeQuality: z.ZodEnum<["good", "poor", "excellent", "fair"]>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const architecturalPatternSchema: z.ZodObject<
   {
@@ -134,7 +116,7 @@ export declare const architecturalPatternSchema: z.ZodObject<
     confidence: z.ZodNumber;
     description: z.ZodString;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const repositoryAnalysisSchema: z.ZodObject<
   {
@@ -160,7 +142,7 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
               subdirectories: z.ZodNumber;
               role: z.ZodOptional<z.ZodString>;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         keyFiles: z.ZodArray<
@@ -180,7 +162,7 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
                     parameters: z.ZodArray<z.ZodString>;
                     description: z.ZodOptional<z.ZodString>;
                   },
-                  z.core.$strip
+                  "strip"
                 >
               >;
               classes: z.ZodArray<
@@ -191,18 +173,18 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
                     methods: z.ZodArray<z.ZodString>;
                     description: z.ZodOptional<z.ZodString>;
                   },
-                  z.core.$strip
+                  "strip"
                 >
               >;
               description: z.ZodOptional<z.ZodString>;
               useCase: z.ZodOptional<z.ZodString>;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         tree: z.ZodString;
       },
-      z.core.$strip
+      "strip"
     >;
     codeAnalysis: z.ZodObject<
       {
@@ -214,14 +196,9 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
             cyclomaticComplexity: z.ZodNumber;
             maintainabilityIndex: z.ZodNumber;
             technicalDebt: z.ZodString;
-            codeQuality: z.ZodEnum<{
-              good: 'good';
-              poor: 'poor';
-              excellent: 'excellent';
-              fair: 'fair';
-            }>;
+            codeQuality: z.ZodEnum<["good", "poor", "excellent", "fair"]>;
           },
-          z.core.$strip
+          "strip"
         >;
         patterns: z.ZodArray<
           z.ZodObject<
@@ -230,11 +207,11 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
               confidence: z.ZodNumber;
               description: z.ZodString;
             },
-            z.core.$strip
+            "strip"
           >
         >;
       },
-      z.core.$strip
+      "strip"
     >;
     dependencies: z.ZodObject<
       {
@@ -242,7 +219,7 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
         development: z.ZodArray<z.ZodAny>;
         frameworks: z.ZodArray<z.ZodAny>;
       },
-      z.core.$strip
+      "strip"
     >;
     insights: z.ZodObject<
       {
@@ -251,15 +228,11 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
         recommendations: z.ZodArray<z.ZodString>;
         potentialIssues: z.ZodArray<z.ZodString>;
       },
-      z.core.$strip
+      "strip"
     >;
     metadata: z.ZodObject<
       {
-        analysisMode: z.ZodEnum<{
-          standard: 'standard';
-          quick: 'quick';
-          comprehensive: 'comprehensive';
-        }>;
+        analysisMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
         llmProvider: z.ZodOptional<z.ZodString>;
         processingTime: z.ZodNumber;
         tokenUsage: z.ZodOptional<
@@ -269,29 +242,24 @@ export declare const repositoryAnalysisSchema: z.ZodObject<
               completion: z.ZodNumber;
               total: z.ZodNumber;
             },
-            z.core.$strip
+            "strip"
           >
         >;
       },
-      z.core.$strip
+      "strip"
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const repositoryRelationshipSchema: z.ZodObject<
   {
     sourceId: z.ZodString;
     targetId: z.ZodString;
-    type: z.ZodEnum<{
-      similar: 'similar';
-      complementary: 'complementary';
-      dependency: 'dependency';
-      fork: 'fork';
-    }>;
+    type: z.ZodEnum<["similar", "complementary", "dependency", "fork"]>;
     strength: z.ZodNumber;
     reason: z.ZodString;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const tagSchema: z.ZodObject<
   {
@@ -300,7 +268,7 @@ export declare const tagSchema: z.ZodObject<
     category: z.ZodOptional<z.ZodString>;
     color: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const indexedRepositorySchema: z.ZodObject<
   {
@@ -315,7 +283,7 @@ export declare const indexedRepositorySchema: z.ZodObject<
     size: z.ZodNumber;
     complexity: z.ZodNumber;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const repositoryIndexSchema: z.ZodObject<
   {
@@ -333,7 +301,7 @@ export declare const repositoryIndexSchema: z.ZodObject<
           size: z.ZodNumber;
           complexity: z.ZodNumber;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     relationships: z.ZodArray<
@@ -341,16 +309,11 @@ export declare const repositoryIndexSchema: z.ZodObject<
         {
           sourceId: z.ZodString;
           targetId: z.ZodString;
-          type: z.ZodEnum<{
-            similar: 'similar';
-            complementary: 'complementary';
-            dependency: 'dependency';
-            fork: 'fork';
-          }>;
+          type: z.ZodEnum<["similar", "complementary", "dependency", "fork"]>;
           strength: z.ZodNumber;
           reason: z.ZodString;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     tags: z.ZodArray<
@@ -361,19 +324,19 @@ export declare const repositoryIndexSchema: z.ZodObject<
           category: z.ZodOptional<z.ZodString>;
           color: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     lastUpdated: z.ZodDate;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const dateRangeSchema: z.ZodObject<
   {
     start: z.ZodDate;
     end: z.ZodDate;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const searchQuerySchema: z.ZodObject<
   {
@@ -387,11 +350,11 @@ export declare const searchQuerySchema: z.ZodObject<
           start: z.ZodDate;
           end: z.ZodDate;
         },
-        z.core.$strip
+        "strip"
       >
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const searchResultMatchSchema: z.ZodObject<
   {
@@ -399,7 +362,7 @@ export declare const searchResultMatchSchema: z.ZodObject<
     value: z.ZodString;
     score: z.ZodNumber;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const searchResultSchema: z.ZodObject<
   {
@@ -416,7 +379,7 @@ export declare const searchResultSchema: z.ZodObject<
         size: z.ZodNumber;
         complexity: z.ZodNumber;
       },
-      z.core.$strip
+      "strip"
     >;
     score: z.ZodNumber;
     matches: z.ZodArray<
@@ -426,11 +389,11 @@ export declare const searchResultSchema: z.ZodObject<
           value: z.ZodString;
           score: z.ZodNumber;
         },
-        z.core.$strip
+        "strip"
       >
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const providerConfigSchema: z.ZodObject<
   {
@@ -439,7 +402,7 @@ export declare const providerConfigSchema: z.ZodObject<
     maxTokens: z.ZodOptional<z.ZodNumber>;
     temperature: z.ZodOptional<z.ZodNumber>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const llmResponseSchema: z.ZodObject<
   {
@@ -450,10 +413,10 @@ export declare const llmResponseSchema: z.ZodObject<
         completion: z.ZodNumber;
         total: z.ZodNumber;
       },
-      z.core.$strip
+      "strip"
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const fileAnalysisSchema: z.ZodObject<
   {
@@ -467,7 +430,7 @@ export declare const fileAnalysisSchema: z.ZodObject<
     classes: z.ZodArray<z.ZodString>;
     sample: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const projectInfoSchema: z.ZodObject<
   {
@@ -478,8 +441,12 @@ export declare const projectInfoSchema: z.ZodObject<
     directoryCount: z.ZodNumber;
     directories: z.ZodArray<z.ZodString>;
     keyFiles: z.ZodArray<z.ZodString>;
-    dependencies: z.ZodOptional<z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodString>>>;
-    devDependencies: z.ZodOptional<z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    dependencies: z.ZodOptional<
+      z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodString>>
+    >;
+    devDependencies: z.ZodOptional<
+      z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodString>>
+    >;
     readme: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     fileAnalysis: z.ZodArray<
       z.ZodObject<
@@ -494,11 +461,11 @@ export declare const projectInfoSchema: z.ZodObject<
           classes: z.ZodArray<z.ZodString>;
           sample: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const generalPreferencesSchema: z.ZodObject<
   {
@@ -506,22 +473,14 @@ export declare const generalPreferencesSchema: z.ZodObject<
     autoSave: z.ZodBoolean;
     autoIndex: z.ZodBoolean;
     enableNotifications: z.ZodBoolean;
-    theme: z.ZodEnum<{
-      system: 'system';
-      light: 'light';
-      dark: 'dark';
-    }>;
+    theme: z.ZodEnum<["system", "light", "dark"]>;
     language: z.ZodString;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const analysisPreferencesSchema: z.ZodObject<
   {
-    defaultMode: z.ZodEnum<{
-      standard: 'standard';
-      quick: 'quick';
-      comprehensive: 'comprehensive';
-    }>;
+    defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
     maxFiles: z.ZodNumber;
     maxLinesPerFile: z.ZodNumber;
     includeLLMAnalysis: z.ZodBoolean;
@@ -531,7 +490,7 @@ export declare const analysisPreferencesSchema: z.ZodObject<
     cacheDirectory: z.ZodString;
     cacheTTL: z.ZodNumber;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const providerConfigurationSchema: z.ZodObject<
   {
@@ -543,7 +502,7 @@ export declare const providerConfigurationSchema: z.ZodObject<
     enabled: z.ZodBoolean;
     customEndpoint: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const llmProviderPreferencesSchema: z.ZodObject<
   {
@@ -560,38 +519,31 @@ export declare const llmProviderPreferencesSchema: z.ZodObject<
           enabled: z.ZodBoolean;
           customEndpoint: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const exportPreferencesSchema: z.ZodObject<
   {
-    defaultFormat: z.ZodEnum<{
-      html: 'html';
-      json: 'json';
-      markdown: 'markdown';
-    }>;
+    defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
     outputDirectory: z.ZodString;
     includeMetadata: z.ZodBoolean;
     compressLargeFiles: z.ZodBoolean;
     customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const uiPreferencesSchema: z.ZodObject<
   {
     compactMode: z.ZodBoolean;
     showAdvancedOptions: z.ZodBoolean;
-    defaultView: z.ZodEnum<{
-      grid: 'grid';
-      list: 'list';
-    }>;
+    defaultView: z.ZodEnum<["grid", "list"]>;
     itemsPerPage: z.ZodNumber;
     enableAnimations: z.ZodBoolean;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const userPreferencesSchema: z.ZodObject<
   {
@@ -601,22 +553,14 @@ export declare const userPreferencesSchema: z.ZodObject<
         autoSave: z.ZodBoolean;
         autoIndex: z.ZodBoolean;
         enableNotifications: z.ZodBoolean;
-        theme: z.ZodEnum<{
-          system: 'system';
-          light: 'light';
-          dark: 'dark';
-        }>;
+        theme: z.ZodEnum<["system", "light", "dark"]>;
         language: z.ZodString;
       },
-      z.core.$strip
+      "strip"
     >;
     analysis: z.ZodObject<
       {
-        defaultMode: z.ZodEnum<{
-          standard: 'standard';
-          quick: 'quick';
-          comprehensive: 'comprehensive';
-        }>;
+        defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
         maxFiles: z.ZodNumber;
         maxLinesPerFile: z.ZodNumber;
         includeLLMAnalysis: z.ZodBoolean;
@@ -626,7 +570,7 @@ export declare const userPreferencesSchema: z.ZodObject<
         cacheDirectory: z.ZodString;
         cacheTTL: z.ZodNumber;
       },
-      z.core.$strip
+      "strip"
     >;
     llmProvider: z.ZodObject<
       {
@@ -643,49 +587,38 @@ export declare const userPreferencesSchema: z.ZodObject<
               enabled: z.ZodBoolean;
               customEndpoint: z.ZodOptional<z.ZodString>;
             },
-            z.core.$strip
+            "strip"
           >
         >;
       },
-      z.core.$strip
+      "strip"
     >;
     export: z.ZodObject<
       {
-        defaultFormat: z.ZodEnum<{
-          html: 'html';
-          json: 'json';
-          markdown: 'markdown';
-        }>;
+        defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
         outputDirectory: z.ZodString;
         includeMetadata: z.ZodBoolean;
         compressLargeFiles: z.ZodBoolean;
         customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
       },
-      z.core.$strip
+      "strip"
     >;
     ui: z.ZodObject<
       {
         compactMode: z.ZodBoolean;
         showAdvancedOptions: z.ZodBoolean;
-        defaultView: z.ZodEnum<{
-          grid: 'grid';
-          list: 'list';
-        }>;
+        defaultView: z.ZodEnum<["grid", "list"]>;
         itemsPerPage: z.ZodNumber;
         enableAnimations: z.ZodBoolean;
       },
-      z.core.$strip
+      "strip"
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const analysisModePresetSchema: z.ZodObject<
   {
-    name: z.ZodEnum<{
-      standard: 'standard';
-      quick: 'quick';
-      comprehensive: 'comprehensive';
-    }>;
+    name: z.ZodEnum<["standard", "quick", "comprehensive"]>;
     displayName: z.ZodString;
     description: z.ZodString;
     maxFiles: z.ZodNumber;
@@ -695,7 +628,7 @@ export declare const analysisModePresetSchema: z.ZodObject<
     estimatedTime: z.ZodString;
     recommended: z.ZodBoolean;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const workspaceConfigurationSchema: z.ZodObject<
   {
@@ -711,24 +644,16 @@ export declare const workspaceConfigurationSchema: z.ZodObject<
               autoSave: z.ZodBoolean;
               autoIndex: z.ZodBoolean;
               enableNotifications: z.ZodBoolean;
-              theme: z.ZodEnum<{
-                system: 'system';
-                light: 'light';
-                dark: 'dark';
-              }>;
+              theme: z.ZodEnum<["system", "light", "dark"]>;
               language: z.ZodString;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         analysis: z.ZodOptional<
           z.ZodObject<
             {
-              defaultMode: z.ZodEnum<{
-                standard: 'standard';
-                quick: 'quick';
-                comprehensive: 'comprehensive';
-              }>;
+              defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
               maxFiles: z.ZodNumber;
               maxLinesPerFile: z.ZodNumber;
               includeLLMAnalysis: z.ZodBoolean;
@@ -738,7 +663,7 @@ export declare const workspaceConfigurationSchema: z.ZodObject<
               cacheDirectory: z.ZodString;
               cacheTTL: z.ZodNumber;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         llmProvider: z.ZodOptional<
@@ -757,27 +682,23 @@ export declare const workspaceConfigurationSchema: z.ZodObject<
                     enabled: z.ZodBoolean;
                     customEndpoint: z.ZodOptional<z.ZodString>;
                   },
-                  z.core.$strip
+                  "strip"
                 >
               >;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         export: z.ZodOptional<
           z.ZodObject<
             {
-              defaultFormat: z.ZodEnum<{
-                html: 'html';
-                json: 'json';
-                markdown: 'markdown';
-              }>;
+              defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
               outputDirectory: z.ZodString;
               includeMetadata: z.ZodBoolean;
               compressLargeFiles: z.ZodBoolean;
               customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         ui: z.ZodOptional<
@@ -785,23 +706,20 @@ export declare const workspaceConfigurationSchema: z.ZodObject<
             {
               compactMode: z.ZodBoolean;
               showAdvancedOptions: z.ZodBoolean;
-              defaultView: z.ZodEnum<{
-                grid: 'grid';
-                list: 'list';
-              }>;
+              defaultView: z.ZodEnum<["grid", "list"]>;
               itemsPerPage: z.ZodNumber;
               enableAnimations: z.ZodBoolean;
             },
-            z.core.$strip
+            "strip"
           >
         >;
       },
-      z.core.$strip
+      "strip"
     >;
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const projectConfigurationSchema: z.ZodObject<
   {
@@ -818,24 +736,16 @@ export declare const projectConfigurationSchema: z.ZodObject<
               autoSave: z.ZodBoolean;
               autoIndex: z.ZodBoolean;
               enableNotifications: z.ZodBoolean;
-              theme: z.ZodEnum<{
-                system: 'system';
-                light: 'light';
-                dark: 'dark';
-              }>;
+              theme: z.ZodEnum<["system", "light", "dark"]>;
               language: z.ZodString;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         analysis: z.ZodOptional<
           z.ZodObject<
             {
-              defaultMode: z.ZodEnum<{
-                standard: 'standard';
-                quick: 'quick';
-                comprehensive: 'comprehensive';
-              }>;
+              defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
               maxFiles: z.ZodNumber;
               maxLinesPerFile: z.ZodNumber;
               includeLLMAnalysis: z.ZodBoolean;
@@ -845,7 +755,7 @@ export declare const projectConfigurationSchema: z.ZodObject<
               cacheDirectory: z.ZodString;
               cacheTTL: z.ZodNumber;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         llmProvider: z.ZodOptional<
@@ -864,27 +774,23 @@ export declare const projectConfigurationSchema: z.ZodObject<
                     enabled: z.ZodBoolean;
                     customEndpoint: z.ZodOptional<z.ZodString>;
                   },
-                  z.core.$strip
+                  "strip"
                 >
               >;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         export: z.ZodOptional<
           z.ZodObject<
             {
-              defaultFormat: z.ZodEnum<{
-                html: 'html';
-                json: 'json';
-                markdown: 'markdown';
-              }>;
+              defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
               outputDirectory: z.ZodString;
               includeMetadata: z.ZodBoolean;
               compressLargeFiles: z.ZodBoolean;
               customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
             },
-            z.core.$strip
+            "strip"
           >
         >;
         ui: z.ZodOptional<
@@ -892,29 +798,22 @@ export declare const projectConfigurationSchema: z.ZodObject<
             {
               compactMode: z.ZodBoolean;
               showAdvancedOptions: z.ZodBoolean;
-              defaultView: z.ZodEnum<{
-                grid: 'grid';
-                list: 'list';
-              }>;
+              defaultView: z.ZodEnum<["grid", "list"]>;
               itemsPerPage: z.ZodNumber;
               enableAnimations: z.ZodBoolean;
             },
-            z.core.$strip
+            "strip"
           >
         >;
       },
-      z.core.$strip
+      "strip"
     >;
     customIgnorePatterns: z.ZodOptional<z.ZodArray<z.ZodString>>;
     customAnalysisOptions: z.ZodOptional<
       z.ZodObject<
         {
           defaultMode: z.ZodOptional<
-            z.ZodEnum<{
-              standard: 'standard';
-              quick: 'quick';
-              comprehensive: 'comprehensive';
-            }>
+            z.ZodEnum<["standard", "quick", "comprehensive"]>
           >;
           maxFiles: z.ZodOptional<z.ZodNumber>;
           maxLinesPerFile: z.ZodOptional<z.ZodNumber>;
@@ -925,13 +824,13 @@ export declare const projectConfigurationSchema: z.ZodObject<
           cacheDirectory: z.ZodOptional<z.ZodString>;
           cacheTTL: z.ZodOptional<z.ZodNumber>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const configurationProfileSchema: z.ZodObject<
   {
@@ -946,22 +845,14 @@ export declare const configurationProfileSchema: z.ZodObject<
             autoSave: z.ZodBoolean;
             autoIndex: z.ZodBoolean;
             enableNotifications: z.ZodBoolean;
-            theme: z.ZodEnum<{
-              system: 'system';
-              light: 'light';
-              dark: 'dark';
-            }>;
+            theme: z.ZodEnum<["system", "light", "dark"]>;
             language: z.ZodString;
           },
-          z.core.$strip
+          "strip"
         >;
         analysis: z.ZodObject<
           {
-            defaultMode: z.ZodEnum<{
-              standard: 'standard';
-              quick: 'quick';
-              comprehensive: 'comprehensive';
-            }>;
+            defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
             maxFiles: z.ZodNumber;
             maxLinesPerFile: z.ZodNumber;
             includeLLMAnalysis: z.ZodBoolean;
@@ -971,7 +862,7 @@ export declare const configurationProfileSchema: z.ZodObject<
             cacheDirectory: z.ZodString;
             cacheTTL: z.ZodNumber;
           },
-          z.core.$strip
+          "strip"
         >;
         llmProvider: z.ZodObject<
           {
@@ -988,47 +879,40 @@ export declare const configurationProfileSchema: z.ZodObject<
                   enabled: z.ZodBoolean;
                   customEndpoint: z.ZodOptional<z.ZodString>;
                 },
-                z.core.$strip
+                "strip"
               >
             >;
           },
-          z.core.$strip
+          "strip"
         >;
         export: z.ZodObject<
           {
-            defaultFormat: z.ZodEnum<{
-              html: 'html';
-              json: 'json';
-              markdown: 'markdown';
-            }>;
+            defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
             outputDirectory: z.ZodString;
             includeMetadata: z.ZodBoolean;
             compressLargeFiles: z.ZodBoolean;
             customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
           },
-          z.core.$strip
+          "strip"
         >;
         ui: z.ZodObject<
           {
             compactMode: z.ZodBoolean;
             showAdvancedOptions: z.ZodBoolean;
-            defaultView: z.ZodEnum<{
-              grid: 'grid';
-              list: 'list';
-            }>;
+            defaultView: z.ZodEnum<["grid", "list"]>;
             itemsPerPage: z.ZodNumber;
             enableAnimations: z.ZodBoolean;
           },
-          z.core.$strip
+          "strip"
         >;
       },
-      z.core.$strip
+      "strip"
     >;
     isDefault: z.ZodBoolean;
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const configurationErrorSchema: z.ZodObject<
   {
@@ -1036,7 +920,7 @@ export declare const configurationErrorSchema: z.ZodObject<
     message: z.ZodString;
     code: z.ZodString;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const configurationWarningSchema: z.ZodObject<
   {
@@ -1044,7 +928,7 @@ export declare const configurationWarningSchema: z.ZodObject<
     message: z.ZodString;
     suggestion: z.ZodOptional<z.ZodString>;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const configurationValidationResultSchema: z.ZodObject<
   {
@@ -1056,7 +940,7 @@ export declare const configurationValidationResultSchema: z.ZodObject<
           message: z.ZodString;
           code: z.ZodString;
         },
-        z.core.$strip
+        "strip"
       >
     >;
     warnings: z.ZodArray<
@@ -1066,11 +950,11 @@ export declare const configurationValidationResultSchema: z.ZodObject<
           message: z.ZodString;
           suggestion: z.ZodOptional<z.ZodString>;
         },
-        z.core.$strip
+        "strip"
       >
     >;
   },
-  z.core.$strip
+  "strip"
 >;
 export declare const configurationBackupSchema: z.ZodObject<
   {
@@ -1085,22 +969,14 @@ export declare const configurationBackupSchema: z.ZodObject<
             autoSave: z.ZodBoolean;
             autoIndex: z.ZodBoolean;
             enableNotifications: z.ZodBoolean;
-            theme: z.ZodEnum<{
-              system: 'system';
-              light: 'light';
-              dark: 'dark';
-            }>;
+            theme: z.ZodEnum<["system", "light", "dark"]>;
             language: z.ZodString;
           },
-          z.core.$strip
+          "strip"
         >;
         analysis: z.ZodObject<
           {
-            defaultMode: z.ZodEnum<{
-              standard: 'standard';
-              quick: 'quick';
-              comprehensive: 'comprehensive';
-            }>;
+            defaultMode: z.ZodEnum<["standard", "quick", "comprehensive"]>;
             maxFiles: z.ZodNumber;
             maxLinesPerFile: z.ZodNumber;
             includeLLMAnalysis: z.ZodBoolean;
@@ -1110,7 +986,7 @@ export declare const configurationBackupSchema: z.ZodObject<
             cacheDirectory: z.ZodString;
             cacheTTL: z.ZodNumber;
           },
-          z.core.$strip
+          "strip"
         >;
         llmProvider: z.ZodObject<
           {
@@ -1127,47 +1003,36 @@ export declare const configurationBackupSchema: z.ZodObject<
                   enabled: z.ZodBoolean;
                   customEndpoint: z.ZodOptional<z.ZodString>;
                 },
-                z.core.$strip
+                "strip"
               >
             >;
           },
-          z.core.$strip
+          "strip"
         >;
         export: z.ZodObject<
           {
-            defaultFormat: z.ZodEnum<{
-              html: 'html';
-              json: 'json';
-              markdown: 'markdown';
-            }>;
+            defaultFormat: z.ZodEnum<["html", "json", "markdown"]>;
             outputDirectory: z.ZodString;
             includeMetadata: z.ZodBoolean;
             compressLargeFiles: z.ZodBoolean;
             customTemplates: z.ZodRecord<z.ZodString, z.ZodString>;
           },
-          z.core.$strip
+          "strip"
         >;
         ui: z.ZodObject<
           {
             compactMode: z.ZodBoolean;
             showAdvancedOptions: z.ZodBoolean;
-            defaultView: z.ZodEnum<{
-              grid: 'grid';
-              list: 'list';
-            }>;
+            defaultView: z.ZodEnum<["grid", "list"]>;
             itemsPerPage: z.ZodNumber;
             enableAnimations: z.ZodBoolean;
           },
-          z.core.$strip
+          "strip"
         >;
       },
-      z.core.$strip
+      "strip"
     >;
-    reason: z.ZodEnum<{
-      manual: 'manual';
-      auto: 'auto';
-      migration: 'migration';
-    }>;
+    reason: z.ZodEnum<["manual", "auto", "migration"]>;
   },
-  z.core.$strip
+  "strip"
 >;
