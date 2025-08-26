@@ -381,9 +381,11 @@ export class AdvancedAnalyzer {
       javascript: /function\s+(\w+)\s*\(/g,
       python: /def\s+(\w+)\s*\(/g,
       java: /(?:public|private|protected)?\s*[\w<>[\]]+\s+(\w+)\s*\([^)]*\)\s*{/g,
-    };
+    } as const;
 
-    const pattern = methodPatterns[language.toLowerCase()] || methodPatterns.javascript;
+    const pattern =
+      methodPatterns[language.toLowerCase() as keyof typeof methodPatterns] ||
+      methodPatterns.javascript;
     let match;
 
     while ((match = pattern.exec(content)) !== null) {
@@ -771,7 +773,7 @@ export class AdvancedAnalyzer {
           moment: { versions: ['<2.29.4'], severity: 'low' as const },
           axios: { versions: ['<0.21.2'], severity: 'high' as const },
           express: { versions: ['<4.18.2'], severity: 'medium' as const },
-        };
+        } as const;
 
         // Check dependencies
         const allDeps = {
@@ -780,8 +782,9 @@ export class AdvancedAnalyzer {
         };
 
         for (const [depName, version] of Object.entries(allDeps)) {
-          if (knownVulnerablePackages[depName]) {
-            const vulnInfo = knownVulnerablePackages[depName];
+          if (depName in knownVulnerablePackages) {
+            const vulnInfo =
+              knownVulnerablePackages[depName as keyof typeof knownVulnerablePackages];
             vulnerabilities.push({
               id: `dependency:${depName}:${version}`,
               severity: vulnInfo.severity,
@@ -858,16 +861,19 @@ export class AdvancedAnalyzer {
       'Hardcoded Token': 'Store tokens securely and rotate regularly',
       'Hardcoded Private Key': 'Store private keys in secure key management system',
       'Potential SQL Injection': 'Use parameterized queries or prepared statements',
-      'Potential XSS via innerHTML': 'Use textContent or sanitize HTML content',
+      'Potential XSS via innerHTML': 'Use textContent instead of innerHTML when possible',
       'Potential XSS via document.write': 'Avoid document.write or sanitize content',
       'Dangerous eval() usage': 'Avoid eval() or use safer alternatives like JSON.parse',
       'Insecure Random Number Generation': 'Use cryptographically secure random number generator',
       'Insecure HTTP URL': 'Use HTTPS instead of HTTP for secure communication',
       'Potential Command Injection': 'Validate and sanitize command inputs',
       'Vulnerable Dependency': 'Update to a secure version of the dependency',
-    };
+    } as const;
 
-    return recommendations[type] || 'Review and address this security issue';
+    return (
+      recommendations[type as keyof typeof recommendations] ||
+      'Review and address this security issue'
+    );
   }
 
   /**

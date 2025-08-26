@@ -58,8 +58,6 @@ export class AnalysisEngine {
       'started',
       {
         mode: options.mode,
-        includeContent: options.includeContent,
-        maxFileSize: options.maxFileSize,
         requestId,
       },
       'analysis-engine'
@@ -71,10 +69,9 @@ export class AnalysisEngine {
         repositoryPath: repoPath,
         analysisMode: options.mode,
         options: {
-          includeContent: options.includeContent,
-          maxFileSize: options.maxFileSize,
-          excludePatterns: options.excludePatterns?.length || 0,
-          includePatterns: options.includePatterns?.length || 0,
+          maxFiles: options.maxFiles,
+          maxLinesPerFile: options.maxLinesPerFile,
+          includeTree: options.includeTree,
         },
       },
       'analysis-engine',
@@ -155,7 +152,7 @@ export class AnalysisEngine {
           'Converting analysis options to discovery options',
           {
             analysisMode: options.mode,
-            includeContent: options.includeContent,
+            includeTree: options.includeTree,
           },
           'analysis-engine',
           requestId
@@ -169,8 +166,9 @@ export class AnalysisEngine {
           {
             repositoryPath: repoPath,
             discoveryOptions: {
-              includeContent: discoveryOptions.includeContent,
-              maxFileSize: discoveryOptions.maxFileSize,
+              maxFiles: discoveryOptions.maxFiles,
+              maxLinesPerFile: discoveryOptions.maxLinesPerFile,
+              includeTree: discoveryOptions.includeTree,
             },
           },
           'analysis-engine',
