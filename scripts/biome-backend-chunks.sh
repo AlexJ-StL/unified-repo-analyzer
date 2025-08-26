@@ -51,30 +51,32 @@ processed_chunks=0
 
 for chunk in "${chunks[@]}"; do
     echo "📁 Processing: $chunk"
-    
+
     # Build command
     cmd="bun biome check \"$chunk\" --max-diagnostics=$MAX_DIAGNOSTICS"
-    
+
     if [[ -n "$WRITE_MODE" ]]; then
         cmd="$cmd $WRITE_MODE"
     fi
-    
+
     if [[ -n "$UNSAFE_MODE" ]]; then
         cmd="$cmd $UNSAFE_MODE"
     fi
-    
+
     # Execute command
-    if eval $cmd; then
+    if eval "$cmd"; then
         echo "✅ $chunk - No issues found"
     else
         echo "⚠️  $chunk - Issues found"
     fi
-    
+
     ((processed_chunks++))
     echo ""
 done
 
 echo "📊 Summary"
 echo "Processed chunks: $processed_chunks/${#chunks[@]}"
+echo "Total errors encountered: $total_errors"
+echo "Total warnings encountered: $total_warnings"
 echo ""
 echo "💡 Usage: ./biome-backend-chunks.sh [--write] [--unsafe] [--max-diagnostics N]"

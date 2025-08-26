@@ -115,7 +115,7 @@ build_docker_images() {
     cd "$PROJECT_ROOT"
     
     # Build images
-    docker-compose build --no-cache
+    "$DOCKER_COMPOSE_FILE" build --no-cache
     
     log_success "Docker images built successfully"
 }
@@ -127,20 +127,20 @@ deploy_application() {
     
     # Stop existing containers
     log_info "Stopping existing containers..."
-    docker-compose down
+    "$DOCKER_COMPOSE_FILE" down
     
     # Start new containers
     log_info "Starting new containers..."
-    docker-compose up -d
+    "$DOCKER_COMPOSE_FILE" up -d
     
     # Wait for services to be healthy
     log_info "Waiting for services to be healthy..."
     sleep 10
     
     # Check health
-    if docker-compose ps | grep -q "unhealthy"; then
+    if "$DOCKER_COMPOSE_FILE" ps | grep -q "unhealthy"; then
         log_error "Some services are unhealthy"
-        docker-compose logs
+        "$DOCKER_COMPOSE_FILE" logs
         exit 1
     fi
     
@@ -171,7 +171,7 @@ run_health_checks() {
 
 show_status() {
     log_info "Deployment status:"
-    docker-compose ps
+    "$DOCKER_COMPOSE_FILE" ps
     
     echo ""
     log_info "Application URLs:"
@@ -182,9 +182,9 @@ show_status() {
     
     echo ""
     log_info "Useful commands:"
-    echo "  View logs: docker-compose logs -f"
-    echo "  Stop services: docker-compose down"
-    echo "  Restart services: docker-compose restart"
+    echo "  View logs: \"$DOCKER_COMPOSE_FILE\" logs -f"
+    echo "  Stop services: \"$DOCKER_COMPOSE_FILE\" down"
+    echo "  Restart services: \"$DOCKER_COMPOSE_FILE\" restart"
 }
 
 # Main deployment process

@@ -130,7 +130,7 @@ function Build-DockerImages {
     Set-Location $ProjectRoot
 
     # Build images
-    docker-compose build --no-cache
+    docker-compose -f "$DockerComposeFile" build --no-cache
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to build Docker images"
         exit 1
@@ -146,11 +146,11 @@ function Deploy-Application {
 
     # Stop existing containers
     Write-Info "Stopping existing containers..."
-    docker-compose down
+    docker-compose -f "$DockerComposeFile" down
 
     # Start new containers
     Write-Info "Starting new containers..."
-    docker-compose up -d
+    docker-compose -f "$DockerComposeFile" up -d
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to start containers"
         exit 1
@@ -161,10 +161,10 @@ function Deploy-Application {
     Start-Sleep -Seconds 10
 
     # Check health
-    $Status = docker-compose ps
+    $Status = docker-compose -f "$DockerComposeFile" ps
     if ($Status -match "unhealthy") {
         Write-Error "Some services are unhealthy"
-        docker-compose logs
+        docker-compose -f "$DockerComposeFile" logs
         exit 1
     }
 
@@ -211,7 +211,7 @@ function Test-Health {
 
 function Show-Status {
     Write-Info "Deployment status:"
-    docker-compose ps
+    docker-compose -f "$DockerComposeFile" ps
 
     Write-Host ""
     Write-Info "Application URLs:"
@@ -222,9 +222,9 @@ function Show-Status {
 
     Write-Host ""
     Write-Info "Useful commands:"
-    Write-Host "  View logs: docker-compose logs -f"
-    Write-Host "  Stop services: docker-compose down"
-    Write-Host "  Restart services: docker-compose restart"
+    Write-Host "  View logs: docker-compose -f \"$DockerComposeFile\" logs -f"
+    Write-Host "  Stop services: docker-compose -f \"$DockerComposeFile\" down"
+    Write-Host "  Restart services: docker-compose -f \"$DockerComposeFile\" restart"
 }
 
 function Invoke-MainDeployment {

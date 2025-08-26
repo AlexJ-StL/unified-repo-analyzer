@@ -2,22 +2,22 @@
  * Performance tests for large repository processing
  */
 
-import { join } from 'node:path';
-import axios from 'axios';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { join } from "node:path";
+import axios from "axios";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import {
   createTestRepository,
   PerformanceMonitor,
   startTestServer,
   type TestRepository,
   type TestServer,
-  waitForAnalysis,
-} from './setup';
-import type { BatchResult } from './types';
+  waitForAnalysis
+} from "./setup";
+import type { BatchResult } from "./types";
 
-describe('Performance Tests', () => {
+describe("Performance Tests", () => {
   let server: TestServer;
-  const testRepos: TestRepository[] = [];
+  const testRepos: (TestRepository | Promise<TestRepository>)[] = [];
   const perfMonitor = new PerformanceMonitor();
 
   beforeAll(async () => {
@@ -26,42 +26,49 @@ describe('Performance Tests', () => {
 
   afterAll(async () => {
     await server.stop();
-    await Promise.all(testRepos.map((repo) => repo.cleanup()));
+    await Promise.all(
+      testRepos.map((repo) => {
+        if (repo instanceof Promise) {
+          return repo.then((r) => r.cleanup());
+        }
+        return repo.cleanup();
+      })
+    );
   });
 
-  describe('Large Repository Processing', () => {
-    test('should handle repository with 1000+ files', async () => {
-      const endTimer = perfMonitor.startTimer('1000-files');
+  describe("Large Repository Processing", () => {
+    test("should handle repository with 1000+ files", async () => {
+      const endTimer = perfMonitor.startTimer("1000-files");
 
       // Generate a large repository structure
       const files: Record<string, string> = {
-        'package.json': JSON.stringify({
-          name: 'large-monorepo',
-          workspaces: ['packages/*'],
+        "package.json": JSON.stringify({
+          name: "large-monorepo",
+          workspaces: ["packages/*"],
           dependencies: {
-            react: '^18.0.0',
-            typescript: '^5.0.0',
-            express: '^4.18.0',
-          },
+            react: "^18.0.0",
+            typescript: "^5.0.0",
+            express: "^4.18.0"
+          }
         }),
-        'README.md': '# Large Monorepo\n\nA test repository with many files.',
-        'tsconfig.json': JSON.stringify({
+        "README.md": "# Large Monorepo\n\nA test repository with many files.",
+        "tsconfig.json": JSON.stringify({
           compilerOptions: {
-            target: 'es2020',
-            module: 'commonjs',
-            strict: true,
-          },
-        }),
+            target: "es2020",
+            module: "commonjs",
+            strict: true
+          }
+        })
       };
 
       // Generate multiple packages
       for (let pkg = 0; pkg < 10; pkg++) {
         files[`packages/package-${pkg}/package.json`] = JSON.stringify({
           name: `package-${pkg}`,
-          version: '1.0.0',
+          version: "1.0.0",
           dependencies: {
-            lodash: '^4.17.21',
-          },
+            lodash: "^4.17.21"
+          }
         });
 
         // Generate files within each package
@@ -127,7 +134,9 @@ export const helper${i} = {
         }
 
         // Add test files
-        files[`packages/package-${pkg}/src/__tests__/component-${pkg}.test.tsx`] = `
+        files[
+          `packages/package-${pkg}/src/__tests__/component-${pkg}.test.tsx`
+        ] = `
 import { render, screen } from '@testing-library/react';
 import Component${pkg} from '../component-${pkg}';
 
@@ -140,26 +149,31 @@ describe('Component${pkg}', () => {
 `;
       }
 
-      const repo = await createTestRepository('large-repo-1000', files);
-      testRepos.push(repo);
+      const repo = createTestRepository("large-repo-1000", files);
+      // void (async () => { await repo; })(); // This line is effectively a no-op, repo is implicitly awaited by push and access
+      testRepos.push(repo as Promise<TestRepository>);
 
       const response = await axios.post(`${server.baseUrl}/api/analyze`, {
-        path: repo.path,
+        path: (await repo).path,
         options: {
-          mode: 'standard',
+          mode: "standard",
           maxFiles: 1500,
           maxLinesPerFile: 1000,
           includeLLMAnalysis: false,
-          includeTree: false, // Skip tree generation for performance
-        },
+          includeTree: false // Skip tree generation for performance
+        }
       });
 
-      const analysis = await waitForAnalysis(server.baseUrl, response.data.analysisId, 120000); // 2 minute timeout
+      const analysis = await waitForAnalysis(
+        server.baseUrl,
+        response.data.analysisId,
+        120000
+      ); // 2 minute timeout
 
-      expect(analysis.status).toBe('completed');
+      expect(analysis.status).toBe("completed");
       expect(analysis.result.fileCount).toBeGreaterThan(1000);
-      expect(analysis.result.languages).toContain('TypeScript');
-      expect(analysis.result.frameworks).toContain('React');
+      expect(analysis.result.languages).toContain("TypeScript");
+      expect(analysis.result.frameworks).toContain("React");
 
       const duration = endTimer();
       expect(duration).toBeLessThan(120000); // Should complete within 2 minutes
@@ -169,18 +183,18 @@ describe('Component${pkg}', () => {
       console.log(`Large repo (1000+ files) processed in ${duration}ms`);
     });
 
-    test('should handle repository with deep directory structure', async () => {
-      const endTimer = perfMonitor.startTimer('deep-structure');
+    test("should handle repository with deep directory structure", async () => {
+      const endTimer = perfMonitor.startTimer("deep-structure");
 
       const files: Record<string, string> = {
-        'package.json': JSON.stringify({
-          name: 'deep-structure-repo',
-          dependencies: { express: '^4.18.0' },
-        }),
+        "package.json": JSON.stringify({
+          name: "deep-structure-repo",
+          dependencies: { express: "^4.18.0" }
+        })
       };
 
       // Create deep nested structure (10 levels deep)
-      let currentPath = 'src';
+      let currentPath = "src";
       for (let depth = 0; depth < 10; depth++) {
         currentPath = join(currentPath, `level-${depth}`);
 
@@ -216,20 +230,24 @@ module.exports = Module${depth}${file};
         }
       }
 
-      const repo = await createTestRepository('deep-structure', files);
-      testRepos.push(repo);
+      const repo = createTestRepository("deep-structure", files);
+      testRepos.push(repo as Promise<TestRepository>);
 
       const response = await axios.post(`${server.baseUrl}/api/analyze`, {
-        path: repo.path,
+        path: (await repo).path,
         options: {
-          mode: 'comprehensive',
-          includeLLMAnalysis: false,
-        },
+          mode: "comprehensive",
+          includeLLMAnalysis: false
+        }
       });
 
-      const analysis = await waitForAnalysis(server.baseUrl, response.data.analysisId, 60000);
+      const analysis = await waitForAnalysis(
+        server.baseUrl,
+        response.data.analysisId,
+        60000
+      );
 
-      expect(analysis.status).toBe('completed');
+      expect(analysis.status).toBe("completed");
       expect(analysis.result.directoryCount).toBeGreaterThan(10);
 
       const duration = endTimer();
@@ -238,8 +256,8 @@ module.exports = Module${depth}${file};
       console.log(`Deep structure repo processed in ${duration}ms`);
     });
 
-    test('should handle repository with large files', async () => {
-      const endTimer = perfMonitor.startTimer('large-files');
+    test("should handle repository with large files", async () => {
+      const endTimer = perfMonitor.startTimer("large-files");
 
       // Generate large file content
       const generateLargeFile = (size: number): string => {
@@ -264,7 +282,7 @@ function transformData(item) {
 }
 `;
 
-        let content = '';
+        let content = "";
         const iterations = Math.ceil(size / baseContent.length);
         for (let i = 0; i < iterations; i++) {
           content += baseContent.replace(/processData/g, `processData${i}`);
@@ -273,32 +291,36 @@ function transformData(item) {
       };
 
       const files: Record<string, string> = {
-        'package.json': JSON.stringify({
-          name: 'large-files-repo',
-          dependencies: { lodash: '^4.17.21' },
+        "package.json": JSON.stringify({
+          name: "large-files-repo",
+          dependencies: { lodash: "^4.17.21" }
         }),
-        'large-file-1.js': generateLargeFile(50000), // ~50KB
-        'large-file-2.js': generateLargeFile(100000), // ~100KB
-        'large-file-3.js': generateLargeFile(200000), // ~200KB
-        'README.md':
-          '# Large Files Repository\n\nTesting analysis of repositories with large files.',
+        "large-file-1.js": generateLargeFile(50000), // ~50KB
+        "large-file-2.js": generateLargeFile(100000), // ~100KB
+        "large-file-3.js": generateLargeFile(200000), // ~200KB
+        "README.md":
+          "# Large Files Repository\n\nTesting analysis of repositories with large files."
       };
 
-      const repo = await createTestRepository('large-files', files);
-      testRepos.push(repo);
+      const repo = createTestRepository("large-files", files);
+      testRepos.push(repo as Promise<TestRepository>);
 
       const response = await axios.post(`${server.baseUrl}/api/analyze`, {
-        path: repo.path,
+        path: (await repo).path,
         options: {
-          mode: 'standard',
+          mode: "standard",
           maxLinesPerFile: 10000, // Limit lines per file for performance
-          includeLLMAnalysis: false,
-        },
+          includeLLMAnalysis: false
+        }
       });
 
-      const analysis = await waitForAnalysis(server.baseUrl, response.data.analysisId, 60000);
+      const analysis = await waitForAnalysis(
+        server.baseUrl,
+        response.data.analysisId,
+        60000
+      );
 
-      expect(analysis.status).toBe('completed');
+      expect(analysis.status).toBe("completed");
       expect(analysis.result.totalSize).toBeGreaterThan(300000); // Should be > 300KB
 
       const duration = endTimer();
@@ -308,20 +330,20 @@ function transformData(item) {
     });
   });
 
-  describe('Concurrent Processing Performance', () => {
-    test('should handle 10 concurrent analysis requests efficiently', async () => {
-      const endTimer = perfMonitor.startTimer('10-concurrent');
+  describe("Concurrent Processing Performance", () => {
+    test("should handle 10 concurrent analysis requests efficiently", async () => {
+      const endTimer = perfMonitor.startTimer("10-concurrent");
 
       // Create 10 different repositories
-      const repoPromises = [];
+      const repoPromises: Promise<TestRepository>[] = [];
       for (let i = 0; i < 10; i++) {
         const files: Record<string, string> = {
-          'package.json': JSON.stringify({
+          "package.json": JSON.stringify({
             name: `concurrent-repo-${i}`,
             dependencies: {
-              express: '^4.18.0',
-              lodash: '^4.17.21',
-            },
+              express: "^4.18.0",
+              lodash: "^4.17.21"
+            }
           }),
           [`app-${i}.js`]: `
 const express = require('express');
@@ -341,23 +363,23 @@ app${i}.listen(300${i}, () => {
 });
 
 module.exports = app${i};
-`,
+`
         };
 
         repoPromises.push(createTestRepository(`concurrent-${i}`, files));
       }
 
       const repos = await Promise.all(repoPromises);
-      testRepos.push(...repos);
+      testRepos.push(...repos.map((r) => r as TestRepository));
 
       // Start all analyses concurrently
       const analysisPromises = repos.map((repo) =>
         axios.post(`${server.baseUrl}/api/analyze`, {
           path: repo.path,
           options: {
-            mode: 'quick',
-            includeLLMAnalysis: false,
-          },
+            mode: "quick",
+            includeLLMAnalysis: false
+          }
         })
       );
 
@@ -370,7 +392,9 @@ module.exports = app${i};
         )
       );
 
-      expect(analyses.every((analysis) => analysis.status === 'completed')).toBe(true);
+      expect(
+        analyses.every((analysis) => analysis.status === "completed")
+      ).toBe(true);
 
       const duration = endTimer();
       expect(duration).toBeLessThan(45000); // Should complete within 45 seconds
@@ -378,18 +402,18 @@ module.exports = app${i};
       console.log(`10 concurrent analyses completed in ${duration}ms`);
     });
 
-    test('should handle batch processing of 20 repositories', async () => {
-      const endTimer = perfMonitor.startTimer('batch-20');
+    test("should handle batch processing of 20 repositories", async () => {
+      const endTimer = perfMonitor.startTimer("batch-20");
 
       // Create 20 repositories for batch processing
-      const repoPromises = [];
+      const repoPromises: Promise<TestRepository>[] = [];
       for (let i = 0; i < 20; i++) {
         const files: Record<string, string> = {
-          'package.json': JSON.stringify({
+          "package.json": JSON.stringify({
             name: `batch-repo-${i}`,
             dependencies: {
-              react: '^18.0.0',
-            },
+              react: "^18.0.0"
+            }
           }),
           [`component-${i}.jsx`]: `
 import React from 'react';
@@ -407,21 +431,21 @@ export default function Component${i}() {
     </div>
   );
 }
-`,
+`
         };
 
         repoPromises.push(createTestRepository(`batch-${i}`, files));
       }
 
       const repos = await Promise.all(repoPromises);
-      testRepos.push(...repos);
+      testRepos.push(...repos.map((r) => r as TestRepository));
 
       const response = await axios.post(`${server.baseUrl}/api/analyze/batch`, {
         paths: repos.map((repo) => repo.path),
         options: {
-          mode: 'quick',
-          includeLLMAnalysis: false,
-        },
+          mode: "quick",
+          includeLLMAnalysis: false
+        }
       });
 
       // Wait for batch completion
@@ -433,7 +457,7 @@ export default function Component${i}() {
           const batchResponse = await axios.get(
             `${server.baseUrl}/api/batch/${response.data.batchId}`
           );
-          if (batchResponse.data.status === 'completed') {
+          if (batchResponse.data.status === "completed") {
             batchResult = batchResponse.data;
             break;
           }
@@ -448,7 +472,9 @@ export default function Component${i}() {
 
       expect(batchResult).toBeDefined();
       expect(batchResult?.results).toHaveLength(20);
-      expect(batchResult?.results.every((r) => r.status === 'completed')).toBe(true);
+      expect(batchResult?.results.every((r) => r.status === "completed")).toBe(
+        true
+      );
 
       const duration = endTimer();
       expect(duration).toBeLessThan(120000); // Should complete within 2 minutes
@@ -457,16 +483,16 @@ export default function Component${i}() {
     });
   });
 
-  describe('Memory and Resource Usage', () => {
-    test('should not exceed memory limits during large repository analysis', async () => {
+  describe("Memory and Resource Usage", () => {
+    test("should not exceed memory limits during large repository analysis", async () => {
       const initialMemory = process.memoryUsage();
 
       // Create a memory-intensive repository
       const files: Record<string, string> = {
-        'package.json': JSON.stringify({
-          name: 'memory-test-repo',
-          dependencies: {},
-        }),
+        "package.json": JSON.stringify({
+          name: "memory-test-repo",
+          dependencies: {}
+        })
       };
 
       // Generate many files with substantial content
@@ -480,8 +506,8 @@ const data${i} = ${JSON.stringify(
             value: Math.random(),
             nested: {
               prop1: `value-${j}`,
-              prop2: Array.from({ length: 10 }, (_, k) => `nested-${k}`),
-            },
+              prop2: Array.from({ length: 10 }, (_, k) => `nested-${k}`)
+            }
           }))
         )};
 
@@ -514,21 +540,25 @@ module.exports = Module${i};
 `;
       }
 
-      const repo = await createTestRepository('memory-test', files);
+      const repo = await createTestRepository("memory-test", files);
       testRepos.push(repo);
 
       const response = await axios.post(`${server.baseUrl}/api/analyze`, {
         path: repo.path,
         options: {
-          mode: 'standard',
+          mode: "standard",
           maxFiles: 250,
-          includeLLMAnalysis: false,
-        },
+          includeLLMAnalysis: false
+        }
       });
 
-      const analysis = await waitForAnalysis(server.baseUrl, response.data.analysisId, 90000);
+      const analysis = await waitForAnalysis(
+        server.baseUrl,
+        response.data.analysisId,
+        90000
+      );
 
-      expect(analysis.status).toBe('completed');
+      expect(analysis.status).toBe("completed");
 
       const finalMemory = process.memoryUsage();
       const memoryIncrease = finalMemory.heapUsed - initialMemory.heapUsed;
@@ -536,13 +566,15 @@ module.exports = Module${i};
       // Memory increase should be reasonable (less than 500MB)
       expect(memoryIncrease).toBeLessThan(500 * 1024 * 1024);
 
-      console.log(`Memory increase: ${Math.round(memoryIncrease / 1024 / 1024)}MB`);
+      console.log(
+        `Memory increase: ${Math.round(memoryIncrease / 1024 / 1024)}MB`
+      );
     });
   });
 
   afterAll(() => {
     // Log performance statistics
-    console.log('\n=== Performance Test Results ===');
+    console.log("\n=== Performance Test Results ===");
     const stats = perfMonitor.getAllStats();
     Object.entries(stats).forEach(([name, stat]) => {
       if (stat) {
