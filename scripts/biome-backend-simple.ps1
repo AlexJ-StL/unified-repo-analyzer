@@ -3,7 +3,7 @@ param([switch]$Write)
 
 $chunks = @(
     "packages/backend/src/config",
-    "packages/backend/src/types", 
+    "packages/backend/src/types",
     "packages/backend/src/utils",
     "packages/backend/src/providers",
     "packages/backend/src/services",

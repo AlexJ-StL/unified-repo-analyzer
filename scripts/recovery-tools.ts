@@ -5,10 +5,10 @@
  * Provides automated recovery procedures for common build failures
  */
 
-import { spawn } from "node:child_process";
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { performance } from "node:perf_hooks";
+import { spawn } from 'node:child_process';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { performance } from 'node:perf_hooks';
 
 /**
  * Recovery action result
@@ -30,7 +30,7 @@ class RecoveryTools {
 
   constructor(projectRoot: string = process.cwd()) {
     this.projectRoot = resolve(projectRoot);
-    this.bunExecutablePath = "bun";
+    this.bunExecutablePath = 'bun';
   }
 
   /**
@@ -38,17 +38,17 @@ class RecoveryTools {
    */
   async cleanDependencies(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("🧹 Cleaning dependencies...");
+    console.log('🧹 Cleaning dependencies...');
 
     try {
       // Step 1: Remove all node_modules directories
-      console.log("  Removing node_modules directories...");
+      console.log('  Removing node_modules directories...');
       const nodeModulesPaths = [
-        join(this.projectRoot, "node_modules"),
-        join(this.projectRoot, "packages/shared/node_modules"),
-        join(this.projectRoot, "packages/backend/node_modules"),
-        join(this.projectRoot, "packages/frontend/node_modules"),
-        join(this.projectRoot, "packages/cli/node_modules")
+        join(this.projectRoot, 'node_modules'),
+        join(this.projectRoot, 'packages/shared/node_modules'),
+        join(this.projectRoot, 'packages/backend/node_modules'),
+        join(this.projectRoot, 'packages/frontend/node_modules'),
+        join(this.projectRoot, 'packages/cli/node_modules'),
       ];
 
       for (const path of nodeModulesPaths) {
@@ -59,13 +59,13 @@ class RecoveryTools {
       }
 
       // Step 2: Remove build artifacts
-      console.log("  Removing build artifacts...");
+      console.log('  Removing build artifacts...');
       const buildArtifacts = [
-        join(this.projectRoot, "packages/shared/dist"),
-        join(this.projectRoot, "packages/backend/dist"),
-        join(this.projectRoot, "packages/frontend/dist"),
-        join(this.projectRoot, "packages/cli/dist"),
-        join(this.projectRoot, "tsconfig.tsbuildinfo")
+        join(this.projectRoot, 'packages/shared/dist'),
+        join(this.projectRoot, 'packages/backend/dist'),
+        join(this.projectRoot, 'packages/frontend/dist'),
+        join(this.projectRoot, 'packages/cli/dist'),
+        join(this.projectRoot, 'tsconfig.tsbuildinfo'),
       ];
 
       for (const path of buildArtifacts) {
@@ -76,47 +76,39 @@ class RecoveryTools {
       }
 
       // Step 3: Clear package manager caches
-      console.log("  Clearing package manager caches...");
-      await this.runCommand("bun", ["pm", "cache", "rm"]);
+      console.log('  Clearing package manager caches...');
+      await this.runCommand('bun', ['pm', 'cache', 'rm']);
 
       // Step 4: Force reinstall dependencies
-      console.log("  Reinstalling dependencies...");
-      const installResult = await this.runCommand("bun", [
-        "install",
-        "--force"
-      ]);
+      console.log('  Reinstalling dependencies...');
+      const installResult = await this.runCommand('bun', ['install', '--force']);
 
       if (!installResult.success) {
-        throw new Error(
-          `Dependency installation failed: ${installResult.error}`
-        );
+        throw new Error(`Dependency installation failed: ${installResult.error}`);
       }
 
       // Step 5: Verify installation
-      console.log("  Verifying installation...");
+      console.log('  Verifying installation...');
       const verifyResult = await this.verifyDependencies();
 
       if (!verifyResult.success) {
-        throw new Error(
-          `Dependency verification failed: ${verifyResult.message}`
-        );
+        throw new Error(`Dependency verification failed: ${verifyResult.message}`);
       }
 
       const duration = performance.now() - startTime;
       return {
         success: true,
-        message: "Dependencies cleaned and restored successfully",
+        message: 'Dependencies cleaned and restored successfully',
         duration,
-        details:
-          "All node_modules removed, caches cleared, dependencies reinstalled"
+        details: 'All node_modules removed, caches cleared, dependencies reinstalled',
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "Dependency cleanup failed",
+        message: 'Dependency cleanup failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -126,17 +118,17 @@ class RecoveryTools {
    */
   async fixTypeScriptIssues(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("🔧 Fixing TypeScript issues...");
+    console.log('🔧 Fixing TypeScript issues...');
 
     try {
       // Step 1: Clear TypeScript caches
-      console.log("  Clearing TypeScript caches...");
+      console.log('  Clearing TypeScript caches...');
       const tsCacheFiles = [
-        join(this.projectRoot, "tsconfig.tsbuildinfo"),
-        join(this.projectRoot, "packages/shared/tsconfig.tsbuildinfo"),
-        join(this.projectRoot, "packages/backend/tsconfig.tsbuildinfo"),
-        join(this.projectRoot, "packages/frontend/tsconfig.tsbuildinfo"),
-        join(this.projectRoot, "packages/cli/tsconfig.tsbuildinfo")
+        join(this.projectRoot, 'tsconfig.tsbuildinfo'),
+        join(this.projectRoot, 'packages/shared/tsconfig.tsbuildinfo'),
+        join(this.projectRoot, 'packages/backend/tsconfig.tsbuildinfo'),
+        join(this.projectRoot, 'packages/frontend/tsconfig.tsbuildinfo'),
+        join(this.projectRoot, 'packages/cli/tsconfig.tsbuildinfo'),
       ];
 
       for (const file of tsCacheFiles) {
@@ -147,38 +139,38 @@ class RecoveryTools {
       }
 
       // Step 2: Ensure TypeScript is installed
-      console.log("  Verifying TypeScript installation...");
-      const tsCheck = await this.runCommand("bun", ["list", "typescript"]);
+      console.log('  Verifying TypeScript installation...');
+      const tsCheck = await this.runCommand('bun', ['list', 'typescript']);
       if (!tsCheck.success) {
-        console.log("  Installing TypeScript...");
-        await this.runCommand("bun", ["add", "-D", "typescript"]);
+        console.log('  Installing TypeScript...');
+        await this.runCommand('bun', ['add', '-D', 'typescript']);
       }
 
       // Step 3: Rebuild shared package first (dependency order)
-      console.log("  Rebuilding shared package...");
-      const sharedBuild = await this.runCommand("bun", ["run", "build:shared"]);
+      console.log('  Rebuilding shared package...');
+      const sharedBuild = await this.runCommand('bun', ['run', 'build:shared']);
       if (!sharedBuild.success) {
         throw new Error(`Shared package build failed: ${sharedBuild.error}`);
       }
 
       // Step 4: Test TypeScript compilation
-      console.log("  Testing TypeScript compilation...");
-      const _compileTest = await this.runCommand("bunx", ["tsc", "--noEmit"]);
+      console.log('  Testing TypeScript compilation...');
+      const _compileTest = await this.runCommand('bunx', ['tsc', '--noEmit']);
 
       const duration = performance.now() - startTime;
       return {
         success: true,
-        message: "TypeScript issues fixed successfully",
+        message: 'TypeScript issues fixed successfully',
         duration,
-        details: "Caches cleared, shared package rebuilt, compilation verified"
+        details: 'Caches cleared, shared package rebuilt, compilation verified',
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "TypeScript fix failed",
+        message: 'TypeScript fix failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -188,7 +180,7 @@ class RecoveryTools {
    */
   async checkBuildEnvironment(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("🌍 Checking build environment...");
+    console.log('🌍 Checking build environment...');
 
     try {
       const issues: string[] = [];
@@ -196,10 +188,7 @@ class RecoveryTools {
 
       // Check Node.js version
       const nodeVersion = process.version;
-      const majorVersion = Number.parseInt(
-        nodeVersion.slice(1).split(".")[0],
-        10
-      );
+      const majorVersion = Number.parseInt(nodeVersion.slice(1).split('.')[0], 10);
       if (majorVersion < 18) {
         issues.push(`Node.js version ${nodeVersion} is below minimum (18.0.0)`);
       } else {
@@ -207,55 +196,46 @@ class RecoveryTools {
       }
 
       // Check Bun installation
-      const bunCheck = await this.runCommand("bun", ["--version"]);
+      const bunCheck = await this.runCommand('bun', ['--version']);
       if (bunCheck.success) {
         console.log(`  ✅ Bun version: ${bunCheck.stdout?.trim()}`);
       } else {
-        issues.push("Bun is not installed or not accessible");
+        issues.push('Bun is not installed or not accessible');
       }
 
       // Check TypeScript installation
-      const tsCheck = await this.runCommand("bunx", ["tsc", "--version"]);
+      const tsCheck = await this.runCommand('bunx', ['tsc', '--version']);
       if (tsCheck.success) {
         console.log(`  ✅ TypeScript version: ${tsCheck.stdout?.trim()}`);
       } else {
-        issues.push("TypeScript compiler not accessible");
-        console.log("  Installing TypeScript...");
-        const installResult = await this.runCommand("bun", [
-          "add",
-          "-D",
-          "typescript"
-        ]);
+        issues.push('TypeScript compiler not accessible');
+        console.log('  Installing TypeScript...');
+        const installResult = await this.runCommand('bun', ['add', '-D', 'typescript']);
         if (installResult.success) {
-          fixes.push("Installed TypeScript");
+          fixes.push('Installed TypeScript');
         } else {
-          issues.push("Failed to install TypeScript");
+          issues.push('Failed to install TypeScript');
         }
       }
 
       // Check workspace configuration
-      const packageJsonPath = join(this.projectRoot, "package.json");
+      const packageJsonPath = join(this.projectRoot, 'package.json');
       if (existsSync(packageJsonPath)) {
-        const packageData = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+        const packageData = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
         if (packageData.workspaces) {
-          console.log("  ✅ Workspace configuration found");
+          console.log('  ✅ Workspace configuration found');
         } else {
-          issues.push("No workspace configuration in root package.json");
+          issues.push('No workspace configuration in root package.json');
         }
       } else {
-        issues.push("Root package.json not found");
+        issues.push('Root package.json not found');
       }
 
       // Check build scripts
-      const buildScripts = [
-        "build",
-        "build:shared",
-        "build:backend",
-        "build:frontend"
-      ];
+      const buildScripts = ['build', 'build:shared', 'build:backend', 'build:frontend'];
 
       if (existsSync(packageJsonPath)) {
-        const packageData = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+        const packageData = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
         const scripts = packageData.scripts || {};
 
         for (const script of buildScripts) {
@@ -266,7 +246,7 @@ class RecoveryTools {
           }
         }
       } else {
-        issues.push("Cannot read package.json for build script check");
+        issues.push('Cannot read package.json for build script check');
       }
 
       const duration = performance.now() - startTime;
@@ -274,18 +254,18 @@ class RecoveryTools {
         success: issues.length === 0,
         message:
           issues.length === 0
-            ? "Build environment is healthy"
+            ? 'Build environment is healthy'
             : `Found ${issues.length} environment issues`,
         duration,
-        details: issues.length > 0 ? issues.join("; ") : "All checks passed"
+        details: issues.length > 0 ? issues.join('; ') : 'All checks passed',
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "Environment check failed",
+        message: 'Environment check failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -295,31 +275,29 @@ class RecoveryTools {
    */
   async fixBuildScripts(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("🔨 Fixing build scripts...");
+    console.log('🔨 Fixing build scripts...');
 
     try {
       // Step 1: Validate package.json scripts
-      const packageJsonPath = join(this.projectRoot, "package.json");
+      const packageJsonPath = join(this.projectRoot, 'package.json');
       if (!existsSync(packageJsonPath)) {
-        throw new Error("Root package.json not found");
+        throw new Error('Root package.json not found');
       }
 
-      const packageData = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+      const packageData = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
       const scripts = packageData.scripts || {};
 
       // Step 2: Check for essential scripts
       const essentialScripts = {
-        build: "bun run scripts/enhanced-build.ts",
-        "build:shared": "bun run --cwd packages/shared build",
-        "build:backend": "bun run --cwd packages/backend build",
-        "build:frontend": "bun run --cwd packages/frontend build",
-        "build:cli": "bun run --cwd packages/cli build"
+        build: 'bun run scripts/enhanced-build.ts',
+        'build:shared': 'bun run --cwd packages/shared build',
+        'build:backend': 'bun run --cwd packages/backend build',
+        'build:frontend': 'bun run --cwd packages/frontend build',
+        'build:cli': 'bun run --cwd packages/cli build',
       };
 
       let scriptsFixed = 0;
-      for (const [scriptName, scriptCommand] of Object.entries(
-        essentialScripts
-      )) {
+      for (const [scriptName, scriptCommand] of Object.entries(essentialScripts)) {
         if (!scripts[scriptName]) {
           scripts[scriptName] = scriptCommand;
           scriptsFixed++;
@@ -331,14 +309,12 @@ class RecoveryTools {
       if (scriptsFixed > 0) {
         packageData.scripts = scripts;
         writeFileSync(packageJsonPath, JSON.stringify(packageData, null, 2));
-        console.log(
-          `  Updated package.json with ${scriptsFixed} missing scripts`
-        );
+        console.log(`  Updated package.json with ${scriptsFixed} missing scripts`);
       }
 
       // Step 4: Test build script execution
-      console.log("  Testing build script execution...");
-      const testResult = await this.runCommand("bun", ["run", "build:shared"]);
+      console.log('  Testing build script execution...');
+      const testResult = await this.runCommand('bun', ['run', 'build:shared']);
 
       if (!testResult.success) {
         throw new Error(`Build script test failed: ${testResult.error}`);
@@ -347,20 +323,20 @@ class RecoveryTools {
       const duration = performance.now() - startTime;
       return {
         success: true,
-        message: "Build scripts fixed successfully",
+        message: 'Build scripts fixed successfully',
         duration,
         details:
           scriptsFixed > 0
             ? `Fixed ${scriptsFixed} missing scripts, build test passed`
-            : "All scripts present, build test passed"
+            : 'All scripts present, build test passed',
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "Build script fix failed",
+        message: 'Build script fix failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -370,29 +346,27 @@ class RecoveryTools {
    */
   async fixWorkspaceConfiguration(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("🔗 Fixing workspace configuration...");
+    console.log('🔗 Fixing workspace configuration...');
 
     try {
       // Step 1: Verify workspace packages exist
-      const packagesDir = join(this.projectRoot, "packages");
+      const packagesDir = join(this.projectRoot, 'packages');
       if (!existsSync(packagesDir)) {
-        throw new Error("Packages directory not found");
+        throw new Error('Packages directory not found');
       }
 
       // Step 2: Check each package has package.json
-      const fs = require("node:fs");
+      const fs = require('node:fs');
       const packages = fs
         .readdirSync(packagesDir, { withFileTypes: true })
-        .filter((dirent: { isDirectory: () => boolean }) =>
-          dirent.isDirectory()
-        )
+        .filter((dirent: { isDirectory: () => boolean }) => dirent.isDirectory())
         .map((dirent: { name: string }) => dirent.name);
 
-      console.log(`  Found packages: ${packages.join(", ")}`);
+      console.log(`  Found packages: ${packages.join(', ')}`);
 
       const _packagesFixed = 0;
       for (const pkg of packages) {
-        const packageJsonPath = join(packagesDir, pkg, "package.json");
+        const packageJsonPath = join(packagesDir, pkg, 'package.json');
         if (!existsSync(packageJsonPath)) {
           console.log(`  ⚠️  Missing package.json in ${pkg}`);
           // Could create basic package.json here if needed
@@ -402,16 +376,16 @@ class RecoveryTools {
       }
 
       // Step 3: Reinstall to fix workspace links
-      console.log("  Reinstalling to fix workspace links...");
-      const installResult = await this.runCommand("bun", ["install"]);
+      console.log('  Reinstalling to fix workspace links...');
+      const installResult = await this.runCommand('bun', ['install']);
 
       if (!installResult.success) {
         throw new Error(`Workspace reinstall failed: ${installResult.error}`);
       }
 
       // Step 4: Test workspace linking
-      console.log("  Testing workspace linking...");
-      const linkTest = await this.runCommand("bun", ["run", "build:shared"]);
+      console.log('  Testing workspace linking...');
+      const linkTest = await this.runCommand('bun', ['run', 'build:shared']);
 
       if (!linkTest.success) {
         throw new Error(`Workspace link test failed: ${linkTest.error}`);
@@ -420,17 +394,17 @@ class RecoveryTools {
       const duration = performance.now() - startTime;
       return {
         success: true,
-        message: "Workspace configuration fixed successfully",
+        message: 'Workspace configuration fixed successfully',
         duration,
-        details: `Verified ${packages.length} packages, workspace links restored`
+        details: `Verified ${packages.length} packages, workspace links restored`,
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "Workspace fix failed",
+        message: 'Workspace fix failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -440,42 +414,37 @@ class RecoveryTools {
    */
   async nuclearReset(): Promise<RecoveryResult> {
     const startTime = performance.now();
-    console.log("☢️  NUCLEAR RESET - Complete environment cleanup...");
-    console.log("⚠️  This will remove ALL build artifacts and dependencies!");
+    console.log('☢️  NUCLEAR RESET - Complete environment cleanup...');
+    console.log('⚠️  This will remove ALL build artifacts and dependencies!');
 
     try {
       // Step 1: Remove all node_modules and build artifacts
-      console.log("  Removing all build artifacts...");
+      console.log('  Removing all build artifacts...');
       const pathsToRemove = [
-        "node_modules",
-        "packages/*/node_modules",
-        "packages/*/dist",
-        "*.tsbuildinfo",
-        "packages/*/*.tsbuildinfo",
-        "build-doctor-report.json"
+        'node_modules',
+        'packages/*/node_modules',
+        'packages/*/dist',
+        '*.tsbuildinfo',
+        'packages/*/*.tsbuildinfo',
+        'build-doctor-report.json',
       ];
 
       for (const pattern of pathsToRemove) {
-        if (pattern.includes("*")) {
+        if (pattern.includes('*')) {
           // Handle glob patterns manually for critical paths
-          if (pattern === "packages/*/node_modules") {
-            const packages = ["shared", "backend", "frontend", "cli"];
+          if (pattern === 'packages/*/node_modules') {
+            const packages = ['shared', 'backend', 'frontend', 'cli'];
             for (const pkg of packages) {
-              const path = join(
-                this.projectRoot,
-                "packages",
-                pkg,
-                "node_modules"
-              );
+              const path = join(this.projectRoot, 'packages', pkg, 'node_modules');
               if (existsSync(path)) {
                 rmSync(path, { recursive: true, force: true });
                 console.log(`    Removed: ${path}`);
               }
             }
-          } else if (pattern === "packages/*/dist") {
-            const packages = ["shared", "backend", "frontend", "cli"];
+          } else if (pattern === 'packages/*/dist') {
+            const packages = ['shared', 'backend', 'frontend', 'cli'];
             for (const pkg of packages) {
-              const path = join(this.projectRoot, "packages", pkg, "dist");
+              const path = join(this.projectRoot, 'packages', pkg, 'dist');
               if (existsSync(path)) {
                 rmSync(path, { recursive: true, force: true });
                 console.log(`    Removed: ${path}`);
@@ -492,32 +461,29 @@ class RecoveryTools {
       }
 
       // Step 2: Clear all caches
-      console.log("  Clearing all caches...");
-      await this.runCommand("bun", ["pm", "cache", "rm"]);
+      console.log('  Clearing all caches...');
+      await this.runCommand('bun', ['pm', 'cache', 'rm']);
 
       // Step 3: Fresh install
-      console.log("  Fresh dependency installation...");
-      const installResult = await this.runCommand("bun", ["install"]);
+      console.log('  Fresh dependency installation...');
+      const installResult = await this.runCommand('bun', ['install']);
 
       if (!installResult.success) {
         throw new Error(`Fresh install failed: ${installResult.error}`);
       }
 
       // Step 4: Rebuild everything
-      console.log("  Rebuilding all packages...");
-      const buildResult = await this.runCommand("bun", ["run", "build"]);
+      console.log('  Rebuilding all packages...');
+      const buildResult = await this.runCommand('bun', ['run', 'build']);
 
       if (!buildResult.success) {
-        console.log("  ⚠️  Full build failed, trying individual packages...");
+        console.log('  ⚠️  Full build failed, trying individual packages...');
 
         // Try building packages individually
-        const packages = ["shared", "backend", "cli", "frontend"];
+        const packages = ['shared', 'backend', 'cli', 'frontend'];
         for (const pkg of packages) {
           console.log(`    Building ${pkg}...`);
-          const pkgBuild = await this.runCommand("bun", [
-            "run",
-            `build:${pkg}`
-          ]);
+          const pkgBuild = await this.runCommand('bun', ['run', `build:${pkg}`]);
           if (pkgBuild.success) {
             console.log(`    ✅ ${pkg} built successfully`);
           } else {
@@ -529,17 +495,17 @@ class RecoveryTools {
       const duration = performance.now() - startTime;
       return {
         success: true,
-        message: "Nuclear reset completed successfully",
+        message: 'Nuclear reset completed successfully',
         duration,
-        details: "Complete environment cleanup and rebuild performed"
+        details: 'Complete environment cleanup and rebuild performed',
       };
     } catch (error) {
       const duration = performance.now() - startTime;
       return {
         success: false,
-        message: "Nuclear reset failed",
+        message: 'Nuclear reset failed',
         duration,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -550,29 +516,29 @@ class RecoveryTools {
   private async verifyDependencies(): Promise<RecoveryResult> {
     try {
       // Check if node_modules exists and has .bin directory
-      const nodeModules = join(this.projectRoot, "node_modules");
-      const binDir = join(nodeModules, ".bin");
+      const nodeModules = join(this.projectRoot, 'node_modules');
+      const binDir = join(nodeModules, '.bin');
 
       if (!existsSync(nodeModules)) {
         return {
           success: false,
-          message: "node_modules directory missing",
-          duration: 0
+          message: 'node_modules directory missing',
+          duration: 0,
         };
       }
 
       if (!existsSync(binDir)) {
         return {
           success: false,
-          message: "node_modules/.bin directory missing",
-          duration: 0
+          message: 'node_modules/.bin directory missing',
+          duration: 0,
         };
       }
 
       // Test that we can run basic commands
       const testCommands = [
-        { cmd: "bun", args: ["--version"] },
-        { cmd: "bunx", args: ["tsc", "--version"] }
+        { cmd: 'bun', args: ['--version'] },
+        { cmd: 'bunx', args: ['tsc', '--version'] },
       ];
 
       for (const { cmd, args } of testCommands) {
@@ -580,24 +546,24 @@ class RecoveryTools {
         if (!result.success) {
           return {
             success: false,
-            message: `Command '${cmd} ${args.join(" ")}' failed`,
+            message: `Command '${cmd} ${args.join(' ')}' failed`,
             duration: 0,
-            error: result.error
+            error: result.error,
           };
         }
       }
 
       return {
         success: true,
-        message: "Dependencies verified successfully",
-        duration: 0
+        message: 'Dependencies verified successfully',
+        duration: 0,
       };
     } catch (error) {
       return {
         success: false,
-        message: "Dependency verification failed",
+        message: 'Dependency verification failed',
         duration: 0,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -616,57 +582,51 @@ class RecoveryTools {
     error?: string;
   }> {
     return new Promise((resolve) => {
-      const executable =
-        command === "bun" || command === "bunx"
-          ? this.bunExecutablePath
-          : command;
+      const executable = command === 'bun' || command === 'bunx' ? this.bunExecutablePath : command;
       const child = spawn(executable, args, {
         cwd: options.cwd || this.projectRoot,
-        stdio: "pipe"
+        stdio: 'pipe',
       });
 
-      let stdout = "";
-      let stderr = "";
+      let stdout = '';
+      let stderr = '';
       let timeoutId: NodeJS.Timeout | null = null;
 
       if (options.timeout) {
         timeoutId = setTimeout(() => {
-          child.kill("SIGTERM");
+          child.kill('SIGTERM');
           resolve({
             success: false,
-            error: `Command timed out after ${options.timeout}ms`
+            error: `Command timed out after ${options.timeout}ms`,
           });
         }, options.timeout);
       }
 
-      child.stdout?.on("data", (data) => {
+      child.stdout?.on('data', (data) => {
         stdout += data.toString();
       });
 
-      child.stderr?.on("data", (data) => {
+      child.stderr?.on('data', (data) => {
         stderr += data.toString();
       });
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         if (timeoutId) clearTimeout(timeoutId);
 
         resolve({
           success: code === 0,
           stdout: stdout || undefined,
           stderr: stderr || undefined,
-          error:
-            code !== 0
-              ? stderr || `Command failed with exit code ${code}`
-              : undefined
+          error: code !== 0 ? stderr || `Command failed with exit code ${code}` : undefined,
         });
       });
 
-      child.on("error", (error) => {
+      child.on('error', (error) => {
         if (timeoutId) clearTimeout(timeoutId);
 
         resolve({
           success: false,
-          error: error.message
+          error: error.message,
         });
       });
     });
@@ -684,44 +644,44 @@ async function main(): Promise<void> {
   let result: RecoveryResult;
 
   switch (action) {
-    case "clean-deps":
+    case 'clean-deps':
       result = await recovery.cleanDependencies();
       break;
-    case "fix-types":
+    case 'fix-types':
       result = await recovery.fixTypeScriptIssues();
       break;
-    case "check-env":
+    case 'check-env':
       result = await recovery.checkBuildEnvironment();
       break;
-    case "fix-scripts":
+    case 'fix-scripts':
       result = await recovery.fixBuildScripts();
       break;
-    case "fix-workspace":
+    case 'fix-workspace':
       result = await recovery.fixWorkspaceConfiguration();
       break;
-    case "nuclear":
+    case 'nuclear':
       result = await recovery.nuclearReset();
       break;
-    case "full": {
+    case 'full': {
       {
         // Run full recovery sequence
-        console.log("🚀 Running full recovery sequence...\n");
+        console.log('🚀 Running full recovery sequence...\n');
 
         const steps = [
           {
-            name: "Clean Dependencies",
-            fn: () => recovery.cleanDependencies()
+            name: 'Clean Dependencies',
+            fn: () => recovery.cleanDependencies(),
           },
-          { name: "Fix TypeScript", fn: () => recovery.fixTypeScriptIssues() },
+          { name: 'Fix TypeScript', fn: () => recovery.fixTypeScriptIssues() },
           {
-            name: "Check Environment",
-            fn: () => recovery.checkBuildEnvironment()
+            name: 'Check Environment',
+            fn: () => recovery.checkBuildEnvironment(),
           },
-          { name: "Fix Scripts", fn: () => recovery.fixBuildScripts() },
+          { name: 'Fix Scripts', fn: () => recovery.fixBuildScripts() },
           {
-            name: "Fix Workspace",
-            fn: () => recovery.fixWorkspaceConfiguration()
-          }
+            name: 'Fix Workspace',
+            fn: () => recovery.fixWorkspaceConfiguration(),
+          },
         ];
 
         let allSuccess = true;
@@ -730,13 +690,9 @@ async function main(): Promise<void> {
           const stepResult = await step.fn();
 
           if (stepResult.success) {
-            console.log(
-              `✅ ${stepResult.message} (${Math.round(stepResult.duration)}ms)`
-            );
+            console.log(`✅ ${stepResult.message} (${Math.round(stepResult.duration)}ms)`);
           } else {
-            console.log(
-              `❌ ${stepResult.message} (${Math.round(stepResult.duration)}ms)`
-            );
+            console.log(`❌ ${stepResult.message} (${Math.round(stepResult.duration)}ms)`);
             if (stepResult.error) {
               console.log(`   Error: ${stepResult.error}`);
             }
@@ -747,32 +703,32 @@ async function main(): Promise<void> {
         result = {
           success: allSuccess,
           message: allSuccess
-            ? "Full recovery completed successfully"
-            : "Full recovery completed with some failures",
-          duration: 0
+            ? 'Full recovery completed successfully'
+            : 'Full recovery completed with some failures',
+          duration: 0,
         };
         break;
       }
     }
     default:
-      console.log("Recovery Tools - Automated build recovery scripts");
-      console.log("\nUsage: bun run scripts/recovery-tools.ts <action>");
-      console.log("\nActions:");
-      console.log("  clean-deps    - Clean and restore dependencies");
-      console.log("  fix-types     - Fix TypeScript compilation issues");
-      console.log("  check-env     - Check build environment");
-      console.log("  fix-scripts   - Fix build scripts configuration");
-      console.log("  fix-workspace - Fix workspace configuration");
-      console.log("  nuclear       - Complete environment reset (destructive)");
-      console.log("  full          - Run full recovery sequence");
-      console.log("\nExamples:");
-      console.log("  bun run scripts/recovery-tools.ts clean-deps");
-      console.log("  bun run scripts/recovery-tools.ts full");
+      console.log('Recovery Tools - Automated build recovery scripts');
+      console.log('\nUsage: bun run scripts/recovery-tools.ts <action>');
+      console.log('\nActions:');
+      console.log('  clean-deps    - Clean and restore dependencies');
+      console.log('  fix-types     - Fix TypeScript compilation issues');
+      console.log('  check-env     - Check build environment');
+      console.log('  fix-scripts   - Fix build scripts configuration');
+      console.log('  fix-workspace - Fix workspace configuration');
+      console.log('  nuclear       - Complete environment reset (destructive)');
+      console.log('  full          - Run full recovery sequence');
+      console.log('\nExamples:');
+      console.log('  bun run scripts/recovery-tools.ts clean-deps');
+      console.log('  bun run scripts/recovery-tools.ts full');
       process.exit(0);
   }
 
   // Output result
-  console.log(`\n${"=".repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   if (result.success) {
     console.log(`✅ SUCCESS: ${result.message}`);
   } else {
@@ -782,7 +738,7 @@ async function main(): Promise<void> {
     }
   }
   console.log(`Duration: ${Math.round(result.duration)}ms`);
-  console.log("=".repeat(60));
+  console.log('='.repeat(60));
 
   process.exit(result.success ? 0 : 1);
 }

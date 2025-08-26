@@ -5,11 +5,11 @@
  * Orchestrates different types of tests and generates reports with strict type safety
  */
 
-import { type ChildProcess, spawn } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { performance } from "node:perf_hooks";
-import type { TestReport, TestResult, TestResults } from "../types/config.js";
+import { type ChildProcess, spawn } from 'node:child_process';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { performance } from 'node:perf_hooks';
+import type { TestReport, TestResult, TestResults } from '../types/config.js';
 
 // For module detection compatibility
 declare const require: NodeRequire;
@@ -19,7 +19,7 @@ declare const module: NodeModule;
  * Enhanced spawn options with strict typing
  */
 interface SpawnOptions {
-  stdio?: "inherit" | "pipe";
+  stdio?: 'inherit' | 'pipe';
   env?: NodeJS.ProcessEnv;
   cwd?: string;
   timeout?: number;
@@ -42,7 +42,7 @@ interface TestConfiguration {
 interface TestSuiteMetadata {
   name: string;
   description: string;
-  category: "unit" | "integration" | "e2e" | "performance" | "coverage";
+  category: 'unit' | 'integration' | 'e2e' | 'performance' | 'coverage';
   dependencies: string[];
   estimatedDuration: number;
   critical: boolean;
@@ -128,8 +128,8 @@ class CommandExecutionResultClass extends Error {
   public readonly result: CommandExecutionResult;
 
   constructor(result: CommandExecutionResult) {
-    super(result.error || "Command execution failed");
-    this.name = "CommandExecutionError";
+    super(result.error || 'Command execution failed');
+    this.name = 'CommandExecutionError';
     this.result = result;
 
     // Maintain proper stack trace
@@ -143,7 +143,7 @@ class CommandExecutionResultClass extends Error {
       name: this.name,
       message: this.message,
       result: this.result,
-      stack: this.stack
+      stack: this.stack,
     };
   }
 }
@@ -175,11 +175,9 @@ type RequiredProperties<T> = {
 function _isTestResult(result: unknown): result is EnhancedTestResult {
   return (
     result !== null &&
-    typeof result === "object" &&
-    "status" in result &&
-    ["passed", "failed", "skipped", "generated", "unknown"].includes(
-      (result as TestResult).status
-    )
+    typeof result === 'object' &&
+    'status' in result &&
+    ['passed', 'failed', 'skipped', 'generated', 'unknown'].includes((result as TestResult).status)
   );
 }
 
@@ -188,10 +186,9 @@ function _isTestResult(result: unknown): result is EnhancedTestResult {
  */
 function isSuccessfulTestResult(
   result: EnhancedTestResult
-): result is EnhancedTestResult & { status: "passed" | "generated" } {
+): result is EnhancedTestResult & { status: 'passed' | 'generated' } {
   return (
-    (result as TestResult).status === "passed" ||
-    (result as TestResult).status === "generated"
+    (result as TestResult).status === 'passed' || (result as TestResult).status === 'generated'
   );
 }
 
@@ -200,10 +197,9 @@ function isSuccessfulTestResult(
  */
 function isFailedTestResult(
   result: EnhancedTestResult
-): result is EnhancedTestResult & { status: "failed"; error: string } {
+): result is EnhancedTestResult & { status: 'failed'; error: string } {
   return (
-    (result as TestResult).status === "failed" &&
-    typeof (result as TestResult).error === "string"
+    (result as TestResult).status === 'failed' && typeof (result as TestResult).error === 'string'
   );
 }
 
@@ -213,11 +209,11 @@ function isFailedTestResult(
 function _isServerHealthCheck(config: unknown): config is ServerHealthCheck {
   return (
     config !== null &&
-    typeof config === "object" &&
-    "url" in config &&
-    typeof config.url === "string" &&
-    "timeout" in config &&
-    typeof config.timeout === "number"
+    typeof config === 'object' &&
+    'url' in config &&
+    typeof config.url === 'string' &&
+    'timeout' in config &&
+    typeof config.timeout === 'number'
   );
 }
 
@@ -231,7 +227,7 @@ class TestRunnerError extends Error {
 
   constructor(code: string, message: string, details?: unknown) {
     super(message);
-    this.name = "TestRunnerError";
+    this.name = 'TestRunnerError';
     this.code = code;
     this.details = details;
     this.timestamp = new Date();
@@ -249,7 +245,7 @@ class TestRunnerError extends Error {
       message: this.message,
       details: this.details,
       timestamp: this.timestamp.toISOString(),
-      stack: this.stack
+      stack: this.stack,
     };
   }
 }
@@ -262,15 +258,15 @@ const DEFAULT_CONFIG: RequiredProperties<TestConfiguration> = {
   retryAttempts: 3,
   skipPerformanceTests: false,
   coverageEnabled: true,
-  parallelExecution: false
+  parallelExecution: false,
 } as const;
 
 const DEFAULT_HEALTH_CHECK: RequiredProperties<ServerHealthCheck> = {
-  url: "http://localhost:3000",
+  url: 'http://localhost:3000',
   timeout: 30000,
   interval: 1000,
   expectedStatus: 200,
-  headers: {}
+  headers: {},
 } as const;
 
 class TestRunner {
@@ -285,7 +281,7 @@ class TestRunner {
       integration: null,
       e2e: null,
       performance: null,
-      coverage: null
+      coverage: null,
     };
     this.startTime = performance.now();
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -298,49 +294,49 @@ class TestRunner {
    * Initialize test suite metadata
    */
   private initializeMetadata(): void {
-    this.metadata.set("unit", {
-      name: "Unit Tests",
-      description: "Component and unit level tests",
-      category: "unit",
+    this.metadata.set('unit', {
+      name: 'Unit Tests',
+      description: 'Component and unit level tests',
+      category: 'unit',
       dependencies: [],
       estimatedDuration: 30000,
-      critical: true
+      critical: true,
     });
 
-    this.metadata.set("integration", {
-      name: "Integration Tests",
-      description: "Cross-component integration tests",
-      category: "integration",
-      dependencies: ["unit"],
+    this.metadata.set('integration', {
+      name: 'Integration Tests',
+      description: 'Cross-component integration tests',
+      category: 'integration',
+      dependencies: ['unit'],
       estimatedDuration: 60000,
-      critical: true
+      critical: true,
     });
 
-    this.metadata.set("e2e", {
-      name: "End-to-End Tests",
-      description: "Full application workflow tests",
-      category: "e2e",
-      dependencies: ["integration"],
+    this.metadata.set('e2e', {
+      name: 'End-to-End Tests',
+      description: 'Full application workflow tests',
+      category: 'e2e',
+      dependencies: ['integration'],
       estimatedDuration: 120000,
-      critical: true
+      critical: true,
     });
 
-    this.metadata.set("performance", {
-      name: "Performance Tests",
-      description: "Application performance and load testing",
-      category: "performance",
-      dependencies: ["e2e"],
+    this.metadata.set('performance', {
+      name: 'Performance Tests',
+      description: 'Application performance and load testing',
+      category: 'performance',
+      dependencies: ['e2e'],
       estimatedDuration: 90000,
-      critical: false
+      critical: false,
     });
 
-    this.metadata.set("coverage", {
-      name: "Coverage Report",
-      description: "Test coverage analysis and reporting",
-      category: "coverage",
-      dependencies: ["unit", "integration", "e2e"],
+    this.metadata.set('coverage', {
+      name: 'Coverage Report',
+      description: 'Test coverage analysis and reporting',
+      category: 'coverage',
+      dependencies: ['unit', 'integration', 'e2e'],
       estimatedDuration: 15000,
-      critical: false
+      critical: false,
     });
   }
 
@@ -350,10 +346,7 @@ class TestRunner {
   private getTestMetadata(type: TestType): TestSuiteMetadata {
     const metadata = this.metadata.get(type);
     if (!metadata) {
-      throw new TestRunnerError(
-        "METADATA_NOT_FOUND",
-        `No metadata found for test type: ${type}`
-      );
+      throw new TestRunnerError('METADATA_NOT_FOUND', `No metadata found for test type: ${type}`);
     }
     return metadata;
   }
@@ -370,7 +363,7 @@ class TestRunner {
 
       if (!result || !isSuccessfulTestResult(result)) {
         throw new TestRunnerError(
-          "DEPENDENCY_FAILED",
+          'DEPENDENCY_FAILED',
           `Cannot run ${type} tests because dependency ${dependencyType} failed or was not completed`
         );
       }
@@ -384,7 +377,7 @@ class TestRunner {
     operation: () => Promise<T>,
     maxRetries: number = this.config.retryAttempts
   ): Promise<T> {
-    let lastError: Error = new Error("Unknown error"); // Initialize lastError
+    let lastError: Error = new Error('Unknown error'); // Initialize lastError
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -419,13 +412,9 @@ class TestRunner {
     const results = Object.values(this.results);
 
     const totalTests = results.filter((r) => r !== null).length;
-    const passedTests = results.filter(
-      (r) => r && isSuccessfulTestResult(r)
-    ).length;
-    const failedTests = results.filter(
-      (r) => r && isFailedTestResult(r)
-    ).length;
-    const skippedTests = results.filter((r) => r?.status === "skipped").length;
+    const passedTests = results.filter((r) => r && isSuccessfulTestResult(r)).length;
+    const failedTests = results.filter((r) => r && isFailedTestResult(r)).length;
+    const skippedTests = results.filter((r) => r?.status === 'skipped').length;
 
     const criticalTests = Array.from(this.metadata.values())
       .filter((m) => m.critical)
@@ -439,7 +428,7 @@ class TestRunner {
       failedTests,
       skippedTests,
       criticalTests,
-      nonCriticalTests
+      nonCriticalTests,
     };
   }
 
@@ -465,17 +454,11 @@ class TestRunner {
    */
   private validateConfiguration(): void {
     if (this.config.timeout <= 0) {
-      throw new TestRunnerError(
-        "INVALID_CONFIG",
-        "Timeout must be greater than 0"
-      );
+      throw new TestRunnerError('INVALID_CONFIG', 'Timeout must be greater than 0');
     }
 
     if (this.config.retryAttempts < 0) {
-      throw new TestRunnerError(
-        "INVALID_CONFIG",
-        "Retry attempts must be non-negative"
-      );
+      throw new TestRunnerError('INVALID_CONFIG', 'Retry attempts must be non-negative');
     }
 
     if (this.config.parallelExecution && this.config.retryAttempts > 0) {
@@ -483,7 +466,7 @@ class TestRunner {
   }
 
   async run(): Promise<void> {
-    console.log("🚀 Starting comprehensive test suite...\n");
+    console.log('🚀 Starting comprehensive test suite...\n');
 
     try {
       // Run tests in sequence for better resource management
@@ -494,11 +477,10 @@ class TestRunner {
       await this.generateCoverageReport();
       await this.generateSummaryReport();
 
-      console.log("\n✅ All tests completed successfully!");
+      console.log('\n✅ All tests completed successfully!');
       process.exit(0);
     } catch (error) {
-      const _errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const _errorMessage = error instanceof Error ? error.message : String(error);
       process.exit(1);
     }
   }
@@ -507,7 +489,7 @@ class TestRunner {
    * Enhanced run method with dependency validation and error handling
    */
   async runWithValidation(): Promise<void> {
-    console.log("🚀 Starting comprehensive test suite with validation...\n");
+    console.log('🚀 Starting comprehensive test suite with validation...\n');
 
     try {
       // Validate configuration first
@@ -521,11 +503,10 @@ class TestRunner {
       await this.generateCoverageReport();
       await this.generateSummaryReport();
 
-      console.log("\n✅ All tests completed successfully!");
+      console.log('\n✅ All tests completed successfully!');
       process.exit(0);
     } catch (error) {
-      const _errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const _errorMessage = error instanceof Error ? error.message : String(error);
 
       if (error instanceof TestRunnerError) {
         if (error.details) {
@@ -537,112 +518,106 @@ class TestRunner {
   }
 
   private async runUnitTests(): Promise<void> {
-    console.log("📋 Running unit tests...");
+    console.log('📋 Running unit tests...');
     const startTime = performance.now();
 
     try {
-      await this.validateDependencies("unit");
+      await this.validateDependencies('unit');
       await this.executeWithRetry(async () => {
-        await this.runCommand("bun", ["test", "--coverage"]);
+        await this.runCommand('bun', ['test', '--coverage']);
       });
 
       const duration = performance.now() - startTime;
-      const metadata = this.getTestMetadata("unit");
+      const metadata = this.getTestMetadata('unit');
 
       this.results.unit = {
-        status: "passed",
+        status: 'passed',
         duration,
         metadata,
-        retryCount: 0
+        retryCount: 0,
       };
 
       console.log(`✅ Unit tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const metadata = this.getTestMetadata("unit");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const metadata = this.getTestMetadata('unit');
 
       this.results.unit = {
-        status: "failed",
+        status: 'failed',
         error: errorMessage,
         metadata,
-        retryCount: this.config.retryAttempts
+        retryCount: this.config.retryAttempts,
       };
 
-      throw new TestRunnerError("UNIT_TESTS_FAILED", "Unit tests failed", {
-        error: errorMessage
+      throw new TestRunnerError('UNIT_TESTS_FAILED', 'Unit tests failed', {
+        error: errorMessage,
       });
     }
   }
 
   private async runIntegrationTests(): Promise<void> {
-    console.log("🔗 Running integration tests...");
+    console.log('🔗 Running integration tests...');
     const startTime = performance.now();
 
     try {
-      await this.validateDependencies("integration");
+      await this.validateDependencies('integration');
       await this.executeWithRetry(async () => {
-        await this.runCommand("bun", ["run", "test:integration"]);
+        await this.runCommand('bun', ['run', 'test:integration']);
       });
 
       const duration = performance.now() - startTime;
-      const metadata = this.getTestMetadata("integration");
+      const metadata = this.getTestMetadata('integration');
 
       this.results.integration = {
-        status: "passed",
+        status: 'passed',
         duration,
         metadata,
-        retryCount: 0
+        retryCount: 0,
       };
 
       console.log(`✅ Integration tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const metadata = this.getTestMetadata("integration");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const metadata = this.getTestMetadata('integration');
 
       this.results.integration = {
-        status: "failed",
+        status: 'failed',
         error: errorMessage,
         metadata,
-        retryCount: this.config.retryAttempts
+        retryCount: this.config.retryAttempts,
       };
 
-      throw new TestRunnerError(
-        "INTEGRATION_TESTS_FAILED",
-        "Integration tests failed",
-        {
-          error: errorMessage
-        }
-      );
+      throw new TestRunnerError('INTEGRATION_TESTS_FAILED', 'Integration tests failed', {
+        error: errorMessage,
+      });
     }
   }
 
   private async runE2ETests(): Promise<void> {
-    console.log("🌐 Running end-to-end tests...");
+    console.log('🌐 Running end-to-end tests...');
     const startTime = performance.now();
 
     try {
-      await this.validateDependencies("e2e");
+      await this.validateDependencies('e2e');
 
       await this.executeWithRetry(async () => {
         // Start servers in background
-        const backendProcess = spawn("bun", ["run", "start:backend"], {
-          stdio: "pipe",
-          env: { ...process.env, NODE_ENV: "test" }
+        const backendProcess = spawn('bun', ['run', 'start:backend'], {
+          stdio: 'pipe',
+          env: { ...process.env, NODE_ENV: 'test' },
         });
 
-        const frontendProcess = spawn("bun", ["run", "start:frontend"], {
-          stdio: "pipe",
-          env: { ...process.env, NODE_ENV: "test" }
+        const frontendProcess = spawn('bun', ['run', 'start:frontend'], {
+          stdio: 'pipe',
+          env: { ...process.env, NODE_ENV: 'test' },
         });
 
         // Wait for servers to start
-        await this.waitForServer("http://localhost:3001/api/health", 30000);
-        await this.waitForServer("http://localhost:3000", 30000);
+        await this.waitForServer('http://localhost:3001/api/health', 30000);
+        await this.waitForServer('http://localhost:3000', 30000);
 
         try {
-          await this.runCommand("bun", ["run", "test:e2e"]);
+          await this.runCommand('bun', ['run', 'test:e2e']);
         } finally {
           // Cleanup servers
           backendProcess.kill();
@@ -651,78 +626,73 @@ class TestRunner {
       });
 
       const duration = performance.now() - startTime;
-      const metadata = this.getTestMetadata("e2e");
+      const metadata = this.getTestMetadata('e2e');
 
       this.results.e2e = {
-        status: "passed",
+        status: 'passed',
         duration,
         metadata,
-        retryCount: 0
+        retryCount: 0,
       };
 
       console.log(`✅ E2E tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const metadata = this.getTestMetadata("e2e");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const metadata = this.getTestMetadata('e2e');
 
       this.results.e2e = {
-        status: "failed",
+        status: 'failed',
         error: errorMessage,
         metadata,
-        retryCount: this.config.retryAttempts
+        retryCount: this.config.retryAttempts,
       };
 
-      throw new TestRunnerError("E2E_TESTS_FAILED", "E2E tests failed", {
-        error: errorMessage
+      throw new TestRunnerError('E2E_TESTS_FAILED', 'E2E tests failed', {
+        error: errorMessage,
       });
     }
   }
 
   private async runPerformanceTests(): Promise<void> {
-    if (
-      process.env.SKIP_PERFORMANCE_TESTS === "true" ||
-      this.config.skipPerformanceTests
-    ) {
-      console.log("⏭️  Skipping performance tests\n");
-      const metadata = this.getTestMetadata("performance");
+    if (process.env.SKIP_PERFORMANCE_TESTS === 'true' || this.config.skipPerformanceTests) {
+      console.log('⏭️  Skipping performance tests\n');
+      const metadata = this.getTestMetadata('performance');
       this.results.performance = {
-        status: "skipped",
-        metadata
+        status: 'skipped',
+        metadata,
       };
       return;
     }
 
-    console.log("⚡ Running performance tests...");
+    console.log('⚡ Running performance tests...');
     const startTime = performance.now();
 
     try {
-      await this.validateDependencies("performance");
+      await this.validateDependencies('performance');
       await this.executeWithRetry(async () => {
-        await this.runCommand("bun", ["run", "test:performance"]);
+        await this.runCommand('bun', ['run', 'test:performance']);
       });
 
       const duration = performance.now() - startTime;
-      const metadata = this.getTestMetadata("performance");
+      const metadata = this.getTestMetadata('performance');
 
       this.results.performance = {
-        status: "passed",
+        status: 'passed',
         duration,
         metadata,
-        retryCount: 0
+        retryCount: 0,
       };
 
       console.log(`✅ Performance tests passed (${Math.round(duration)}ms)\n`);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const metadata = this.getTestMetadata("performance");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const metadata = this.getTestMetadata('performance');
 
       this.results.performance = {
-        status: "failed",
+        status: 'failed',
         error: errorMessage,
         metadata,
-        retryCount: this.config.retryAttempts
+        retryCount: this.config.retryAttempts,
       };
 
       // Performance tests are not critical for CI
@@ -732,40 +702,39 @@ class TestRunner {
 
   private async generateCoverageReport(): Promise<void> {
     if (!this.config.coverageEnabled) {
-      console.log("⏭️  Coverage generation disabled\n");
-      const metadata = this.getTestMetadata("coverage");
+      console.log('⏭️  Coverage generation disabled\n');
+      const metadata = this.getTestMetadata('coverage');
       this.results.coverage = {
-        status: "skipped",
-        metadata
+        status: 'skipped',
+        metadata,
       };
       return;
     }
 
-    console.log("📊 Generating coverage report...");
+    console.log('📊 Generating coverage report...');
 
     try {
-      await this.validateDependencies("coverage");
+      await this.validateDependencies('coverage');
       await this.executeWithRetry(async () => {
-        await this.runCommand("bun", ["run", "coverage:merge"]);
-        await this.runCommand("bun", ["run", "coverage:report"]);
+        await this.runCommand('bun', ['run', 'coverage:merge']);
+        await this.runCommand('bun', ['run', 'coverage:report']);
       });
 
-      const metadata = this.getTestMetadata("coverage");
+      const metadata = this.getTestMetadata('coverage');
       this.results.coverage = {
-        status: "generated",
-        metadata
+        status: 'generated',
+        metadata,
       };
-      console.log("✅ Coverage report generated\n");
+      console.log('✅ Coverage report generated\n');
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const metadata = this.getTestMetadata("coverage");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const metadata = this.getTestMetadata('coverage');
 
       this.results.coverage = {
-        status: "failed",
+        status: 'failed',
         error: errorMessage,
         metadata,
-        retryCount: this.config.retryAttempts
+        retryCount: this.config.retryAttempts,
       };
 
       console.log(`⚠️  Coverage report generation failed: ${errorMessage}\n`);
@@ -774,7 +743,7 @@ class TestRunner {
 
   private async generateSummaryReport(): Promise<void> {
     const totalDuration = performance.now() - this.startTime;
-    const reportDir = join(__dirname, "../test-results");
+    const reportDir = join(__dirname, '../test-results');
 
     if (!existsSync(reportDir)) {
       mkdirSync(reportDir, { recursive: true });
@@ -790,53 +759,44 @@ class TestRunner {
         platform: process.platform,
         arch: process.arch,
         ci: !!process.env.CI,
-        bunVersion: process.version.includes("bun")
-          ? process.version
-          : "unknown",
-        memoryUsage: process.memoryUsage()
+        bunVersion: process.version.includes('bun') ? process.version : 'unknown',
+        memoryUsage: process.memoryUsage(),
       },
       statistics: stats,
-      metadata: Object.fromEntries(this.metadata)
+      metadata: Object.fromEntries(this.metadata),
     };
 
     // Write JSON report
-    writeFileSync(
-      join(reportDir, "test-summary.json"),
-      JSON.stringify(enhancedReport, null, 2)
-    );
+    writeFileSync(join(reportDir, 'test-summary.json'), JSON.stringify(enhancedReport, null, 2));
 
     // Write human-readable report
     const humanReport = this.generateHumanReport(enhancedReport);
-    writeFileSync(join(reportDir, "test-summary.txt"), humanReport);
+    writeFileSync(join(reportDir, 'test-summary.txt'), humanReport);
 
-    console.log("📋 Test summary report generated");
+    console.log('📋 Test summary report generated');
     console.log(humanReport);
   }
 
   private generateHumanReport(report: EnhancedTestReport): string {
     const { results, totalDuration, environment, statistics } = report;
 
-    let output = `${"=".repeat(60)}\n`;
-    output += "           TEST SUITE SUMMARY REPORT\n";
-    output += `${"=".repeat(60)}\n\n`;
+    let output = `${'='.repeat(60)}\n`;
+    output += '           TEST SUITE SUMMARY REPORT\n';
+    output += `${'='.repeat(60)}\n\n`;
 
     output += `Total Duration: ${totalDuration}ms\n`;
-    output += `Environment: ${environment.bunVersion ? "Bun" : "Node"} ${environment.nodeVersion} on ${environment.platform}\n`;
+    output += `Environment: ${environment.bunVersion ? 'Bun' : 'Node'} ${environment.nodeVersion} on ${environment.platform}\n`;
     output += `Architecture: ${environment.arch}\n`;
-    output += `CI Mode: ${environment.ci ? "Yes" : "No"}\n`;
+    output += `CI Mode: ${environment.ci ? 'Yes' : 'No'}\n`;
 
     if (environment.memoryUsage) {
-      const memUsed = Math.round(
-        environment.memoryUsage.heapUsed / 1024 / 1024
-      );
-      const memTotal = Math.round(
-        environment.memoryUsage.heapTotal / 1024 / 1024
-      );
+      const memUsed = Math.round(environment.memoryUsage.heapUsed / 1024 / 1024);
+      const memTotal = Math.round(environment.memoryUsage.heapTotal / 1024 / 1024);
       output += `Memory Usage: ${memUsed}MB / ${memTotal}MB\n`;
     }
 
-    output += "\nTest Statistics:\n";
-    output += `${"-".repeat(40)}\n`;
+    output += '\nTest Statistics:\n';
+    output += `${'-'.repeat(40)}\n`;
     output += `Total Tests: ${statistics.totalTests}\n`;
     output += `Passed: ${statistics.passedTests} ✅\n`;
     output += `Failed: ${statistics.failedTests} ❌\n`;
@@ -844,8 +804,8 @@ class TestRunner {
     output += `Critical Tests: ${statistics.criticalTests}\n`;
     output += `Non-Critical Tests: ${statistics.nonCriticalTests}\n\n`;
 
-    output += "Test Results:\n";
-    output += `${"-".repeat(40)}\n`;
+    output += 'Test Results:\n';
+    output += `${'-'.repeat(40)}\n`;
 
     Object.entries(results).forEach(([type, result]) => {
       if (!result) {
@@ -855,23 +815,19 @@ class TestRunner {
 
       const status = result.status;
       const icon =
-        status === "passed"
-          ? "✅"
-          : status === "failed"
-            ? "❌"
-            : status === "skipped"
-              ? "⏭️"
-              : status === "generated"
-                ? "📊"
-                : "❓";
+        status === 'passed'
+          ? '✅'
+          : status === 'failed'
+            ? '❌'
+            : status === 'skipped'
+              ? '⏭️'
+              : status === 'generated'
+                ? '📊'
+                : '❓';
 
-      const duration = result.duration
-        ? ` (${Math.round(result.duration)}ms)`
-        : "";
+      const duration = result.duration ? ` (${Math.round(result.duration)}ms)` : '';
       const retryInfo =
-        result.retryCount && result.retryCount > 0
-          ? ` (retries: ${result.retryCount})`
-          : "";
+        result.retryCount && result.retryCount > 0 ? ` (retries: ${result.retryCount})` : '';
 
       output += `${icon} ${type.toUpperCase()}: ${status.toUpperCase()}${duration}${retryInfo}\n`;
 
@@ -881,20 +837,20 @@ class TestRunner {
 
       if (result.metadata) {
         output += `   Description: ${result.metadata.description}\n`;
-        output += `   Critical: ${result.metadata.critical ? "Yes" : "No"}\n`;
+        output += `   Critical: ${result.metadata.critical ? 'Yes' : 'No'}\n`;
       }
     });
 
-    output += `\n${"=".repeat(60)}\n`;
+    output += `\n${'='.repeat(60)}\n`;
 
     if (statistics.passedTests === statistics.totalTests) {
-      output += "🎉 ALL TESTS PASSED!\n";
+      output += '🎉 ALL TESTS PASSED!\n';
     } else {
       output += `⚠️  ${statistics.passedTests}/${statistics.totalTests} test suites passed\n`;
     }
 
     if (!this.canProceed()) {
-      output += "🚨 CRITICAL TESTS FAILED - CANNOT PROCEED!\n";
+      output += '🚨 CRITICAL TESTS FAILED - CANNOT PROCEED!\n';
     }
 
     return output;
@@ -908,24 +864,24 @@ class TestRunner {
     return new Promise((resolve, reject) => {
       const startTime = performance.now();
       const child: ChildProcess = spawn(command, args, {
-        stdio: "inherit",
-        ...options
+        stdio: 'inherit',
+        ...options,
       });
 
-      let stdout = "";
-      let stderr = "";
+      let stdout = '';
+      let stderr = '';
 
-      if (options.stdio === "pipe") {
-        child.stdout?.on("data", (data) => {
+      if (options.stdio === 'pipe') {
+        child.stdout?.on('data', (data) => {
           stdout += data.toString();
         });
 
-        child.stderr?.on("data", (data) => {
+        child.stderr?.on('data', (data) => {
           stderr += data.toString();
         });
       }
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         const duration = performance.now() - startTime;
 
         if (code === 0) {
@@ -934,7 +890,7 @@ class TestRunner {
             exitCode: code,
             duration,
             stdout: stdout || undefined,
-            stderr: stderr || undefined
+            stderr: stderr || undefined,
           });
         } else {
           reject(
@@ -944,13 +900,13 @@ class TestRunner {
               duration,
               error: stderr || `Command failed with exit code ${code}`,
               stdout: stdout || undefined,
-              stderr: stderr || undefined
+              stderr: stderr || undefined,
             })
           );
         }
       });
 
-      child.on("error", (error) => {
+      child.on('error', (error) => {
         const duration = performance.now() - startTime;
         reject(
           new CommandExecutionResultClass({
@@ -958,7 +914,7 @@ class TestRunner {
             exitCode: null,
             duration,
             error: error.message,
-            stderr: error.message
+            stderr: error.message,
           })
         );
       });
@@ -978,7 +934,7 @@ class TestRunner {
         // Use fetch instead of axios for better Bun compatibility
         const response = await fetch(url, {
           signal: AbortSignal.timeout(config.interval),
-          headers: config.headers
+          headers: config.headers,
         });
 
         if (response.status === (config.expectedStatus || 200)) {
@@ -991,7 +947,7 @@ class TestRunner {
     }
 
     throw new TestRunnerError(
-      "SERVER_TIMEOUT",
+      'SERVER_TIMEOUT',
       `Server at ${url} did not start within ${timeout}ms`
     );
   }
@@ -1009,7 +965,7 @@ class TestRunner {
     try {
       const response = await fetch(url, {
         signal: AbortSignal.timeout(config.timeout),
-        headers: config.headers
+        headers: config.headers,
       });
 
       const duration = performance.now() - startTime;
@@ -1019,7 +975,7 @@ class TestRunner {
           success: true,
           exitCode: 0,
           duration,
-          stdout: `Server is healthy (Status: ${response.status})`
+          stdout: `Server is healthy (Status: ${response.status})`,
         };
       }
       return {
@@ -1027,7 +983,7 @@ class TestRunner {
         exitCode: response.status,
         duration,
         error: `Server returned unexpected status: ${response.status}`,
-        stderr: `Expected ${config.expectedStatus || 200}, got ${response.status}`
+        stderr: `Expected ${config.expectedStatus || 200}, got ${response.status}`,
       };
     } catch (error) {
       const duration = performance.now() - startTime;
@@ -1036,7 +992,7 @@ class TestRunner {
         exitCode: null,
         duration,
         error: error instanceof Error ? error.message : String(error),
-        stderr: `Failed to connect to server at ${url}`
+        stderr: `Failed to connect to server at ${url}`,
       };
     }
   }

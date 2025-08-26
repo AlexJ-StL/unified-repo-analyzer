@@ -291,7 +291,7 @@ def format_response(data):
 class DataProcessor:
     def __init__(self, config):
         self.config = config
-    
+
     def process(self, data):
         return format_response(data)
 `,
