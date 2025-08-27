@@ -1,3 +1,5 @@
-export function util3() {
-  return 'utility function 3';
-}
+
+          export function util3() {
+            return 'utility function 3';
+          }
+        
