@@ -1,12 +1,12 @@
-import { randomUUID } from 'node:crypto';
-import fs from 'node:fs';
-import path from 'node:path';
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
-import { env } from '../config/environment';
+import { randomUUID } from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+import { env } from "../config/environment";
 
 // Types and interfaces for structured logging
-export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
+export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR";
 
 export interface LogEntry {
   timestamp: string;
@@ -28,13 +28,13 @@ export interface ErrorDetails {
 export interface LoggerConfig {
   level: LogLevel;
   outputs: LogOutput[];
-  format: 'JSON' | 'TEXT';
+  format: "JSON" | "TEXT";
   includeStackTrace: boolean;
   redactSensitiveData: boolean;
 }
 
 export interface LogOutput {
-  type: 'console' | 'file' | 'external';
+  type: "console" | "file" | "external";
   config: ConsoleConfig | FileConfig | ExternalConfig;
 }
 
@@ -52,7 +52,7 @@ export interface FileConfig {
 export interface ExternalConfig {
   endpoint: string;
   apiKey?: string;
-  format: 'JSON' | 'TEXT';
+  format: "JSON" | "TEXT";
 }
 
 // Request context storage for correlation IDs
@@ -64,12 +64,15 @@ export class Logger {
   private config: LoggerConfig;
   private defaultComponent: string;
 
-  constructor(config?: Partial<LoggerConfig>, component = 'unified-repo-analyzer') {
+  constructor(
+    config?: Partial<LoggerConfig>,
+    component = "unified-repo-analyzer"
+  ) {
     this.defaultComponent = component;
     this.config = {
-      level: 'INFO',
-      outputs: [{ type: 'console', config: { colorize: true } }],
-      format: 'JSON',
+      level: "INFO",
+      outputs: [{ type: "console", config: { colorize: true } }],
+      format: "JSON",
       includeStackTrace: true,
       redactSensitiveData: true,
       ...config,
@@ -89,14 +92,20 @@ export class Logger {
     // Create transports based on configuration
     for (const output of this.config.outputs) {
       switch (output.type) {
-        case 'console':
-          transports.push(this.createConsoleTransport(output.config as ConsoleConfig));
+        case "console":
+          transports.push(
+            this.createConsoleTransport(output.config as ConsoleConfig)
+          );
           break;
-        case 'file':
-          transports.push(this.createFileTransport(output.config as FileConfig));
+        case "file":
+          transports.push(
+            this.createFileTransport(output.config as FileConfig)
+          );
           break;
-        case 'external':
-          transports.push(this.createExternalTransport(output.config as ExternalConfig));
+        case "external":
+          transports.push(
+            this.createExternalTransport(output.config as ExternalConfig)
+          );
           break;
       }
     }
@@ -107,13 +116,13 @@ export class Logger {
       transports,
       exceptionHandlers: [
         new winston.transports.File({
-          filename: path.join(env.LOG_DIR, 'exceptions.log'),
+          filename: path.join(env.LOG_DIR, "exceptions.log"),
           format: this.createLogFormat(),
         }),
       ],
       rejectionHandlers: [
         new winston.transports.File({
-          filename: path.join(env.LOG_DIR, 'rejections.log'),
+          filename: path.join(env.LOG_DIR, "rejections.log"),
           format: this.createLogFormat(),
         }),
       ],
@@ -124,7 +133,7 @@ export class Logger {
   private createLogFormat(): winston.Logform.Format {
     return winston.format.combine(
       winston.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss.SSS',
+        format: "YYYY-MM-DD HH:mm:ss.SSS",
       }),
       winston.format.errors({ stack: this.config.includeStackTrace }),
       winston.format.printf((info) => {
@@ -139,14 +148,16 @@ export class Logger {
 
         if (info.error || info.stack) {
           logEntry.error = {
-            name: info.error?.name || 'Error',
+            name: info.error?.name || "Error",
             message: info.error?.message || info.message,
-            stack: this.config.includeStackTrace ? info.stack || info.error?.stack : undefined,
+            stack: this.config.includeStackTrace
+              ? info.stack || info.error?.stack
+              : undefined,
             code: info.error?.code,
           };
         }
 
-        return this.config.format === 'JSON'
+        return this.config.format === "JSON"
           ? JSON.stringify(logEntry)
           : this.formatTextLog(logEntry);
       })
@@ -156,7 +167,10 @@ export class Logger {
   private createConsoleTransport(config: ConsoleConfig): winston.transport {
     return new winston.transports.Console({
       format: config.colorize
-        ? winston.format.combine(winston.format.colorize(), this.createLogFormat())
+        ? winston.format.combine(
+            winston.format.colorize(),
+            this.createLogFormat()
+          )
         : this.createLogFormat(),
       level: this.config.level.toLowerCase(),
     });
@@ -168,14 +182,15 @@ export class Logger {
     if (config.rotateDaily) {
       // Use DailyRotateFile for daily rotation
       return new DailyRotateFile({
-        filename: config.path.replace('.log', '-%DATE%.log'),
-        datePattern: 'YYYY-MM-DD',
+        filename: config.path.replace(".log", "-%DATE%.log"),
+        datePattern: "YYYY-MM-DD",
         format: this.createLogFormat(),
         maxSize: config.maxSize,
         maxFiles: `${config.maxFiles}d`, // Keep files for N days
-        auditFile: config.path.replace('.log', '-audit.json'),
+        auditFile: config.path.replace(".log", "-audit.json"),
         createSymlink: true,
         symlinkName: config.path,
+        level: this.config.level.toLowerCase(),
       });
     }
     return new winston.transports.File({
@@ -184,6 +199,7 @@ export class Logger {
       maxsize: maxSizeBytes,
       maxFiles: config.maxFiles,
       tailable: true,
+      level: this.config.level.toLowerCase(),
     });
   }
 
@@ -193,9 +209,14 @@ export class Logger {
       host: this.extractHostFromEndpoint(config.endpoint),
       port: this.extractPortFromEndpoint(config.endpoint),
       path: this.extractPathFromEndpoint(config.endpoint),
-      ssl: config.endpoint.startsWith('https'),
-      format: config.format === 'JSON' ? winston.format.json() : winston.format.simple(),
-      headers: config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : undefined,
+      ssl: config.endpoint.startsWith("https"),
+      format:
+        config.format === "JSON"
+          ? winston.format.json()
+          : winston.format.simple(),
+      headers: config.apiKey
+        ? { Authorization: `Bearer ${config.apiKey}` }
+        : undefined,
     });
   }
 
@@ -204,14 +225,18 @@ export class Logger {
       const url = new URL(endpoint);
       return url.hostname;
     } catch {
-      return 'localhost';
+      return "localhost";
     }
   }
 
   private extractPortFromEndpoint(endpoint: string): number {
     try {
       const url = new URL(endpoint);
-      return url.port ? Number.parseInt(url.port, 10) : url.protocol === 'https:' ? 443 : 80;
+      return url.port
+        ? Number.parseInt(url.port, 10)
+        : url.protocol === "https:"
+          ? 443
+          : 80;
     } catch {
       return 80;
     }
@@ -220,9 +245,9 @@ export class Logger {
   private extractPathFromEndpoint(endpoint: string): string {
     try {
       const url = new URL(endpoint);
-      return url.pathname || '/';
+      return url.pathname || "/";
     } catch {
-      return '/';
+      return "/";
     }
   }
 
@@ -231,14 +256,14 @@ export class Logger {
     if (!match) return 10485760; // Default 10MB
 
     const size = Number.parseInt(match[1], 10);
-    const unit = (match[2] || 'MB').toUpperCase();
+    const unit = (match[2] || "MB").toUpperCase();
 
     switch (unit) {
-      case 'KB':
+      case "KB":
         return size * 1024;
-      case 'MB':
+      case "MB":
         return size * 1024 * 1024;
-      case 'GB':
+      case "GB":
         return size * 1024 * 1024 * 1024;
       default:
         return size;
@@ -264,12 +289,20 @@ export class Logger {
       return metadata;
     }
 
-    const sensitiveKeys = ['password', 'token', 'apikey', 'secret', 'authorization'];
+    const sensitiveKeys = [
+      "password",
+      "token",
+      "apikey",
+      "secret",
+      "authorization",
+    ];
     const sanitized = { ...metadata };
 
     for (const key of Object.keys(sanitized)) {
-      if (sensitiveKeys.some((sensitive) => key.toLowerCase().includes(sensitive))) {
-        sanitized[key] = '[REDACTED]';
+      if (
+        sensitiveKeys.some((sensitive) => key.toLowerCase().includes(sensitive))
+      ) {
+        sanitized[key] = "[REDACTED]";
       }
     }
 
@@ -320,11 +353,11 @@ export class Logger {
 
   // Request context management
   setRequestId(requestId: string): void {
-    requestContext.set('current', requestId);
+    requestContext.set("current", requestId);
   }
 
   getRequestId(): string {
-    return requestContext.get('current') || this.generateRequestId();
+    return requestContext.get("current") || this.generateRequestId();
   }
 
   // Configuration management
@@ -340,33 +373,35 @@ export class Logger {
 
 // Create default logger instance
 const defaultLoggerConfig: Partial<LoggerConfig> = {
-  level: (env.LOG_LEVEL?.toUpperCase() as LogLevel) || 'INFO',
+  level: (env.LOG_LEVEL?.toUpperCase() as LogLevel) || "INFO",
   outputs: [],
-  format: 'JSON',
+  format: "JSON",
   includeStackTrace: true,
   redactSensitiveData: true,
 };
 
 // Configure outputs based on environment
-if (env.NODE_ENV === 'development') {
-  defaultLoggerConfig.outputs = [{ type: 'console', config: { colorize: true } }];
+if (env.NODE_ENV === "development") {
+  defaultLoggerConfig.outputs = [
+    { type: "console", config: { colorize: true } },
+  ];
 } else {
   defaultLoggerConfig.outputs = [
-    { type: 'console', config: { colorize: false } },
+    { type: "console", config: { colorize: false } },
     {
-      type: 'file',
+      type: "file",
       config: {
-        path: path.join(env.LOG_DIR, 'combined.log'),
-        maxSize: '10MB',
+        path: path.join(env.LOG_DIR, "combined.log"),
+        maxSize: "10MB",
         maxFiles: 10,
         rotateDaily: false,
       },
     },
     {
-      type: 'file',
+      type: "file",
       config: {
-        path: path.join(env.LOG_DIR, 'error.log'),
-        maxSize: '10MB',
+        path: path.join(env.LOG_DIR, "error.log"),
+        maxSize: "10MB",
         maxFiles: 5,
         rotateDaily: false,
       },
@@ -410,14 +445,19 @@ export const requestLogger = (req: any, res: any, next: any) => {
     query: sanitizeQueryParams(req.query),
     headers: sanitizeHeaders(req.headers),
     body: sanitizeRequestBody(req.body),
-    userAgent: req.get('User-Agent'),
+    userAgent: req.get("User-Agent"),
     ip: req.ip || req.connection.remoteAddress || req.socket.remoteAddress,
     timestamp: startTime,
-    contentLength: req.get('Content-Length'),
-    contentType: req.get('Content-Type'),
+    contentLength: req.get("Content-Length"),
+    contentType: req.get("Content-Type"),
   };
 
-  logger.info('HTTP Request Started', requestData, 'http-middleware', requestId);
+  logger.info(
+    "HTTP Request Started",
+    requestData,
+    "http-middleware",
+    requestId
+  );
 
   // Capture response data
   const originalSend = res.send;
@@ -428,7 +468,9 @@ export const requestLogger = (req: any, res: any, next: any) => {
   // Override res.send to capture response body
   res.send = function (body: any) {
     responseBody = body;
-    responseSize = Buffer.isBuffer(body) ? body.length : Buffer.byteLength(body || '', 'utf8');
+    responseSize = Buffer.isBuffer(body)
+      ? body.length
+      : Buffer.byteLength(body || "", "utf8");
     return originalSend.call(this, body);
   };
 
@@ -436,11 +478,11 @@ export const requestLogger = (req: any, res: any, next: any) => {
   res.json = function (obj: any) {
     responseBody = obj;
     const jsonString = JSON.stringify(obj);
-    responseSize = Buffer.byteLength(jsonString, 'utf8');
+    responseSize = Buffer.byteLength(jsonString, "utf8");
     return originalJson.call(this, obj);
   };
 
-  res.on('finish', () => {
+  res.on("finish", () => {
     const duration = Date.now() - start;
     const endTime = new Date().toISOString();
 
@@ -455,21 +497,37 @@ export const requestLogger = (req: any, res: any, next: any) => {
       responseBody: sanitizeResponseBody(responseBody, res.statusCode),
       responseSize: `${responseSize} bytes`,
       timestamp: endTime,
-      userAgent: req.get('User-Agent'),
+      userAgent: req.get("User-Agent"),
       ip: req.ip || req.connection.remoteAddress || req.socket.remoteAddress,
     };
 
     // Log based on status code
     if (res.statusCode >= 500) {
-      logger.error('HTTP Request Completed', undefined, responseData, 'http-middleware', requestId);
+      logger.error(
+        "HTTP Request Completed",
+        undefined,
+        responseData,
+        "http-middleware",
+        requestId
+      );
     } else if (res.statusCode >= 400) {
-      logger.warn('HTTP Request Completed', responseData, 'http-middleware', requestId);
+      logger.warn(
+        "HTTP Request Completed",
+        responseData,
+        "http-middleware",
+        requestId
+      );
     } else {
-      logger.info('HTTP Request Completed', responseData, 'http-middleware', requestId);
+      logger.info(
+        "HTTP Request Completed",
+        responseData,
+        "http-middleware",
+        requestId
+      );
     }
   });
 
-  res.on('error', (error: Error) => {
+  res.on("error", (error: Error) => {
     const duration = Date.now() - start;
     const errorData = {
       requestId,
@@ -481,7 +539,13 @@ export const requestLogger = (req: any, res: any, next: any) => {
       timestamp: new Date().toISOString(),
     };
 
-    logger.error('HTTP Request Error', error, errorData, 'http-middleware', requestId);
+    logger.error(
+      "HTTP Request Error",
+      error,
+      errorData,
+      "http-middleware",
+      requestId
+    );
   });
 
   next();
@@ -493,16 +557,16 @@ function sanitizeHeaders(headers: any): Record<string, any> {
 
   const sanitized = { ...headers };
   const sensitiveHeaders = [
-    'authorization',
-    'cookie',
-    'x-api-key',
-    'x-auth-token',
-    'x-access-token',
+    "authorization",
+    "cookie",
+    "x-api-key",
+    "x-auth-token",
+    "x-access-token",
   ];
 
   for (const key of Object.keys(sanitized)) {
     if (sensitiveHeaders.includes(key.toLowerCase())) {
-      sanitized[key] = '[REDACTED]';
+      sanitized[key] = "[REDACTED]";
     }
   }
 
@@ -513,11 +577,11 @@ function sanitizeQueryParams(query: any): Record<string, any> {
   if (!query) return {};
 
   const sanitized = { ...query };
-  const sensitiveParams = ['password', 'token', 'apikey', 'secret', 'auth'];
+  const sensitiveParams = ["password", "token", "apikey", "secret", "auth"];
 
   for (const key of Object.keys(sanitized)) {
     if (sensitiveParams.some((param) => key.toLowerCase().includes(param))) {
-      sanitized[key] = '[REDACTED]';
+      sanitized[key] = "[REDACTED]";
     }
   }
 
@@ -528,18 +592,25 @@ function sanitizeRequestBody(body: any): any {
   if (!body) return null;
 
   // Don't log large bodies
-  const bodyString = typeof body === 'string' ? body : JSON.stringify(body);
+  const bodyString = typeof body === "string" ? body : JSON.stringify(body);
   if (bodyString.length > 1000) {
     return `[BODY TOO LARGE: ${bodyString.length} characters]`;
   }
 
-  if (typeof body === 'object') {
+  if (typeof body === "object") {
     const sanitized = { ...body };
-    const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth', 'credential'];
+    const sensitiveFields = [
+      "password",
+      "token",
+      "apikey",
+      "secret",
+      "auth",
+      "credential",
+    ];
 
     for (const key of Object.keys(sanitized)) {
       if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
-        sanitized[key] = '[REDACTED]';
+        sanitized[key] = "[REDACTED]";
       }
     }
 
@@ -554,20 +625,20 @@ function sanitizeResponseBody(body: any, statusCode: number): any {
 
   // Don't log response bodies for successful requests to avoid noise
   if (statusCode >= 200 && statusCode < 300) {
-    const bodyString = typeof body === 'string' ? body : JSON.stringify(body);
+    const bodyString = typeof body === "string" ? body : JSON.stringify(body);
     if (bodyString.length > 500) {
       return `[RESPONSE BODY: ${bodyString.length} characters]`;
     }
   }
 
   // For error responses, include more details but sanitize sensitive data
-  if (statusCode >= 400 && typeof body === 'object') {
+  if (statusCode >= 400 && typeof body === "object") {
     const sanitized = { ...body };
-    const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth'];
+    const sensitiveFields = ["password", "token", "apikey", "secret", "auth"];
 
     for (const key of Object.keys(sanitized)) {
       if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
-        sanitized[key] = '[REDACTED]';
+        sanitized[key] = "[REDACTED]";
       }
     }
 
@@ -579,28 +650,32 @@ function sanitizeResponseBody(body: any, statusCode: number): any {
 
 function getStatusText(statusCode: number): string {
   const statusTexts: Record<number, string> = {
-    200: 'OK',
-    201: 'Created',
-    204: 'No Content',
-    400: 'Bad Request',
-    401: 'Unauthorized',
-    403: 'Forbidden',
-    404: 'Not Found',
-    405: 'Method Not Allowed',
-    409: 'Conflict',
-    422: 'Unprocessable Entity',
-    429: 'Too Many Requests',
-    500: 'Internal Server Error',
-    502: 'Bad Gateway',
-    503: 'Service Unavailable',
-    504: 'Gateway Timeout',
+    200: "OK",
+    201: "Created",
+    204: "No Content",
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Not Found",
+    405: "Method Not Allowed",
+    409: "Conflict",
+    422: "Unprocessable Entity",
+    429: "Too Many Requests",
+    500: "Internal Server Error",
+    502: "Bad Gateway",
+    503: "Service Unavailable",
+    504: "Gateway Timeout",
   };
 
-  return statusTexts[statusCode] || 'Unknown';
+  return statusTexts[statusCode] || "Unknown";
 }
 
 // Error logging helper
-export const logError = (error: Error, context?: Record<string, any>, component?: string) => {
+export const logError = (
+  error: Error,
+  context?: Record<string, any>,
+  component?: string
+) => {
   logger.error(error.message, error, context, component);
 };
 
@@ -617,7 +692,7 @@ export const logPerformance = (
       duration: `${duration}ms`,
       ...metadata,
     },
-    component || 'performance'
+    component || "performance"
   );
 };
 
@@ -627,20 +702,20 @@ export const logSecurityEvent = (
   details: Record<string, any>,
   component?: string
 ) => {
-  logger.warn(`Security Event: ${event}`, details, component || 'security');
+  logger.warn(`Security Event: ${event}`, details, component || "security");
 };
 
 // Analysis logging helper
 export const logAnalysis = (
   repoPath: string,
-  status: 'started' | 'completed' | 'failed',
+  status: "started" | "completed" | "failed",
   metadata?: Record<string, any>,
   component?: string
 ) => {
   const message = `Analysis ${status}: ${repoPath}`;
-  const comp = component || 'analysis';
+  const comp = component || "analysis";
 
-  if (status === 'failed') {
+  if (status === "failed") {
     logger.error(message, undefined, metadata, comp);
   } else {
     logger.info(message, metadata, comp);

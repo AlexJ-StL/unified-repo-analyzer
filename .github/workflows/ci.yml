@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   push:
@@ -6,14 +6,80 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  BUN_VERSION: '1.0.0'
-  CACHE_VERSION: v1
-
 jobs:
-  # Job 1: Code Quality and Linting
+  test:
+    name: Test on ${{ matrix.os }} with ${{ matrix.runtime }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        runtime: [bun, node]
+        include:
+          - runtime: bun
+            bun-version: latest
+          - runtime: node
+            node-version: "18"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Setup Node.js
+        if: matrix.runtime == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies (Bun)
+        if: matrix.runtime == 'bun'
+        run: bun install
+
+      - name: Install dependencies (Node)
+        if: matrix.runtime == 'node'
+        run: npm ci
+
+      - name: Run tests with CI configuration (Bun)
+        if: matrix.runtime == 'bun'
+        run: bun run test:ci
+        env:
+          CI: true
+          NODE_ENV: test
+
+      - name: Run tests with CI configuration (Node)
+        if: matrix.runtime == 'node'
+        run: npm run test:ci
+        env:
+          CI: true
+          NODE_ENV: test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.runtime }}
+          path: |
+            ci-test-results.xml
+            ci-test-results.json
+            coverage/
+
+      - name: Upload coverage to Codecov
+        if: matrix.runtime == 'bun' && matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
   lint:
-    name: Code Quality & Linting
+    name: Lint and Format Check
     runs-on: ubuntu-latest
 
     steps:
@@ -23,180 +89,88 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install
 
-      - name: Run Biome linting and formatting check
-        run: bun run check
+      - name: Run linter
+        run: bun run lint
 
-      - name: TypeScript type checking
-        run: bun run type-check
+      - name: Check formatting
+        run: bun run format --check
 
-      - name: Check for circular dependencies
-        run: bun run check-circular-deps
-
-  # Job 2: Unit Tests
-  unit-tests:
-    name: Unit Tests
+  build:
+    name: Build and Test Build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: [backend, frontend, cli, shared]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
-      - name: Build shared package
-        run: npm run build:shared
+      - name: Build project
+        run: bun run build:prod
 
-      - name: Run unit tests for ${{ matrix.package }}
-        run: npm run test:${{ matrix.package }} -- --coverage --watchAll=false
+      - name: Run build doctor
+        run: bun run build:doctor
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          file: ./packages/${{ matrix.package }}/coverage/lcov.info
-          flags: ${{ matrix.package }}
-          name: ${{ matrix.package }}-coverage
+          name: build-artifacts
+          path: |
+            packages/*/dist/
+            packages/*/build/
 
-  # Job 3: Integration Tests
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
-
-    services:
-      # Add any required services (Redis, PostgreSQL, etc.)
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    needs: [test, build]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
-      - name: Build all packages
-        run: npm run build
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
 
       - name: Run integration tests
-        run: npm run test:integration
+        run: bun run test:integration
         env:
-          REDIS_URL: redis://localhost:6379
+          CI: true
           NODE_ENV: test
-
-      - name: Upload integration test results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: integration-test-results
-          path: |
-            packages/backend/test-results/
-            packages/backend/coverage/
-
-  # Job 4: End-to-End Tests
-  e2e-tests:
-    name: End-to-End Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build all packages
-        run: npm run build
-
-      - name: Start test servers
-        run: |
-          npm run start:backend &
-          npm run start:frontend &
-          sleep 30  # Wait for servers to start
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: bun run test:e2e
         env:
+          CI: true
           NODE_ENV: test
-          HEADLESS: true
-
-      - name: Upload E2E test artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: e2e-test-artifacts
-          path: |
-            tests/e2e/screenshots/
-            tests/e2e/videos/
-            tests/e2e/reports/
-
-  # Job 5: Performance Tests
-  performance-tests:
-    name: Performance Tests
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build all packages
-        run: npm run build
 
       - name: Run performance tests
-        run: npm run test:performance
+        run: bun run test:performance
         env:
+          CI: true
           NODE_ENV: test
 
-      - name: Upload performance results
-        uses: actions/upload-artifact@v3
-        with:
-          name: performance-results
-          path: tests/performance/results/
-
-  # Job 6: Security Audit
-  security-audit:
+  security:
     name: Security Audit
     runs-on: ubuntu-latest
 
@@ -204,198 +178,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate
+      - name: Run security audit
+        run: bun audit
 
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
-
-      - name: Run CodeQL analysis
-        uses: github/codeql-action/init@v2
-        with:
-          languages: javascript
-
-      - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
-
-  # Job 7: Build and Package
-  build:
-    name: Build & Package
-    runs-on: ubuntu-latest
-    needs: [lint, unit-tests]
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build all packages
-        run: npm run build
-
-      - name: Package CLI for distribution
-        run: npm run package:cli
-
-      - name: Test CLI package
-        run: npm run test:cli-package
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts-${{ matrix.os }}
-          path: |
-            packages/*/dist/
-            packages/cli/bin/
-            *.tgz
-
-  # Job 8: Docker Build
-  docker-build:
-    name: Docker Build
-    runs-on: ubuntu-latest
-    needs: [build]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and test Docker images
-        run: |
-          docker build -t unified-repo-analyzer:backend -f docker/Dockerfile.backend .
-          docker build -t unified-repo-analyzer:frontend -f docker/Dockerfile.frontend .
-
-          # Test Docker images
-          docker run --rm unified-repo-analyzer:backend npm test
-          docker run --rm unified-repo-analyzer:frontend npm test
-
-      - name: Push Docker images
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          docker tag unified-repo-analyzer:backend ${{ secrets.DOCKER_USERNAME }}/unified-repo-analyzer:backend-latest
-          docker tag unified-repo-analyzer:frontend ${{ secrets.DOCKER_USERNAME }}/unified-repo-analyzer:frontend-latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/unified-repo-analyzer:backend-latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/unified-repo-analyzer:frontend-latest
-
-  # Job 9: Documentation
-  documentation:
-    name: Documentation
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate API documentation
-        run: npm run docs:api
-
-      - name: Generate TypeScript documentation
-        run: npm run docs:typedoc
-
-      - name: Build documentation site
-        run: npm run docs:build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/dist
-
-  # Job 10: Notification
-  notify:
-    name: Notification
-    runs-on: ubuntu-latest
-    needs: [lint, unit-tests, integration-tests, e2e-tests, build]
-    if: always()
-
-    steps:
-      - name: Notify Slack on success
-        if: success()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: success
-          channel: '#ci-cd'
-          text: '✅ CI pipeline passed for ${{ github.ref }}'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Slack on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: failure
-          channel: '#ci-cd'
-          text: '❌ CI pipeline failed for ${{ github.ref }}'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  # Cleanup job to remove old artifacts
-  cleanup:
-    name: Cleanup
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [notify]
-
-    steps:
-      - name: Delete old artifacts
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId,
-            });
-
-            // Keep only the latest 5 artifacts
-            const toDelete = artifacts.data.artifacts.slice(5);
-
-            for (const artifact of toDelete) {
-              await github.rest.actions.deleteArtifact({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                artifact_id: artifact.id,
-              });
-            }
+      - name: Run dependency check
+        run: bun run recovery:check-env
