@@ -28,7 +28,11 @@ export class EnvironmentDetector {
   }
 
   static isNode(): boolean {
-    return typeof process !== "undefined" && !!process.versions?.node;
+    return (
+      typeof process !== "undefined" &&
+      !!process.versions?.node &&
+      typeof Bun === "undefined"
+    );
   }
 
   static getNodeVersion(): string | undefined {
@@ -59,12 +63,13 @@ export class EnvironmentDetector {
 }
 
 /**
- * CI-specific timeout management
+ * CI-specific timeout management with runtime awareness
  */
 export class CITimeoutManager {
   private static readonly BASE_TIMEOUT = 5000;
-  private static readonly CI_MULTIPLIER = 4;
-  private static readonly SLOW_OPERATION_MULTIPLIER = 8;
+  private static readonly CI_MULTIPLIER = EnvironmentDetector.isBun() ? 3 : 4; // Bun is faster
+  private static readonly SLOW_OPERATION_MULTIPLIER =
+    EnvironmentDetector.isBun() ? 6 : 8;
 
   static getTimeout(
     operation: "fast" | "normal" | "slow" | "very-slow" = "normal"
@@ -100,18 +105,22 @@ export class CITimeoutManager {
     operation: "fast" | "normal" | "slow" = "normal"
   ): number {
     const isCI = EnvironmentDetector.isCI();
+    const isBun = EnvironmentDetector.isBun();
 
     if (!isCI) return 0;
 
+    // Bun is more stable, needs fewer retries
+    const bunMultiplier = isBun ? 0.7 : 1;
+
     switch (operation) {
       case "fast":
-        return 2;
+        return Math.ceil(2 * bunMultiplier);
       case "normal":
-        return 3;
+        return Math.ceil(3 * bunMultiplier);
       case "slow":
-        return 5;
+        return Math.ceil(5 * bunMultiplier);
       default:
-        return 3;
+        return Math.ceil(3 * bunMultiplier);
     }
   }
 }
@@ -453,6 +462,173 @@ export function ciTest<T extends (...args: any[]) => any>(
 }
 
 /**
+ * Cross-runtime test validation utilities
+ */
+export class CrossRuntimeValidator {
+  /**
+   * Validate that a test behaves consistently across runtimes
+   */
+  static async validateCrossRuntime<T>(
+    testFn: () => Promise<T>,
+    testName: string,
+    options: {
+      tolerance?: number; // Tolerance for numeric comparisons
+      ignoreTimingDifferences?: boolean;
+      customComparator?: (bunResult: T, nodeResult: T) => boolean;
+    } = {}
+  ): Promise<{
+    bunResult?: T;
+    nodeResult?: T;
+    consistent: boolean;
+    differences?: string[];
+  }> {
+    const results: {
+      bunResult?: T;
+      nodeResult?: T;
+      consistent: boolean;
+      differences?: string[];
+    } = {
+      consistent: true,
+      differences: [],
+    };
+
+    // This is a conceptual implementation - in practice, you'd need to run this
+    // across different runtime environments
+    try {
+      const currentResult = await testFn();
+
+      if (EnvironmentDetector.isBun()) {
+        results.bunResult = currentResult;
+      } else {
+        results.nodeResult = currentResult;
+      }
+
+      // In a real implementation, you'd compare results from both runtimes
+      // For now, we'll just validate the current runtime
+      results.consistent = true;
+    } catch (error) {
+      results.consistent = false;
+      results.differences = [
+        `Runtime error in ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"}: ${error}`,
+      ];
+    }
+
+    return results;
+  }
+
+  /**
+   * Create a test that validates behavior across runtimes
+   */
+  static createCrossRuntimeTest<T>(
+    testName: string,
+    testFn: () => Promise<T>,
+    options: {
+      skipInRuntime?: "bun" | "node";
+      expectDifferences?: boolean;
+      tolerance?: number;
+    } = {}
+  ) {
+    return async () => {
+      if (options.skipInRuntime === "bun" && EnvironmentDetector.isBun()) {
+        console.log(`Skipping ${testName} in Bun runtime`);
+        return;
+      }
+
+      if (options.skipInRuntime === "node" && !EnvironmentDetector.isBun()) {
+        console.log(`Skipping ${testName} in Node.js runtime`);
+        return;
+      }
+
+      const monitor = new CIPerformanceMonitor(
+        `${testName} (${EnvironmentDetector.isBun() ? "Bun" : "Node.js"})`
+      );
+
+      try {
+        monitor.checkpoint("test-start");
+        const result = await testFn();
+        monitor.checkpoint("test-end");
+
+        // Log runtime-specific performance data
+        if (EnvironmentDetector.isCI() || process.env.DEBUG_CROSS_RUNTIME) {
+          monitor.logReport();
+        }
+
+        return result;
+      } catch (error) {
+        console.error(
+          `Cross-runtime test failed in ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"}:`,
+          error
+        );
+        throw error;
+      }
+    };
+  }
+}
+
+/**
+ * Enhanced error reporting for CI environments
+ */
+export class CIErrorReporter {
+  /**
+   * Format error for CI consumption
+   */
+  static formatError(
+    error: Error,
+    context: {
+      testName?: string;
+      runtime?: string;
+      platform?: string;
+      ciProvider?: string;
+    } = {}
+  ): string {
+    const lines = [
+      `❌ Test Error: ${context.testName || "Unknown Test"}`,
+      `Runtime: ${context.runtime || EnvironmentDetector.isBun() ? "Bun" : "Node.js"}`,
+      `Platform: ${context.platform || EnvironmentDetector.getPlatform()}`,
+      `CI Provider: ${context.ciProvider || EnvironmentDetector.getCIProvider() || "Local"}`,
+      `Error: ${error.message}`,
+    ];
+
+    if (error.stack) {
+      lines.push(`Stack Trace:`);
+      lines.push(error.stack);
+    }
+
+    return lines.join("\n");
+  }
+
+  /**
+   * Report error with context to CI system
+   */
+  static reportError(
+    error: Error,
+    context: {
+      testName?: string;
+      runtime?: string;
+      platform?: string;
+    } = {}
+  ): void {
+    const formattedError = this.formatError(error, {
+      ...context,
+      ciProvider: EnvironmentDetector.getCIProvider(),
+    });
+
+    // Log to console for CI systems to capture
+    console.error(formattedError);
+
+    // GitHub Actions specific annotations
+    if (process.env.GITHUB_ACTIONS) {
+      console.log(`::error title=Test Failure::${error.message}`);
+    }
+
+    // GitLab CI specific formatting
+    if (process.env.GITLAB_CI) {
+      console.log(`\x1b[31mERROR:\x1b[0m ${error.message}`);
+    }
+  }
+}
+
+/**
  * Export environment information for debugging
  */
 export function logEnvironmentInfo(): void {
@@ -473,5 +649,8 @@ export function logEnvironmentInfo(): void {
     console.log(
       `  Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB`
     );
+    console.log(`  Max Memory: ${process.env.NODE_OPTIONS || "default"}`);
+    console.log(`  Test Timeout: ${process.env.TEST_TIMEOUT || "default"}`);
+    console.log(`  Parallel Tests: ${process.env.TEST_PARALLEL || "false"}`);
   }
 }

@@ -29,6 +29,9 @@ export * from "./parallel-test-utils";
 // Re-export CI/CD utilities
 export * from "./ci-test-utils";
 
+// Re-export runtime-specific helpers
+export * from "./runtime-test-helpers";
+
 // Load test environment variables
 config({ path: join(__dirname, "../.env.test") });
 

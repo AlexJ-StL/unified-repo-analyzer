@@ -1,14 +1,14 @@
 {
-	"extends": "../../tsconfig.json",
-	"compilerOptions": {
-		"outDir": "./dist",
-		"rootDir": "./src",
-		"target": "ES2022",
-		"module": "ESNext",
-		"lib": ["ES2022"],
-		"types": ["node"],
-		"allowJs": false
-	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules", "dist", "build", "__tests__", "jest.config.ts"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022"],
+    "types": ["node", "vitest/globals", "bun-types"],
+    "allowJs": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "build", "__tests__", "jest.config.ts"]
 }
