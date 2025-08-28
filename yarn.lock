@@ -1738,7 +1738,7 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react@>=16.8", "@types/react@>=18", "@types/react@^18.0.0", "@types/react@^18.2.66":
+"@types/react@>=16.8", "@types/react@>=18", "@types/react@^18.0.0", "@types/react@^18.2.66", "@types/react@^19":
   version "18.3.23"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.3.23.tgz"
   integrity sha512-/LDXMQh55EzZQ0uVAZmKKhfENivEvWz6E+EYzh+/MCjMhNsotd+ZHhBGIjFDTi6+fz0OhQQQLbTgdQIxxCsC0w==
@@ -1825,7 +1825,7 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz"
   integrity sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==
 
-"@unified-repo-analyzer/backend@^workspace:packages/backend":
+"@unified-repo-analyzer/backend@packages/backend":
   version "workspace:packages/backend"
   resolved "workspace:packages/backend"
   devDependencies:
@@ -1855,7 +1855,7 @@
     winston-daily-rotate-file "^5.0.0"
     zod "^3.22.4"
 
-"@unified-repo-analyzer/cli@^workspace:packages/cli":
+"@unified-repo-analyzer/cli@packages/cli":
   version "workspace:packages/cli"
   resolved "workspace:packages/cli"
   devDependencies:
@@ -1874,7 +1874,7 @@
     ora "^5.4.1"
     undici "^6.0.0"
 
-"@unified-repo-analyzer/frontend@^workspace:packages/frontend":
+"@unified-repo-analyzer/frontend@packages/frontend":
   version "workspace:packages/frontend"
   resolved "workspace:packages/frontend"
   devDependencies:
@@ -1907,7 +1907,7 @@
     socket.io-client "^4.7.5"
     zustand "^4.5.2"
 
-"@unified-repo-analyzer/shared@^workspace:packages/shared", "@unified-repo-analyzer/shared@workspace:*":
+"@unified-repo-analyzer/shared@packages/shared", "@unified-repo-analyzer/shared@workspace:*":
   version "workspace:packages/shared"
   resolved "workspace:packages/shared"
   devDependencies:
@@ -2338,6 +2338,13 @@ bun@^1.2.20:
     "@oven/bun-linux-x64-musl-baseline" "1.2.20"
     "@oven/bun-windows-x64" "1.2.20"
     "@oven/bun-windows-x64-baseline" "1.2.20"
+
+bun-types@^1.2.21:
+  version "1.2.21"
+  resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.21.tgz"
+  integrity sha512-sa2Tj77Ijc/NTLS0/Odjq/qngmEPZfbfnOERi0KRUYhT9R8M4VBioWVmMWE5GrYbKMc+5lVybXygLdibHaqVqw==
+  dependencies:
+    "@types/node" "*"
 
 bytes@3.1.2:
   version "3.1.2"

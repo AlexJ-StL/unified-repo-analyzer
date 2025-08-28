@@ -1,18 +1,21 @@
 {
-	"extends": "../../tsconfig.json",
-	"compilerOptions": {
-		"outDir": "./dist",
-		"rootDir": "./src",
-		"types": ["node"]
-	},
-	"include": ["src/**/*.ts"],
-	"exclude": [
-		"node_modules",
-		"dist",
-		"build",
-		"**/*.test.js",
-		"**/*.spec.js",
-		"**/__tests__/**",
-		"**/*.test.ts"
-	]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node", "vitest/globals", "bun-types"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "temp-test-repos",
+    "**/*.test.js",
+    "**/*.spec.js",
+    "**/__tests__/**",
+    "**/*.test.ts"
+  ]
 }

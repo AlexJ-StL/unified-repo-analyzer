@@ -138,22 +138,23 @@ export class Logger {
       winston.format.errors({ stack: this.config.includeStackTrace }),
       winston.format.printf((info) => {
         const logEntry: LogEntry = {
-          timestamp: info.timestamp,
-          level: info.level.toUpperCase(),
-          component: info.component || this.defaultComponent,
-          requestId: info.requestId || this.generateRequestId(),
-          message: info.message,
-          metadata: this.sanitizeMetadata(info.metadata || {}),
+          timestamp: String(info.timestamp),
+          level: String(info.level).toUpperCase(),
+          component: String(info.component || this.defaultComponent),
+          requestId: String(info.requestId || this.generateRequestId()),
+          message: String(info.message),
+          metadata: this.sanitizeMetadata((info as any).metadata || {}),
         };
 
-        if (info.error || info.stack) {
+        const infoAny = info as any;
+        if (infoAny.error || infoAny.stack) {
           logEntry.error = {
-            name: info.error?.name || "Error",
-            message: info.error?.message || info.message,
+            name: infoAny.error?.name || "Error",
+            message: infoAny.error?.message || String(info.message),
             stack: this.config.includeStackTrace
-              ? info.stack || info.error?.stack
+              ? infoAny.stack || infoAny.error?.stack
               : undefined,
-            code: info.error?.code,
+            code: infoAny.error?.code,
           };
         }
 

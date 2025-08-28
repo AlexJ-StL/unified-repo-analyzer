@@ -1,7 +1,7 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { env } from '../config/environment';
-import logger from './logger.service';
+import fs from "node:fs";
+import path from "node:path";
+import { env } from "../config/environment";
+import logger from "./logger.service";
 
 interface BackupMetadata {
   timestamp: Date;
@@ -38,13 +38,14 @@ class BackupService {
         await this.createBackup();
         await this.cleanupOldBackups();
       } catch (error) {
-        logger.error('Scheduled backup failed', {
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        logger.error(
+          "Scheduled backup failed",
+          error instanceof Error ? error : new Error(String(error))
+        );
       }
     }, env.BACKUP_INTERVAL);
 
-    logger.info('Backup service initialized', {
+    logger.info("Backup service initialized", {
       interval: `${env.BACKUP_INTERVAL / 1000 / 60} minutes`,
       retention: `${env.BACKUP_RETENTION_DAYS} days`,
     });
@@ -57,11 +58,11 @@ class BackupService {
   }
 
   async createBackup(): Promise<string> {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const backupFilename = `backup-${timestamp}.tar.gz`;
     const backupPath = path.join(env.BACKUP_DIR, backupFilename);
 
-    logger.info('Starting backup creation', { filename: backupFilename });
+    logger.info("Starting backup creation", { filename: backupFilename });
 
     try {
       // Create backup metadata
@@ -70,17 +71,20 @@ class BackupService {
       // Create compressed backup
       await this.createCompressedBackup(backupPath, metadata);
 
-      logger.info('Backup created successfully', {
+      logger.info("Backup created successfully", {
         filename: backupFilename,
         size: this.formatFileSize(fs.statSync(backupPath).size),
       });
 
       return backupPath;
     } catch (error) {
-      logger.error('Backup creation failed', {
-        filename: backupFilename,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
+      logger.error(
+        "Backup creation failed",
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          filename: backupFilename,
+        }
+      );
       throw error;
     }
   }
@@ -113,7 +117,7 @@ class BackupService {
 
     return {
       timestamp: new Date(),
-      version: process.env.npm_package_version || '1.0.0',
+      version: process.env.npm_package_version || "1.0.0",
       dataSize,
       indexSize,
       cacheSize,
@@ -123,8 +127,8 @@ class BackupService {
 
   private async calculateChecksum(): Promise<string> {
     // Simple checksum based on directory modification times
-    const crypto = await import('node:crypto');
-    const hash = crypto.createHash('sha256');
+    const crypto = await import("node:crypto");
+    const hash = crypto.createHash("sha256");
 
     const addDirectoryToHash = async (dirPath: string) => {
       if (!fs.existsSync(dirPath)) return;
@@ -145,35 +149,40 @@ class BackupService {
     await addDirectoryToHash(env.INDEX_DIR);
     await addDirectoryToHash(env.CACHE_DIR);
 
-    return hash.digest('hex');
+    return hash.digest("hex");
   }
 
   private async createCompressedBackup(
     backupPath: string,
     metadata: BackupMetadata
   ): Promise<void> {
-    const tar = await import('tar');
+    const tar = await import("tar");
 
     // Create temporary directory for backup staging
-    const tempDir = path.join(env.BACKUP_DIR, 'temp');
+    const tempDir = path.join(env.BACKUP_DIR, "temp");
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
     }
 
     try {
       // Write metadata file
-      const metadataPath = path.join(tempDir, 'metadata.json');
-      await fs.promises.writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+      const metadataPath = path.join(tempDir, "metadata.json");
+      await fs.promises.writeFile(
+        metadataPath,
+        JSON.stringify(metadata, null, 2)
+      );
 
       // Create tar archive with compression
       const filesToBackup = [
-        { src: env.DATA_DIR, dest: 'data' },
-        { src: env.INDEX_DIR, dest: 'index' },
-        { src: env.CACHE_DIR, dest: 'cache' },
-        { src: metadataPath, dest: 'metadata.json' },
+        { src: env.DATA_DIR, dest: "data" },
+        { src: env.INDEX_DIR, dest: "index" },
+        { src: env.CACHE_DIR, dest: "cache" },
+        { src: metadataPath, dest: "metadata.json" },
       ];
 
-      const validFiles = filesToBackup.filter((file) => fs.existsSync(file.src));
+      const validFiles = filesToBackup.filter((file) =>
+        fs.existsSync(file.src)
+      );
 
       await tar.create(
         {
@@ -181,7 +190,9 @@ class BackupService {
           file: backupPath,
           cwd: path.dirname(env.DATA_DIR),
         },
-        validFiles.map((file) => path.relative(path.dirname(env.DATA_DIR), file.src))
+        validFiles.map((file) =>
+          path.relative(path.dirname(env.DATA_DIR), file.src)
+        )
       );
     } finally {
       // Clean up temporary directory
@@ -196,14 +207,16 @@ class BackupService {
       throw new Error(`Backup file not found: ${backupPath}`);
     }
 
-    logger.info('Starting backup restoration', { backupPath });
+    logger.info("Starting backup restoration", { backupPath });
 
     try {
-      const tar = await import('tar');
+      const tar = await import("tar");
 
       // Create backup of current data before restoration
       const currentBackupPath = await this.createBackup();
-      logger.info('Current data backed up before restoration', { currentBackupPath });
+      logger.info("Current data backed up before restoration", {
+        currentBackupPath,
+      });
 
       // Extract backup
       await tar.extract({
@@ -212,10 +225,15 @@ class BackupService {
       });
 
       // Verify restoration
-      const metadataPath = path.join(path.dirname(env.DATA_DIR), 'metadata.json');
+      const metadataPath = path.join(
+        path.dirname(env.DATA_DIR),
+        "metadata.json"
+      );
       if (fs.existsSync(metadataPath)) {
-        const metadata = JSON.parse(await fs.promises.readFile(metadataPath, 'utf-8'));
-        logger.info('Backup restored successfully', {
+        const metadata = JSON.parse(
+          await fs.promises.readFile(metadataPath, "utf-8")
+        );
+        logger.info("Backup restored successfully", {
           originalTimestamp: metadata.timestamp,
           version: metadata.version,
         });
@@ -224,10 +242,13 @@ class BackupService {
         await fs.promises.unlink(metadataPath);
       }
     } catch (error) {
-      logger.error('Backup restoration failed', {
-        backupPath,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
+      logger.error(
+        "Backup restoration failed",
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          backupPath,
+        }
+      );
       throw error;
     }
   }
@@ -237,7 +258,7 @@ class BackupService {
 
     const files = await fs.promises.readdir(env.BACKUP_DIR);
     const backupFiles = files.filter(
-      (file) => file.startsWith('backup-') && file.endsWith('.tar.gz')
+      (file) => file.startsWith("backup-") && file.endsWith(".tar.gz")
     );
 
     const backups: BackupInfo[] = [];
@@ -255,17 +276,17 @@ class BackupService {
           created: stats.birthtime,
         });
       } catch (error) {
-        logger.warn('Failed to read backup metadata', { filename, error });
+        logger.warn("Failed to read backup metadata", { filename, error });
         // Add backup without metadata
         backups.push({
           filename,
           metadata: {
             timestamp: stats.birthtime,
-            version: 'unknown',
+            version: "unknown",
             dataSize: 0,
             indexSize: 0,
             cacheSize: 0,
-            checksum: '',
+            checksum: "",
           },
           size: stats.size,
           created: stats.birthtime,
@@ -276,20 +297,22 @@ class BackupService {
     return backups.sort((a, b) => b.created.getTime() - a.created.getTime());
   }
 
-  private async extractBackupMetadata(backupPath: string): Promise<BackupMetadata> {
-    const tar = await import('tar');
+  private async extractBackupMetadata(
+    backupPath: string
+  ): Promise<BackupMetadata> {
+    const tar = await import("tar");
 
     return new Promise((resolve, reject) => {
       tar
         .list({
           file: backupPath,
           onentry: (entry) => {
-            if (entry.path === 'metadata.json') {
-              let data = '';
-              entry.on('data', (chunk) => {
+            if (entry.path === "metadata.json") {
+              let data = "";
+              entry.on("data", (chunk) => {
                 data += chunk.toString();
               });
-              entry.on('end', () => {
+              entry.on("end", () => {
                 try {
                   const metadata = JSON.parse(data);
                   resolve(metadata);
@@ -315,17 +338,22 @@ class BackupService {
       const backupPath = path.join(env.BACKUP_DIR, backup.filename);
       try {
         await fs.promises.unlink(backupPath);
-        logger.info('Old backup deleted', { filename: backup.filename });
+        logger.info("Old backup deleted", { filename: backup.filename });
       } catch (error) {
-        logger.warn('Failed to delete old backup', {
-          filename: backup.filename,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
+        logger.warn(
+          "Failed to delete old backup",
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            filename: backup.filename,
+          }
+        );
       }
     }
 
     if (oldBackups.length > 0) {
-      logger.info('Backup cleanup completed', { deletedCount: oldBackups.length });
+      logger.info("Backup cleanup completed", {
+        deletedCount: oldBackups.length,
+      });
     }
   }
 
@@ -337,11 +365,11 @@ class BackupService {
     }
 
     await fs.promises.unlink(backupPath);
-    logger.info('Backup deleted', { filename });
+    logger.info("Backup deleted", { filename });
   }
 
   private formatFileSize(bytes: number): string {
-    const units = ['B', 'KB', 'MB', 'GB'];
+    const units = ["B", "KB", "MB", "GB"];
     let size = bytes;
     let unitIndex = 0;
 

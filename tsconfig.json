@@ -14,9 +14,16 @@
     "isolatedModules": true,
     "allowImportingTsExtensions": false,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["node", "vitest/globals"],
+    "types": ["node", "vitest/globals", "bun-types"],
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   },
-  "exclude": ["node_modules", "dist", "packages/frontend"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/frontend",
+    "**/temp-test-repos/**"
+  ]
 }

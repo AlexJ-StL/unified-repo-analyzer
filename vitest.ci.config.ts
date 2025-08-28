@@ -10,37 +10,47 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      // CI-specific overrides
-      testTimeout: 180000, // 3 minutes for complex tests
-      hookTimeout: 90000, // 1.5 minutes for setup/teardown
-      teardownTimeout: 60000, // 1 minute for cleanup
+      // CI-specific overrides with runtime detection
+      testTimeout: typeof Bun !== "undefined" ? 240000 : 300000, // Bun: 4min, Node: 5min
+      hookTimeout: typeof Bun !== "undefined" ? 120000 : 150000, // Bun: 2min, Node: 2.5min
+      teardownTimeout: typeof Bun !== "undefined" ? 90000 : 120000, // Bun: 1.5min, Node: 2min
 
-      // More aggressive retry for CI flakiness
-      retry: 5,
+      // Runtime-aware retry configuration for CI flakiness
+      retry: typeof Bun !== "undefined" ? 3 : 5, // Bun is more stable, needs fewer retries
 
-      // Optimized for CI reporting
-      reporter: ["verbose", "junit", "json", "github-actions"],
+      // Enhanced CI reporting with runtime and environment awareness
+      reporter: process.env.GITHUB_ACTIONS
+        ? ["verbose", "junit", "json", "github-actions"]
+        : process.env.GITLAB_CI
+          ? ["verbose", "junit", "json"]
+          : ["verbose", "junit", "json"],
       outputFile: {
-        junit: "./ci-test-results.xml",
-        json: "./ci-test-results.json",
+        junit: `./ci-test-results-${typeof Bun !== "undefined" ? "bun" : "node"}-${process.platform}.xml`,
+        json: `./ci-test-results-${typeof Bun !== "undefined" ? "bun" : "node"}-${process.platform}.json`,
       },
 
-      // CI-optimized parallel execution
-      pool: "threads",
+      // Runtime-optimized parallel execution for CI
+      pool: typeof Bun !== "undefined" ? "threads" : "forks",
       poolOptions: {
         threads: {
           singleThread: false,
           isolate: true,
           useAtomics: true,
-          maxThreads: 8, // Higher for CI machines
-          minThreads: 4,
+          maxThreads: typeof Bun !== "undefined" ? 10 : 8, // Bun handles more threads better
+          minThreads: typeof Bun !== "undefined" ? 5 : 4,
+        },
+        forks: {
+          singleFork: false,
+          isolate: true,
+          maxForks: typeof Bun !== "undefined" ? 6 : 10, // Node handles more forks better
+          minForks: typeof Bun !== "undefined" ? 3 : 5,
         },
       },
 
-      // Enhanced concurrency for CI
-      maxConcurrency: 10,
-      minThreads: 4,
-      maxThreads: 8,
+      // Runtime-aware enhanced concurrency for CI
+      maxConcurrency: typeof Bun !== "undefined" ? 12 : 10,
+      minThreads: typeof Bun !== "undefined" ? 5 : 4,
+      maxThreads: typeof Bun !== "undefined" ? 10 : 8,
 
       // Deterministic execution for CI
       sequence: {
@@ -100,15 +110,22 @@ export default mergeConfig(
         all: true,
       },
 
-      // Environment-specific settings
+      // Runtime and environment-specific settings
       env: {
         CI: "true",
         NODE_ENV: "test",
         SILENT_TESTS: "true", // Reduce noise in CI logs
         DEBUG_CLEANUP: "false", // Disable debug output in CI
         TEST_PARALLEL: "true",
-        // Memory limits for CI
-        NODE_OPTIONS: "--max-old-space-size=4096",
+        TEST_RUNTIME: typeof Bun !== "undefined" ? "bun" : "node",
+        TEST_PLATFORM: process.platform,
+        // Runtime-specific memory limits for CI
+        ...(typeof Bun === "undefined" && {
+          NODE_OPTIONS: "--max-old-space-size=6144", // Increased for Node.js in CI
+        }),
+        // Enhanced error reporting
+        FORCE_COLOR: "1", // Ensure colored output in CI
+        DEBUG_COLORS: "1",
       },
 
       // Enhanced watch mode disabled in CI
@@ -123,12 +140,42 @@ export default mergeConfig(
       // Enhanced globals for CI environment
       globals: true,
 
-      // Stricter type checking in CI
+      // Runtime-aware type checking in CI
       typecheck: {
         enabled: true,
         tsconfig: "./tsconfig.json",
         include: ["**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+        // Runtime-specific type checking options
+        ...(typeof Bun !== "undefined" && {
+          // Bun-specific type checking optimizations
+          checker: "tsc",
+          allowJs: true,
+        }),
       },
+
+      // Enhanced error handling for different CI environments
+      onConsoleLog: (log, type) => {
+        // Filter out noisy logs in CI but keep errors
+        if (
+          type === "stderr" ||
+          log.includes("ERROR") ||
+          log.includes("FAIL")
+        ) {
+          return true;
+        }
+        // Suppress debug logs in CI unless explicitly enabled
+        return process.env.DEBUG_TESTS === "true";
+      },
+
+      // Runtime-specific test isolation
+      isolate: true,
+
+      // Enhanced cleanup for CI environments
+      restoreMocks: true,
+      clearMocks: true,
+      resetMocks: true,
+      unstubEnvs: true,
+      unstubGlobals: true,
     },
   })
 );

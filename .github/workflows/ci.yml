@@ -52,6 +52,10 @@ jobs:
         env:
           CI: true
           NODE_ENV: test
+          TEST_RUNTIME: bun
+          TEST_PLATFORM: ${{ matrix.os }}
+          GITHUB_ACTIONS: true
+          DEBUG_ENV: true
 
       - name: Run tests with CI configuration (Node)
         if: matrix.runtime == 'node'
@@ -59,6 +63,11 @@ jobs:
         env:
           CI: true
           NODE_ENV: test
+          TEST_RUNTIME: node
+          TEST_PLATFORM: ${{ matrix.os }}
+          GITHUB_ACTIONS: true
+          DEBUG_ENV: true
+          NODE_OPTIONS: "--max-old-space-size=6144"
 
       - name: Upload test results
         if: always()
@@ -66,9 +75,12 @@ jobs:
         with:
           name: test-results-${{ matrix.os }}-${{ matrix.runtime }}
           path: |
-            ci-test-results.xml
-            ci-test-results.json
+            ci-test-results-*.xml
+            ci-test-results-*.json
+            test-results-*.xml
+            test-results-*.json
             coverage/
+            integration-test-results-*.json
 
       - name: Upload coverage to Codecov
         if: matrix.runtime == 'bun' && matrix.os == 'ubuntu-latest'
@@ -153,22 +165,30 @@ jobs:
           name: build-artifacts
 
       - name: Run integration tests
-        run: bun run test:integration
+        run: bun run test:integration:ci
         env:
           CI: true
           NODE_ENV: test
+          TEST_RUNTIME: bun
+          GITHUB_ACTIONS: true
+          DEBUG_ENV: true
 
       - name: Run E2E tests
         run: bun run test:e2e
         env:
           CI: true
           NODE_ENV: test
+          TEST_RUNTIME: bun
+          GITHUB_ACTIONS: true
 
       - name: Run performance tests
         run: bun run test:performance
         env:
           CI: true
           NODE_ENV: test
+          TEST_RUNTIME: bun
+          GITHUB_ACTIONS: true
+          DEBUG_PERFORMANCE: true
 
   security:
     name: Security Audit

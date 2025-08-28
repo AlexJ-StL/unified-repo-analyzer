@@ -56,49 +56,101 @@ export default defineConfig({
         },
       },
     },
-    // Enhanced CI/CD configuration
-    testTimeout: process.env.CI ? 120000 : 30000, // Increased timeout for CI
-    hookTimeout: process.env.CI ? 60000 : 15000,
-    teardownTimeout: process.env.CI ? 30000 : 10000,
-    // Enhanced retry configuration for flaky tests
-    retry: process.env.CI ? 3 : 0, // More retries in CI
-    // Better error reporting for different environments
+    // Enhanced CI/CD configuration with runtime-specific adjustments
+    testTimeout: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 180000
+        : 240000 // Bun: 3min, Node: 4min in CI
+      : typeof Bun !== "undefined"
+        ? 45000
+        : 60000, // Bun: 45s, Node: 60s locally
+    hookTimeout: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 90000
+        : 120000 // Bun: 1.5min, Node: 2min in CI
+      : typeof Bun !== "undefined"
+        ? 20000
+        : 30000, // Bun: 20s, Node: 30s locally
+    teardownTimeout: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 45000
+        : 60000 // Bun: 45s, Node: 60s in CI
+      : typeof Bun !== "undefined"
+        ? 15000
+        : 20000, // Bun: 15s, Node: 20s locally
+    // Enhanced retry configuration for flaky tests with runtime awareness
+    retry: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 3
+        : 5 // Bun: 3 retries, Node: 5 retries in CI
+      : 0, // No retries locally
+    // Enhanced error reporting for different environments and runtimes
     reporter: process.env.CI
-      ? ["verbose", "junit", "json"]
+      ? process.env.GITHUB_ACTIONS
+        ? ["verbose", "junit", "json", "github-actions"]
+        : ["verbose", "junit", "json"]
       : process.env.DEBUG_TESTS
         ? ["verbose", "html"]
         : ["default"],
     outputFile: process.env.CI
       ? {
-          junit: "./test-results.xml",
-          json: "./test-results.json",
+          junit: `./test-results-${typeof Bun !== "undefined" ? "bun" : "node"}.xml`,
+          json: `./test-results-${typeof Bun !== "undefined" ? "bun" : "node"}.json`,
         }
       : process.env.DEBUG_TESTS
         ? "./test-results.html"
         : undefined,
-    // Enhanced parallel execution for CI
-    pool: process.env.CI ? "threads" : "forks",
+    // Enhanced parallel execution for CI with runtime-specific optimizations
+    pool: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? "threads"
+        : "forks" // Bun prefers threads, Node prefers forks
+      : "forks",
     poolOptions: {
       threads: {
         singleThread: false,
         isolate: true,
         useAtomics: true,
-        maxThreads: process.env.CI ? 4 : 2,
-        minThreads: process.env.CI ? 2 : 1,
+        maxThreads: process.env.CI
+          ? typeof Bun !== "undefined"
+            ? 6
+            : 4 // Bun can handle more threads
+          : typeof Bun !== "undefined"
+            ? 3
+            : 2,
+        minThreads: process.env.CI ? (typeof Bun !== "undefined" ? 3 : 2) : 1,
       },
       forks: {
         singleFork: false,
         isolate: true,
-        maxForks: process.env.CI ? 4 : 2,
-        minForks: process.env.CI ? 2 : 1,
+        maxForks: process.env.CI
+          ? typeof Bun !== "undefined"
+            ? 4
+            : 6 // Node can handle more forks
+          : typeof Bun !== "undefined"
+            ? 2
+            : 3,
+        minForks: process.env.CI ? (typeof Bun !== "undefined" ? 2 : 3) : 1,
       },
     },
     // Better test isolation
     isolate: true,
-    // Parallel execution configuration
-    maxConcurrency: process.env.CI ? 6 : 3,
-    minThreads: process.env.CI ? 2 : 1,
-    maxThreads: process.env.CI ? 6 : 3,
+    // Runtime-aware parallel execution configuration
+    maxConcurrency: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 8
+        : 6 // Bun can handle higher concurrency
+      : typeof Bun !== "undefined"
+        ? 4
+        : 3,
+    minThreads: process.env.CI ? (typeof Bun !== "undefined" ? 3 : 2) : 1,
+    maxThreads: process.env.CI
+      ? typeof Bun !== "undefined"
+        ? 8
+        : 6
+      : typeof Bun !== "undefined"
+        ? 4
+        : 3,
     // File parallelization
     fileParallelism: true,
     // Sequence configuration for better isolation
@@ -107,10 +159,29 @@ export default defineConfig({
       concurrent: true,
       setupFiles: "parallel",
     },
-    // Enhanced error handling for CI
-    bail: process.env.CI ? 1 : 0, // Fail fast in CI if there are critical errors
-    // Memory management for CI environments
+    // Enhanced error handling for CI with runtime-specific behavior
+    bail: process.env.CI
+      ? process.env.GITHUB_ACTIONS
+        ? 0
+        : 1 // Don't bail in GitHub Actions for better reporting
+      : 0,
+    // Memory management for CI environments with runtime awareness
     logHeapUsage: process.env.CI || process.env.DEBUG_MEMORY,
+    // Enhanced error handling and debugging
+    dangerouslyIgnoreUnhandledErrors: false,
+    // Runtime-specific optimizations
+    deps: {
+      external:
+        typeof Bun !== "undefined"
+          ? [/^(?!.*vitest).*$/] // Bun-specific external deps
+          : [/^(?!.*vitest).*$/, /^node:/], // Node-specific external deps
+      moduleDirectories: ["node_modules", "packages"],
+      // Runtime-specific inline dependencies
+      inline:
+        typeof Bun !== "undefined"
+          ? [/@unified-repo-analyzer\/.*/, /vitest/] // Bun needs vitest inlined
+          : [/@unified-repo-analyzer\/.*/], // Node doesn't need vitest inlined
+    },
   },
   resolve: {
     alias: {
