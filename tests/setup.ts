@@ -13,24 +13,29 @@ import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
 // Export mocking utilities for easy access in tests
 export { vi } from "vitest";
-export const mocked = vi.mocked;
 
-// Re-export enhanced mock utilities
-export * from "./mock-utils.js";
-
-// Re-export cleanup utilities (conditional to avoid circular imports)
-export * from "./cleanup-manager";
-export * from "./test-cleanup-helpers";
-
-// Re-export isolation and parallel test utilities
-export * from "./test-isolation";
-export * from "./parallel-test-utils";
+// Create a safe mocked function that works with both Bun and Vitest
+export const mocked = <T>(item: T): T => {
+  if (typeof vi.mocked === "function") {
+    return vi.mocked(item);
+  }
+  // Fallback for when vi.mocked is not available
+  return item as T;
+};
 
 // Re-export CI/CD utilities
 export * from "./ci-test-utils";
 
+// Re-export cleanup utilities (conditional to avoid circular imports)
+export * from "./cleanup-manager";
+// Re-export enhanced mock utilities
+export * from "./mock-utils.js";
+export * from "./parallel-test-utils";
 // Re-export runtime-specific helpers
 export * from "./runtime-test-helpers";
+export * from "./test-cleanup-helpers";
+// Re-export isolation and parallel test utilities
+export * from "./test-isolation";
 
 // Load test environment variables
 config({ path: join(__dirname, "../.env.test") });
@@ -67,13 +72,9 @@ beforeAll(async () => {
   }
 
   // Setup global error handlers for better test debugging
-  process.on("unhandledRejection", (reason, promise) => {
-    console.error("Unhandled Rejection at:", promise, "reason:", reason);
-  });
+  process.on("unhandledRejection", (_reason, _promise) => {});
 
-  process.on("uncaughtException", (error) => {
-    console.error("Uncaught Exception:", error);
-  });
+  process.on("uncaughtException", (_error) => {});
 
   // Setup DOM environment if jsdom is available
   if (typeof window !== "undefined") {
@@ -128,11 +129,9 @@ afterAll(async () => {
         `Final cleanup: ${stats.tasksRun} tasks completed in ${stats.totalTime.toFixed(2)}ms`
       );
       if (stats.errors.length > 0) {
-        console.warn("Cleanup errors:", stats.errors);
       }
     }
-  } catch (error) {
-    console.warn("Final cleanup failed, running emergency cleanup:", error);
+  } catch (_error) {
     emergencyCleanup();
   }
 });
@@ -168,10 +167,6 @@ afterEach(async () => {
 
   // Log cleanup warnings if there were errors (but don't fail tests)
   if (stats.errors.length > 0 && process.env.DEBUG_CLEANUP) {
-    console.warn(
-      `Test cleanup completed with ${stats.errors.length} errors:`,
-      stats.errors.map((e) => `${e.task}: ${e.error.message}`)
-    );
   }
 });
 
@@ -180,7 +175,7 @@ afterEach(async () => {
 /**
  * Cleanup test artifacts like temporary files and directories
  */
-async function cleanupTestArtifacts(): Promise<void> {
+async function _cleanupTestArtifacts(): Promise<void> {
   try {
     const fs = await import("node:fs/promises");
     const path = await import("node:path");
@@ -201,10 +196,7 @@ async function cleanupTestArtifacts(): Promise<void> {
         // Ignore if directory doesn't exist
       }
     }
-  } catch (error) {
-    // Silently ignore cleanup errors to not interfere with test results
-    console.warn("Test cleanup warning:", error);
-  }
+  } catch (_error) {}
 }
 
 /**

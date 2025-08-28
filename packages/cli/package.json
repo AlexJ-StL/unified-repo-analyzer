@@ -1,44 +1,59 @@
 {
-	"name": "@unified-repo-analyzer/cli",
-	"version": "0.1.0",
-	"description": "Command-line interface for the Unified Repository Analyzer",
-	"main": "dist/index.js",
-	"bin": {
-		"repo-analyzer": "./bin/repo-analyzer.js"
-	},
-	"scripts": {
-		"dev": "bun --watch src/index.ts || npm run dev:node",
-		"dev:node": "ts-node src/index.ts",
-		"build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
-		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.json",
-		"start": "bun dist/index.js || node dist/index.js",
-		"test": "bun test || npm test --silent || echo \"No npm tests configured\"",
-		"lint": "biome lint .",
-		"format": "biome format --write .",
-		"clean": "rimraf dist"
-	},
-	"keywords": [
-		"cli",
-		"repository",
-		"analysis"
-	],
-	"author": "",
-	"license": "MIT",
-	"dependencies": {
-		"@unified-repo-analyzer/shared": "workspace:*",
-		"chalk": "^4.1.2",
-		"commander": "^12.0.0",
-		"conf": "^12.0.0",
-		"inquirer": "^9.2.15",
-		"ora": "^5.4.1",
-		"undici": "^6.0.0"
-	},
-	"devDependencies": {
-		"@types/inquirer": "^9.0.7",
-		"@types/node": "^20.11.30",
-		"cross-env": "^7.0.3",
-		"rimraf": "^5.0.5",
-		"ts-node": "^10.9.2",
-		"typescript": "^5.3.3"
-	}
+  "name": "@unified-repo-analyzer/cli",
+  "version": "1.0.0",
+  "description": "Command-line interface for the Unified Repository Analyzer",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "repo-analyzer": "./bin/repo-analyzer.js"
+  },
+  "scripts": {
+    "dev": "bun --watch src/index.ts || npm run dev:node",
+    "dev:node": "ts-node src/index.ts",
+    "build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
+    "build:tsc": "bunx tsc --project tsconfig.json",
+    "start": "bun dist/index.js || node dist/index.js",
+    "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "cli",
+    "repository",
+    "analysis"
+  ],
+  "author": "Unified Repository Analyzer Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/unified-repo-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/unified-repo-analyzer/issues"
+  },
+  "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "@unified-repo-analyzer/shared": "workspace:*",
+    "chalk": "^4.1.2",
+    "commander": "^12.0.0",
+    "conf": "^12.0.0",
+    "inquirer": "^9.2.15",
+    "ora": "^5.4.1",
+    "undici": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.11.30",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
 }

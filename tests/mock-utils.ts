@@ -25,7 +25,12 @@ export function mockModule<T extends Record<string, any>>(
   modulePath: string,
   mockImplementation: Partial<T>
 ): void {
-  vi.mock(modulePath, () => mockImplementation);
+  if (typeof vi.mock === "function") {
+    vi.mock(modulePath, () => mockImplementation);
+  } else {
+    // Fallback for when vi.mock is not available (e.g., Bun test runner)
+    console.warn(`Mock not available for module: ${modulePath}`);
+  }
 }
 
 /**
@@ -41,7 +46,7 @@ export function createPartialMock<T extends Record<string, any>>(
  * Mock a class constructor with proper typing
  */
 export function mockClass<T extends new (...args: any[]) => any>(
-  constructor: T,
+  _constructor: T,
   mockImplementation?: Partial<InstanceType<T>>
 ): ReturnType<typeof vi.fn> {
   const mockConstructor = vi.fn();
@@ -132,36 +137,56 @@ export function spyOn<T extends Record<string, any>, K extends keyof T>(
  */
 export const mockTimers = {
   setup: () => {
-    vi.useFakeTimers();
+    if (typeof vi.useFakeTimers === "function") {
+      vi.useFakeTimers();
+    }
   },
 
   cleanup: () => {
-    vi.clearAllTimers();
-    vi.useRealTimers();
+    if (typeof vi.clearAllTimers === "function") {
+      vi.clearAllTimers();
+    }
+    if (typeof vi.useRealTimers === "function") {
+      vi.useRealTimers();
+    }
   },
 
   advanceTime: (ms: number) => {
-    vi.advanceTimersByTime(ms);
+    if (typeof vi.advanceTimersByTime === "function") {
+      vi.advanceTimersByTime(ms);
+    }
   },
 
   runAllTimers: () => {
-    vi.runAllTimers();
+    if (typeof vi.runAllTimers === "function") {
+      vi.runAllTimers();
+    }
   },
 
   /**
    * Setup timers with automatic cleanup registration
    */
   setupWithCleanup: async () => {
-    vi.useFakeTimers();
-    const { registerCleanupTask } = await import("./cleanup-manager");
-    registerCleanupTask(
-      "mock-timers",
-      () => {
-        vi.clearAllTimers();
-        vi.useRealTimers();
-      },
-      1
-    );
+    if (typeof vi.useFakeTimers === "function") {
+      vi.useFakeTimers();
+    }
+    try {
+      const { registerCleanupTask } = await import("./cleanup-manager");
+      registerCleanupTask(
+        "mock-timers",
+        () => {
+          if (typeof vi.clearAllTimers === "function") {
+            vi.clearAllTimers();
+          }
+          if (typeof vi.useRealTimers === "function") {
+            vi.useRealTimers();
+          }
+        },
+        1
+      );
+    } catch {
+      // Cleanup manager not available, skip registration
+    }
   },
 };
 

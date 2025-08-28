@@ -1,50 +1,71 @@
 {
-	"name": "@unified-repo-analyzer/frontend",
-	"version": "0.1.0",
-	"description": "React frontend for the Unified Repository Analyzer",
-	"type": "module",
-	"scripts": {
-		"dev": "bun run vite || npm run vite",
-		"tsc": "node ../../node_modules/typescript/bin/tsc --noEmit --skipLibCheck",
-		"build": "bun run vite build || npm run vite -- build",
-		"build:prod": "cross-env NODE_ENV=production bun run vite build --mode production || cross-env NODE_ENV=production npm run vite -- build --mode production",
-		"preview": "bun run vite preview || npm run vite -- preview",
-		"test": "bun run vitest run || npm run vitest -- run",
-		"test:prod": "cross-env NODE_ENV=production bun run vitest run --coverage || cross-env NODE_ENV=production npm run vitest -- run --coverage",
-		"test:watch": "bun run vitest || npm run vitest",
-		"lint": "biome lint .",
-		"format": "biome format --write .",
-		"clean": "rimraf dist"
-	},
-	"dependencies": {
-		"@unified-repo-analyzer/shared": "workspace:*",
-		"@headlessui/react": "^1.7.18",
-		"@heroicons/react": "^2.1.1",
-		"axios": "^1.6.7",
-		"d3": "^7.8.5",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-markdown": "^9.1.0",
-		"react-router-dom": "^6.22.3",
-		"socket.io-client": "^4.7.5",
-		"zustand": "^4.5.2"
-	},
-	"devDependencies": {
-		"@testing-library/jest-dom": "^6.4.6",
-		"@testing-library/react": "^14.2.1",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/d3": "^7.4.3",
-		"@types/node": "^20.19.9",
-		"@types/react": "^18.2.66",
-		"@types/react-dom": "^18.2.22",
-		"@vitejs/plugin-react": "^4.2.1",
-		"autoprefixer": "^10.4.18",
-		"jsdom": "^24.0.0",
-		"postcss": "^8.4.35",
-		"rimraf": "^5.0.5",
-		"tailwindcss": "^3.4.1",
-		"typescript": "^5.3.3",
-		"vite": "^7.0.5",
-		"vitest": "^3.2.4"
-	}
+  "name": "@unified-repo-analyzer/frontend",
+  "version": "1.0.0",
+  "description": "React frontend for the Unified Repository Analyzer",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run vite || npm run vite",
+    "tsc": "bunx tsc --noEmit --skipLibCheck",
+    "build": "bun run vite build || npm run vite -- build",
+    "build:prod": "cross-env NODE_ENV=production bun run vite build --mode production || cross-env NODE_ENV=production npm run vite -- build --mode production",
+    "preview": "bun run vite preview || npm run vite -- preview",
+    "test": "bun run vitest run || npm run vitest -- run",
+    "test:prod": "cross-env NODE_ENV=production bun run vitest run --coverage || cross-env NODE_ENV=production npm run vitest -- run --coverage",
+    "test:watch": "bun run vitest || npm run vitest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "repository",
+    "analysis",
+    "frontend",
+    "react"
+  ],
+  "author": "Unified Repository Analyzer Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/unified-repo-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/unified-repo-analyzer/issues"
+  },
+  "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "@unified-repo-analyzer/shared": "workspace:*",
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "axios": "^1.6.7",
+    "d3": "^7.8.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^9.1.0",
+    "react-router-dom": "^6.22.3",
+    "socket.io-client": "^4.7.5",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^20.19.9",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.18",
+    "jsdom": "^24.0.0",
+    "postcss": "^8.4.35",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.5",
+    "vitest": "^1.6.0"
+  }
 }

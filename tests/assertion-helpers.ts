@@ -3,7 +3,7 @@
  * Provides utilities to validate test assertions and prevent common issues
  */
 
-import { expect } from "vitest";
+import { expect } from 'vitest';
 
 /**
  * Enhanced assertion helpers that provide better error messages and validation
@@ -23,14 +23,7 @@ export class AssertionHelpers {
       sortedBy?: keyof T;
     } = {}
   ): void {
-    const {
-      minLength,
-      maxLength,
-      exactLength,
-      itemValidator,
-      uniqueBy,
-      sortedBy,
-    } = options;
+    const { minLength, maxLength, exactLength, itemValidator, uniqueBy, sortedBy } = options;
 
     // Length validations
     if (exactLength !== undefined) {
@@ -50,9 +43,7 @@ export class AssertionHelpers {
         try {
           itemValidator(item, index);
         } catch (error) {
-          throw new Error(
-            `Array item at index ${index} failed validation: ${error}`
-          );
+          throw new Error(`Array item at index ${index} failed validation: ${error}`);
         }
       });
     }
@@ -104,7 +95,7 @@ export class AssertionHelpers {
     }
 
     // Property validation
-    results.forEach((result, index) => {
+    results.forEach((result, _index) => {
       // Check required properties
       requiredProperties.forEach((prop) => {
         expect(result).toHaveProperty(prop);
@@ -147,33 +138,33 @@ export class AssertionHelpers {
    */
   static validateRepositoryStructure(repository: any): void {
     // Required properties
-    expect(repository).toHaveProperty("id");
-    expect(repository).toHaveProperty("name");
-    expect(repository).toHaveProperty("path");
+    expect(repository).toHaveProperty('id');
+    expect(repository).toHaveProperty('name');
+    expect(repository).toHaveProperty('path');
 
     // Type validations
-    expect(typeof repository.id).toBe("string");
-    expect(typeof repository.name).toBe("string");
-    expect(typeof repository.path).toBe("string");
+    expect(typeof repository.id).toBe('string');
+    expect(typeof repository.name).toBe('string');
+    expect(typeof repository.path).toBe('string');
 
     // Optional but common properties
-    if ("languages" in repository) {
+    if ('languages' in repository) {
       expect(Array.isArray(repository.languages)).toBe(true);
     }
 
-    if ("frameworks" in repository) {
+    if ('frameworks' in repository) {
       expect(Array.isArray(repository.frameworks)).toBe(true);
     }
 
-    if ("tags" in repository) {
+    if ('tags' in repository) {
       expect(Array.isArray(repository.tags)).toBe(true);
     }
 
-    if ("createdAt" in repository) {
+    if ('createdAt' in repository) {
       expect(repository.createdAt).toBeInstanceOf(Date);
     }
 
-    if ("updatedAt" in repository) {
+    if ('updatedAt' in repository) {
       expect(repository.updatedAt).toBeInstanceOf(Date);
     }
   }
@@ -183,27 +174,27 @@ export class AssertionHelpers {
    */
   static validateAnalysisResults(analysis: any): void {
     // Required top-level properties
-    expect(analysis).toHaveProperty("summary");
-    expect(analysis).toHaveProperty("details");
-    expect(analysis).toHaveProperty("metadata");
+    expect(analysis).toHaveProperty('summary');
+    expect(analysis).toHaveProperty('details');
+    expect(analysis).toHaveProperty('metadata');
 
     // Summary validation
-    expect(analysis.summary).toHaveProperty("totalFiles");
-    expect(analysis.summary).toHaveProperty("totalLines");
-    expect(analysis.summary).toHaveProperty("languages");
-    expect(typeof analysis.summary.totalFiles).toBe("number");
-    expect(typeof analysis.summary.totalLines).toBe("number");
+    expect(analysis.summary).toHaveProperty('totalFiles');
+    expect(analysis.summary).toHaveProperty('totalLines');
+    expect(analysis.summary).toHaveProperty('languages');
+    expect(typeof analysis.summary.totalFiles).toBe('number');
+    expect(typeof analysis.summary.totalLines).toBe('number');
     expect(Array.isArray(analysis.summary.languages)).toBe(true);
 
     // Details validation
-    expect(analysis.details).toHaveProperty("files");
+    expect(analysis.details).toHaveProperty('files');
     expect(Array.isArray(analysis.details.files)).toBe(true);
 
     // Metadata validation
-    expect(analysis.metadata).toHaveProperty("analysisDate");
-    expect(analysis.metadata).toHaveProperty("version");
+    expect(analysis.metadata).toHaveProperty('analysisDate');
+    expect(analysis.metadata).toHaveProperty('version');
     expect(analysis.metadata.analysisDate).toBeInstanceOf(Date);
-    expect(typeof analysis.metadata.version).toBe("string");
+    expect(typeof analysis.metadata.version).toBe('string');
   }
 
   /**
@@ -211,8 +202,8 @@ export class AssertionHelpers {
    */
   static validateErrorStructure(error: any, expectedType?: string): void {
     expect(error).toBeInstanceOf(Error);
-    expect(error).toHaveProperty("message");
-    expect(typeof error.message).toBe("string");
+    expect(error).toHaveProperty('message');
+    expect(typeof error.message).toBe('string');
     expect(error.message.length).toBeGreaterThan(0);
 
     if (expectedType) {
@@ -220,8 +211,8 @@ export class AssertionHelpers {
     }
 
     // Stack trace should be present
-    expect(error).toHaveProperty("stack");
-    expect(typeof error.stack).toBe("string");
+    expect(error).toHaveProperty('stack');
+    expect(typeof error.stack).toBe('string');
   }
 
   /**
@@ -262,10 +253,7 @@ export class AssertionHelpers {
 
     // Specific call validation
     if (nthCallWith) {
-      expect(mockFn).toHaveBeenNthCalledWith(
-        nthCallWith.call,
-        ...nthCallWith.args
-      );
+      expect(mockFn).toHaveBeenNthCalledWith(nthCallWith.call, ...nthCallWith.args);
     }
   }
 
@@ -281,21 +269,16 @@ export class AssertionHelpers {
       requiredMetrics?: string[];
     } = {}
   ): void {
-    const {
-      maxDuration,
-      minDuration,
-      maxMemory,
-      requiredMetrics = [],
-    } = options;
+    const { maxDuration, minDuration, maxMemory, requiredMetrics = [] } = options;
 
     // Required metrics
     requiredMetrics.forEach((metric) => {
       expect(metrics).toHaveProperty(metric);
-      expect(typeof metrics[metric]).toBe("number");
+      expect(typeof metrics[metric]).toBe('number');
     });
 
     // Duration validation
-    if ("duration" in metrics) {
+    if ('duration' in metrics) {
       if (maxDuration !== undefined) {
         expect(metrics.duration).toBeLessThanOrEqual(maxDuration);
       }
@@ -305,7 +288,7 @@ export class AssertionHelpers {
     }
 
     // Memory validation
-    if ("memoryUsage" in metrics && maxMemory !== undefined) {
+    if ('memoryUsage' in metrics && maxMemory !== undefined) {
       expect(metrics.memoryUsage).toBeLessThanOrEqual(maxMemory);
     }
   }
@@ -328,20 +311,20 @@ export class AssertionHelpers {
         const value = config[key];
 
         switch (type) {
-          case "string":
-            expect(typeof value).toBe("string");
+          case 'string':
+            expect(typeof value).toBe('string');
             break;
-          case "number":
-            expect(typeof value).toBe("number");
+          case 'number':
+            expect(typeof value).toBe('number');
             break;
-          case "boolean":
-            expect(typeof value).toBe("boolean");
+          case 'boolean':
+            expect(typeof value).toBe('boolean');
             break;
-          case "array":
+          case 'array':
             expect(Array.isArray(value)).toBe(true);
             break;
-          case "object":
-            expect(typeof value).toBe("object");
+          case 'object':
+            expect(typeof value).toBe('object');
             expect(value).not.toBeNull();
             break;
         }
@@ -364,12 +347,7 @@ export class AssertionHelpers {
       errorSchema?: Record<string, any>;
     } = {}
   ): void {
-    const {
-      statusCode,
-      requiredHeaders = [],
-      bodySchema,
-      errorSchema,
-    } = options;
+    const { statusCode, requiredHeaders = [], bodySchema, errorSchema } = options;
 
     // Status code validation
     if (statusCode !== undefined) {
@@ -388,9 +366,9 @@ export class AssertionHelpers {
       const body = response.body || response.data;
 
       if (statusCode && statusCode >= 200 && statusCode < 300 && bodySchema) {
-        this.validateConfiguration(body, bodySchema);
+        AssertionHelpers.validateConfiguration(body, bodySchema);
       } else if (statusCode && statusCode >= 400 && errorSchema) {
-        this.validateConfiguration(body, errorSchema);
+        AssertionHelpers.validateConfiguration(body, errorSchema);
       }
     }
   }
@@ -406,11 +384,7 @@ export class AssertionHelpers {
       fileContentValidation?: Record<string, (content: string) => void>;
     } = {}
   ): void {
-    const {
-      expectedFiles = [],
-      expectedDirectories = [],
-      fileContentValidation = {},
-    } = options;
+    const { expectedFiles = [], expectedDirectories = [], fileContentValidation = {} } = options;
 
     // File existence validation
     expectedFiles.forEach((filePath) => {
@@ -439,8 +413,8 @@ export class CommonAssertionPatterns {
    */
   static validateRepositorySearch(results: any[], query: any): void {
     AssertionHelpers.validateSearchResults(results, {
-      requiredProperties: ["id", "name", "path"],
-      optionalProperties: ["languages", "frameworks", "tags", "description"],
+      requiredProperties: ['id', 'name', 'path'],
+      optionalProperties: ['languages', 'frameworks', 'tags', 'description'],
       maxResults: 100, // Reasonable limit
     });
 
@@ -461,8 +435,8 @@ export class CommonAssertionPatterns {
 
     if (query.frameworks) {
       results.forEach((repo) => {
-        const hasMatchingFramework = query.frameworks.some(
-          (framework: string) => repo.frameworks?.includes(framework)
+        const hasMatchingFramework = query.frameworks.some((framework: string) =>
+          repo.frameworks?.includes(framework)
         );
         expect(hasMatchingFramework).toBe(true);
       });
@@ -482,12 +456,12 @@ export class CommonAssertionPatterns {
 
     // Validate file details
     result.details.files.forEach((file: any) => {
-      expect(file).toHaveProperty("path");
-      expect(file).toHaveProperty("language");
-      expect(file).toHaveProperty("lines");
-      expect(typeof file.path).toBe("string");
-      expect(typeof file.language).toBe("string");
-      expect(typeof file.lines).toBe("number");
+      expect(file).toHaveProperty('path');
+      expect(file).toHaveProperty('language');
+      expect(file).toHaveProperty('lines');
+      expect(typeof file.path).toBe('string');
+      expect(typeof file.language).toBe('string');
+      expect(typeof file.lines).toBe('number');
     });
   }
 
@@ -495,25 +469,25 @@ export class CommonAssertionPatterns {
    * Validates a successful export operation
    */
   static validateExportOperation(result: any, format: string): void {
-    expect(result).toHaveProperty("success");
+    expect(result).toHaveProperty('success');
     expect(result.success).toBe(true);
-    expect(result).toHaveProperty("format");
+    expect(result).toHaveProperty('format');
     expect(result.format).toBe(format);
-    expect(result).toHaveProperty("outputPath");
-    expect(typeof result.outputPath).toBe("string");
+    expect(result).toHaveProperty('outputPath');
+    expect(typeof result.outputPath).toBe('string');
 
     if (result.data) {
       switch (format.toLowerCase()) {
-        case "json":
+        case 'json':
           expect(() => JSON.parse(result.data)).not.toThrow();
           break;
-        case "markdown":
-          expect(typeof result.data).toBe("string");
-          expect(result.data).toContain("#"); // Should have markdown headers
+        case 'markdown':
+          expect(typeof result.data).toBe('string');
+          expect(result.data).toContain('#'); // Should have markdown headers
           break;
-        case "html":
-          expect(typeof result.data).toBe("string");
-          expect(result.data).toContain("<html>"); // Should be valid HTML
+        case 'html':
+          expect(typeof result.data).toBe('string');
+          expect(result.data).toContain('<html>'); // Should be valid HTML
           break;
       }
     }
@@ -526,7 +500,7 @@ export class CommonAssertionPatterns {
     mockLogger: any,
     expectedLogs: Array<{ level: string; message: string; metadata?: any }>
   ): void {
-    expectedLogs.forEach((expectedLog, index) => {
+    expectedLogs.forEach((expectedLog, _index) => {
       const { level, message, metadata } = expectedLog;
 
       expect(mockLogger[level]).toHaveBeenCalled();

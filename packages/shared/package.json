@@ -1,31 +1,45 @@
 {
-	"name": "@unified-repo-analyzer/shared",
-	"version": "0.1.0",
-	"description": "Shared types and utilities for the Unified Repository Analyzer",
-	"main": "dist/index.js",
-	"browser": "dist/browser.js",
-	"types": "dist/index.d.ts",
-	"scripts": {
-		"build": "rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || npm run build:tsc)",
-		"build:tsc": "node ../../node_modules/typescript/bin/tsc --project tsconfig.json",
-		"lint": "biome lint .",
-		"format": "biome format --write .",
-		"test": "bun test || npm test --silent || echo \"No npm tests configured\"",
-		"clean": "rimraf dist"
-	},
-	"keywords": [
-		"repository",
-		"analysis",
-		"types"
-	],
-	"author": "",
-	"license": "MIT",
-	"devDependencies": {
-		"@types/node": "^20.11.30",
-		"rimraf": "^5.0.5",
-		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"zod": "^3.22.4"
-	}
+  "name": "@unified-repo-analyzer/shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for the Unified Repository Analyzer",
+  "main": "dist/index.js",
+  "browser": "dist/browser.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "rimraf dist && (bunx tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || npm run build:tsc)",
+    "build:tsc": "bunx tsc --project tsconfig.json",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "repository",
+    "analysis",
+    "types"
+  ],
+  "author": "Unified Repository Analyzer Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/unified-repo-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/unified-repo-analyzer/issues"
+  },
+  "homepage": "https://github.com/your-org/unified-repo-analyzer#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
 }
