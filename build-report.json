@@ -1,39 +1,91 @@
 {
-  "timestamp": "2025-08-26T02:15:15.222Z",
-  "success": false,
-  "duration": 0,
+  "timestamp": "2025-08-28T18:18:04.573Z",
+  "success": true,
+  "duration": 22912.3158,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
-      "success": false,
-      "exitCode": 2,
-      "duration": 0,
-      "stdout": "src/validation/validators.ts(46,27): error TS2339: Property 'repositoryAnalysisSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(73,27): error TS2339: Property 'repositoryIndexSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(82,27): error TS2339: Property 'searchQuerySchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(91,27): error TS2339: Property 'providerConfigSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(46,27): error TS2339: Property 'repositoryAnalysisSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(73,27): error TS2339: Property 'repositoryIndexSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(82,27): error TS2339: Property 'searchQuerySchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\nsrc/validation/validators.ts(91,27): error TS2339: Property 'providerConfigSchema' does not exist on type 'typeof import(\"C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/src/validation/schemas\")'.\r\n",
-      "stderr": "$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n$ node ../../node_modules/typescript/bin/tsc --project tsconfig.json\n",
-      "error": "$ rimraf dist && (node ../../node_modules/typescript/bin/tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n$ node ../../node_modules/typescript/bin/tsc --project tsconfig.json\n",
-      "suggestions": [
-        "Clean and reinstall dependencies",
-        "Check build logs for detailed error information"
-      ]
+      "success": true,
+      "exitCode": 0,
+      "duration": 6022.6643,
+      "stdout": "Bundled 26 modules in 108ms\n\n  index.js      243.47 KB  (entry point)\n  index.js.map  0.48 MB    (source map)\n\nBundled 18 modules in 94ms\n\n  browser.js      147.51 KB  (entry point)\n  browser.js.map  0.30 MB    (source map)\n\n",
+      "stderr": "$ rimraf dist && (bunx tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n"
+    },
+    "@unified-repo-analyzer/backend": {
+      "success": true,
+      "exitCode": 0,
+      "duration": 1551.7914,
+      "stdout": "Bundled 653 modules in 718ms\n\n  index.js      3.63 MB  (entry point)\n  index.js.map  6.40 MB  (source map)\n\n",
+      "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
+    },
+    "@unified-repo-analyzer/cli": {
+      "success": true,
+      "exitCode": 0,
+      "duration": 1157.2225999999991,
+      "stdout": "Bundled 305 modules in 302ms\n\n  index.js      1.50 MB  (entry point)\n  index.js.map  2.90 MB  (source map)\n\n",
+      "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
+    },
+    "@unified-repo-analyzer/frontend": {
+      "success": true,
+      "exitCode": 0,
+      "duration": 14180.6375,
+      "stdout": "\u001b[36mvite v7.1.1 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1310 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-BkYCd7hj.css             \u001b[39m\u001b[1m\u001b[2m 37.51 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.39 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-BxNVma3A.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.73 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DQRJcab0.js     \u001b[39m\u001b[1m\u001b[2m  4.05 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.81 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-B0dnXax0.js   \u001b[39m\u001b[1m\u001b[2m  4.28 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.91 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-DOkG2oqb.js       \u001b[39m\u001b[1m\u001b[2m  5.06 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.27 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-Ds02quiW.js                \u001b[39m\u001b[1m\u001b[2m  7.85 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.71 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-CTbixjLu.js   \u001b[39m\u001b[1m\u001b[2m 22.79 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.43 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-CoKoaOr4.js          \u001b[39m\u001b[1m\u001b[2m 34.63 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 10.06 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-NIGUFBhG.js              \u001b[39m\u001b[1m\u001b[2m 35.41 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 14.19 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-iXudSdd3.js  \u001b[39m\u001b[1m\u001b[2m 37.25 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.49 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-D2OJHOMO.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.74 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-DrUQ5FQZ.js              \u001b[39m\u001b[1m\u001b[2m177.51 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.70 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-D-ShTn5A.js        \u001b[39m\u001b[1m\u001b[2m336.96 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 90.39 kB\u001b[22m\n\u001b[32m✓ built in 12.68s\u001b[39m\n",
+      "stderr": "$ bun run vite build || bun run vite -- build\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-08-26T02:14:44.073Z",
+      "timestamp": "2025-08-28T18:17:41.352Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-08-26T02:14:44.522Z",
+      "timestamp": "2025-08-28T18:17:41.655Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-08-26T02:15:02.507Z",
-      "level": "warning",
-      "message": "Command failed, retrying (1/1)",
+      "timestamp": "2025-08-28T18:17:47.677Z",
+      "level": "success",
+      "message": "Command completed successfully in 6023ms",
       "package": "@unified-repo-analyzer/shared"
+    },
+    {
+      "timestamp": "2025-08-28T18:17:47.679Z",
+      "level": "info",
+      "message": "Executing: bun run build",
+      "package": "@unified-repo-analyzer/backend"
+    },
+    {
+      "timestamp": "2025-08-28T18:17:49.231Z",
+      "level": "success",
+      "message": "Command completed successfully in 1552ms",
+      "package": "@unified-repo-analyzer/backend"
+    },
+    {
+      "timestamp": "2025-08-28T18:17:49.232Z",
+      "level": "info",
+      "message": "Executing: bun run build",
+      "package": "@unified-repo-analyzer/cli"
+    },
+    {
+      "timestamp": "2025-08-28T18:17:50.389Z",
+      "level": "success",
+      "message": "Command completed successfully in 1157ms",
+      "package": "@unified-repo-analyzer/cli"
+    },
+    {
+      "timestamp": "2025-08-28T18:17:50.391Z",
+      "level": "info",
+      "message": "Executing: bun run build",
+      "package": "@unified-repo-analyzer/frontend"
+    },
+    {
+      "timestamp": "2025-08-28T18:18:04.571Z",
+      "level": "success",
+      "message": "Command completed successfully in 14181ms",
+      "package": "@unified-repo-analyzer/frontend"
     }
   ],
   "environment": {
@@ -42,9 +94,5 @@
     "arch": "x64",
     "cwd": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer"
   },
-  "suggestions": [
-    "Review failed package build logs for specific errors",
-    "Run `bun install --force` to refresh dependencies",
-    "Check TypeScript configuration in failed packages"
-  ]
+  "suggestions": []
 }

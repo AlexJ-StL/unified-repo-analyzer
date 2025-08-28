@@ -1,19 +1,19 @@
-import fs from "node:fs";
-import path from "node:path";
-import type { Request, Response } from "express";
-import { env } from "../config/environment";
-import logger from "./logger.service";
+import fs from 'node:fs';
+import path from 'node:path';
+import type { Request, Response } from 'express';
+import { env } from '../config/environment';
+import logger from './logger.service';
 
 interface HealthCheck {
   name: string;
-  status: "healthy" | "unhealthy" | "degraded";
+  status: 'healthy' | 'unhealthy' | 'degraded';
   message?: string;
   responseTime?: number;
   lastChecked: Date;
 }
 
 interface HealthStatus {
-  status: "healthy" | "unhealthy" | "degraded";
+  status: 'healthy' | 'unhealthy' | 'degraded';
   timestamp: Date;
   uptime: number;
   version: string;
@@ -32,22 +32,22 @@ class HealthService {
 
   private registerDefaultChecks(): void {
     // File system check
-    this.registerCheck("filesystem", async () => {
-      const testFile = path.join(env.DATA_DIR, ".health-check");
+    this.registerCheck('filesystem', async () => {
+      const testFile = path.join(env.DATA_DIR, '.health-check');
       try {
-        await fs.promises.writeFile(testFile, "health-check");
+        await fs.promises.writeFile(testFile, 'health-check');
         await fs.promises.unlink(testFile);
-        return { status: "healthy" as const };
+        return { status: 'healthy' as const };
       } catch (error) {
         return {
-          status: "unhealthy" as const,
-          message: `File system error: ${error instanceof Error ? error.message : "Unknown error"}`,
+          status: 'unhealthy' as const,
+          message: `File system error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         };
       }
     });
 
     // Memory check
-    this.registerCheck("memory", async () => {
+    this.registerCheck('memory', async () => {
       const memUsage = process.memoryUsage();
       const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
       const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
@@ -55,54 +55,54 @@ class HealthService {
 
       if (heapUsagePercent > 90) {
         return {
-          status: "unhealthy" as const,
+          status: 'unhealthy' as const,
           message: `High memory usage: ${heapUsagePercent.toFixed(1)}%`,
         };
       }
       if (heapUsagePercent > 75) {
         return {
-          status: "degraded" as const,
+          status: 'degraded' as const,
           message: `Elevated memory usage: ${heapUsagePercent.toFixed(1)}%`,
         };
       }
 
       return {
-        status: "healthy" as const,
+        status: 'healthy' as const,
         message: `Memory usage: ${heapUsagePercent.toFixed(1)}%`,
       };
     });
 
     // Disk space check
-    this.registerCheck("disk", async () => {
+    this.registerCheck('disk', async () => {
       try {
         await fs.promises.stat(env.DATA_DIR);
         // This is a simplified check - in production, you'd want to check actual disk space
-        return { status: "healthy" as const };
+        return { status: 'healthy' as const };
       } catch (error) {
         return {
-          status: "unhealthy" as const,
-          message: `Disk check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+          status: 'unhealthy' as const,
+          message: `Disk check failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         };
       }
     });
 
     // LLM providers check
-    this.registerCheck("llm-providers", async () => {
+    this.registerCheck('llm-providers', async () => {
       const providers = [];
-      if (env.CLAUDE_API_KEY) providers.push("Claude");
-      if (env.GEMINI_API_KEY) providers.push("Gemini");
-      if (env.OPENROUTER_API_KEY) providers.push("OpenRouter");
+      if (env.CLAUDE_API_KEY) providers.push('Claude');
+      if (env.GEMINI_API_KEY) providers.push('Gemini');
+      if (env.OPENROUTER_API_KEY) providers.push('OpenRouter');
 
       if (providers.length === 0) {
         return {
-          status: "degraded" as const,
-          message: "No LLM providers configured",
+          status: 'degraded' as const,
+          message: 'No LLM providers configured',
         };
       }
 
       return {
-        status: "healthy" as const,
-        message: `Providers available: ${providers.join(", ")}`,
+        status: 'healthy' as const,
+        message: `Providers available: ${providers.join(', ')}`,
       };
     });
   }
@@ -110,7 +110,7 @@ class HealthService {
   registerCheck(
     name: string,
     checkFn: () => Promise<{
-      status: "healthy" | "unhealthy" | "degraded";
+      status: 'healthy' | 'unhealthy' | 'degraded';
       message?: string;
     }>
   ): void {
@@ -121,7 +121,7 @@ class HealthService {
   private async performCheck(
     name: string,
     checkFn: () => Promise<{
-      status: "healthy" | "unhealthy" | "degraded";
+      status: 'healthy' | 'unhealthy' | 'degraded';
       message?: string;
     }>
   ): Promise<void> {
@@ -130,11 +130,8 @@ class HealthService {
     try {
       const result = await Promise.race([
         checkFn(),
-        new Promise<{ status: "unhealthy"; message: string }>((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Health check timeout")),
-            env.HEALTH_CHECK_TIMEOUT
-          )
+        new Promise<{ status: 'unhealthy'; message: string }>((_, reject) =>
+          setTimeout(() => reject(new Error('Health check timeout')), env.HEALTH_CHECK_TIMEOUT)
         ),
       ]);
 
@@ -152,8 +149,8 @@ class HealthService {
 
       this.checks.set(name, {
         name,
-        status: "unhealthy",
-        message: error instanceof Error ? error.message : "Unknown error",
+        status: 'unhealthy',
+        message: error instanceof Error ? error.message : 'Unknown error',
         responseTime,
         lastChecked: new Date(),
       });
@@ -164,7 +161,7 @@ class HealthService {
     setInterval(() => {
       this.runAllChecks().catch((error) => {
         logger.error(
-          "Error running periodic health checks",
+          'Error running periodic health checks',
           error instanceof Error ? error : new Error(String(error))
         );
       });
@@ -173,7 +170,7 @@ class HealthService {
     // Run initial checks
     this.runAllChecks().catch((error) => {
       logger.error(
-        "Error running initial health checks",
+        'Error running initial health checks',
         error instanceof Error ? error : new Error(String(error))
       );
     });
@@ -189,19 +186,19 @@ class HealthService {
     const uptime = Date.now() - this.startTime.getTime();
 
     // Determine overall status
-    let overallStatus: "healthy" | "unhealthy" | "degraded" = "healthy";
+    let overallStatus: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
 
-    if (checks.some((check) => check.status === "unhealthy")) {
-      overallStatus = "unhealthy";
-    } else if (checks.some((check) => check.status === "degraded")) {
-      overallStatus = "degraded";
+    if (checks.some((check) => check.status === 'unhealthy')) {
+      overallStatus = 'unhealthy';
+    } else if (checks.some((check) => check.status === 'degraded')) {
+      overallStatus = 'degraded';
     }
 
     return {
       status: overallStatus,
       timestamp: new Date(),
       uptime,
-      version: process.env.npm_package_version || "1.0.0",
+      version: process.env.npm_package_version || '1.0.0',
       environment: env.NODE_ENV,
       checks,
     };
@@ -213,11 +210,7 @@ class HealthService {
 
     // Set appropriate HTTP status code
     const statusCode =
-      healthStatus.status === "healthy"
-        ? 200
-        : healthStatus.status === "degraded"
-          ? 200
-          : 503;
+      healthStatus.status === 'healthy' ? 200 : healthStatus.status === 'degraded' ? 200 : 503;
 
     res.status(statusCode).json(healthStatus);
   };
@@ -227,12 +220,10 @@ class HealthService {
     const healthStatus = this.getHealthStatus();
 
     // Ready if not unhealthy
-    if (healthStatus.status !== "unhealthy") {
-      res.status(200).json({ status: "ready" });
+    if (healthStatus.status !== 'unhealthy') {
+      res.status(200).json({ status: 'ready' });
     } else {
-      res
-        .status(503)
-        .json({ status: "not ready", checks: healthStatus.checks });
+      res.status(503).json({ status: 'not ready', checks: healthStatus.checks });
     }
   };
 
@@ -240,7 +231,7 @@ class HealthService {
   livenessHandler = async (_req: Request, res: Response): Promise<void> => {
     // Simple liveness check - if we can respond, we're alive
     res.status(200).json({
-      status: "alive",
+      status: 'alive',
       timestamp: new Date(),
       uptime: Date.now() - this.startTime.getTime(),
     });

@@ -12,26 +12,33 @@ export default defineConfig({
     restoreMocks: true,
     unstubEnvs: true,
     unstubGlobals: true,
-    // Enable proper ESM mocking with better module resolution
-    deps: {
-      external: [/^(?!.*vitest).*$/],
-      moduleDirectories: ["node_modules", "packages"],
-    },
-    // Better module mocking support
-    server: {
-      deps: {
-        inline: [
-          // Inline dependencies that need to be transformed for mocking
-          /@unified-repo-analyzer\/.*/,
-        ],
+    // Use different environments based on file patterns with projects
+    projects: [
+      {
+        name: "frontend",
+        testMatch: ["**/packages/frontend/**/*.test.{ts,tsx}"],
+        environment: "jsdom",
       },
-    },
-    // Use different environments based on file patterns
-    environmentMatchGlobs: [
-      ["**/packages/frontend/**", "jsdom"],
-      ["**/packages/backend/**", "node"],
-      ["**/packages/cli/**", "node"],
-      ["**/packages/shared/**", "node"],
+      {
+        name: "backend",
+        testMatch: ["**/packages/backend/**/*.test.{ts,tsx}"],
+        environment: "node",
+      },
+      {
+        name: "cli",
+        testMatch: ["**/packages/cli/**/*.test.{ts,tsx}"],
+        environment: "node",
+      },
+      {
+        name: "shared",
+        testMatch: ["**/packages/shared/**/*.test.{ts,tsx}"],
+        environment: "node",
+      },
+      {
+        name: "root",
+        testMatch: ["**/tests/**/*.test.{ts,tsx}"],
+        environment: "node",
+      },
     ],
     coverage: {
       provider: "v8",
@@ -155,7 +162,7 @@ export default defineConfig({
     fileParallelism: true,
     // Sequence configuration for better isolation
     sequence: {
-      shuffle: process.env.CI ? false : true, // Deterministic in CI
+      shuffle: !process.env.CI, // Deterministic in CI
       concurrent: true,
       setupFiles: "parallel",
     },
@@ -169,18 +176,21 @@ export default defineConfig({
     logHeapUsage: process.env.CI || process.env.DEBUG_MEMORY,
     // Enhanced error handling and debugging
     dangerouslyIgnoreUnhandledErrors: false,
-    // Runtime-specific optimizations
+    // Enable proper ESM mocking with better module resolution
+
+    // Better module mocking support
     deps: {
-      external:
-        typeof Bun !== "undefined"
-          ? [/^(?!.*vitest).*$/] // Bun-specific external deps
-          : [/^(?!.*vitest).*$/, /^node:/], // Node-specific external deps
+      optimizer: {
+        ssr: {
+          include: [
+            // Include dependencies that need to be transformed for mocking
+            /@unified-repo-analyzer\/.*/,
+            /vitest/,
+          ],
+          exclude: [/^node:/],
+        },
+      },
       moduleDirectories: ["node_modules", "packages"],
-      // Runtime-specific inline dependencies
-      inline:
-        typeof Bun !== "undefined"
-          ? [/@unified-repo-analyzer\/.*/, /vitest/] // Bun needs vitest inlined
-          : [/@unified-repo-analyzer\/.*/], // Node doesn't need vitest inlined
     },
   },
   resolve: {

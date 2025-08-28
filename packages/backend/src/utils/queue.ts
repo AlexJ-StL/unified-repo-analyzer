@@ -2,16 +2,16 @@
  * Queue system for managing concurrent tasks
  */
 
-import EventEmitter from "node:events";
+import EventEmitter from 'node:events';
 
 /**
  * Task status enum
  */
 export enum TaskStatus {
-  PENDING = "pending",
-  RUNNING = "running",
-  COMPLETED = "completed",
-  FAILED = "failed",
+  PENDING = 'pending',
+  RUNNING = 'running',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
 }
 
 /**
@@ -39,12 +39,12 @@ export interface QueueOptions {
  * Queue events
  */
 export enum QueueEvent {
-  TASK_ADDED = "task:added",
-  TASK_STARTED = "task:started",
-  TASK_COMPLETED = "task:completed",
-  TASK_FAILED = "task:failed",
-  QUEUE_DRAINED = "queue:drained",
-  QUEUE_PROGRESS = "queue:progress",
+  TASK_ADDED = 'task:added',
+  TASK_STARTED = 'task:started',
+  TASK_COMPLETED = 'task:completed',
+  TASK_FAILED = 'task:failed',
+  QUEUE_DRAINED = 'queue:drained',
+  QUEUE_PROGRESS = 'queue:progress',
 }
 
 /**
@@ -155,8 +155,7 @@ export class TaskQueue<T, R> extends EventEmitter {
       running,
       completed,
       failed,
-      progress:
-        total > 0 ? Math.round(((completed + failed) / total) * 100) : 0,
+      progress: total > 0 ? Math.round(((completed + failed) / total) * 100) : 0,
     };
   }
 
@@ -174,10 +173,7 @@ export class TaskQueue<T, R> extends EventEmitter {
     this.isProcessing = true;
 
     // Process tasks up to concurrency limit
-    while (
-      this.pendingTasks.length > 0 &&
-      this.runningTasks.size < this.options.concurrency
-    ) {
+    while (this.pendingTasks.length > 0 && this.runningTasks.size < this.options.concurrency) {
       const taskId = this.pendingTasks.shift()!;
       const task = this.tasks.get(taskId)!;
 

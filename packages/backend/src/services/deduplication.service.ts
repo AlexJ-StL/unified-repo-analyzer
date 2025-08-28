@@ -2,10 +2,10 @@
  * Request deduplication service for concurrent identical requests
  */
 
-import crypto from "node:crypto";
+import crypto from 'node:crypto';
 // NodeJS.Timeout is available globally
-import type { AnalysisOptions } from "@unified-repo-analyzer/shared/src/types/analysis";
-import { logger } from "../utils/logger";
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { logger } from '../utils/logger';
 
 interface PendingRequest<T> {
   promise: Promise<T>;
@@ -35,16 +35,10 @@ export class DeduplicationService {
   /**
    * Generates a unique key for analysis request
    */
-  private generateAnalysisKey(
-    repoPath: string,
-    options: AnalysisOptions
-  ): string {
-    const optionsHash = crypto
-      .createHash("md5")
-      .update(JSON.stringify(options))
-      .digest("hex");
+  private generateAnalysisKey(repoPath: string, options: AnalysisOptions): string {
+    const optionsHash = crypto.createHash('md5').update(JSON.stringify(options)).digest('hex');
 
-    const pathHash = crypto.createHash("md5").update(repoPath).digest("hex");
+    const pathHash = crypto.createHash('md5').update(repoPath).digest('hex');
 
     return `analysis:${pathHash}:${optionsHash}`;
   }
@@ -52,19 +46,13 @@ export class DeduplicationService {
   /**
    * Generates a unique key for batch analysis request
    */
-  private generateBatchKey(
-    repoPaths: string[],
-    options: AnalysisOptions
-  ): string {
+  private generateBatchKey(repoPaths: string[], options: AnalysisOptions): string {
     const pathsHash = crypto
-      .createHash("md5")
+      .createHash('md5')
       .update(JSON.stringify(repoPaths.sort()))
-      .digest("hex");
+      .digest('hex');
 
-    const optionsHash = crypto
-      .createHash("md5")
-      .update(JSON.stringify(options))
-      .digest("hex");
+    const optionsHash = crypto.createHash('md5').update(JSON.stringify(options)).digest('hex');
 
     return `batch:${pathsHash}:${optionsHash}`;
   }
@@ -139,9 +127,7 @@ export class DeduplicationService {
       requestCount: 1,
     });
 
-    logger.info(
-      `New batch analysis request for ${repoPaths.length} repositories`
-    );
+    logger.info(`New batch analysis request for ${repoPaths.length} repositories`);
     return promise;
   }
 
@@ -198,7 +184,7 @@ export class DeduplicationService {
   public clear(): void {
     this.pendingAnalysis.clear();
     this.pendingBatch.clear();
-    logger.info("All pending requests cleared");
+    logger.info('All pending requests cleared');
   }
 
   /**
@@ -212,10 +198,7 @@ export class DeduplicationService {
 
 // Create singleton instance
 export const deduplicationService = new DeduplicationService(
-  Number.parseInt(
-    process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString(),
-    10
-  )
+  Number.parseInt(process.env.DEDUP_MAX_AGE_MS || (5 * 60 * 1000).toString(), 10)
 );
 
 export default deduplicationService;
