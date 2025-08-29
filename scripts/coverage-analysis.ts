@@ -30,11 +30,22 @@ interface CoverageMetric {
   pct: number;
 }
 
+interface CoverageMapItem {
+  start: {
+    line: number;
+    column: number;
+  };
+  end: {
+    line: number;
+    column: number;
+  };
+}
+
 interface FileCoverage {
   path: string;
-  statementMap: Record<string, any>;
-  fnMap: Record<string, any>;
-  branchMap: Record<string, any>;
+  statementMap: Record<string, CoverageMapItem>;
+  fnMap: Record<string, CoverageMapItem>;
+  branchMap: Record<string, CoverageMapItem>;
   s: Record<string, number>;
   f: Record<string, number>;
   b: Record<string, number[]>;

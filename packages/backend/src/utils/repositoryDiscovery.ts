@@ -1,35 +1,28 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-import
-{
-  promisify;
-}
-from;
-('node:util');
-
+import { promisify } from 'node:util';
+import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import { v4 as uuidv4 } from 'uuid';
 import { sortFilesByImportance } from './fileImportance';
 import { detectFrameworks, detectLanguage } from './languageDetection';
-
-{
-  FileInfo;
-}
-from;
-('@unified-repo-analyzer/shared/src/types/repository');
 
 /**
  * Repository discovery and analysis utilities
  */
 
-AnalysisOptions,
+import type {
+  AnalysisOptions,
   RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis'
-extractDirectoryInfo, FileSystemError, FileSystemErrorType, getCombinedIgnorePatterns,
-type;
-TraversalOptions,
+} from '@unified-repo-analyzer/shared/src/types/analysis';
+import {
+  extractDirectoryInfo,
+  FileSystemError,
+  FileSystemErrorType,
+  getCombinedIgnorePatterns,
+  type TraversalOptions,
   traverseDirectory,
-} from './fileSystem'
+} from './fileSystem';
+
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 
@@ -274,7 +267,10 @@ export async function discoverRepository(
     dependencies: {
       production: [],
       development: [],
-      frameworks: frameworks.map((f) => ({ name: f.name, confidence: f.confidence })),
+      frameworks: frameworks.map((f) => ({
+        name: f.name,
+        confidence: f.confidence,
+      })),
     },
 
     insights: {

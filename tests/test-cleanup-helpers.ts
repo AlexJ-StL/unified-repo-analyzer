@@ -273,8 +273,8 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
       const result = testFn(...args);
 
       // If the test function returns a promise, add cleanup to the chain
-      if (result && typeof result.then === 'function') {
-        return result.finally(() => cleanup.cleanup());
+      if (result && typeof result.then === 'function' && typeof result.finally === 'function') {
+        return (result as Promise<unknown>).finally(() => cleanup.cleanup());
       }
 
       return result;

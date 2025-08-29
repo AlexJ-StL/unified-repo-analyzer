@@ -89,10 +89,10 @@ class BunProcessManager {
           const parts = line.split(',').map((p) => p.replace(/"/g, ''));
           if (parts.length >= 5) {
             processes.push({
-              pid: Number.parseInt(parts[1]),
+              pid: Number.parseInt(parts[1], 10),
               command: parts[0],
               cpuUsage: 0, // Windows tasklist doesn't provide CPU usage directly
-              memoryUsage: Number.parseInt(parts[4].replace(/[^\d]/g, '')) || 0,
+              memoryUsage: Number.parseInt(parts[4].replace(/[^\d]/g, ''), 10) || 0,
               startTime: new Date().toISOString(), // Approximate
             });
           }

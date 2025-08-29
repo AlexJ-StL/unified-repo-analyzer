@@ -6,7 +6,7 @@
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 class CoverageDashboard {
@@ -36,783 +36,688 @@ class CoverageDashboard {
     console.log('🌐 Open in browser to view interactive coverage dashboard');
   }
 
-  private async loadCoverageData(): Promise<any> {}
-  board;
-  CoverageDash;
-  export;
-  {
-  rd();
-}
-Dashboarateshboard.geneait;
-dad();
-awoarashbeDverag = new Co();
-dashboard;
-)
-{
-  constmaina. (import.metface
-ifnterLI i // C }
-}
-
-('Low');
-eturn;
-rdium;
-('return ');
-Me;
-70;
-) erage <f (cov    i'High'
-turn
-50;
-) re < f (coverage i   tring
-{
-  er;
-  ): srage: numbl(covePriorityLabe getprivate
-}
-y - low;
-';
- rit'prioturn  reedium'
-'priority-m70) returnerage < ov
-if (cigh';priority-hreturn '
-50;
-) overage <(c
-if 
-   r)
-: string
-{
-  ge: numbeClass(coveraetPriorityivate g
-
-  proor';
-}
-('coverage-p   return ');
-age - fairver;
-)
-return 'co>= 70ge overa  if (cood';
-overage - g0;
-)
-return 'coverage >= 8(c if    cellent';
-ge - exveraeturn;
-'co 90) rge >=coveraf (
-    iring
-{
-  ber;
-  ): stoverage: numlass(cverageCivate getCo
-
-  pr, js)
-}
-hboard.js;
-(')rdDir, ');
-dashis.dashboan(titeFile(joiawait wr
-
-    e);
-`;tylChild(s.head.appenddocument
-
+  private async loadCoverageData(): Promise<any> {
+    try {
+      // Placeholder: Implement actual coverage data loading
+      // For example, from 'coverage-reports/summary.json' or similar
+      const reportFile = 'coverage-reports/summary.json'; // Adjust path as needed
+      const data = await readFile(reportFile, 'utf-8');
+      return JSON.parse(data);
+    } catch (_error) {
+      return null;
     }
-\`; 0; }ty:00%); opaciateX(1orm: transl to { transf      1; }
-  ty:ci(0); opatranslateXransform: rom { t
-        fOut {ames slide@keyfr  
-      }
-    }
-acity: 1; X(0); oplateorm: trans transf       to { 0; }
- opacity:ateX(100%); rm: transltransfo{ om 
-        frs slideIn {me   @keyfraent = \`
- .textConte');
-styleylent('st.createElem = document styleonst
-c animationsCSS
+  }
 
-// Add );
-} 3000;
-    }, }, 300)n);
-       notificatioemoveChild(.body.rcument      do> {
-      (() =ut setTimeo   e';
-    .3s easlideOut 0= 'se.animation styltion.  notifica{
-       => eout(()   setTim
-     tion);
-otificapendChild(nment.body.ap
-    docu
-    \`;  2b8'};
-   : '#17a3545'rror' ? '#dc 'e==: type =8a745' ccess' ? '#2e === 'su \${typkground:bac;
-        easelideIn 0.3s imation: s      an 1000;
-     z-index:     t: 500;
-weighont- fe;
-       color: whit
-        us: 8px;r-radi   borde
-     5px 20px;: 1dding  pa      t: 20px;
-       righop: 20px;
- 
-        ton: fixed;   positi\`
-      = sTextcsion.style.  notificat  
-  age;
-  ntent = messon.textCoati  notific
-  ;}\`on-\${typeatiic notifification = \`notsNameasification.cl
-    not('div');ment.createElementcuon = donotificaticonst 
-    o') {type = 'infmessage, otification(n showN
+  private getPriorityLabel(coverage: number): string {
+    if (coverage >= 80) return 'High';
+    if (coverage >= 50) return 'Medium';
+    return 'Low';
+  }
 
-functio');
-}_blankml', 'x.ht('../indeopenow.ndwiport
-    overage ree HTML c  // Open thils() {
-   viewDetanctionfu
+  private getPriorityClass(coverage: number): string {
+    if (coverage >= 80) return 'priority-high';
+    if (coverage >= 50) return 'priority-medium';
+    return 'priority-low';
+  }
 
-, 3000);
-}   }
- cess');ved!', 'sucnd sarated aneport geRen('ioowNotificat    sh=> {
-    ut(() etTimeo    sd a report
-nd downloae ald generats wou, thilementation real imp In a
-    //.', 'info');eport..d coverage rting detaileon('GeneracatiowNotifi sh{
-   ) erateReport(on genuncti0);
-}
+  private getCoverageClass(coverage: number): string {
+    if (coverage >= 90) return 'coverage-excellent';
+    if (coverage >= 80) return 'coverage-good';
+    if (coverage >= 70) return 'coverage-fair';
+    if (coverage >= 50) return 'coverage-poor';
+    return 'coverage-critical';
+  }
 
-f}, 500
-    '); 'success',d.atepdoverage u Ceted!mpls coion('TestNotificatshow        => {
-ut(()   setTimeoecution
-   test exd triggeroultion, this wmplementan a real i I
-    //, 'info');age...' with coverng tests'Runniation( showNotifics() {
-   unTest
-function r
-0);
-}00    }, 2d();
-.reloa  location);
-      ', 'success'efreshed! rage datation('Covercafiti   showNo{
-     meout(() => a
-    setTidatfetch new d is woultion, thmplementan a real i/ I;
-    / 'info').',data..erage ing covfreshRen('catiohowNotifi
-    s{eshData() unction refr
-}
+  private async generateHTML(coverageData: any): Promise<void> {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Repo Analyzer - Coverage Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Test Coverage Dashboard</h1>
+            <p class="subtitle">Unified Repo Analyzer</p>
+        </header>
+        <main>
+            <section class="actions-section">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="viewPackageDetails()">🔍 View Details</button>
+                    <button class="action-btn" onclick="generateReport()">📊 Generate Report</button>
+                    <button class="action-btn" onclick="runTests()">🧪 Run Tests</button>
+                    <button class="action-btn" onclick="refreshData()">🔄 Refresh Data</button>
+                </div>
+            </section>
 
-fe.\`);pen herwould okage acckageName} p\${paor w filed vie(\`Detalert{
-    aeName) ails(packagowPackageDeton sh
+            <section class="overall-summary">
+                <h2>Overall Coverage Summary</h2>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h3>Branch Coverage</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${coverageData.summary.branches.pct}%"></div>
+                        </div>
+                        <p><span class="metric-value">${coverageData.summary.branches.pct.toFixed(1)}%</span> (${coverageData.summary.branches.covered}/${coverageData.summary.branches.total})</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Statement Coverage</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${coverageData.summary.statements.pct}%"></div>
+                        </div>
+                        <p><span class="metric-value">${coverageData.summary.statements.pct.toFixed(1)}%</span> (${coverageData.summary.statements.covered}/${coverageData.summary.statements.total})</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Function Coverage</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${coverageData.summary.functions.pct}%"></div>
+                        </div>
+                        <p><span class="metric-value">${coverageData.summary.functions.pct.toFixed(1)}%</span> (${coverageData.summary.functions.covered}/${coverageData.summary.functions.total})</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Line Coverage</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${coverageData.summary.lines.pct}%"></div>
+                        </div>
+                        <p><span class="metric-value">${coverageData.summary.lines.pct.toFixed(1)}%</span> (${coverageData.summary.lines.covered}/${coverageData.summary.lines.total})</p>
+                    </div>
+                </div>
+                <p class="last-updated">Last updated: ${new Date().toLocaleString()}</p>
+            </section>
 
-functi;
-}});
-    })      eName);
-  ackagls(pageDetai   showPack        tent;
- ').textConelector('h3this.querySckageName =   const pa         ction() {
- fun('click', ertenaddEventLis    card.=> {
-    ard Each(cageCards.for
-    packe-card');'.packagtorAll(ecSelerycument.qus = doardeCnst packag   coe cards
- s for packagerck handl // Add cli;
-    
-      })});
-    )';
-     le(1lateY(0) sca 'transansform =.style.tr this       on() {
-    e', functiseleavistener('moudEventL   card.ad  
-     ;
-        })
-      )';02scale(1.lateY(-5px) orm = 'transe.transf   this.styl        {
-  on(), functieenter'ousner('mventListe card.addE        {
-ch(card =>rds.forEametricCa;
-    etric-card')('.mSelectorAllnt.querycumeards = doonst metricC    ccards
- to metric Add tooltips{
-    // eFeatures() teractivdInction ad
-fun
-}
+            ${
+              coverageData.packages && coverageData.packages.length > 0
+                ? `
+            <section class="package-breakdown">
+                <h2>Package Breakdown</h2>
+                <div class="package-grid">
+                    ${coverageData.packages
+                      .map(
+                        (pkg: any) => `
+                        <div class="package-card">
+                            <h3>${pkg.name}</h3>
+                            <div class="package-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Branches:</span>
+                                    <span class="metric-value">${pkg.branches.pct.toFixed(1)}%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Statements:</span>
+                                    <span class="metric-value">${pkg.statements.pct.toFixed(1)}%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Functions:</span>
+                                    <span class="metric-value">${pkg.functions.pct.toFixed(1)}%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Lines:</span>
+                                    <span class="metric-value">${pkg.lines.pct.toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                      )
+                      .join('')}
+                </div>
+            </section>
+            `
+                : ''
+            }
 
-    });
-        } }     }
-                               }
-         }
-                        + '%';
-  turn value           re          
-         {ion(value)lback: funct   cal              {
-            ticks:          0,
-        max: 10             rue,
-     : tinAtZero        beg       : {
-        y        {
-      s:  scale                 },
-       }
-              'top'
-tion:       posi               legend: {
-                      },
+            ${
+              coverageData.files && coverageData.files.length > 0
+                ? `
+            <section class="low-coverage-files">
+                <h2>Files Needing Attention</h2>
+                <table class="coverage-table">
+                    <thead>
+                        <tr>
+                            <th>File</th>
+                            <th>Priority</th>
+                            <th>Coverage %</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${coverageData.files
+                          .filter((file: any) => file.coverage < 70)
+                          .sort((a: any, b: any) => a.coverage - b.coverage)
+                          .slice(0, 20)
+                          .map(
+                            (file: any) => `
+                                <tr class="${this.getCoverageClass(file.coverage)}">
+                                    <td class="file-path">${file.path}</td>
+                                    <td class="priority ${this.getPriorityClass(file.coverage)}">${this.getPriorityLabel(file.coverage)}</td>
+                                    <td class="coverage">${file.coverage.toFixed(1)}%</td>
+                                    <td class="type">${file.type || 'N/A'}</td>
+                                </tr>
+                            `
+                          )
+                          .join('')}
+                    </tbody>
+                </table>
+            </section>
+            `
+                : ''
+            }
 
-         Over Time's Trend'Coverage     text:            e,
-     ruisplay: t         d        {
-          title:           {
-lugins:       p,
-     lseectRatio: fasp maintainA    
-       ve: true,sponsi    re{
-         options:  },
-       
-               ]           }
-     
-    ension: 0.4           t,
-         )'51, 0.1, 147, 2240rgba(or: 'kgroundCol   bac           ,
-      93fb'or: '#f0erCol     bord             sData,
-  nche: bra      data             es',
- : 'Branch     label         {
-                     },
-                 
-n: 0.4  tensio                 2, 0.1)',
- (118, 75, 16Color: 'rgba background          
-         #764ba2', 'rColor:de        bor            tsData,
-mena: state dat                  ',
- tatementsel: 'S         lab                {
- 
-              },           0.4
-    tension:                1)',
-  6, 234, 0.02, 12: 'rgba(1oundColor  backgr                 7eea',
- #66erColor: 'ord b            a,
-       Dat: functionsta  da           
-       unctions',: 'F  label          {
-                 },
-            
-           : 0.4sion       ten          1)',
-   0, 0.(72, 187, 12olor: 'rgbagroundC back             78',
-      '#48bbor:    borderCol          
-       sData,ata: line        d           ines',
- 'L  label:                
-        {          [
-  asets:         dates,
-   : dat     labels: {
-         data
-      e',: 'lin type      
- art(ctx, {   new Ch  
- .pct);
-  branchescoverage.t => t. trends.map(esData =const brancht);
-    ements.pcoverage.stat t.cap(t =>rends.mentsData = tstatem  const 
-  ions.pct);nctrage.fut.cove(t => .mapata = trendssDst function   conct);
- rage.lines.pt => t.coveends.map(sData = trine  const l  ng());
-triDateStoLocale.date).te(tew Da> nmap(t = = trends.ates    const d
-    
-urn;(!ctx) ret;
-    if sChart')yId('trendmentBnt.getElecumetx = do
-    const c) {ndsndsChart(treitializeTreon in
+            ${
+              coverageData.trends && coverageData.trends.length > 0
+                ? `
+            <section class="trends-section">
+                <h2>Coverage Trends Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </section>
+            `
+                : ''
+            }
 
-functi
-});res(atuctiveFera
-    addInteuresactive feat inter // Add}
-    
-   
-    ds);(data.trenrtdsChaenializeTrinit       
- 0) {> th s.lenga.trendnds && datf (data.tres
-    idata existhart if trends cInitialize /    /);
-    
- , data:'with datad oarerage dashbializing covog('Initle.lsoon cta) {
-   shboard(daeDalizn initiactio
-funcriptboard JavaSshrage DaveCo= `; //  js nst {
-cooid > se < vromierateJS();
-: Pc gensynprivate a}
-
-  ), css)
-tyles.css
-('dDir, ');
-sboar.dashoin(thiseFile(jwait writ    a
-
-}
-}`
-20px
-ing: padd
-on;
-{
-  secti;
-}
-
-s:
-1fr
-late - column
-grid - temp;
-{
-  grid;
-  e-packag  .
-}
-ns:
-1fr
--colummplaterid - te
-gcs - grid;
-{
-  ri.met;
-}
-e:
-2rem
-ont - siz
-fh1;
-{
-  header;
-}
-: 15px
-ding
-padiner;
-{
-  .conta68px)
-    ax - width
-  : 7media (mesign */
-  @e
-    (Dponsiv * Res)
-  / .04;;
-  )
-  126, 234, 0gba(102, 8px 25px r-shadow: 0)
-  boxY(-2pxranslatensform: t    traver 
-on-btn:ho
-
-.actie;
-eass;
-.3on: all 0 transitir
-inte: poorrs
-cum;
-ze:
-1resiont-0px
-fing:
-15px 2paddx
-ius:
-8porder-rad    b
-der: none
-bor;
-tewhi: color;
-a2;
-100%
-)
-4b #767eea 0%,#66ent(135deg, inear-gradiround: l
-    backgon-btn
-  actipx;
-
-.
-    gap: 15
-px, 1fr
-))minmax(200to-fit, (aumns: repeatplate-colutemrid-
-    gsplay: grid
-d
-  diactions-gri */
-.* Actions;
-
-/ #-.55677::;;bccddiillloooooprrrttwy{{}};
-eigh;
-font - w;
-: #fd7e14
-orcol
-  edium.priority - mt;
-  : bold
-eighfont - w5;
-: #dc354orol
-  cty - high.priori;
-  t: 500;
-ighweont - ze;
-frm: capitalitransfo;
-text - type;
-  e - ag;
-
-.coverrap
-e: now - spachites
-wow: ellipsi;
-text - overfln;
-delow: hidoverfx;
--width;
-: 300p
-    max: 0.9rem
--sizeonte
-fpaco;
-', monos', 'Menl ';
-Monacot - family;
-:   fonh
-  pat
-
-.file-
-7;
-505;
-#
-49;
-color: ight: 600;
--went9fa;
-fof8fackground: #
-  bble;
-  th;
-  erage - ta.low - cov2e6;
-olid;
-#deeottom
-: 1px s    border-bign: left
-t - alexpx
-t;
-12dding:pa
-    e-table td
-  eraglow - covable;
-  th,
-  .e-toverag-c
-
-.low: 20px
-margin - toppse;
-collase: -collaporder;
-bh: 100%;
-widtle;
-  abrage - table;
-  tow - cove;
-
-.low-x: auto
-overfle
-  erage - tabl * / 2-.;aceegloorvw;
-  Table * Low;
-  Cov0;
-
-/ 00024:;;agimnpprxx{};
-t: 4;
-heighon: relativeositi;
-p;
-  nerntairt - coner * /.;aachhrt;
-  Contaid;
-
-/* C: bolhtigwefont-r: #dc3545; -poor { colo.coverage}
-ht: bold; ont-weig #fd7e14; fir { color:e-fa.coverag}
-ld; ight: bo2c1; font-we: #6f4od { color-go}
-.coverageold; ight: b45; font-we: #28a7ornt { colrage-excelle
-.cove */ ge;
-Classesra;
-}
-
-/* Cove;
-7d75 color: #6c;
-   00t-weight: 5  fon-name {
-  
-.metricnter;
-}
-items: ce    align-between;
-e-pacnt: sy-contetifus    jx;
-play: fle  disc {
-  metri
-
-.package-px;
-}   gap: 8y: grid;
-  displaics {
-   e-metr}
-
-.packag95057;
-color: #4    ;
-pxm: 15ttobo  margin-;
-  1.3rem font-size:  h3 {
-   -card
-
-.package#e9ecef;
-} 1px solid    border:0px;
-   padding: 2
-  dius: 8px;der-ra
-    bornd: #f8f9fa;ckgrou    bard {
-
-.package-cax;
-}
-ap: 20p
-    gfr));300px, 1it, minmax(eat(auto-fmns: rep-columplatetegrid- grid;
-       display:ge-grid {
- 
-.packaid */* Package Grase
-}
-
-/idth 0.5s esition: w
-trans:
-4pxrder-radiu)
-bo169b78, #
-38a48b, #dient(90deggrad: linear-groun    backt: 100%
-heighl
-{
-  ress - fil.progn;
-}
-iddeerflow: hx;
-ovdius:
-4pr-ra borde0
-8fnd: #e2e    backgrouht: 8px
-heig100%
-:    width
-{
-  ess - bar;
-}
-
-.progr15px
-: om-bott
-    margin718096
-color: #
-m
-9re 0. font-size:ails
-{
-  c - det.metri;
-}
-
-: 1px
--spacingter
-letse;
-m: uppercaext - transfor;
-8px
-t - bottom
-:  margin
-lor: #
-4a5568em
-co2r1.nt - size
-:
-{
-  foic - label;
-}
-
-.metr
-m: 10px
-rgin - botto
-ma;
-#
-2d3748
-: lor co bold
-ght: font - wei3rem
-e: -siz;
-font;
-value;
-{
-  .metric-,0.15)
-}
-ba(0,0,0rg12px 40px shadow: 0   box-x);
-ateY(-5pform: transl
-    transver {card:ho.metric-
-
-ease;
-}hadow 0.3s ease, box-ssform 0.3s tion: tran
-    transi
-67eeapx solid #6eft: 5border-lnter
--align
-: ceext t5px
-: 2    padding 12px
--radius
-:   border
- 100%)
-f7
-#edf27fafc
-0%,#feg, ent(135dinear-gradikground: l  bacard {
-  ic-c
-
-.metr
-}x
-20p  gap: 
-  )
-1fr)x,nmax(250p miuto-fit,t(a: repeaolumnste-c grid-templa
-   y: grid
-lasp
-di;
-{
- idcs-gr */
-.metris Grid
-
-/* Metric: 10px;
-}dding-bottomea;
-    pa7epx solid #66om: 3 border-bott48;
-    #2d37 color:25px;
-   om: margin-bott   1.8rem;
- ont-size:  {
-    fon h2
-
-secti,0,0.1);
-}x rgba(0,0 0 8px 32p-shadow:boxx;
-    ottom: 30prgin-b0px;
-    mag: 3
-    paddin2px;us: 1adirder-r  bo;
-  nd: whitegrou
-    back
-section {0.8;
-}
-ty: ;
-    opacize: 0.9rem  font-sidated {
-  .last-up10px;
-}
-
-tom: gin-botmar0.9;
-    y:     opacit
-1.2rem;ize: -sfontitle {
-    bt
-
-.su,0,0.3);
-} rgba(0,0x 2px 4pxdow: 2pext-sha tx;
-   : 10pn-bottomrgiem;
-    ma-size: 2.5ront    feader h1 {
-
-}
-
-hite;r: wh   colo
- 0px;om: 4n-bott
-    margienter;align: ctext-{
-    ader px;
-}
-
-headding: 20to;
-    p: 0 aumarginx;
-    idth: 1200pax-w   m
- {tainer 
-.con: #333;
-}
-;
-    colort: 100vhheigh    min-100%);
-%, #764ba2 67eea 0135deg, #6ent(linear-gradind:  backgrouf;
-   ri-seans, Roboto, sSegoe UI'ystemFont, 'inkMacSsystem, Bl -apple-amily:ont-f{
-    fy 
-}
-
-bodx;order-bosizing: b box-ing: 0;
-   add p;
-   margin: 0/
-* {
-     Styles *ashboardCoverage Dt css = `/*  {
-    consvoid>se<: PromiCSS()neratenc gevate asy
-
-  pri  });
-ml'), html'index.hthboardDir, ashis.dn(titeFile(joiawait wr`;
-
-    html>
+        </main>
+    </div>
+    <script src="dashboard.js"></script>
 </body>
-</>script);
-    </rageDataoved(cshboarializeDainit     
-   geData)};eracovfy(ingiSON.str = ${JDatacoveraget   cons
-      d with datashboar daitialize // In       cript>
-    <st>
-</scrip">d.jsshboarsrc="da   <script </div>
+</html>`;
+    await writeFile(join(this.dashboardDir, 'index.html'), html);
+  }
 
- 
-    main> </      ion>
- sect</        v>
-     </di          >
-     utton/b         <     
-      ew Details    🔍 Vi                  ls()">
-  wDetaiclick="vie" onction-btnn class="a   <butto              utton>
-   /b <                   rt
-enerate Repo   📊 G              
-       ()">rteReponeratclick="gebtn" onction-="aassbutton cl       <            
- utton>  </b                  
-stsn TeRu   🧪                  )">
-    "runTests(click=ion-btn" on"actlass=<button c             >
-         </button              Data
-    efresh      🔄 R         
-          ">efreshData()"rclick=n-btn" on"actioon class= <butt              ">
-     dns-grilass="actio c   <div     
-        </h2>k Actions    <h2>Quic           
- n">-sectioonsss="action clacti     <se      ions -->
- -- Act  <!
-          : ''}
-     `       /section>
-  <          
-  </div>          >
-      </table                 </tbody>
-                   ')}
-       `).join('                           
- /tr>          <                     }</td>
- age)overl(file.crityLabeios.getPr}">${thiage)covere.ityClass(filgetPrior ${this.ty"prioris=d clas          <t                      td>
-    ixed(1)}%</toFage.{file.cover">$erage)}file.covass(CoverageClgetue ${this.valerage-ass="cov      <td cl                          }</td>
-    ypefile.tpe">${tyverage-d class="co         <t                  
-         e}</td>${file.fil">-pathass="file  <td cl                            tr>
-           <                    
-       : any) => `file0, 20).map((s.slice(eFileagver   ${lowCo                  dy>
-               <tbo            thead>
-        </                    tr>
-      </             >
-         th>Priority</<th                      
-          e</th><th>Coverag                           
-     ype</th>       <th>T                         ile</th>
-     <th>F                       >
-       <tr                    d>
-     ea     <th                  le>
- tab         <     ">
-      verage-tabless="low-co cla        <div2>
-        ention</httNeeding A <h2>Files               ction">
- seoverage-ss="low-cn clasectio    <
-        ? ` 0 ength >erageFiles.l   ${lowCov>
-         es --ilverage FLow Co <!--          : ''}
+  private async generateCSS(): Promise<void> {
+    const css = `/* General Styles */
+:root {
+  --primary-color: #007bff;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --light-bg: #f8f9fa;
+  --dark-text: #343a40;
+  --border-color: #dee2e6;
+  --shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-hover: 0 4px 8px rgba(0,0,0,0.15);
+}
 
-       ` n>
-        </sectio
-            </div>               as>
-nvart"></cad="trendsCh  <canvas i            
-      er">ontain"chart-cv class=   <di      h2>
-       Trends</overage h2>C        <      ">
-  ectionends-sss="trection cla    <s       ? `
- h > 0 engt& trends.ls &trend          ${>
-  nds --e Treoverag      <!-- C
-      n>
-tio       </sec      </div>
-               }
- `).join('')                 v>
-       </di              
-       </div>                        >
-     </div                            n>
- }%</spa1)ct.toFixed(ches.poverage.bran${cpct)}">nches.verage.brarageClass(co.getCove${thisric-value met class="       <span                      
-       es:</span>me">Branchetric-na class="m       <span                     >
-        age-metric"ackss="p    <div cla                               </div>
-                          
-   >)}%</spanoFixed(1ements.pct.tge.stat}">${coverants.pct)age.stateme(coverssoverageCla{this.getCvalue $c-s="metriasclspan       <                             >
- spanatements:</ame">Stetric-nan class="m        <sp                     >
-       c"tri"package-meclass=  <div                         
-      div>      </                      n>
-    </spaixed(1)}%.toFct.functions.p>${coverageons.pct)}"functis(coverage.rageClashis.getCovevalue ${tetric-"mlass=    <span c                           
-     s:</span>tionncic-name">Fuass="metrn cl    <spa                                ic">
-kage-metrlass="pacdiv c   <                           v>
-   </di                          
-     1)}%</span>oFixed(.tnes.pct{coverage.li)}">$lines.pctrage.covegeClass(eragetCovalue ${this.metric-vpan class="<s                                 an>
-   nes:</spame">Liic-nclass="metrspan     <                       
-         ric">metkage-class="pac <div                             >
-   metrics""package-ass=div cl     <                     h3>
-  pkg}</3>${       <h            >
-         kage-card"ss="paccladiv     <                 `
-     any]) =>tring,overage]: [spkg, c(([.mapeBreakdown)es(packagtri.en ${Object           ">
-        ackage-grid class="p        <div>
-        own</h2 Breakdackage      <h2>P          on">
-ectikage-ss="pacon clas<secti        
-    kdown -->age Brea  <!-- Pack   >
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-          </section       
-  iv>    </d  
-            </div>                </div>
-                      >
-    div</ct}%">nches.pmary.braum{sth: $e="widfill" stylss-s="progre <div clas                           >
-"ress-bars="prog <div clas                     iv>
-  l}</danches.totay.brummar${svered}/ranches.co>${summary.bdetails"etric-v class="m         <di             es</div>
-  >Branchtric-label"ass="me   <div cl                    v>
- di}%</ixed(1)es.pct.toFy.branch>${summare"ric-valu"metiv class=<d                    hes">
-    ancrd brcac-rilass="met     <div c          >
-     /div         <           </div>
-                      /div>
-  "><s.pct}%statementry.ummah: ${syle="widtss-fill" st"progreclass=  <div                       ">
-    arress-bprog"ass= cl      <div               
-   </div>ents.total}mary.statem/${sumts.covered}tatemenummary.s">${sc-detailsetri="mss   <div cla             v>
-        ments</dibel">Stateic-las="metrlas <div c                       1)}%</div>
-ixed(ents.pct.toFmary.statem${sum-value">etric="miv class    <d             
-       atements">ic-card sttrs="meclasv        <di            iv>
-        </d           </div>
-                     v>
-     ></dict}%"tions.pmmary.func${su="width: fill" style"progress-v class=    <di                     
-   bar">s-progresass=" <div cl                       tal}</div>
-s.tory.functionsumma/${s.covered}ary.functionsummdetails">${="metric-lass    <div c                 
-   /div>unctions<-label">Fictr"meiv class=   <d                div>
-     )}%</toFixed(1pct.tions.func>${summary.tric-value"v class="me     <di                  
- >nctions"card fuic-"metrss=<div cla           
-          </div>                   /div>
-   <                    ></div>
- }%"y.lines.pctarsummth: ${idle="w" styress-fillass="progdiv cl          <                  bar">
-ogress-class="pr      <div             v>
-      .total}</dieslinary.d}/${summ.covere.lines>${summaryils"etric-detass="m    <div cla                   div>
- ">Lines</c-label"metriss=v cla <di                   div>
-    ixed(1)}%</nes.pct.toF.lisummary>${ric-value"s="met   <div clas                  ">
-   linesc-card ="metridiv class  <          
-        ">rics-gridss="metdiv cla         <       2>
-age</hl Cover2>Overal  <h              ">
-onmary-secti"sumlass=section c      <>
-      mary --overage Sumverall C  <!-- O        ain>
-          <meader>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-text);
+  background-color: #f4f7f6;
+}
 
-/h
-        <div>        </    
-eString()}.toLocale()at${new Dupdated: ast       L   ">
-       ast-updated class="l     <div     /p>
-  y Analyzer<sitor Repoied">Unif"subtitle  <p class=          ard</h1>
-hboasrage Dst Cove   <h1>📊 Te         >
-  <header    ">
-  "containerv class=di
-    <d>
-<body>pt>
-</hea.js"></scripm/chartdelivr.net/ntps://cdn.jst src="ht
-    <scripyles.css">"st=t" hrefheestyles="rel    <link 
-tle>tilyzer</ry Ana RepositoUnifiedd -  Dashboarveragee>Co   <titl=1.0">
- l-scaleinitiah, dte-width=devicntent="wiort" co"viewpta name=">
-    <me="UTF-8meta charsetd>
-    <<hea">
-en lang="l>
-<htmlTYPE htm `<!DOConst html =  c
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-  eData;} = coverages, trends ageFil lowCoverdown,eBreakmary, packag{ sum   const <void> {
- mise any): ProData:coverageerateHTML(async gene ivat  pr
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
 
- }
-  }l;
-   turn nul{
-      retch 
-    } carse(data);ON.paJS    return 
-  -8');File, 'utfdFile(reportwait rea ast data =
-      conry {  t }
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
 
-  
-   null;     return e)) {
- rtFilc(reposSynxistif (!e    on';
-    
-s.jsanalysiage-ereports/covge-rverartFile = 'const repo  co
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Summary Section */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.summary-card h3 {
+  margin-bottom: 15px;
+  color: var(--dark-text);
+  font-size: 1.1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.6s ease;
+}
+
+.metric-value {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.last-updated {
+  text-align: center;
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 20px;
+}
+
+/* Package Breakdown */
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.package-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--primary-color);
+}
+
+.package-card h3 {
+  margin-bottom: 15px;
+  color: var(--dark-text);
+}
+
+.package-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-label {
+  font-weight: 500;
+}
+
+/* Low Coverage Files Table */
+.coverage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.coverage-table th,
+.coverage-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.coverage-table th {
+  background-color: var(--light-bg);
+  font-weight: 600;
+}
+
+.coverage-table tr:hover {
+  background-color: #f1f3f5;
+}
+
+.file-path {
+  font-family: monospace;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priority {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.priority-high {
+  color: var(--success-color);
+}
+
+.priority-medium {
+  color: var(--warning-color);
+}
+
+.priority-low {
+  color: var(--danger-color);
+}
+
+.coverage-excellent { background-color: #d4edda; } /* Light green */
+.coverage-good { background-color: #d1ecf1; } /* Light blue */
+.coverage-fair { background-color: #fff3cd; } /* Light yellow */
+.coverage-poor { background-color: #f8d7da; } /* Light red */
+.coverage-critical { background-color: #f5c6cb; } /* Darker red */
+
+/* Trends Chart */
+.chart-container {
+  position: relative;
+  height: 400px;
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+
+  .summary-grid,
+  .package-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+  animation: fadeIn 0.5s ease-out;
+  margin-bottom: 30px;
+}
+
+/* Notification Styles */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: var(--shadow-hover);
+  animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+  background-color: var(--success-color);
+}
+
+.notification.error {
+  background-color: var(--danger-color);
+}
+
+.notification.info {
+  background-color: var(--info-color);
+}
+
+.notification.warning {
+  background-color: var(--warning-color);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}`;
+    await writeFile(join(this.dashboardDir, 'styles.css'), css);
+  }
+
+  private async generateJS(): Promise<void> {
+    const js = `// Initialize dashboard functionality
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCharts();
+    initializeInteractiveFeatures();
+    showNotification('Dashboard loaded successfully!', 'success');
+});
+
+// Chart.js configurations
+function initializeCharts() {
+    const trendsCtx = document.getElementById('trendsChart');
+    if (trendsCtx && window.coverageData && window.coverageData.trends) {
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: window.coverageData.trends.map(t => t.date),
+                datasets: [
+                    {
+                        label: 'Branch Coverage',
+                        data: window.coverageData.trends.map(t => t.branches.pct),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Statement Coverage',
+                        data: window.coverageData.trends.map(t => t.statements.pct),
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Function Coverage',
+                        data: window.coverageData.trends.map(t => t.functions.pct),
+                        borderColor: 'rgb(255, 206, 86)',
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Line Coverage',
+                        data: window.coverageData.trends.map(t => t.lines.pct),
+                        borderColor: 'rgb(153, 102, 255)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Coverage Trends Over Time'
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Interactive features
+function initializeInteractiveFeatures() {
+    // Add click handlers to package cards if they exist
+    const packageCards = document.querySelectorAll('.package-card');
+    packageCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const packageName = card.querySelector('h3').textContent;
+            showNotification(\`Viewing details for \${packageName}\`, 'info');
+            // Placeholder: Implement detailed view for a package
+        });
+    });
+
+    // Add hover effects to metric cards
+    const metricCards = document.querySelectorAll('.summary-card, .package-card');
+    metricCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// Notification system
+function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
+    const notification = document.createElement('div');
+    notification.className = \`notification \${type}\`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Action button functions
+function viewPackageDetails() {
+    showNotification('Package details view feature coming soon!', 'info');
+    // Placeholder: Implement package detail view
+}
+
+function generateReport() {
+    showNotification('Generating detailed report...', 'info');
+    // Placeholder: Implement report generation
+    setTimeout(() => {
+        showNotification('Report generated and downloaded!', 'success');
+    }, 2000);
+}
+
+function runTests() {
+    showNotification('Running tests... This may take a while.', 'info');
+    // Placeholder: Implement test running logic
+    setTimeout(() => {
+        showNotification('Tests completed!', 'success');
+        // Optionally refresh data after tests
+        refreshData();
+    }, 5000); // Simulate test duration
+}
+
+function refreshData() {
+    showNotification('Refreshing coverage data...', 'info');
+    // Placeholder: Implement data fetching and refresh logic
+    setTimeout(() => {
+        location.reload(); // Simple refresh, can be more sophisticated
+        showNotification('Data refreshed!', 'success');
+    }, 1000);
+}
+
+// Utility functions (can be expanded)
+function formatPercentage(value: number): string {
+    return value.toFixed(1) + '%';
+}
+
+function formatDate(dateString: string): string {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+// Expose functions to global scope for onclick handlers
+window.viewPackageDetails = viewPackageDetails;
+window.generateReport = generateReport;
+window.runTests = runTests;
+window.refreshData = refreshData;`;
+    await writeFile(join(this.dashboardDir, 'dashboard.js'), js);
+  }
+}
+
+// Main execution
+async function main() {
+  const dashboard = new CoverageDashboard();
+  await dashboard.generateDashboard();
+}
+
+main().catch((_error) => {
+  process.exit(1);
+});

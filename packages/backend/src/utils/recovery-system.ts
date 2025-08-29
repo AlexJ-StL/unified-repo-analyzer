@@ -1,23 +1,16 @@
+import { EventEmitter } from 'node:events';
 import logger from '../services/logger.service.js';
 import {
-import
-{
-  EventEmitter;
-}
-from;
-('node:events');
-
+  createEnhancedError,
+  type EnhancedError,
+  ErrorCategory,
+  ErrorSeverity,
+} from './error-handler.js';
 import { enhancedLogger } from './logging-enhancer.js';
 
 /**
  * Error recovery and graceful degradation system
  */
-
-createEnhancedError, type;
-EnhancedError,
-  ErrorCategory,
-  ErrorSeverity,
-} from './error-handler.js'
 /**
  * Recovery strategy types
  */

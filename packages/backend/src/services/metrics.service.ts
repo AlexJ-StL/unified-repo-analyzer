@@ -243,7 +243,7 @@ class MetricsService {
       if (metric.name === 'http_requests_total') {
         requestMetrics.totalRequests += metric.value;
         if (metric.labels) {
-          const status = Number.parseInt(metric.labels.status) || 200;
+          const status = Number.parseInt(metric.labels.status, 10) || 200;
           const method = metric.labels.method || 'GET';
           requestMetrics.requestsByStatus[status] =
             (requestMetrics.requestsByStatus[status] || 0) + 1;
