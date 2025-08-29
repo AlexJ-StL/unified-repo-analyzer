@@ -12,8 +12,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { sortFilesByImportance } from './fileImportance';
 import { detectFrameworks, detectLanguage } from './languageDetection';
 
-import type {
-import type
 {
   FileInfo;
 }
@@ -27,7 +25,8 @@ from;
 AnalysisOptions,
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis'
-extractDirectoryInfo, FileSystemError, FileSystemErrorType, getCombinedIgnorePatterns, type;
+extractDirectoryInfo, FileSystemError, FileSystemErrorType, getCombinedIgnorePatterns,
+type;
 TraversalOptions,
   traverseDirectory,
 } from './fileSystem'

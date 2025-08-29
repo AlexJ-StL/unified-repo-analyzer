@@ -1,4 +1,3 @@
-
 /**
  * Type guards for global objects in the Unified Repository Analyzer frontend
  */

@@ -1,21 +1,19 @@
-import { PrinterIcon } from "@heroicons/react/24/outline";
-import type { BatchAnalysisResult } from "@unified-repo-analyzer/shared";
-import type React from "react";
-import { useState } from "react";
-import ExportButton from "./results/ExportButton";
-import ExportHistory from "./results/ExportHistory";
-import PrintableReport from "./results/PrintableReport";
+import { PrinterIcon } from '@heroicons/react/24/outline';
+import type { BatchAnalysisResult } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
+import ExportButton from './results/ExportButton';
+import ExportHistory from './results/ExportHistory';
+import PrintableReport from './results/PrintableReport';
 
 interface BatchResultsViewerProps {
   batchResult: BatchAnalysisResult;
 }
 
-const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
-  batchResult,
-}) => {
-  const [activeTab, setActiveTab] = useState<
-    "overview" | "repositories" | "insights" | "exports"
-  >("overview");
+const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'repositories' | 'insights' | 'exports'>(
+    'overview'
+  );
   const [showPrintView, setShowPrintView] = useState(false);
 
   if (!batchResult) {
@@ -27,13 +25,13 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
   }
 
   const tabs: {
-    id: "overview" | "repositories" | "insights" | "exports";
+    id: 'overview' | 'repositories' | 'insights' | 'exports';
     label: string;
   }[] = [
-    { id: "overview", label: "Overview" },
-    { id: "repositories", label: "Repositories" },
-    { id: "insights", label: "Combined Insights" },
-    { id: "exports", label: "Export & Share" },
+    { id: 'overview', label: 'Overview' },
+    { id: 'repositories', label: 'Repositories' },
+    { id: 'insights', label: 'Combined Insights' },
+    { id: 'exports', label: 'Export & Share' },
   ];
 
   const handlePrint = () => {
@@ -68,10 +66,10 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
                 onClick={() => setActiveTab(tab.id)}
                 className={`whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm mr-6 ${
                   activeTab === tab.id
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
-                aria-current={activeTab === tab.id ? "page" : undefined}
+                aria-current={activeTab === tab.id ? 'page' : undefined}
               >
                 {tab.label}
               </button>
@@ -94,25 +92,20 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
       </div>
 
       <div className="p-6">
-        {activeTab === "overview" && (
+        {activeTab === 'overview' && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Batch Analysis Overview
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Batch Analysis Overview</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">
                     {batchResult.repositories.length}
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Repositories Analyzed
-                  </div>
+                  <div className="text-sm text-gray-600">Repositories Analyzed</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
-                    {batchResult.status?.completed ||
-                      batchResult.repositories.length}
+                    {batchResult.status?.completed || batchResult.repositories.length}
                   </div>
                   <div className="text-sm text-gray-600">Completed</div>
                 </div>
@@ -132,26 +125,16 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
             </div>
 
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3">
-                Batch Details
-              </h4>
+              <h4 className="text-md font-medium text-gray-900 mb-3">Batch Details</h4>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">
-                      Batch ID
-                    </dt>
-                    <dd className="text-sm text-gray-900 font-mono">
-                      {batchResult.id}
-                    </dd>
+                    <dt className="text-sm font-medium text-gray-500">Batch ID</dt>
+                    <dd className="text-sm text-gray-900 font-mono">{batchResult.id}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">
-                      Created
-                    </dt>
-                    <dd className="text-sm text-gray-900">
-                      {formatDate(batchResult.createdAt)}
-                    </dd>
+                    <dt className="text-sm font-medium text-gray-500">Created</dt>
+                    <dd className="text-sm text-gray-900">{formatDate(batchResult.createdAt)}</dd>
                   </div>
                 </dl>
               </div>
@@ -159,17 +142,12 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
           </div>
         )}
 
-        {activeTab === "repositories" && (
+        {activeTab === 'repositories' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">
-              Repository Results
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900">Repository Results</h3>
             <div className="grid gap-6">
               {batchResult.repositories.map((repo, index) => (
-                <div
-                  key={repo.id}
-                  className="border border-gray-200 rounded-lg p-6"
-                >
+                <div key={repo.id} className="border border-gray-200 rounded-lg p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h4 className="text-lg font-medium text-gray-900">
@@ -179,45 +157,28 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-500">
-                            Language
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            {repo.language}
-                          </div>
+                          <div className="text-sm font-medium text-gray-500">Language</div>
+                          <div className="text-sm text-gray-900">{repo.language}</div>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-500">
-                            Files
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            {repo.fileCount}
-                          </div>
+                          <div className="text-sm font-medium text-gray-500">Files</div>
+                          <div className="text-sm text-gray-900">{repo.fileCount}</div>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-500">
-                            Size
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            {formatSize(repo.totalSize)}
-                          </div>
+                          <div className="text-sm font-medium text-gray-500">Size</div>
+                          <div className="text-sm text-gray-900">{formatSize(repo.totalSize)}</div>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-500">
-                            Quality
-                          </div>
+                          <div className="text-sm font-medium text-gray-500">Quality</div>
                           <div
                             className={`text-sm font-medium ${
-                              repo.codeAnalysis.complexity.codeQuality ===
-                              "excellent"
-                                ? "text-green-600"
-                                : repo.codeAnalysis.complexity.codeQuality ===
-                                    "good"
-                                  ? "text-blue-600"
-                                  : repo.codeAnalysis.complexity.codeQuality ===
-                                      "fair"
-                                    ? "text-yellow-600"
-                                    : "text-red-600"
+                              repo.codeAnalysis.complexity.codeQuality === 'excellent'
+                                ? 'text-green-600'
+                                : repo.codeAnalysis.complexity.codeQuality === 'good'
+                                  ? 'text-blue-600'
+                                  : repo.codeAnalysis.complexity.codeQuality === 'fair'
+                                    ? 'text-yellow-600'
+                                    : 'text-red-600'
                             }`}
                           >
                             {repo.codeAnalysis.complexity.codeQuality}
@@ -241,52 +202,42 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
           </div>
         )}
 
-        {activeTab === "insights" && (
+        {activeTab === 'insights' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900">
-              Combined Insights
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900">Combined Insights</h3>
 
             {batchResult.combinedInsights ? (
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-md font-medium text-gray-900 mb-3">
-                    Commonalities
-                  </h4>
+                  <h4 className="text-md font-medium text-gray-900 mb-3">Commonalities</h4>
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <ul className="space-y-2">
-                      {batchResult.combinedInsights.commonalities.map(
-                        (item, index) => (
-                          <li
-                            key={`commonality-${index}-${item.slice(0, 20)}`}
-                            className="text-sm text-blue-800 flex items-start"
-                          >
-                            <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                            {item}
-                          </li>
-                        )
-                      )}
+                      {batchResult.combinedInsights.commonalities.map((item, index) => (
+                        <li
+                          key={`commonality-${index}-${item.slice(0, 20)}`}
+                          className="text-sm text-blue-800 flex items-start"
+                        >
+                          <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          {item}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-md font-medium text-gray-900 mb-3">
-                    Key Differences
-                  </h4>
+                  <h4 className="text-md font-medium text-gray-900 mb-3">Key Differences</h4>
                   <div className="bg-yellow-50 p-4 rounded-lg">
                     <ul className="space-y-2">
-                      {batchResult.combinedInsights.differences.map(
-                        (item, index) => (
-                          <li
-                            key={`difference-${index}-${item.slice(0, 20)}`}
-                            className="text-sm text-yellow-800 flex items-start"
-                          >
-                            <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                            {item}
-                          </li>
-                        )
-                      )}
+                      {batchResult.combinedInsights.differences.map((item, index) => (
+                        <li
+                          key={`difference-${index}-${item.slice(0, 20)}`}
+                          className="text-sm text-yellow-800 flex items-start"
+                        >
+                          <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          {item}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -297,17 +248,12 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
                   </h4>
                   <div className="bg-green-50 p-4 rounded-lg">
                     <ul className="space-y-2">
-                      {batchResult.combinedInsights.integrationOpportunities.map(
-                        (item, index) => (
-                          <li
-                            key={index}
-                            className="text-sm text-green-800 flex items-start"
-                          >
-                            <span className="inline-block w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                            {item}
-                          </li>
-                        )
-                      )}
+                      {batchResult.combinedInsights.integrationOpportunities.map((item, index) => (
+                        <li key={index} className="text-sm text-green-800 flex items-start">
+                          <span className="inline-block w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          {item}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -322,7 +268,7 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({
           </div>
         )}
 
-        {activeTab === "exports" && <ExportHistory />}
+        {activeTab === 'exports' && <ExportHistory />}
       </div>
     </div>
   );

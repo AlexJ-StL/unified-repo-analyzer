@@ -1,6 +1,5 @@
-import logger from '../services/logger.service.js';
-
 import type { Request, Response } from 'express';
+import logger from '../services/logger.service.js';
 
 /**
  * Enhanced logging utilities for better debugging and monitoring

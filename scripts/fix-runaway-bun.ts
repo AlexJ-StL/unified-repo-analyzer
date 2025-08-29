@@ -5,10 +5,9 @@
  * Requirements: System stability, resource management
  */
 
-import { execSync, spawn } from "node:child_process";
-import { writeFile, readFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 interface ProcessInfo {
   pid: number;
@@ -27,9 +26,8 @@ interface BunProcessConfig {
 }
 
 class BunProcessManager {
-  private readonly configFile = ".kiro/bun-process-config.json";
-  private readonly logFile = ".kiro/logs/bun-process-monitor.log";
-  private readonly pidFile = ".kiro/bun-processes.pid";
+  private readonly configFile = '.kiro/bun-process-config.json';
+  private readonly logFile = '.kiro/logs/bun-process-monitor.log';
 
   private config: BunProcessConfig = {
     maxConcurrentProcesses: 3,
@@ -43,10 +41,10 @@ class BunProcessManager {
   private monitoringInterval?: NodeJS.Timeout;
 
   async initialize(): Promise<void> {
-    console.log("🔧 Initializing Bun Process Manager...");
+    console.log('🔧 Initializing Bun Process Manager...');
 
     // Create necessary directories
-    await mkdir(".kiro/logs", { recursive: true });
+    await mkdir('.kiro/logs', { recursive: true });
 
     // Load or create configuration
     await this.loadConfig();
@@ -54,49 +52,47 @@ class BunProcessManager {
     // Clean up any existing runaway processes
     await this.cleanupRunawayProcesses();
 
-    console.log("✅ Bun Process Manager initialized");
+    console.log('✅ Bun Process Manager initialized');
   }
 
   private async loadConfig(): Promise<void> {
     if (existsSync(this.configFile)) {
       try {
-        const configData = await readFile(this.configFile, "utf-8");
+        const configData = await readFile(this.configFile, 'utf-8');
         this.config = { ...this.config, ...JSON.parse(configData) };
-        console.log("📋 Loaded Bun process configuration");
-      } catch (error) {
-        console.warn("⚠️  Failed to load config, using defaults");
-      }
+        console.log('📋 Loaded Bun process configuration');
+      } catch (_error) {}
     } else {
       await this.saveConfig();
     }
   }
 
   private async saveConfig(): Promise<void> {
-    await mkdir(".kiro", { recursive: true });
+    await mkdir('.kiro', { recursive: true });
     await writeFile(this.configFile, JSON.stringify(this.config, null, 2));
-    console.log("💾 Saved Bun process configuration");
+    console.log('💾 Saved Bun process configuration');
   }
 
   async getBunProcesses(): Promise<ProcessInfo[]> {
     try {
       // Get all Bun processes on Windows
       const output = execSync('tasklist /FI "IMAGENAME eq bun.exe" /FO CSV', {
-        encoding: "utf-8",
+        encoding: 'utf-8',
         timeout: 10000,
       });
 
-      const lines = output.split("\n").slice(1); // Skip header
+      const lines = output.split('\n').slice(1); // Skip header
       const processes: ProcessInfo[] = [];
 
       for (const line of lines) {
         if (line.trim()) {
-          const parts = line.split(",").map((p) => p.replace(/"/g, ""));
+          const parts = line.split(',').map((p) => p.replace(/"/g, ''));
           if (parts.length >= 5) {
             processes.push({
-              pid: parseInt(parts[1]),
+              pid: Number.parseInt(parts[1]),
               command: parts[0],
               cpuUsage: 0, // Windows tasklist doesn't provide CPU usage directly
-              memoryUsage: parseInt(parts[4].replace(/[^\d]/g, "")) || 0,
+              memoryUsage: Number.parseInt(parts[4].replace(/[^\d]/g, '')) || 0,
               startTime: new Date().toISOString(), // Approximate
             });
           }
@@ -104,19 +100,18 @@ class BunProcessManager {
       }
 
       return processes;
-    } catch (error) {
-      console.error("❌ Failed to get Bun processes:", error);
+    } catch (_error) {
       return [];
     }
   }
 
   async cleanupRunawayProcesses(): Promise<void> {
-    console.log("🧹 Cleaning up runaway Bun processes...");
+    console.log('🧹 Cleaning up runaway Bun processes...');
 
     const processes = await this.getBunProcesses();
 
     if (processes.length === 0) {
-      console.log("✅ No Bun processes found");
+      console.log('✅ No Bun processes found');
       return;
     }
 
@@ -124,22 +119,17 @@ class BunProcessManager {
 
     // Kill processes if there are too many
     if (processes.length > this.config.maxConcurrentProcesses) {
-      const excessProcesses = processes.slice(
-        this.config.maxConcurrentProcesses
-      );
+      const excessProcesses = processes.slice(this.config.maxConcurrentProcesses);
 
       for (const process of excessProcesses) {
-        await this.killProcess(process.pid, "excess process");
+        await this.killProcess(process.pid, 'excess process');
       }
     }
 
     // Kill high memory usage processes
     for (const process of processes) {
       if (process.memoryUsage > this.config.maxMemoryUsageMB * 1024) {
-        await this.killProcess(
-          process.pid,
-          `high memory usage: ${process.memoryUsage}KB`
-        );
+        await this.killProcess(process.pid, `high memory usage: ${process.memoryUsage}KB`);
       }
     }
 
@@ -151,34 +141,30 @@ class BunProcessManager {
       execSync(`taskkill /F /PID ${pid}`, { timeout: 5000 });
       console.log(`🔪 Killed Bun process ${pid} (${reason})`);
       await this.logAction(`Killed process ${pid}: ${reason}`);
-    } catch (error) {
-      console.warn(`⚠️  Failed to kill process ${pid}:`, error);
-    }
+    } catch (_error) {}
   }
 
   async startMonitoring(): Promise<void> {
     if (this.isMonitoring) {
-      console.log("📊 Monitoring is already running");
+      console.log('📊 Monitoring is already running');
       return;
     }
 
-    console.log("🔍 Starting Bun process monitoring...");
+    console.log('🔍 Starting Bun process monitoring...');
     this.isMonitoring = true;
 
     this.monitoringInterval = setInterval(async () => {
       try {
         await this.monitorProcesses();
-      } catch (error) {
-        console.error("❌ Monitoring error:", error);
-      }
+      } catch (_error) {}
     }, this.config.monitoringIntervalMs);
 
     // Also monitor on process exit
-    process.on("exit", () => this.stopMonitoring());
-    process.on("SIGINT", () => this.stopMonitoring());
-    process.on("SIGTERM", () => this.stopMonitoring());
+    process.on('exit', () => this.stopMonitoring());
+    process.on('SIGINT', () => this.stopMonitoring());
+    process.on('SIGTERM', () => this.stopMonitoring());
 
-    console.log("✅ Monitoring started");
+    console.log('✅ Monitoring started');
   }
 
   async stopMonitoring(): Promise<void> {
@@ -186,7 +172,7 @@ class BunProcessManager {
       return;
     }
 
-    console.log("🛑 Stopping Bun process monitoring...");
+    console.log('🛑 Stopping Bun process monitoring...');
     this.isMonitoring = false;
 
     if (this.monitoringInterval) {
@@ -194,7 +180,7 @@ class BunProcessManager {
       this.monitoringInterval = undefined;
     }
 
-    console.log("✅ Monitoring stopped");
+    console.log('✅ Monitoring stopped');
   }
 
   private async monitorProcesses(): Promise<void> {
@@ -208,9 +194,7 @@ class BunProcessManager {
     }
 
     // Log current status
-    await this.logAction(
-      `Monitoring: ${processes.length} Bun processes running`
-    );
+    await this.logAction(`Monitoring: ${processes.length} Bun processes running`);
   }
 
   private async logAction(message: string): Promise<void> {
@@ -218,18 +202,16 @@ class BunProcessManager {
     const logEntry = `[${timestamp}] ${message}\n`;
 
     try {
-      await mkdir(".kiro/logs", { recursive: true });
+      await mkdir('.kiro/logs', { recursive: true });
 
       // Append to log file
       if (existsSync(this.logFile)) {
-        const existingLog = await readFile(this.logFile, "utf-8");
+        const existingLog = await readFile(this.logFile, 'utf-8');
         await writeFile(this.logFile, existingLog + logEntry);
       } else {
         await writeFile(this.logFile, logEntry);
       }
-    } catch (error) {
-      console.warn("⚠️  Failed to write log:", error);
-    }
+    } catch (_error) {}
   }
 
   private async logCleanupAction(processCount: number): Promise<void> {
@@ -237,7 +219,7 @@ class BunProcessManager {
   }
 
   async createPreventionHooks(): Promise<void> {
-    console.log("🔗 Creating prevention hooks...");
+    console.log('🔗 Creating prevention hooks...');
 
     // Create a wrapper script for Bun commands
     const wrapperScript = `#!/usr/bin/env bun
@@ -302,48 +284,42 @@ if (import.meta.main) {
   main().catch(console.error);
 }`;
 
-    await writeFile("scripts/bun-wrapper.ts", wrapperScript);
-    console.log("✅ Created Bun wrapper script");
+    await writeFile('scripts/bun-wrapper.ts', wrapperScript);
+    console.log('✅ Created Bun wrapper script');
 
     // Create package.json script modifications
-    const packageJsonPath = "package.json";
+    const packageJsonPath = 'package.json';
     if (existsSync(packageJsonPath)) {
       try {
-        const packageJson = JSON.parse(
-          await readFile(packageJsonPath, "utf-8")
-        );
+        const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
 
         // Add cleanup and monitoring scripts
         packageJson.scripts = {
           ...packageJson.scripts,
-          "bun:cleanup": "bun run scripts/fix-runaway-bun.ts cleanup",
-          "bun:monitor": "bun run scripts/fix-runaway-bun.ts monitor",
-          "bun:status": "bun run scripts/fix-runaway-bun.ts status",
+          'bun:cleanup': 'bun run scripts/fix-runaway-bun.ts cleanup',
+          'bun:monitor': 'bun run scripts/fix-runaway-bun.ts monitor',
+          'bun:status': 'bun run scripts/fix-runaway-bun.ts status',
         };
 
         await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
-        console.log("✅ Added Bun management scripts to package.json");
-      } catch (error) {
-        console.warn("⚠️  Failed to update package.json:", error);
-      }
+        console.log('✅ Added Bun management scripts to package.json');
+      } catch (_error) {}
     }
   }
 
   async getStatus(): Promise<void> {
-    console.log("📊 Bun Process Status");
-    console.log("====================");
+    console.log('📊 Bun Process Status');
+    console.log('====================');
 
     const processes = await this.getBunProcesses();
 
-    console.log(
-      `Active Bun processes: ${processes.length}/${this.config.maxConcurrentProcesses}`
-    );
+    console.log(`Active Bun processes: ${processes.length}/${this.config.maxConcurrentProcesses}`);
     console.log(`Max memory limit: ${this.config.maxMemoryUsageMB}MB`);
     console.log(`Process timeout: ${this.config.processTimeoutMs / 1000}s`);
-    console.log(`Monitoring: ${this.isMonitoring ? "Active" : "Inactive"}`);
+    console.log(`Monitoring: ${this.isMonitoring ? 'Active' : 'Inactive'}`);
 
     if (processes.length > 0) {
-      console.log("\nActive processes:");
+      console.log('\nActive processes:');
       for (const process of processes) {
         console.log(`  PID ${process.pid}: ${process.memoryUsage}KB memory`);
       }
@@ -352,21 +328,19 @@ if (import.meta.main) {
     // Show recent log entries
     if (existsSync(this.logFile)) {
       try {
-        const logContent = await readFile(this.logFile, "utf-8");
+        const logContent = await readFile(this.logFile, 'utf-8');
         const recentEntries = logContent
-          .split("\n")
+          .split('\n')
           .slice(-5)
           .filter((line) => line.trim());
 
         if (recentEntries.length > 0) {
-          console.log("\nRecent activity:");
+          console.log('\nRecent activity:');
           for (const entry of recentEntries) {
             console.log(`  ${entry}`);
           }
         }
-      } catch (error) {
-        console.warn("⚠️  Could not read log file");
-      }
+      } catch (_error) {}
     }
   }
 }
@@ -379,35 +353,35 @@ async function main() {
   const command = process.argv[2];
 
   switch (command) {
-    case "cleanup":
+    case 'cleanup':
       await manager.cleanupRunawayProcesses();
       break;
 
-    case "monitor":
+    case 'monitor':
       await manager.startMonitoring();
-      console.log("Press Ctrl+C to stop monitoring");
+      console.log('Press Ctrl+C to stop monitoring');
       // Keep the process alive
       await new Promise(() => {});
       break;
 
-    case "status":
+    case 'status':
       await manager.getStatus();
       break;
 
-    case "setup":
+    case 'setup':
       await manager.createPreventionHooks();
       break;
 
     default:
-      console.log("🔧 Bun Process Manager");
-      console.log("======================");
-      console.log("Available commands:");
-      console.log("  cleanup  - Kill runaway Bun processes");
-      console.log("  monitor  - Start continuous monitoring");
-      console.log("  status   - Show current process status");
-      console.log("  setup    - Create prevention hooks");
-      console.log("");
-      console.log("Usage: bun run scripts/fix-runaway-bun.ts [command]");
+      console.log('🔧 Bun Process Manager');
+      console.log('======================');
+      console.log('Available commands:');
+      console.log('  cleanup  - Kill runaway Bun processes');
+      console.log('  monitor  - Start continuous monitoring');
+      console.log('  status   - Show current process status');
+      console.log('  setup    - Create prevention hooks');
+      console.log('');
+      console.log('Usage: bun run scripts/fix-runaway-bun.ts [command]');
 
       // Default action: cleanup
       await manager.cleanupRunawayProcesses();

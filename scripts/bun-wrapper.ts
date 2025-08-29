@@ -5,7 +5,6 @@
  */
 
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
 
 const MAX_PROCESSES = 3;
 const TIMEOUT_MS = 300000;
@@ -17,9 +16,9 @@ async function checkExistingProcesses(): Promise<number> {
       encoding: 'utf-8',
       timeout: 5000,
     });
-    
+
     const lines = output.split('\n').slice(1);
-    return lines.filter(line => line.trim()).length;
+    return lines.filter((line) => line.trim()).length;
   } catch {
     return 0;
   }
@@ -27,9 +26,8 @@ async function checkExistingProcesses(): Promise<number> {
 
 async function main() {
   const existingProcesses = await checkExistingProcesses();
-  
+
   if (existingProcesses >= MAX_PROCESSES) {
-    console.error(`❌ Too many Bun processes running (${existingProcesses}/${MAX_PROCESSES}). Please wait or run 'bun run scripts/fix-runaway-bun.ts cleanup'`);
     process.exit(1);
   }
 
@@ -39,8 +37,7 @@ async function main() {
     timeout: TIMEOUT_MS,
   });
 
-  child.on('error', (error) => {
-    console.error('❌ Bun process error:', error);
+  child.on('error', (_error) => {
     process.exit(1);
   });
 
@@ -50,7 +47,6 @@ async function main() {
 
   // Kill process if it runs too long
   setTimeout(() => {
-    console.warn('⚠️  Process timeout reached, killing...');
     child.kill('SIGTERM');
     setTimeout(() => child.kill('SIGKILL'), 5000);
   }, TIMEOUT_MS);

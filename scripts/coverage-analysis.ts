@@ -1,14 +1,15 @@
 #!/usr/bin/env bun
+
 /**
  * Comprehensive test coverage analysis tool
  * Provides detailed coverage reporting, analysis, and recommendations
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { execSync } from "node:child_process";
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 
 interface CoverageData {
   total: CoverageSummary;
@@ -45,7 +46,7 @@ interface CoverageReport {
   lowCoverageFiles: Array<{
     file: string;
     coverage: number;
-    type: "lines" | "functions" | "branches" | "statements";
+    type: 'lines' | 'functions' | 'branches' | 'statements';
   }>;
   recommendations: string[];
   trends: CoverageTrend[];
@@ -57,12 +58,12 @@ interface CoverageTrend {
 }
 
 class CoverageAnalyzer {
-  private readonly coverageDir = "coverage";
-  private readonly reportsDir = "coverage-reports";
-  private readonly trendsFile = join(this.reportsDir, "trends.json");
+  private readonly coverageDir = 'coverage';
+  private readonly reportsDir = 'coverage-reports';
+  private readonly trendsFile = join(this.reportsDir, 'trends.json');
 
   async runCoverageAnalysis(): Promise<CoverageReport> {
-    console.log("🔍 Running comprehensive coverage analysis...");
+    console.log('🔍 Running comprehensive coverage analysis...');
 
     // Run tests with coverage
     await this.runTestsWithCoverage();
@@ -83,44 +84,35 @@ class CoverageAnalyzer {
   }
 
   private async runTestsWithCoverage(): Promise<void> {
-    console.log("📊 Running tests with coverage collection...");
+    console.log('📊 Running tests with coverage collection...');
 
     try {
       // Run vitest with coverage
-      execSync("bun run vitest run --coverage --reporter=verbose", {
-        stdio: "inherit",
+      execSync('bun run vitest run --coverage --reporter=verbose', {
+        stdio: 'inherit',
         cwd: process.cwd(),
       });
-    } catch (error) {
-      console.warn(
-        "⚠️  Some tests failed, but continuing with coverage analysis"
-      );
-    }
+    } catch (_error) {}
   }
 
   private async loadCoverageData(): Promise<CoverageData> {
-    const coverageFile = join(this.coverageDir, "coverage-final.json");
+    const coverageFile = join(this.coverageDir, 'coverage-final.json');
 
     if (!existsSync(coverageFile)) {
       throw new Error(`Coverage file not found: ${coverageFile}`);
     }
 
-    const data = await readFile(coverageFile, "utf-8");
+    const data = await readFile(coverageFile, 'utf-8');
     return JSON.parse(data);
   }
 
-  private async generateReport(
-    coverageData: CoverageData
-  ): Promise<CoverageReport> {
-    console.log("📈 Generating coverage analysis report...");
+  private async generateReport(coverageData: CoverageData): Promise<CoverageReport> {
+    console.log('📈 Generating coverage analysis report...');
 
     const summary = this.calculateSummary(coverageData);
     const packageBreakdown = this.analyzePackageBreakdown(coverageData);
     const lowCoverageFiles = this.identifyLowCoverageFiles(coverageData);
-    const recommendations = this.generateRecommendations(
-      summary,
-      lowCoverageFiles
-    );
+    const recommendations = this.generateRecommendations(summary, lowCoverageFiles);
 
     return {
       summary,
@@ -145,32 +137,24 @@ class CoverageAnalyzer {
       // Count lines
       const lineNumbers = Object.keys(file.s).map(Number);
       totals.lines.total += lineNumbers.length;
-      totals.lines.covered += lineNumbers.filter(
-        (line) => file.s[line] > 0
-      ).length;
+      totals.lines.covered += lineNumbers.filter((line) => file.s[line] > 0).length;
 
       // Count functions
       const functionNumbers = Object.keys(file.f).map(Number);
       totals.functions.total += functionNumbers.length;
-      totals.functions.covered += functionNumbers.filter(
-        (fn) => file.f[fn] > 0
-      ).length;
+      totals.functions.covered += functionNumbers.filter((fn) => file.f[fn] > 0).length;
 
       // Count statements
       const statementNumbers = Object.keys(file.s).map(Number);
       totals.statements.total += statementNumbers.length;
-      totals.statements.covered += statementNumbers.filter(
-        (stmt) => file.s[stmt] > 0
-      ).length;
+      totals.statements.covered += statementNumbers.filter((stmt) => file.s[stmt] > 0).length;
 
       // Count branches
       const branchNumbers = Object.keys(file.b).map(Number);
       for (const branchNum of branchNumbers) {
         const branches = file.b[branchNum];
         totals.branches.total += branches.length;
-        totals.branches.covered += branches.filter(
-          (branch) => branch > 0
-        ).length;
+        totals.branches.covered += branches.filter((branch) => branch > 0).length;
       }
     }
 
@@ -179,10 +163,7 @@ class CoverageAnalyzer {
         total: totals.lines.total,
         covered: totals.lines.covered,
         skipped: 0,
-        pct:
-          totals.lines.total > 0
-            ? (totals.lines.covered / totals.lines.total) * 100
-            : 0,
+        pct: totals.lines.total > 0 ? (totals.lines.covered / totals.lines.total) * 100 : 0,
       },
       functions: {
         total: totals.functions.total,
@@ -207,22 +188,18 @@ class CoverageAnalyzer {
         covered: totals.branches.covered,
         skipped: 0,
         pct:
-          totals.branches.total > 0
-            ? (totals.branches.covered / totals.branches.total) * 100
-            : 0,
+          totals.branches.total > 0 ? (totals.branches.covered / totals.branches.total) * 100 : 0,
       },
     };
   }
 
-  private analyzePackageBreakdown(
-    coverageData: CoverageData
-  ): Record<string, CoverageSummary> {
+  private analyzePackageBreakdown(coverageData: CoverageData): Record<string, CoverageSummary> {
     const packages: Record<string, FileCoverage[]> = {};
 
     // Group files by package
     for (const [path, file] of Object.entries(coverageData.files)) {
-      const packageMatch = path.match(/packages\/([^\/]+)/);
-      const packageName = packageMatch ? packageMatch[1] : "root";
+      const packageMatch = path.match(/packages\/([^/]+)/);
+      const packageName = packageMatch ? packageMatch[1] : 'root';
 
       if (!packages[packageName]) {
         packages[packageName] = [];
@@ -245,12 +222,12 @@ class CoverageAnalyzer {
   private identifyLowCoverageFiles(coverageData: CoverageData): Array<{
     file: string;
     coverage: number;
-    type: "lines" | "functions" | "branches" | "statements";
+    type: 'lines' | 'functions' | 'branches' | 'statements';
   }> {
     const lowCoverageFiles: Array<{
       file: string;
       coverage: number;
-      type: "lines" | "functions" | "branches" | "statements";
+      type: 'lines' | 'functions' | 'branches' | 'statements';
     }> = [];
 
     const threshold = 70; // Below 70% is considered low coverage
@@ -260,17 +237,13 @@ class CoverageAnalyzer {
       const lineNumbers = Object.keys(file.s).map(Number);
       const lineCoverage =
         lineNumbers.length > 0
-          ? (lineNumbers.filter((line) => file.s[line] > 0).length /
-              lineNumbers.length) *
-            100
+          ? (lineNumbers.filter((line) => file.s[line] > 0).length / lineNumbers.length) * 100
           : 100;
 
       const functionNumbers = Object.keys(file.f).map(Number);
       const functionCoverage =
         functionNumbers.length > 0
-          ? (functionNumbers.filter((fn) => file.f[fn] > 0).length /
-              functionNumbers.length) *
-            100
+          ? (functionNumbers.filter((fn) => file.f[fn] > 0).length / functionNumbers.length) * 100
           : 100;
 
       let branchCoverage = 100;
@@ -283,8 +256,7 @@ class CoverageAnalyzer {
           totalBranches += branches.length;
           coveredBranches += branches.filter((branch) => branch > 0).length;
         }
-        branchCoverage =
-          totalBranches > 0 ? (coveredBranches / totalBranches) * 100 : 100;
+        branchCoverage = totalBranches > 0 ? (coveredBranches / totalBranches) * 100 : 100;
       }
 
       // Add to low coverage list if below threshold
@@ -292,21 +264,21 @@ class CoverageAnalyzer {
         lowCoverageFiles.push({
           file: path,
           coverage: lineCoverage,
-          type: "lines",
+          type: 'lines',
         });
       }
       if (functionCoverage < threshold) {
         lowCoverageFiles.push({
           file: path,
           coverage: functionCoverage,
-          type: "functions",
+          type: 'functions',
         });
       }
       if (branchCoverage < threshold) {
         lowCoverageFiles.push({
           file: path,
           coverage: branchCoverage,
-          type: "branches",
+          type: 'branches',
         });
       }
     }
@@ -339,9 +311,7 @@ class CoverageAnalyzer {
 
     // File-specific recommendations
     if (lowCoverageFiles.length > 0) {
-      recommendations.push(
-        `📁 ${lowCoverageFiles.length} files have low coverage. Focus on:`
-      );
+      recommendations.push(`📁 ${lowCoverageFiles.length} files have low coverage. Focus on:`);
 
       const topFiles = lowCoverageFiles.slice(0, 5);
       for (const file of topFiles) {
@@ -352,11 +322,11 @@ class CoverageAnalyzer {
     }
 
     // Best practices
-    recommendations.push("✅ Best practices:");
-    recommendations.push("   • Write tests before implementing features (TDD)");
-    recommendations.push("   • Test edge cases and error conditions");
-    recommendations.push("   • Use integration tests for complex workflows");
-    recommendations.push("   • Mock external dependencies appropriately");
+    recommendations.push('✅ Best practices:');
+    recommendations.push('   • Write tests before implementing features (TDD)');
+    recommendations.push('   • Test edge cases and error conditions');
+    recommendations.push('   • Use integration tests for complex workflows');
+    recommendations.push('   • Mock external dependencies appropriately');
 
     return recommendations;
   }
@@ -365,57 +335,56 @@ class CoverageAnalyzer {
     await mkdir(this.reportsDir, { recursive: true });
 
     // Save detailed JSON report
-    const jsonReport = join(this.reportsDir, "coverage-analysis.json");
+    const jsonReport = join(this.reportsDir, 'coverage-analysis.json');
     await writeFile(jsonReport, JSON.stringify(report, null, 2));
 
     // Generate markdown report
     const markdownReport = this.generateMarkdownReport(report);
-    const mdReport = join(this.reportsDir, "coverage-analysis.md");
+    const mdReport = join(this.reportsDir, 'coverage-analysis.md');
     await writeFile(mdReport, markdownReport);
 
-    console.log(`📄 Reports saved:`);
+    console.log('📄 Reports saved:');
     console.log(`   • JSON: ${jsonReport}`);
     console.log(`   • Markdown: ${mdReport}`);
   }
 
   private generateMarkdownReport(report: CoverageReport): string {
-    const { summary, packageBreakdown, lowCoverageFiles, recommendations } =
-      report;
+    const { summary, packageBreakdown, lowCoverageFiles, recommendations } = report;
 
-    let markdown = "# Test Coverage Analysis Report\n\n";
+    let markdown = '# Test Coverage Analysis Report\n\n';
     markdown += `Generated: ${new Date().toISOString()}\n\n`;
 
     // Overall summary
-    markdown += "## Overall Coverage Summary\n\n";
-    markdown += "| Metric | Coverage | Total | Covered |\n";
-    markdown += "|--------|----------|-------|----------|\n";
+    markdown += '## Overall Coverage Summary\n\n';
+    markdown += '| Metric | Coverage | Total | Covered |\n';
+    markdown += '|--------|----------|-------|----------|\n';
     markdown += `| Lines | ${summary.lines.pct.toFixed(1)}% | ${summary.lines.total} | ${summary.lines.covered} |\n`;
     markdown += `| Functions | ${summary.functions.pct.toFixed(1)}% | ${summary.functions.total} | ${summary.functions.covered} |\n`;
     markdown += `| Statements | ${summary.statements.pct.toFixed(1)}% | ${summary.statements.total} | ${summary.statements.covered} |\n`;
     markdown += `| Branches | ${summary.branches.pct.toFixed(1)}% | ${summary.branches.total} | ${summary.branches.covered} |\n\n`;
 
     // Package breakdown
-    markdown += "## Package Breakdown\n\n";
-    markdown += "| Package | Lines | Functions | Statements | Branches |\n";
-    markdown += "|---------|-------|-----------|------------|----------|\n";
+    markdown += '## Package Breakdown\n\n';
+    markdown += '| Package | Lines | Functions | Statements | Branches |\n';
+    markdown += '|---------|-------|-----------|------------|----------|\n';
     for (const [pkg, coverage] of Object.entries(packageBreakdown)) {
       markdown += `| ${pkg} | ${coverage.lines.pct.toFixed(1)}% | ${coverage.functions.pct.toFixed(1)}% | ${coverage.statements.pct.toFixed(1)}% | ${coverage.branches.pct.toFixed(1)}% |\n`;
     }
-    markdown += "\n";
+    markdown += '\n';
 
     // Low coverage files
     if (lowCoverageFiles.length > 0) {
-      markdown += "## Files Needing Attention\n\n";
-      markdown += "| File | Coverage | Type |\n";
-      markdown += "|------|----------|------|\n";
+      markdown += '## Files Needing Attention\n\n';
+      markdown += '| File | Coverage | Type |\n';
+      markdown += '|------|----------|------|\n';
       for (const file of lowCoverageFiles.slice(0, 10)) {
         markdown += `| ${file.file} | ${file.coverage.toFixed(1)}% | ${file.type} |\n`;
       }
-      markdown += "\n";
+      markdown += '\n';
     }
 
     // Recommendations
-    markdown += "## Recommendations\n\n";
+    markdown += '## Recommendations\n\n';
     for (const rec of recommendations) {
       markdown += `${rec}\n\n`;
     }
@@ -429,7 +398,7 @@ class CoverageAnalyzer {
     }
 
     try {
-      const data = await readFile(this.trendsFile, "utf-8");
+      const data = await readFile(this.trendsFile, 'utf-8');
       return JSON.parse(data);
     } catch {
       return [];
@@ -440,16 +409,14 @@ class CoverageAnalyzer {
     const trends = await this.loadTrends();
 
     trends.push({
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toISOString().split('T')[0],
       coverage: summary,
     });
 
     // Keep only last 30 days
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const filteredTrends = trends.filter(
-      (trend) => new Date(trend.date) >= thirtyDaysAgo
-    );
+    const filteredTrends = trends.filter((trend) => new Date(trend.date) >= thirtyDaysAgo);
 
     await mkdir(dirname(this.trendsFile), { recursive: true });
     await writeFile(this.trendsFile, JSON.stringify(filteredTrends, null, 2));
@@ -459,26 +426,19 @@ class CoverageAnalyzer {
     try {
       const report = await this.runCoverageAnalysis();
 
-      console.log("\n🎯 Coverage Analysis Complete!");
-      console.log("=====================================");
-      console.log(
-        `📊 Overall Coverage: ${report.summary.lines.pct.toFixed(1)}%`
-      );
+      console.log('\n🎯 Coverage Analysis Complete!');
+      console.log('=====================================');
+      console.log(`📊 Overall Coverage: ${report.summary.lines.pct.toFixed(1)}%`);
       console.log(`🔧 Functions: ${report.summary.functions.pct.toFixed(1)}%`);
       console.log(`🌿 Branches: ${report.summary.branches.pct.toFixed(1)}%`);
-      console.log(
-        `📝 Statements: ${report.summary.statements.pct.toFixed(1)}%`
-      );
+      console.log(`📝 Statements: ${report.summary.statements.pct.toFixed(1)}%`);
 
       if (report.lowCoverageFiles.length > 0) {
-        console.log(
-          `\n⚠️  ${report.lowCoverageFiles.length} files need attention`
-        );
+        console.log(`\n⚠️  ${report.lowCoverageFiles.length} files need attention`);
       }
 
-      console.log("\n📄 Detailed reports available in coverage-reports/");
-    } catch (error) {
-      console.error("❌ Coverage analysis failed:", error);
+      console.log('\n📄 Detailed reports available in coverage-reports/');
+    } catch (_error) {
       process.exit(1);
     }
   }

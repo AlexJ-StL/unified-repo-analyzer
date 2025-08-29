@@ -1,40 +1,38 @@
 #!/usr/bin/env bun
+
 /**
  * Coverage badge generator
  * Generates SVG badges for coverage metrics
  * Requirements: 4.2, 4.3
  */
 
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 interface BadgeConfig {
-  metric: "lines" | "functions" | "statements" | "branches";
+  metric: 'lines' | 'functions' | 'statements' | 'branches';
   label: string;
   color: string;
   value: string;
 }
 
 class CoverageBadgeGenerator {
-  private readonly badgesDir = "coverage-reports/badges";
+  private readonly badgesDir = 'coverage-reports/badges';
 
   async generateBadges(): Promise<void> {
-    console.log("🏷️  Generating coverage badges...");
+    console.log('🏷️  Generating coverage badges...');
 
     // Load coverage data
     const coverageData = await this.loadCoverageData();
     if (!coverageData) {
-      console.error(
-        "❌ No coverage data found. Run tests with coverage first."
-      );
       return;
     }
 
     await mkdir(this.badgesDir, { recursive: true });
 
     // Generate badges for each metric
-    const metrics = ["lines", "functions", "statements", "branches"] as const;
+    const metrics = ['lines', 'functions', 'statements', 'branches'] as const;
 
     for (const metric of metrics) {
       const coverage = coverageData.summary[metric].pct;
@@ -53,13 +51,13 @@ class CoverageBadgeGenerator {
     // Generate overall coverage badge
     const overallCoverage = this.calculateOverallCoverage(coverageData.summary);
     const overallBadge = this.createBadge({
-      metric: "lines", // Not used for overall
-      label: "coverage",
+      metric: 'lines', // Not used for overall
+      label: 'coverage',
       color: this.getCoverageColor(overallCoverage),
       value: `${overallCoverage.toFixed(1)}%`,
     });
 
-    const overallBadgeFile = join(this.badgesDir, "coverage.svg");
+    const overallBadgeFile = join(this.badgesDir, 'coverage.svg');
     await writeFile(overallBadgeFile, overallBadge);
     console.log(`✅ Generated overall coverage badge: ${overallBadgeFile}`);
 
@@ -68,14 +66,14 @@ class CoverageBadgeGenerator {
   }
 
   private async loadCoverageData(): Promise<any> {
-    const reportFile = "coverage-reports/coverage-analysis.json";
+    const reportFile = 'coverage-reports/coverage-analysis.json';
 
     if (!existsSync(reportFile)) {
       return null;
     }
 
     try {
-      const data = await readFile(reportFile, "utf-8");
+      const data = await readFile(reportFile, 'utf-8');
       return JSON.parse(data);
     } catch {
       return null;
@@ -84,21 +82,21 @@ class CoverageBadgeGenerator {
 
   private getMetricLabel(metric: string): string {
     const labels = {
-      lines: "lines",
-      functions: "functions",
-      statements: "statements",
-      branches: "branches",
+      lines: 'lines',
+      functions: 'functions',
+      statements: 'statements',
+      branches: 'branches',
     };
     return labels[metric as keyof typeof labels] || metric;
   }
 
   private getCoverageColor(coverage: number): string {
-    if (coverage >= 90) return "#4c1"; // Bright green
-    if (coverage >= 80) return "#97ca00"; // Green
-    if (coverage >= 70) return "#a4a61d"; // Yellow-green
-    if (coverage >= 60) return "#dfb317"; // Yellow
-    if (coverage >= 50) return "#fe7d37"; // Orange
-    return "#e05d44"; // Red
+    if (coverage >= 90) return '#4c1'; // Bright green
+    if (coverage >= 80) return '#97ca00'; // Green
+    if (coverage >= 70) return '#a4a61d'; // Yellow-green
+    if (coverage >= 60) return '#dfb317'; // Yellow
+    if (coverage >= 50) return '#fe7d37'; // Orange
+    return '#e05d44'; // Red
   }
 
   private calculateOverallCoverage(summary: any): number {
@@ -150,7 +148,7 @@ class CoverageBadgeGenerator {
   }
 
   private async generateReadmeSnippet(): Promise<void> {
-    const snippetFile = join(this.badgesDir, "README-snippet.md");
+    const snippetFile = join(this.badgesDir, 'README-snippet.md');
 
     const snippet = `## Test Coverage
 

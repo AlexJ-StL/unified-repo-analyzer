@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   name: string;
@@ -13,4 +12,3 @@ export interface Repository {
   language: string;
   stars: number;
 }
-  

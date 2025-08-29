@@ -4,10 +4,10 @@
  * Runs continuously to prevent runaway processes
  */
 
-import { BunProcessManager } from "./fix-runaway-bun.js";
+import { BunProcessManager } from './fix-runaway-bun.js';
 
 async function startService() {
-  console.log("🚀 Starting Bun Monitor Service...");
+  console.log('🚀 Starting Bun Monitor Service...');
 
   const manager = new BunProcessManager();
   await manager.initialize();
@@ -16,18 +16,18 @@ async function startService() {
   await manager.startMonitoring();
 
   // Keep the service running
-  console.log("✅ Bun Monitor Service is running");
-  console.log("   Press Ctrl+C to stop");
+  console.log('✅ Bun Monitor Service is running');
+  console.log('   Press Ctrl+C to stop');
 
   // Handle graceful shutdown
-  process.on("SIGINT", async () => {
-    console.log("\n🛑 Shutting down Bun Monitor Service...");
+  process.on('SIGINT', async () => {
+    console.log('\n🛑 Shutting down Bun Monitor Service...');
     await manager.stopMonitoring();
     process.exit(0);
   });
 
-  process.on("SIGTERM", async () => {
-    console.log("\n🛑 Shutting down Bun Monitor Service...");
+  process.on('SIGTERM', async () => {
+    console.log('\n🛑 Shutting down Bun Monitor Service...');
     await manager.stopMonitoring();
     process.exit(0);
   });

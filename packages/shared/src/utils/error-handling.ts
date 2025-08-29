@@ -1,4 +1,3 @@
-
 /**
  * Enhanced error handling and logging utilities
  * Provides clear error messages, actionable suggestions, and detailed logging

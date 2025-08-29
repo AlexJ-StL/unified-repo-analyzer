@@ -1,12 +1,12 @@
 #!/usr/bin/env bun
+
 /**
  * Interactive coverage dashboard
  * Provides a web-based interface for viewing coverage metrics
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
 class CoverageDashboard {
@@ -20,16 +20,15 @@ class CoverageDashboard {
     // Load coverage data
     const coverageData = await this.loadCoverageData();
     if (!coverageData) {
-      console.error('❌ No coverage data found. Run coverage analysis first.');
       return;
     }
 
     // Generate HTML dashboard
     await this.generateHTML(coverageData);
-    
+
     // Generate CSS styles
     await this.generateCSS();
-    
+
     // Generate JavaScript functionality
     await this.generateJS();
 
@@ -37,39 +36,74 @@ class CoverageDashboard {
     console.log('🌐 Open in browser to view interactive coverage dashboard');
   }
 
-  private async loadCoverageData(): Promise<any> {
-  };board CoverageDash
-export { rd();
+  private async loadCoverageData(): Promise<any> {}
+  board;
+  CoverageDash;
+  export;
+  {
+  rd();
 }
-Dashboarateshboard.geneait dad();
-  awoarashbeDverag= new Co dashboard ) {
+Dashboarateshboard.geneait;
+dad();
+awoarashbeDverag = new Co();
+dashboard;
+)
+{
   constmaina. (import.metface
-ifnterLI i// C }
+ifnterLI i // C }
 }
 
-
- 'Low';eturn ;
-    rdium'return 'Me 70) erage <f (cov    i'High';
-turn 50) re < f (coverage i   tring {
-er): srage: numbl(covePriorityLabe getprivate
-
-   }y-low';
- rit'prioturn  reedium';
-    'priority-m70) returnerage < ov
-    if (cigh';priority-hreturn ' 50) overage <(c if 
-   r): string {ge: numbeClass(coveraetPriorityivate g
+('Low');
+eturn;
+rdium;
+('return ');
+Me;
+70;
+) erage <f (cov    i'High'
+turn
+50;
+) re < f (coverage i   tring
+{
+  er;
+  ): srage: numbl(covePriorityLabe getprivate
+}
+y - low;
+';
+ rit'prioturn  reedium'
+'priority-m70) returnerage < ov
+if (cigh';priority-hreturn '
+50;
+) overage <(c
+if 
+   r)
+: string
+{
+  ge: numbeClass(coveraetPriorityivate g
 
   proor';
-  }'coverage-p   return ';
- age-fairver) return 'co>= 70ge overa  if (cood';
-  overage-g0) return 'coverage >= 8(c if    cellent';
-ge-exveraeturn 'co 90) rge >=coveraf (
-    iring {ber): stoverage: numlass(cverageCivate getCo
+}
+('coverage-p   return ');
+age - fairver;
+)
+return 'co>= 70ge overa  if (cood';
+overage - g0;
+)
+return 'coverage >= 8(c if    cellent';
+ge - exveraeturn;
+'co 90) rge >=coveraf (
+    iring
+{
+  ber;
+  ): stoverage: numlass(cverageCivate getCo
 
-  pr, js);
-  }hboard.js')rdDir, 'dashis.dashboan(titeFile(joiawait wr
+  pr, js)
+}
+hboard.js;
+(')rdDir, ');
+dashis.dashboan(titeFile(joiawait wr
 
-    e);`;tylChild(s.head.appenddocument
+    e);
+`;tylChild(s.head.appenddocument
 
     }
 \`; 0; }ty:00%); opaciateX(1orm: transl to { transf      1; }
@@ -252,112 +286,172 @@ functi
     
  , data:'with datad oarerage dashbializing covog('Initle.lsoon cta) {
    shboard(daeDalizn initiactio
-funcriptboard JavaSshrage DaveCo= `//  js nst {
-    cooid>se<vromierateJS(): Pc gensynprivate a}
+funcriptboard JavaSshrage DaveCo= `; //  js nst {
+cooid > se < vromierateJS();
+: Pc gensynprivate a}
 
-  ), css);
-  tyles.css'dDir, 'sboar.dashoin(thiseFile(jwait writ    a
+  ), css)
+tyles.css
+('dDir, ');
+sboar.dashoin(thiseFile(jwait writ    a
 
+}
+}`
+20px
+ing: padd
+on;
+{
+  secti;
+}
 
-    }
-}`;20px;ing:   padd    
-  on {   secti}
-    
-     
-s: 1fr;late-column  grid-temp  {
-    grid e-packag  .
-      }
-    ns: 1fr;
--colummplaterid-te
-        gcs-grid {ri 
-    .met      }
- e: 2rem;
-ont-siz      fh1 {
-  header  
-       }
-   : 15px;
- ding
-        padiner {
-    .conta68px) {ax-width: 7media (mesign */
-@e Dponsiv* Res
-
-/.4);
-} 126, 234, 0gba(102, 8px 25px r-shadow: 0);
-    boxY(-2pxranslatensform: t    traver {
+s:
+1fr
+late - column
+grid - temp;
+{
+  grid;
+  e-packag  .
+}
+ns:
+1fr
+-colummplaterid - te
+gcs - grid;
+{
+  ri.met;
+}
+e:
+2rem
+ont - siz
+fh1;
+{
+  header;
+}
+: 15px
+ding
+padiner;
+{
+  .conta68px)
+    ax - width
+  : 7media (mesign */
+  @e
+    (Dponsiv * Res)
+  / .04;;
+  )
+  126, 234, 0gba(102, 8px 25px r-shadow: 0)
+  boxY(-2pxranslatensform: t    traver 
 on-btn:ho
 
 .actie;
-}eass .3on: all 0 transitir;
-   inte: poorrs    cum;
-ze: 1resiont-0px;
-    fing: 15px 2paddx;
-    ius: 8porder-rad    b;
+eass;
+.3on: all 0 transitir
+inte: poorrs
+cum;
+ze:
+1resiont-0px
+fing:
+15px 2paddx
+ius:
+8porder-rad    b
 der: none
-    bor;tewhi:   color
-  a2 100%);4b #767eea 0%,#66ent(135deg, inear-gradiround: l
-    backgon-btn {actipx;
-}
+bor;
+tewhi: color;
+a2;
+100%
+)
+4b #767eea 0%,#66ent(135deg, inear-gradiround: l
+    backgon-btn
+  actipx;
 
 .
-    gap: 15;px, 1fr))minmax(200to-fit, (aumns: repeatplate-colutemrid-
-    gsplay: grid;d {
-    diactions-gri */
-.* Actions; }
+    gap: 15
+px, 1fr
+))minmax(200to-fit, (aumns: repeatplate-colutemrid-
+    gsplay: grid
+d
+  diactions-gri */
+.* Actions;
 
-/: #6c757dlory-low { co.prioritt: bold; }
-eigh font-w: #fd7e14;orcol{ edium 
-.priority-mt: bold; }eighfont-w5; : #dc354orol { cty-high
-.priori
-t: 500;
-}ighweont-ze;
-    frm: capitalitransfo  text-type {
-  e-ag
-}
+/ #-.55677::;;bccddiillloooooprrrttwy{{}};
+eigh;
+font - w;
+: #fd7e14
+orcol
+  edium.priority - mt;
+  : bold
+eighfont - w5;
+: #dc354orol
+  cty - high.priori;
+  t: 500;
+ighweont - ze;
+frm: capitalitransfo;
+text - type;
+  e - ag;
 
-.coverrap;e: now-spachites;
-    wow: ellipsi text-overfln;
-   delow: hidoverfx;
-    -width: 300p
-    max: 0.9rem;-sizeonte;
-    fpaco', monos', 'Menl 'Monacot-family:   fonh {
- pat
+.coverrap
+e: now - spachites
+wow: ellipsi;
+text - overfln;
+delow: hidoverfx;
+-width;
+: 300p
+    max: 0.9rem
+-sizeonte
+fpaco;
+', monos', 'Menl ';
+Monacot - family;
+:   fonh
+  pat
 
 .file-
-}7;505 #49
-    color:ight: 600;-went9fa;
-    fof8fackground: #{
-    bble th erage-ta
+7;
+505;
+#
+49;
+color: ight: 600;
+-went9fa;
+fof8fackground: #
+  bble;
+  th;
+  erage - ta.low - cov2e6;
+olid;
+#deeottom
+: 1px s    border-bign: left
+t - alexpx
+t;
+12dding:pa
+    e-table td
+  eraglow - covable;
+  th,
+  .e-toverag-c
 
-.low-cov2e6;
-}olid #deeottom: 1px s    border-bign: left;
-t-alexpx;
-    t 12dding:pa
-    e-table td {eraglow-covable th,
-.e-toverag-c
+.low: 20px
+margin - toppse;
+collase: -collaporder;
+bh: 100%;
+widtle;
+  abrage - table;
+  tow - cove;
 
-.low: 20px;
-}  margin-toppse;
-   collase:-collaporder
-    bh: 100%; widtle {
-   abrage-table tow-cove
-}
+.low-x: auto
+overfle
+  erage - tabl * / 2-.;aceegloorvw;
+  Table * Low;
+  Cov0;
 
-.low-x: auto;  overfle {
-  erage-tabl*/
-.low-coverage Table * Low Cov0;
-}
-
-/: 20px   margin00px;
-  t: 4;
-    heighon: relativeositi
-    p {nerntairt-coner */
-.chahart Contaid; }
+/ 00024:;;agimnpprxx{};
+t: 4;
+heighon: relativeositi;
+p;
+  nerntairt - coner * /.;aachhrt;
+  Contaid;
 
 /* C: bolhtigwefont-r: #dc3545; -poor { colo.coverage}
 ht: bold; ont-weig #fd7e14; fir { color:e-fa.coverag}
 ld; ight: bo2c1; font-we: #6f4od { color-go}
 .coverageold; ight: b45; font-we: #28a7ornt { colrage-excelle
-.cove */ge Classesra}
+.cove */ ge;
+Classesra;
+}
 
 /* Cove;
 7d75 color: #6c;
@@ -393,62 +487,95 @@ ap: 20p
     gfr));300px, 1it, minmax(eat(auto-fmns: rep-columplatetegrid- grid;
        display:ge-grid {
  
-.packaid */* Package Grase;
+.packaid */* Package Grase
 }
 
-/idth 0.5s esition: w;
-    trans: 4pxrder-radiu);
-    bo169b78, #38a48b, #dient(90deggrad: linear-groun    backt: 100%;
-    heighl {
-ress-fil
-.progn;
+/idth 0.5s esition: w
+trans:
+4pxrder-radiu)
+bo169b78, #
+38a48b, #dient(90deggrad: linear-groun    backt: 100%
+heighl
+{
+  ress - fil.progn;
 }
 iddeerflow: hx;
-    ovdius: 4pr-ra borde0;
-   8fnd: #e2e    backgrouht: 8px;
-heig100%;
-    :    width {
- ess-bar}
+ovdius:
+4pr-ra borde0
+8fnd: #e2e    backgrouht: 8px
+heig100%
+:    width
+{
+  ess - bar;
+}
 
-.progr15px;
+.progr15px
 : om-bott
-    margin718096;color: #    m;
-9re 0. font-size:ails {
-   c-det.metri}
+    margin718096
+color: #
+m
+9re 0. font-size:ails
+{
+  c - det.metri;
+}
 
-: 1px;
--spacingter    letse;
-m: uppercaext-transfor 8px;
-    t-bottom:  margin;
-  lor: #4a5568em;
-    co2r1.nt-size: {
-    foic-label }
+: 1px
+-spacingter
+letse;
+m: uppercaext - transfor;
+8px
+t - bottom
+:  margin
+lor: #
+4a5568em
+co2r1.nt - size
+:
+{
+  foic - label;
+}
 
 .metr
-m: 10px;rgin-botto    ma#2d3748;
-: lor co bold;
-   ght: font-wei3rem;
-   e: -siz  font
-  value {
-.metric-,0.15);
+m: 10px
+rgin - botto
+ma;
+#
+2d3748
+: lor co bold
+ght: font - wei3rem
+e: -siz;
+font;
+value;
+{
+  .metric-,0.15)
 }
 ba(0,0,0rg12px 40px shadow: 0   box-x);
-  ateY(-5pform: transl
+ateY(-5pform: transl
     transver {card:ho.metric-
 
 ease;
 }hadow 0.3s ease, box-ssform 0.3s tion: tran
-    transi;67eeapx solid #6eft: 5border-lnter;
-    -align: ceext t5px;
-   : 2    padding 12px;
--radius:   border
- 100%);f7  #edf27fafc 0%,#feg, ent(135dinear-gradikground: l  bacard {
+    transi
+67eeapx solid #6eft: 5border-lnter
+-align
+: ceext t5px
+: 2    padding 12px
+-radius
+:   border
+ 100%)
+f7
+#edf27fafc
+0%,#feg, ent(135dinear-gradikground: l  bacard {
   ic-c
 
 .metr
-}x;20p  gap: 
-  ); 1fr)x,nmax(250p miuto-fit,t(a: repeaolumnste-c grid-templa
-   y: grid;lasp di   {
+}x
+20p  gap: 
+  )
+1fr)x,nmax(250p miuto-fit,t(a: repeaolumnste-c grid-templa
+   y: grid
+lasp
+di;
+{
  idcs-gr */
 .metris Grid
 

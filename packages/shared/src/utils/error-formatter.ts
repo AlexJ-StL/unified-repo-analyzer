@@ -1,4 +1,4 @@
-import { platform } from "node:os";
+import { platform } from 'node:os';
 
 import {
   type ClassifiedError,
@@ -6,7 +6,7 @@ import {
   type ErrorResponse,
   ErrorSeverity,
   type ErrorSuggestion,
-} from "../types/error-classification.js";
+} from '../types/error-classification.js';
 
 /**
  * Error response formatting utilities for unified-repo-analyzer
@@ -44,17 +44,17 @@ export class ErrorFormatter {
 
   // ANSI color codes for console output
   private readonly colors = {
-    reset: "\x1b[0m",
-    bright: "\x1b[1m",
-    dim: "\x1b[2m",
-    red: "\x1b[31m",
-    green: "\x1b[32m",
-    yellow: "\x1b[33m",
-    blue: "\x1b[34m",
-    magenta: "\x1b[35m",
-    cyan: "\x1b[36m",
-    white: "\x1b[37m",
-    gray: "\x1b[90m",
+    reset: '\x1b[0m',
+    bright: '\x1b[1m',
+    dim: '\x1b[2m',
+    red: '\x1b[31m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    cyan: '\x1b[36m',
+    white: '\x1b[37m',
+    gray: '\x1b[90m',
   };
 
   constructor() {
@@ -74,10 +74,7 @@ export class ErrorFormatter {
   /**
    * Format error for API response
    */
-  public formatForAPI(
-    error: ClassifiedError,
-    options: ErrorFormattingOptions = {}
-  ): ErrorResponse {
+  public formatForAPI(error: ClassifiedError, options: ErrorFormattingOptions = {}): ErrorResponse {
     const defaultOptions: ErrorFormattingOptions = {
       includeStack: false,
       includeContext: false,
@@ -109,9 +106,7 @@ export class ErrorFormatter {
         suggestions: opts.includeSuggestions ? suggestions : [],
         correlationId: error.correlationId,
         timestamp: error.timestamp.toISOString(),
-        context: opts.includeContext
-          ? this.sanitizeContext(error.context)
-          : undefined,
+        context: opts.includeContext ? this.sanitizeContext(error.context) : undefined,
       },
       requestId: error.context.requestId,
       path: error.context.path,
@@ -128,10 +123,7 @@ export class ErrorFormatter {
   /**
    * Format error for console output
    */
-  public formatForConsole(
-    error: ClassifiedError,
-    options: ConsoleFormattingOptions = {}
-  ): string {
+  public formatForConsole(error: ClassifiedError, options: ConsoleFormattingOptions = {}): string {
     const defaultOptions: ConsoleFormattingOptions = {
       useColors: true,
       includeStack: false,
@@ -148,7 +140,7 @@ export class ErrorFormatter {
       ...defaultOptions,
       ...options,
     };
-    const indent = " ".repeat(opts.indentSize || 2);
+    const indent = ' '.repeat(opts.indentSize || 2);
     const lines: string[] = [];
 
     // Header with severity indicator
@@ -159,60 +151,46 @@ export class ErrorFormatter {
       : `${severityIcon} ${error.title}`;
 
     lines.push(title);
-    lines.push("");
+    lines.push('');
 
     // Error details
+    lines.push(`${this.colorize('Error ID:', this.colors.gray, opts.useColors)} ${error.id}`);
+    lines.push(`${this.colorize('Code:', this.colors.gray, opts.useColors)} ${error.code}`);
+    lines.push(`${this.colorize('Category:', this.colors.gray, opts.useColors)} ${error.category}`);
+    lines.push(`${this.colorize('Severity:', this.colors.gray, opts.useColors)} ${error.severity}`);
     lines.push(
-      `${this.colorize("Error ID:", this.colors.gray, opts.useColors)} ${error.id}`
-    );
-    lines.push(
-      `${this.colorize("Code:", this.colors.gray, opts.useColors)} ${error.code}`
-    );
-    lines.push(
-      `${this.colorize("Category:", this.colors.gray, opts.useColors)} ${error.category}`
-    );
-    lines.push(
-      `${this.colorize("Severity:", this.colors.gray, opts.useColors)} ${error.severity}`
-    );
-    lines.push(
-      `${this.colorize("Time:", this.colors.gray, opts.useColors)} ${error.timestamp.toISOString()}`
+      `${this.colorize('Time:', this.colors.gray, opts.useColors)} ${error.timestamp.toISOString()}`
     );
 
     if (error.context.path) {
       lines.push(
-        `${this.colorize("Path:", this.colors.gray, opts.useColors)} ${error.context.path}`
+        `${this.colorize('Path:', this.colors.gray, opts.useColors)} ${error.context.path}`
       );
     }
 
-    lines.push("");
+    lines.push('');
 
     // Message
-    lines.push(this.colorize("Message:", this.colors.blue, opts.useColors));
+    lines.push(this.colorize('Message:', this.colors.blue, opts.useColors));
     lines.push(this.wrapText(error.message, opts.maxWidth || 80, indent));
 
     if (error.details) {
-      lines.push("");
-      lines.push(this.colorize("Details:", this.colors.blue, opts.useColors));
+      lines.push('');
+      lines.push(this.colorize('Details:', this.colors.blue, opts.useColors));
       lines.push(this.wrapText(error.details, opts.maxWidth || 80, indent));
     }
 
     // Context information
     if (opts.includeContext && this.hasRelevantContext(error.context)) {
-      lines.push("");
-      lines.push(this.colorize("Context:", this.colors.cyan, opts.useColors));
+      lines.push('');
+      lines.push(this.colorize('Context:', this.colors.cyan, opts.useColors));
       lines.push(...this.formatContextForConsole(error.context, indent, opts));
     }
 
     // Suggestions
     if (opts.includeSuggestions && error.suggestions.length > 0) {
-      lines.push("");
-      lines.push(
-        this.colorize(
-          "💡 Suggested Actions:",
-          this.colors.yellow,
-          opts.useColors
-        )
-      );
+      lines.push('');
+      lines.push(this.colorize('💡 Suggested Actions:', this.colors.yellow, opts.useColors));
 
       let suggestions = error.suggestions;
       if (opts.platformSpecific) {
@@ -223,65 +201,43 @@ export class ErrorFormatter {
       }
 
       suggestions.forEach((suggestion, index) => {
-        const priority = suggestion.priority ? ` (${suggestion.priority})` : "";
+        const priority = suggestion.priority ? ` (${suggestion.priority})` : '';
         const actionText = `${index + 1}. ${suggestion.action}${priority}`;
-        lines.push(
-          this.colorize(actionText, this.colors.yellow, opts.useColors)
-        );
-        lines.push(
-          this.wrapText(
-            suggestion.description,
-            opts.maxWidth || 80,
-            `${indent}   `
-          )
-        );
+        lines.push(this.colorize(actionText, this.colors.yellow, opts.useColors));
+        lines.push(this.wrapText(suggestion.description, opts.maxWidth || 80, `${indent}   `));
 
         if (suggestion.command) {
           const commandText = `Command: ${suggestion.command}`;
-          lines.push(
-            this.colorize(
-              `${indent}   ${commandText}`,
-              this.colors.cyan,
-              opts.useColors
-            )
-          );
+          lines.push(this.colorize(`${indent}   ${commandText}`, this.colors.cyan, opts.useColors));
         }
 
         if (index < suggestions.length - 1) {
-          lines.push("");
+          lines.push('');
         }
       });
     }
 
     // Learn more URL
     if (opts.includeLearnMore && error.learnMoreUrl) {
-      lines.push("");
+      lines.push('');
       lines.push(
-        `${this.colorize("📖 Learn More:", this.colors.blue, opts.useColors)} ${error.learnMoreUrl}`
+        `${this.colorize('📖 Learn More:', this.colors.blue, opts.useColors)} ${error.learnMoreUrl}`
       );
     }
 
     // Stack trace (if requested and available)
     if (opts.includeStack && error.stack) {
-      lines.push("");
-      lines.push(
-        this.colorize("Stack Trace:", this.colors.gray, opts.useColors)
-      );
-      const stackLines = error.stack.split("\n").map((line) => indent + line);
+      lines.push('');
+      lines.push(this.colorize('Stack Trace:', this.colors.gray, opts.useColors));
+      const stackLines = error.stack.split('\n').map((line) => indent + line);
       lines.push(...stackLines);
     }
 
     // Footer
-    lines.push("");
-    lines.push(
-      this.colorize(
-        "─".repeat(opts.maxWidth || 80),
-        this.colors.gray,
-        opts.useColors
-      )
-    );
+    lines.push('');
+    lines.push(this.colorize('─'.repeat(opts.maxWidth || 80), this.colors.gray, opts.useColors));
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -320,23 +276,17 @@ export class ErrorFormatter {
     options: ConsoleFormattingOptions = {}
   ): string {
     if (errors.length === 0) {
-      return "No errors to display.";
+      return 'No errors to display.';
     }
 
     const opts = { ...options, useColors: options.useColors ?? true };
     const lines: string[] = [];
 
     // Summary header
-    const headerText = `Error Summary (${errors.length} error${errors.length === 1 ? "" : "s"})`;
+    const headerText = `Error Summary (${errors.length} error${errors.length === 1 ? '' : 's'})`;
     lines.push(this.colorize(headerText, this.colors.bright, opts.useColors));
-    lines.push(
-      this.colorize(
-        "=".repeat(headerText.length),
-        this.colors.gray,
-        opts.useColors
-      )
-    );
-    lines.push("");
+    lines.push(this.colorize('='.repeat(headerText.length), this.colors.gray, opts.useColors));
+    lines.push('');
 
     // Group errors by severity
     const errorsBySeverity = this.groupErrorsBySeverity(errors);
@@ -349,7 +299,7 @@ export class ErrorFormatter {
       const severityHeader = `${severityIcon} ${severity} (${severityErrors.length})`;
 
       lines.push(this.colorize(severityHeader, severityColor, opts.useColors));
-      lines.push("");
+      lines.push('');
 
       severityErrors.forEach((error, index) => {
         const prefix = `  ${index + 1}. `;
@@ -361,11 +311,11 @@ export class ErrorFormatter {
         }
 
         lines.push(`     Time: ${error.timestamp.toLocaleString()}`);
-        lines.push("");
+        lines.push('');
       });
     });
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -377,7 +327,7 @@ export class ErrorFormatter {
       [ErrorCode.PATH_INVALID_FORMAT]: `The path "${error.context.path}" has an invalid format. Please use the correct format for your operating system.`,
       [ErrorCode.PERMISSION_READ_DENIED]: `You don't have permission to read from "${error.context.path}". Please check the folder permissions.`,
       [ErrorCode.NETWORK_TIMEOUT]:
-        "The network request timed out. Please check your connection and try again.",
+        'The network request timed out. Please check your connection and try again.',
       [ErrorCode.LLM_PROVIDER_QUOTA_EXCEEDED]: `You've reached your API quota limit. Please check your usage or upgrade your plan.`,
     };
 
@@ -387,21 +337,19 @@ export class ErrorFormatter {
   /**
    * Filter suggestions based on current platform
    */
-  private filterPlatformSpecificSuggestions(
-    suggestions: ErrorSuggestion[]
-  ): ErrorSuggestion[] {
+  private filterPlatformSpecificSuggestions(suggestions: ErrorSuggestion[]): ErrorSuggestion[] {
     const platformMap: Record<string, string> = {
-      win32: "windows",
-      darwin: "macos",
-      linux: "linux",
+      win32: 'windows',
+      darwin: 'macos',
+      linux: 'linux',
     };
 
-    const currentPlatformKey = platformMap[this.currentPlatform] || "all";
+    const currentPlatformKey = platformMap[this.currentPlatform] || 'all';
 
     return suggestions.filter(
       (suggestion) =>
         !suggestion.platform ||
-        suggestion.platform === "all" ||
+        suggestion.platform === 'all' ||
         suggestion.platform === currentPlatformKey
     );
   }
@@ -410,18 +358,12 @@ export class ErrorFormatter {
    * Sanitize context for output (remove sensitive information)
    */
   private sanitizeContext(context: any): any {
-    const sensitiveKeys = [
-      "userId",
-      "sessionId",
-      "apiKey",
-      "token",
-      "password",
-    ];
+    const sensitiveKeys = ['userId', 'sessionId', 'apiKey', 'token', 'password'];
     const sanitized = { ...context };
 
     sensitiveKeys.forEach((key) => {
       if (sanitized[key]) {
-        sanitized[key] = "[REDACTED]";
+        sanitized[key] = '[REDACTED]';
       }
     });
 
@@ -433,13 +375,13 @@ export class ErrorFormatter {
    */
   private getSeverityIcon(severity: ErrorSeverity): string {
     const icons: Record<ErrorSeverity, string> = {
-      [ErrorSeverity.CRITICAL]: "🔴",
-      [ErrorSeverity.HIGH]: "🟠",
-      [ErrorSeverity.MEDIUM]: "🟡",
-      [ErrorSeverity.LOW]: "🔵",
+      [ErrorSeverity.CRITICAL]: '🔴',
+      [ErrorSeverity.HIGH]: '🟠',
+      [ErrorSeverity.MEDIUM]: '🟡',
+      [ErrorSeverity.LOW]: '🔵',
     };
 
-    return icons[severity] || "⚪";
+    return icons[severity] || '⚪';
   }
 
   /**
@@ -466,8 +408,8 @@ export class ErrorFormatter {
   /**
    * Wrap text to specified width
    */
-  private wrapText(text: string, maxWidth: number, indent = ""): string {
-    const words = text.split(" ");
+  private wrapText(text: string, maxWidth: number, indent = ''): string {
+    const words = text.split(' ');
     const lines: string[] = [];
     let currentLine = indent;
 
@@ -476,7 +418,7 @@ export class ErrorFormatter {
         lines.push(currentLine);
         currentLine = indent + word;
       } else {
-        currentLine += (currentLine === indent ? "" : " ") + word;
+        currentLine += (currentLine === indent ? '' : ' ') + word;
       }
     });
 
@@ -484,7 +426,7 @@ export class ErrorFormatter {
       lines.push(currentLine);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -492,13 +434,13 @@ export class ErrorFormatter {
    */
   private hasRelevantContext(context: any): boolean {
     const relevantKeys = [
-      "platform",
-      "nodeVersion",
-      "method",
-      "url",
-      "statusCode",
-      "duration",
-      "provider",
+      'platform',
+      'nodeVersion',
+      'method',
+      'url',
+      'statusCode',
+      'duration',
+      'provider',
     ];
     return relevantKeys.some((key) => context[key] !== undefined);
   }

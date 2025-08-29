@@ -1,18 +1,17 @@
+import { createServer } from 'node:http';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { Server } from 'socket.io';
-import { createServer } from 'node:http';
-
-import * as core from './core';
+import { errorHandler, notFound } from './api/middleware/error.middleware';
 import apiRoutes from './api/routes';
-import logger, { requestLogger } from './services/logger.service';
+import { initializeWebSocketHandlers } from './api/websocket';
+import { env, validateProductionConfig } from './config/environment';
+import * as core from './core';
 import { backupService } from './services/backup.service';
 import { configurationService } from './services/config.service';
-import { env, validateProductionConfig } from './config/environment';
-import { errorHandler, notFound } from './api/middleware/error.middleware';
 import { healthService } from './services/health.service';
-import { initializeWebSocketHandlers } from './api/websocket';
+import logger, { requestLogger } from './services/logger.service';
 import { metricsService } from './services/metrics.service';
 
 // Import error middleware
