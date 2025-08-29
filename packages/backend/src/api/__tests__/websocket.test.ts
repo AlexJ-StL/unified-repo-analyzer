@@ -14,9 +14,9 @@ import {
 
 describe('WebSocket Tests', () => {
   let io: Server;
-  let _serverSocket: any;
-  let clientSocket: any;
-  let httpServer: any;
+  let _serverSocket: unknown;
+  let clientSocket: unknown;
+  let httpServer: unknown;
 
   beforeAll(async () => {
     // Create HTTP server
@@ -31,7 +31,7 @@ describe('WebSocket Tests', () => {
     // Start server
     await new Promise<void>((resolve) => {
       httpServer.listen(() => {
-        const port = (httpServer.address() as any).port;
+        const port = (httpServer.address() as { port: number }).port;
         clientSocket = Client(`http://localhost:${port}`, {
           extraHeaders: {
             'x-client-id': 'test-client',
@@ -78,7 +78,7 @@ describe('WebSocket Tests', () => {
 
     // Create a promise for the progress update
     const progressPromise = new Promise<void>((resolve) => {
-      clientSocket.on('analysis-progress', (progress: any) => {
+      clientSocket.on('analysis-progress', (progress: unknown) => {
         expect(progress).toEqual({
           total: 10,
           processed: 5,
@@ -107,7 +107,7 @@ describe('WebSocket Tests', () => {
 
     // Create a promise for the completion notification
     const completionPromise = new Promise<void>((resolve) => {
-      clientSocket.on('analysis-complete', (result: any) => {
+      clientSocket.on('analysis-complete', (result: unknown) => {
         expect(result).toEqual({
           id: 'test-analysis',
           status: 'completed',

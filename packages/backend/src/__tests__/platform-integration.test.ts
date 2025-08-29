@@ -244,7 +244,9 @@ describe('Platform-Specific Integration Tests', () => {
       );
 
       const startTime = Date.now();
-      const result = await pathHandler.validatePath('/test/path', { timeoutMs: 500 });
+      const result = await pathHandler.validatePath('/test/path', {
+        timeoutMs: 500,
+      });
       const duration = Date.now() - startTime;
 
       expect(duration).toBeLessThan(1000); // Should timeout before 1 second
@@ -413,7 +415,9 @@ describe('Platform-Specific Integration Tests', () => {
       ];
 
       for (const networkPath of networkPaths) {
-        const result = await pathHandler.validatePath(networkPath, { timeoutMs: 1000 });
+        const result = await pathHandler.validatePath(networkPath, {
+          timeoutMs: 1000,
+        });
 
         // Network paths should be validated for format even if not accessible
         expect(result.normalizedPath).toBeDefined();
@@ -429,15 +433,19 @@ describe('Platform-Specific Integration Tests', () => {
       pathHandler = new PathHandler();
 
       // Mock logger to capture log entries
-      const logEntries: Array<{ level: string; message: string; metadata?: any }> = [];
+      const logEntries: Array<{
+        level: string;
+        message: string;
+        metadata?: Record<string, unknown>;
+      }> = [];
       const _mockLogger = {
-        debug: (message: string, metadata?: any) =>
+        debug: (message: string, metadata?: Record<string, unknown>) =>
           logEntries.push({ level: 'debug', message, metadata }),
-        info: (message: string, metadata?: any) =>
+        info: (message: string, metadata?: Record<string, unknown>) =>
           logEntries.push({ level: 'info', message, metadata }),
-        warn: (message: string, metadata?: any) =>
+        warn: (message: string, metadata?: Record<string, unknown>) =>
           logEntries.push({ level: 'warn', message, metadata }),
-        error: (message: string, metadata?: any) =>
+        error: (message: string, metadata?: Record<string, unknown>) =>
           logEntries.push({ level: 'error', message, metadata }),
       };
 

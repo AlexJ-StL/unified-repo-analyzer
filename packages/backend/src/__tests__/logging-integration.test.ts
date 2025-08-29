@@ -19,7 +19,7 @@ describe('Logging Integration Tests', () => {
   let logSpy: MockInstance<
     (
       message: string,
-      metadata?: Record<string, any>,
+      metadata?: Record<string, unknown>,
       component?: string,
       requestId?: string
     ) => void
@@ -28,7 +28,7 @@ describe('Logging Integration Tests', () => {
     (
       message: string,
       error?: Error,
-      metadata?: Record<string, any>,
+      metadata?: Record<string, unknown>,
       component?: string,
       requestId?: string
     ) => void
@@ -36,7 +36,7 @@ describe('Logging Integration Tests', () => {
   let debugSpy: MockInstance<
     (
       message: string,
-      metadata?: Record<string, any>,
+      metadata?: Record<string, unknown>,
       component?: string,
       requestId?: string
     ) => void

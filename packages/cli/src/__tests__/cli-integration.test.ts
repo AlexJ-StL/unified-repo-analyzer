@@ -1,21 +1,19 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { program } from '../index';
-import { config } from '../utils';
 
 // Mock the API client
-mock.module('../utils/api-client', () => ({
-  ApiClient: mock(() => ({
-    analyzeRepository: mock(() => Promise.resolve({})),
+vi.mock('../utils/api-client', () => ({
+  ApiClient: vi.fn().mockImplementation(() => ({
+    analyzeRepository: vi.fn().mockResolvedValue({}),
   })),
 }));
 
 // Mock the progress tracker
-mock.module('../utils/progress', () => ({
-  ProgressTracker: mock(() => ({
-    start: mock(() => {}),
-    succeed: mock(() => {}),
-    fail: mock(() => {}),
-    update: mock(() => {}),
+vi.mock('../utils/progress', () => ({
+  ProgressTracker: vi.fn().mockImplementation(() => ({
+    start: vi.fn(),
+    succeed: vi.fn(),
+    fail: vi.fn(),
+    update: vi.fn(),
   })),
 }));
 

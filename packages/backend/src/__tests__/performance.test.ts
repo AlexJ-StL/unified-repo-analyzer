@@ -6,7 +6,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { promisify } from 'node:util';
-import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type {
+  AnalysisOptions,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared/src/types/analysis';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AnalysisEngine } from '../core/AnalysisEngine';
 import { analysisCache } from '../services/cache.service';
@@ -121,7 +124,7 @@ describe('Performance Tests', () => {
             analysisMode: 'quick',
             processingTime: 100,
           },
-        } as any,
+        } as RepositoryAnalysis,
       }));
 
       // Benchmark cache set operations
@@ -202,7 +205,7 @@ describe('Performance Tests', () => {
               analysisMode: 'quick',
               processingTime: 100,
             },
-          } as any;
+          } as RepositoryAnalysis;
           analysisCache.set(`${baseKey}${i}`, testAnalysis);
         }
       }
@@ -250,7 +253,7 @@ describe('Performance Tests', () => {
         id: 'test',
         name: 'test',
         path: testRepoPath,
-      } as any);
+      } as RepositoryAnalysis);
 
       // Should be cached immediately
       let cached = await shortTtlCache.getCachedAnalysis(testRepoPath, defaultOptions);
@@ -329,9 +332,12 @@ describe('Performance Tests', () => {
         const totalTime = performance.now() - startTime;
 
         expect(batchResult.repositories).toHaveLength(3);
-        const status = batchResult.status!;
-        expect(status.completed).toBe(3);
-        expect(status.failed).toBe(0);
+        expect(batchResult.status).toBeDefined();
+        const status = batchResult.status;
+        if (status) {
+          expect(status.completed).toBe(3);
+          expect(status.failed).toBe(0);
+        }
 
         console.log(`Batch processing completed in: ${totalTime.toFixed(2)}ms`);
         console.log(`Average per repository: ${(totalTime / 3).toFixed(2)}ms`);
@@ -381,7 +387,7 @@ describe('Performance Tests', () => {
       const durationWithoutMetrics = performance.now() - startWithoutMetrics;
 
       // Re-enable metrics
-      const { default: metricsServiceModule } = await import('../services/metrics.service');
+      await import('../services/metrics.service');
       // The metrics service is already a singleton, so we don't need to create a new instance
 
       // Measure performance with metrics

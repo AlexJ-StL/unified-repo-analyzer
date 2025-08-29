@@ -62,7 +62,7 @@ export default mergeConfig(
       bail: 1,
 
       // Memory and performance monitoring
-      logHeapUsage: true,
+      logHeapUsage: process.env.DEBUG_MEMORY === 'true',
 
       // Enhanced coverage for CI
       coverage: {
@@ -82,6 +82,8 @@ export default mergeConfig(
           '**/scripts/**',
           '**/docs/**',
           '**/*.md',
+          '**/temp-test-repos/**',
+          '**/large-performance-test/**',
         ],
         thresholds: {
           global: {

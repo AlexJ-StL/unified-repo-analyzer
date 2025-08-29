@@ -5,6 +5,8 @@
 import fs from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import type { ClassifiedError } from '@unified-repo-analyzer/shared/src/types/error-classification';
+import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
 import express from 'express';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -122,7 +124,7 @@ module.exports = { add, multiply };`
         expect(response.body.files.length).toBeGreaterThan(0);
 
         // Should contain our test files
-        const fileNames = response.body.files.map((f: any) => f.name);
+        const fileNames = response.body.files.map((f: FileInfo) => f.path);
         expect(fileNames).toContain('README.md');
         expect(fileNames).toContain('package.json');
         expect(fileNames).toContain('index.js');
@@ -153,7 +155,7 @@ module.exports = { add, multiply };`
         expect(response.body).toHaveProperty('files');
 
         // Should detect JavaScript files
-        const jsFiles = response.body.files.filter((f: any) => f.name.endsWith('.js'));
+        const jsFiles = response.body.files.filter((f: FileInfo) => f.path.endsWith('.js'));
         expect(jsFiles.length).toBeGreaterThan(0);
 
         // Should have language detection
@@ -253,7 +255,9 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('technicalDetails');
 
       if (response.body.technicalDetails?.errors) {
-        const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
+        const errorCodes = response.body.technicalDetails.errors.map(
+          (e: ClassifiedError) => e.code
+        );
         expect(errorCodes).toContain('INVALID_CHARACTERS');
       }
     });
@@ -276,7 +280,9 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('technicalDetails');
 
       if (response.body.technicalDetails?.errors) {
-        const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
+        const errorCodes = response.body.technicalDetails.errors.map(
+          (e: ClassifiedError) => e.code
+        );
         expect(errorCodes).toContain('RESERVED_NAME');
       }
     });
@@ -299,7 +305,9 @@ module.exports = { add, multiply };`
       expect(response.body).toHaveProperty('technicalDetails');
 
       if (response.body.technicalDetails?.errors) {
-        const errorCodes = response.body.technicalDetails.errors.map((e: any) => e.code);
+        const errorCodes = response.body.technicalDetails.errors.map(
+          (e: ClassifiedError) => e.code
+        );
         expect(errorCodes).toContain('PATH_TOO_LONG');
       }
     });
@@ -372,7 +380,9 @@ module.exports = { add, multiply };`
 
       if (response.body.repositories && response.body.repositories.length > 0) {
         // All analysis results should have the same normalized path
-        const uniquePaths = new Set(response.body.repositories.map((r: any) => r.path));
+        const uniquePaths = new Set(
+          response.body.repositories.map((r: { path: string }) => r.path)
+        );
         expect(uniquePaths.size).toBe(1);
       }
     });
@@ -463,8 +473,8 @@ module.exports = { add, multiply };`
         expect(request1.body.languages).toEqual(request2.body.languages);
 
         // Should have same file structure
-        const files1 = request1.body.files.map((f: any) => f.name).sort();
-        const files2 = request2.body.files.map((f: any) => f.name).sort();
+        const files1 = request1.body.files.map((f: FileInfo) => f.path).sort();
+        const files2 = request2.body.files.map((f: FileInfo) => f.path).sort();
         expect(files1).toEqual(files2);
       }
     });
@@ -523,7 +533,7 @@ module.exports = { add, multiply };`
         .expect(404);
 
       // Both should indicate path not found
-      const validationErrors = validationResponse.body.errors.map((e: any) => e.code);
+      const validationErrors = validationResponse.body.errors.map((e: ClassifiedError) => e.code);
       expect(validationErrors).toContain('PATH_NOT_FOUND');
 
       expect(analysisResponse.body.error).toMatch(/not found|not exist/i);

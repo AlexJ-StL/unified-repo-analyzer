@@ -896,7 +896,12 @@ describe('End-to-End User Workflow Tests', () => {
     };
   }
 
-  function generateUserFriendlyMessage(error: any): string {
+  interface ValidationError {
+    code?: string;
+    message?: string;
+  }
+
+  function generateUserFriendlyMessage(error: ValidationError): string {
     const messageMap: Record<string, string> = {
       PATH_NOT_FOUND:
         'The specified path could not be found. Please check that the path exists and try again.',
@@ -949,7 +954,7 @@ describe('End-to-End User Workflow Tests', () => {
 
   async function verifyErrorHandlingLogging(
     requestId: string,
-    expectedErrors: any[]
+    expectedErrors: ValidationError[]
   ): Promise<void> {
     const logContent = await fs.readFile(path.join(testDir, 'workflow.log'), 'utf-8');
     const logLines = logContent

@@ -8,12 +8,12 @@ import {
 } from '../utils/fs-utils';
 
 // Mock fs module
-mock.module('fs', () => ({
-  existsSync: mock(() => true),
-  statSync: mock(() => ({ isDirectory: () => true })),
-  accessSync: mock(() => {}),
-  mkdirSync: mock(() => {}),
-  writeFileSync: mock(() => {}),
+vi.mock('fs', () => ({
+  existsSync: vi.fn().mockReturnValue(true),
+  statSync: vi.fn().mockReturnValue({ isDirectory: () => true }),
+  accessSync: vi.fn(),
+  mkdirSync: vi.fn(),
+  writeFileSync: vi.fn(),
   constants: {
     R_OK: 4,
   },

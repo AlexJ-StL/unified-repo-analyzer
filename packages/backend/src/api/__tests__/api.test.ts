@@ -4,13 +4,34 @@
 
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+// Mock the AnalysisEngine and IndexSystem before importing
+vi.mock('../../core/AnalysisEngine', () => ({
+  AnalysisEngine: vi.fn().mockImplementation(() => ({
+    analyzeRepository: vi.fn().mockResolvedValue({
+      name: 'test-repo',
+      path: '/test/path',
+      languages: ['JavaScript'],
+      frameworks: ['React'],
+      summary: 'Test repository',
+      files: [],
+      dependencies: {},
+      metrics: { fileCount: 10, totalSize: 1000 },
+    }),
+  })),
+}));
+
+vi.mock('../../core/IndexSystem', () => ({
+  IndexSystem: vi.fn().mockImplementation(() => ({
+    addRepository: vi.fn(),
+    searchRepositories: vi.fn().mockReturnValue([]),
+    findSimilarRepositories: vi.fn().mockReturnValue([]),
+  })),
+}));
+
 import { AnalysisEngine } from '../../core/AnalysisEngine';
 import { IndexSystem } from '../../core/IndexSystem';
 import { app } from '../../index';
-
-// Mock the AnalysisEngine and IndexSystem
-vi.mock('../../core/AnalysisEngine');
-vi.mock('../../core/IndexSystem');
 
 describe('API Integration Tests', () => {
   beforeEach(() => {
@@ -354,7 +375,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.searchRepositories as any).mockResolvedValue(mockSearchResults);
+      vi.mocked(AnalysisEngine.prototype.searchRepositories).mockResolvedValue(mockSearchResults);
 
       const response = await request(app)
         .get('/api/repositories/search')
@@ -394,7 +415,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.findSimilarRepositories as any).mockResolvedValue(
+      vi.mocked(AnalysisEngine.prototype.findSimilarRepositories).mockResolvedValue(
         mockSimilarRepositories
       );
 
@@ -416,7 +437,7 @@ describe('API Integration Tests', () => {
         },
       ];
 
-      (AnalysisEngine.prototype.suggestCombinations as any).mockResolvedValue(mockCombinations);
+      vi.mocked(AnalysisEngine.prototype.suggestCombinations).mockResolvedValue(mockCombinations);
 
       const response = await request(app)
         .post('/api/repositories/combinations')

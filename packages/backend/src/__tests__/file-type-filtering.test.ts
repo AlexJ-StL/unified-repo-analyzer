@@ -1,7 +1,7 @@
 import type { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { IndexSystem } from '../core/IndexSystem';
+import { IndexSystem, type RepositoryIndex } from '../core/IndexSystem';
 
 describe('File Type Filtering', () => {
   let indexSystem: IndexSystem;
@@ -50,7 +50,7 @@ describe('File Type Filtering', () => {
     ];
 
     // Use reflection to set private property for testing
-    (indexSystem as any).index = {
+    (indexSystem as { index: RepositoryIndex }).index = {
       repositories: mockRepositories,
       relationships: [],
       tags: [],

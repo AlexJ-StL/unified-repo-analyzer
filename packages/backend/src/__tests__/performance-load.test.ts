@@ -120,7 +120,7 @@ describe('Performance and Load Testing', () => {
         const start = performance.now();
 
         // Create batches of concurrent validations
-        const batches: Promise<any>[][] = [];
+        const batches: Promise<unknown>[][] = [];
         for (let i = 0; i < testPaths.length; i += concurrency) {
           const batch = testPaths
             .slice(i, i + concurrency)
@@ -583,7 +583,7 @@ describe('Performance and Load Testing', () => {
       }
 
       // Create concurrent operations
-      const operations: Promise<any>[] = [];
+      const operations: Promise<unknown>[] = [];
 
       // Path validation operations
       for (let i = 0; i < extremeLoad.pathValidations; i += extremeLoad.concurrentOperations) {

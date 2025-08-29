@@ -301,14 +301,16 @@ describe('Logging System Integration Tests', () => {
       });
 
       // Mock HTTP transport to capture what would be sent
-      const _sentLogs: any[] = [];
+      const _sentLogs: Array<Record<string, unknown>> = [];
 
       // Note: In a real test, we would mock the HTTP transport
       // For this test, we'll verify the logger configuration
       const config = externalLogger.getConfig();
       expect(config.outputs[0].type).toBe('external');
-      expect((config.outputs[0].config as any).endpoint).toBe('https://logs.example.com/api/logs');
-      expect((config.outputs[0].config as any).format).toBe('JSON');
+      expect((config.outputs[0].config as { endpoint: string }).endpoint).toBe(
+        'https://logs.example.com/api/logs'
+      );
+      expect((config.outputs[0].config as { format: string }).format).toBe('JSON');
     });
 
     it('should handle external service failures gracefully', async () => {
@@ -741,7 +743,7 @@ describe('Logging System Integration Tests', () => {
       const finishHandlers: Array<() => void> = [];
       const errorHandlers: Array<(error: Error) => void> = [];
 
-      mockRes.on = vi.fn((event: string, handler: any) => {
+      mockRes.on = vi.fn((event: string, handler: () => void) => {
         if (event === 'finish') {
           finishHandlers.push(handler);
         } else if (event === 'error') {
