@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export default function Component8() {
@@ -8,9 +7,7 @@ export default function Component8() {
     <div>
       <h1>Component 8</h1>
       <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>
-        Increment
-      </button>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
     </div>
   );
 }
