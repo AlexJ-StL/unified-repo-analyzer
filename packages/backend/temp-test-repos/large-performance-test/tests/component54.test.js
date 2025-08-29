@@ -1,6 +1,5 @@
+import Component54 from '../src/component54';
 
-          import Component54 from '../src/component54';
-          test('Component54 renders', () => {
-            expect(Component54).toBeDefined();
-          });
-        
+test('Component54 renders', () => {
+  expect(Component54).toBeDefined();
+});

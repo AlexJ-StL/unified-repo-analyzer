@@ -1,6 +1,5 @@
+import Component80 from '../src/component80';
 
-          import Component80 from '../src/component80';
-          test('Component80 renders', () => {
-            expect(Component80).toBeDefined();
-          });
-        
+test('Component80 renders', () => {
+  expect(Component80).toBeDefined();
+});

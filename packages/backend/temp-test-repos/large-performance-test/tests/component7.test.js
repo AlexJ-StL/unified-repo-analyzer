@@ -1,6 +1,5 @@
+import Component7 from '../src/component7';
 
-          import Component7 from '../src/component7';
-          test('Component7 renders', () => {
-            expect(Component7).toBeDefined();
-          });
-        
+test('Component7 renders', () => {
+  expect(Component7).toBeDefined();
+});

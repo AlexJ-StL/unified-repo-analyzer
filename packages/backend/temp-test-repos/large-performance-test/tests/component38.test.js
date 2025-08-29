@@ -1,6 +1,5 @@
+import Component38 from '../src/component38';
 
-          import Component38 from '../src/component38';
-          test('Component38 renders', () => {
-            expect(Component38).toBeDefined();
-          });
-        
+test('Component38 renders', () => {
+  expect(Component38).toBeDefined();
+});

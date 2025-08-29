@@ -1,6 +1,5 @@
+import Component89 from '../src/component89';
 
-          import Component89 from '../src/component89';
-          test('Component89 renders', () => {
-            expect(Component89).toBeDefined();
-          });
-        
+test('Component89 renders', () => {
+  expect(Component89).toBeDefined();
+});

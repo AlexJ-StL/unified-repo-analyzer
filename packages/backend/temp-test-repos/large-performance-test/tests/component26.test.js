@@ -1,6 +1,5 @@
+import Component26 from '../src/component26';
 
-          import Component26 from '../src/component26';
-          test('Component26 renders', () => {
-            expect(Component26).toBeDefined();
-          });
-        
+test('Component26 renders', () => {
+  expect(Component26).toBeDefined();
+});
