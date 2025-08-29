@@ -1,8 +1,8 @@
+import EventEmitter from 'node:events';
+
 /**
  * Queue system for managing concurrent tasks
  */
-
-import EventEmitter from 'node:events';
 
 /**
  * Task status enum

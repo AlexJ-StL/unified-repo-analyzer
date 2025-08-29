@@ -1,11 +1,6 @@
-/**
- * Error classification service for unified-repo-analyzer
- * Implements error type definitions, categorization, and correlation tracking
- * Requirements: 3.3, 4.5, 5.5
- */
+import { platform } from "node:os";
+import { randomUUID } from "node:crypto";
 
-import { randomUUID } from 'node:crypto';
-import { platform } from 'node:os';
 import {
   type ClassifiedError,
   ErrorCategory,
@@ -16,7 +11,13 @@ import {
   ErrorSeverity,
   type ErrorStatistics,
   type ErrorSuggestion,
-} from '../types/error-classification.js';
+} from "../types/error-classification.js";
+
+/**
+ * Error classification service for unified-repo-analyzer
+ * Implements error type definitions, categorization, and correlation tracking
+ * Requirements: 3.3, 4.5, 5.5
+ */
 
 /**
  * Error classification service
@@ -47,22 +48,30 @@ export class ErrorClassifier {
     context: Partial<ErrorContext> = {},
     parentErrorId?: string
   ): ClassifiedError {
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    const originalError = typeof error === 'string' ? undefined : error;
+    const errorMessage = typeof error === "string" ? error : error.message;
+    const originalError = typeof error === "string" ? undefined : error;
 
     // Generate unique identifiers
     const errorId = randomUUID();
-    const correlationId = context.correlationId || context.requestId || randomUUID();
+    const correlationId =
+      context.correlationId || context.requestId || randomUUID();
 
     // Determine error code and category
-    const { code, category } = this.determineErrorCodeAndCategory(errorMessage, context);
+    const { code, category } = this.determineErrorCodeAndCategory(
+      errorMessage,
+      context
+    );
 
     // Determine severity
     const severity = this.determineSeverity(code, category, context);
 
     // Generate title and enhanced message
     const title = this.generateErrorTitle(code, category);
-    const enhancedMessage = this.enhanceErrorMessage(errorMessage, code, context);
+    const enhancedMessage = this.enhanceErrorMessage(
+      errorMessage,
+      code,
+      context
+    );
 
     // Generate suggestions
     const suggestions = this.generateSuggestions(code, category, context);
@@ -119,7 +128,9 @@ export class ErrorClassifier {
         suggestions: classifiedError.suggestions,
         correlationId: classifiedError.correlationId,
         timestamp: classifiedError.timestamp.toISOString(),
-        context: includeContext ? this.sanitizeContext(classifiedError.context) : undefined,
+        context: includeContext
+          ? this.sanitizeContext(classifiedError.context)
+          : undefined,
       },
       requestId: classifiedError.context.requestId,
       path: classifiedError.context.path,
@@ -129,10 +140,15 @@ export class ErrorClassifier {
   /**
    * Get error statistics for monitoring
    */
-  public getErrorStatistics(timeRange?: { start: Date; end: Date }): ErrorStatistics {
+  public getErrorStatistics(timeRange?: {
+    start: Date;
+    end: Date;
+  }): ErrorStatistics {
     const errors = Array.from(this.errorHistory.values());
     const filteredErrors = timeRange
-      ? errors.filter((e) => e.timestamp >= timeRange.start && e.timestamp <= timeRange.end)
+      ? errors.filter(
+          (e) => e.timestamp >= timeRange.start && e.timestamp <= timeRange.end
+        )
       : errors;
 
     const errorsByCategory = this.groupByCategory(filteredErrors);
@@ -178,7 +194,7 @@ export class ErrorClassifier {
     const timeline = relatedErrors.map((error) => ({
       timestamp: error.timestamp,
       errorId: error.id,
-      event: 'created' as const,
+      event: "created" as const,
     }));
 
     return {
@@ -223,44 +239,62 @@ export class ErrorClassifier {
     const lowerMessage = message.toLowerCase();
 
     // Path-related errors
-    if (lowerMessage.includes('path not found') || lowerMessage.includes('no such file')) {
+    if (
+      lowerMessage.includes("path not found") ||
+      lowerMessage.includes("no such file")
+    ) {
       return {
         code: ErrorCode.PATH_NOT_FOUND,
         category: ErrorCategory.PATH_VALIDATION,
       };
     }
-    if (lowerMessage.includes('invalid path format') || lowerMessage.includes('malformed path')) {
+    if (
+      lowerMessage.includes("invalid path format") ||
+      lowerMessage.includes("malformed path")
+    ) {
       return {
         code: ErrorCode.PATH_INVALID_FORMAT,
         category: ErrorCategory.PATH_FORMAT,
       };
     }
-    if (lowerMessage.includes('path too long') || lowerMessage.includes('filename too long')) {
+    if (
+      lowerMessage.includes("path too long") ||
+      lowerMessage.includes("filename too long")
+    ) {
       return {
         code: ErrorCode.PATH_TOO_LONG,
         category: ErrorCategory.PATH_FORMAT,
       };
     }
-    if (lowerMessage.includes('reserved name') || lowerMessage.includes('invalid name')) {
+    if (
+      lowerMessage.includes("reserved name") ||
+      lowerMessage.includes("invalid name")
+    ) {
       return {
         code: ErrorCode.PATH_RESERVED_NAME,
         category: ErrorCategory.PATH_FORMAT,
       };
     }
-    if (lowerMessage.includes('invalid characters') || lowerMessage.includes('illegal character')) {
+    if (
+      lowerMessage.includes("invalid characters") ||
+      lowerMessage.includes("illegal character")
+    ) {
       return {
         code: ErrorCode.PATH_INVALID_CHARACTERS,
         category: ErrorCategory.PATH_FORMAT,
       };
     }
-    if (lowerMessage.includes('permission denied') || lowerMessage.includes('access denied')) {
-      if (lowerMessage.includes('read')) {
+    if (
+      lowerMessage.includes("permission denied") ||
+      lowerMessage.includes("access denied")
+    ) {
+      if (lowerMessage.includes("read")) {
         return {
           code: ErrorCode.PERMISSION_READ_DENIED,
           category: ErrorCategory.PATH_PERMISSION,
         };
       }
-      if (lowerMessage.includes('write')) {
+      if (lowerMessage.includes("write")) {
         return {
           code: ErrorCode.PERMISSION_WRITE_DENIED,
           category: ErrorCategory.PATH_PERMISSION,
@@ -273,20 +307,26 @@ export class ErrorClassifier {
     }
 
     // Network errors
-    if (lowerMessage.includes('network') || lowerMessage.includes('connection')) {
-      if (lowerMessage.includes('timeout')) {
+    if (
+      lowerMessage.includes("network") ||
+      lowerMessage.includes("connection")
+    ) {
+      if (lowerMessage.includes("timeout")) {
         return {
           code: ErrorCode.NETWORK_TIMEOUT,
           category: ErrorCategory.NETWORK,
         };
       }
-      if (lowerMessage.includes('refused') || lowerMessage.includes('rejected')) {
+      if (
+        lowerMessage.includes("refused") ||
+        lowerMessage.includes("rejected")
+      ) {
         return {
           code: ErrorCode.NETWORK_CONNECTION_REFUSED,
           category: ErrorCategory.NETWORK,
         };
       }
-      if (lowerMessage.includes('unreachable')) {
+      if (lowerMessage.includes("unreachable")) {
         return {
           code: ErrorCode.NETWORK_UNREACHABLE,
           category: ErrorCategory.NETWORK,
@@ -299,7 +339,10 @@ export class ErrorClassifier {
     }
 
     // Timeout errors
-    if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
+    if (
+      lowerMessage.includes("timeout") ||
+      lowerMessage.includes("timed out")
+    ) {
       if (context.path) {
         return {
           code: ErrorCode.TIMEOUT_PATH_VALIDATION,
@@ -361,19 +404,22 @@ export class ErrorClassifier {
 
     // LLM Provider errors
     if (context.provider) {
-      if (lowerMessage.includes('quota') || lowerMessage.includes('limit')) {
+      if (lowerMessage.includes("quota") || lowerMessage.includes("limit")) {
         return {
           code: ErrorCode.LLM_PROVIDER_QUOTA_EXCEEDED,
           category: ErrorCategory.LLM_QUOTA,
         };
       }
-      if (lowerMessage.includes('authentication') || lowerMessage.includes('unauthorized')) {
+      if (
+        lowerMessage.includes("authentication") ||
+        lowerMessage.includes("unauthorized")
+      ) {
         return {
           code: ErrorCode.LLM_PROVIDER_AUTHENTICATION_FAILED,
           category: ErrorCategory.LLM_PROVIDER,
         };
       }
-      if (lowerMessage.includes('rate limit')) {
+      if (lowerMessage.includes("rate limit")) {
         return {
           code: ErrorCode.LLM_PROVIDER_RATE_LIMITED,
           category: ErrorCategory.LLM_PROVIDER,
@@ -386,13 +432,19 @@ export class ErrorClassifier {
     }
 
     // File system errors
-    if (lowerMessage.includes('not a directory') || lowerMessage.includes('is not a directory')) {
+    if (
+      lowerMessage.includes("not a directory") ||
+      lowerMessage.includes("is not a directory")
+    ) {
       return {
         code: ErrorCode.FILESYSTEM_NOT_DIRECTORY,
         category: ErrorCategory.FILESYSTEM,
       };
     }
-    if (lowerMessage.includes('disk full') || lowerMessage.includes('no space')) {
+    if (
+      lowerMessage.includes("disk full") ||
+      lowerMessage.includes("no space")
+    ) {
       return {
         code: ErrorCode.FILESYSTEM_DISK_FULL,
         category: ErrorCategory.FILESYSTEM,
@@ -400,7 +452,10 @@ export class ErrorClassifier {
     }
 
     // Validation errors
-    if (lowerMessage.includes('validation') || lowerMessage.includes('invalid input')) {
+    if (
+      lowerMessage.includes("validation") ||
+      lowerMessage.includes("invalid input")
+    ) {
       return {
         code: ErrorCode.VALIDATION_INPUT_INVALID,
         category: ErrorCategory.VALIDATION,
@@ -408,7 +463,7 @@ export class ErrorClassifier {
     }
 
     // Analysis errors
-    if (lowerMessage.includes('analysis') || context.analysisType) {
+    if (lowerMessage.includes("analysis") || context.analysisType) {
       return {
         code: ErrorCode.ANALYSIS_FAILED,
         category: ErrorCategory.ANALYSIS,
@@ -416,7 +471,10 @@ export class ErrorClassifier {
     }
 
     // Operation cancelled
-    if (lowerMessage.includes('cancelled') || lowerMessage.includes('aborted')) {
+    if (
+      lowerMessage.includes("cancelled") ||
+      lowerMessage.includes("aborted")
+    ) {
       return {
         code: ErrorCode.OPERATION_CANCELLED,
         category: ErrorCategory.SYSTEM,
@@ -490,72 +548,76 @@ export class ErrorClassifier {
   /**
    * Generate user-friendly error title
    */
-  private generateErrorTitle(code: ErrorCode, _category: ErrorCategory): string {
+  private generateErrorTitle(
+    code: ErrorCode,
+    _category: ErrorCategory
+  ): string {
     const titleMap: Record<ErrorCode, string> = {
-      [ErrorCode.PATH_NOT_FOUND]: 'Repository Path Not Found',
-      [ErrorCode.PATH_INVALID_FORMAT]: 'Invalid Path Format',
-      [ErrorCode.PATH_TOO_LONG]: 'Path Too Long',
-      [ErrorCode.PATH_RESERVED_NAME]: 'Reserved Name in Path',
-      [ErrorCode.PATH_INVALID_CHARACTERS]: 'Invalid Characters in Path',
-      [ErrorCode.PATH_INVALID_DRIVE_LETTER]: 'Invalid Drive Letter',
-      [ErrorCode.PATH_INVALID_UNC]: 'Invalid Network Path Format',
-      [ErrorCode.PATH_NULL_BYTE]: 'Security Risk - Null Byte in Path',
-      [ErrorCode.PATH_CONTROL_CHARACTERS]: 'Invalid Control Characters',
-      [ErrorCode.PATH_INVALID_COMPONENT_ENDING]: 'Invalid Path Component',
-      [ErrorCode.PERMISSION_READ_DENIED]: 'Read Permission Denied',
-      [ErrorCode.PERMISSION_WRITE_DENIED]: 'Write Permission Denied',
-      [ErrorCode.PERMISSION_EXECUTE_DENIED]: 'Execute Permission Denied',
-      [ErrorCode.PERMISSION_CHECK_FAILED]: 'Permission Check Failed',
-      [ErrorCode.PERMISSION_SYSTEM_PATH]: 'System Path Access Restricted',
-      [ErrorCode.PERMISSION_READ_ONLY]: 'Read-Only File or Directory',
-      [ErrorCode.FILESYSTEM_NOT_DIRECTORY]: 'Path is Not a Directory',
-      [ErrorCode.FILESYSTEM_ACCESS_DENIED]: 'File System Access Denied',
-      [ErrorCode.FILESYSTEM_DISK_FULL]: 'Disk Space Full',
-      [ErrorCode.FILESYSTEM_CORRUPTED]: 'File System Corrupted',
-      [ErrorCode.NETWORK_UNREACHABLE]: 'Network Unreachable',
-      [ErrorCode.NETWORK_TIMEOUT]: 'Network Timeout',
-      [ErrorCode.NETWORK_CONNECTION_REFUSED]: 'Connection Refused',
-      [ErrorCode.NETWORK_DNS_RESOLUTION]: 'DNS Resolution Failed',
-      [ErrorCode.TIMEOUT_OPERATION]: 'Operation Timed Out',
-      [ErrorCode.TIMEOUT_PATH_VALIDATION]: 'Path Validation Timed Out',
-      [ErrorCode.TIMEOUT_ANALYSIS]: 'Analysis Timed Out',
-      [ErrorCode.TIMEOUT_LLM_REQUEST]: 'LLM Request Timed Out',
-      [ErrorCode.SYSTEM_RESOURCE_EXHAUSTED]: 'System Resources Exhausted',
-      [ErrorCode.SYSTEM_MEMORY_INSUFFICIENT]: 'Insufficient Memory',
-      [ErrorCode.SYSTEM_PLATFORM_UNSUPPORTED]: 'Platform Not Supported',
-      [ErrorCode.VALIDATION_INPUT_INVALID]: 'Invalid Input',
-      [ErrorCode.VALIDATION_SCHEMA_MISMATCH]: 'Schema Validation Failed',
-      [ErrorCode.VALIDATION_REQUIRED_FIELD]: 'Required Field Missing',
-      [ErrorCode.CONFIG_MISSING]: 'Configuration Missing',
-      [ErrorCode.CONFIG_INVALID]: 'Invalid Configuration',
-      [ErrorCode.CONFIG_PARSE_ERROR]: 'Configuration Parse Error',
-      [ErrorCode.ANALYSIS_FAILED]: 'Analysis Failed',
-      [ErrorCode.ANALYSIS_INTERRUPTED]: 'Analysis Interrupted',
-      [ErrorCode.ANALYSIS_INVALID_REPOSITORY]: 'Invalid Repository',
-      [ErrorCode.HTTP_BAD_REQUEST]: 'Bad Request',
-      [ErrorCode.HTTP_UNAUTHORIZED]: 'Unauthorized',
-      [ErrorCode.HTTP_FORBIDDEN]: 'Forbidden',
-      [ErrorCode.HTTP_NOT_FOUND]: 'Not Found',
-      [ErrorCode.HTTP_METHOD_NOT_ALLOWED]: 'Method Not Allowed',
-      [ErrorCode.HTTP_CONFLICT]: 'Conflict',
-      [ErrorCode.HTTP_UNPROCESSABLE_ENTITY]: 'Unprocessable Entity',
-      [ErrorCode.HTTP_TOO_MANY_REQUESTS]: 'Too Many Requests',
-      [ErrorCode.HTTP_INTERNAL_SERVER_ERROR]: 'Internal Server Error',
-      [ErrorCode.HTTP_BAD_GATEWAY]: 'Bad Gateway',
-      [ErrorCode.HTTP_SERVICE_UNAVAILABLE]: 'Service Unavailable',
-      [ErrorCode.HTTP_GATEWAY_TIMEOUT]: 'Gateway Timeout',
-      [ErrorCode.LLM_PROVIDER_UNAVAILABLE]: 'LLM Provider Unavailable',
-      [ErrorCode.LLM_PROVIDER_QUOTA_EXCEEDED]: 'LLM Quota Exceeded',
-      [ErrorCode.LLM_PROVIDER_INVALID_REQUEST]: 'Invalid LLM Request',
-      [ErrorCode.LLM_PROVIDER_AUTHENTICATION_FAILED]: 'LLM Authentication Failed',
-      [ErrorCode.LLM_PROVIDER_RATE_LIMITED]: 'LLM Rate Limited',
-      [ErrorCode.OPERATION_CANCELLED]: 'Operation Cancelled',
-      [ErrorCode.OPERATION_ABORTED]: 'Operation Aborted',
-      [ErrorCode.UNKNOWN_ERROR]: 'Unknown Error',
-      [ErrorCode.INTERNAL_ERROR]: 'Internal Error',
+      [ErrorCode.PATH_NOT_FOUND]: "Repository Path Not Found",
+      [ErrorCode.PATH_INVALID_FORMAT]: "Invalid Path Format",
+      [ErrorCode.PATH_TOO_LONG]: "Path Too Long",
+      [ErrorCode.PATH_RESERVED_NAME]: "Reserved Name in Path",
+      [ErrorCode.PATH_INVALID_CHARACTERS]: "Invalid Characters in Path",
+      [ErrorCode.PATH_INVALID_DRIVE_LETTER]: "Invalid Drive Letter",
+      [ErrorCode.PATH_INVALID_UNC]: "Invalid Network Path Format",
+      [ErrorCode.PATH_NULL_BYTE]: "Security Risk - Null Byte in Path",
+      [ErrorCode.PATH_CONTROL_CHARACTERS]: "Invalid Control Characters",
+      [ErrorCode.PATH_INVALID_COMPONENT_ENDING]: "Invalid Path Component",
+      [ErrorCode.PERMISSION_READ_DENIED]: "Read Permission Denied",
+      [ErrorCode.PERMISSION_WRITE_DENIED]: "Write Permission Denied",
+      [ErrorCode.PERMISSION_EXECUTE_DENIED]: "Execute Permission Denied",
+      [ErrorCode.PERMISSION_CHECK_FAILED]: "Permission Check Failed",
+      [ErrorCode.PERMISSION_SYSTEM_PATH]: "System Path Access Restricted",
+      [ErrorCode.PERMISSION_READ_ONLY]: "Read-Only File or Directory",
+      [ErrorCode.FILESYSTEM_NOT_DIRECTORY]: "Path is Not a Directory",
+      [ErrorCode.FILESYSTEM_ACCESS_DENIED]: "File System Access Denied",
+      [ErrorCode.FILESYSTEM_DISK_FULL]: "Disk Space Full",
+      [ErrorCode.FILESYSTEM_CORRUPTED]: "File System Corrupted",
+      [ErrorCode.NETWORK_UNREACHABLE]: "Network Unreachable",
+      [ErrorCode.NETWORK_TIMEOUT]: "Network Timeout",
+      [ErrorCode.NETWORK_CONNECTION_REFUSED]: "Connection Refused",
+      [ErrorCode.NETWORK_DNS_RESOLUTION]: "DNS Resolution Failed",
+      [ErrorCode.TIMEOUT_OPERATION]: "Operation Timed Out",
+      [ErrorCode.TIMEOUT_PATH_VALIDATION]: "Path Validation Timed Out",
+      [ErrorCode.TIMEOUT_ANALYSIS]: "Analysis Timed Out",
+      [ErrorCode.TIMEOUT_LLM_REQUEST]: "LLM Request Timed Out",
+      [ErrorCode.SYSTEM_RESOURCE_EXHAUSTED]: "System Resources Exhausted",
+      [ErrorCode.SYSTEM_MEMORY_INSUFFICIENT]: "Insufficient Memory",
+      [ErrorCode.SYSTEM_PLATFORM_UNSUPPORTED]: "Platform Not Supported",
+      [ErrorCode.VALIDATION_INPUT_INVALID]: "Invalid Input",
+      [ErrorCode.VALIDATION_SCHEMA_MISMATCH]: "Schema Validation Failed",
+      [ErrorCode.VALIDATION_REQUIRED_FIELD]: "Required Field Missing",
+      [ErrorCode.CONFIG_MISSING]: "Configuration Missing",
+      [ErrorCode.CONFIG_INVALID]: "Invalid Configuration",
+      [ErrorCode.CONFIG_PARSE_ERROR]: "Configuration Parse Error",
+      [ErrorCode.ANALYSIS_FAILED]: "Analysis Failed",
+      [ErrorCode.ANALYSIS_INTERRUPTED]: "Analysis Interrupted",
+      [ErrorCode.ANALYSIS_INVALID_REPOSITORY]: "Invalid Repository",
+      [ErrorCode.HTTP_BAD_REQUEST]: "Bad Request",
+      [ErrorCode.HTTP_UNAUTHORIZED]: "Unauthorized",
+      [ErrorCode.HTTP_FORBIDDEN]: "Forbidden",
+      [ErrorCode.HTTP_NOT_FOUND]: "Not Found",
+      [ErrorCode.HTTP_METHOD_NOT_ALLOWED]: "Method Not Allowed",
+      [ErrorCode.HTTP_CONFLICT]: "Conflict",
+      [ErrorCode.HTTP_UNPROCESSABLE_ENTITY]: "Unprocessable Entity",
+      [ErrorCode.HTTP_TOO_MANY_REQUESTS]: "Too Many Requests",
+      [ErrorCode.HTTP_INTERNAL_SERVER_ERROR]: "Internal Server Error",
+      [ErrorCode.HTTP_BAD_GATEWAY]: "Bad Gateway",
+      [ErrorCode.HTTP_SERVICE_UNAVAILABLE]: "Service Unavailable",
+      [ErrorCode.HTTP_GATEWAY_TIMEOUT]: "Gateway Timeout",
+      [ErrorCode.LLM_PROVIDER_UNAVAILABLE]: "LLM Provider Unavailable",
+      [ErrorCode.LLM_PROVIDER_QUOTA_EXCEEDED]: "LLM Quota Exceeded",
+      [ErrorCode.LLM_PROVIDER_INVALID_REQUEST]: "Invalid LLM Request",
+      [ErrorCode.LLM_PROVIDER_AUTHENTICATION_FAILED]:
+        "LLM Authentication Failed",
+      [ErrorCode.LLM_PROVIDER_RATE_LIMITED]: "LLM Rate Limited",
+      [ErrorCode.OPERATION_CANCELLED]: "Operation Cancelled",
+      [ErrorCode.OPERATION_ABORTED]: "Operation Aborted",
+      [ErrorCode.UNKNOWN_ERROR]: "Unknown Error",
+      [ErrorCode.INTERNAL_ERROR]: "Internal Error",
     };
 
-    return titleMap[code] || 'Unknown Error';
+    return titleMap[code] || "Unknown Error";
   }
 
   /**
@@ -570,7 +632,10 @@ export class ErrorClassifier {
 
     // Add path information if available
     if (context.path) {
-      enhancedMessage = enhancedMessage.replace(/path/gi, `path "${context.path}"`);
+      enhancedMessage = enhancedMessage.replace(
+        /path/gi,
+        `path "${context.path}"`
+      );
     }
 
     // Add platform-specific information
@@ -580,7 +645,7 @@ export class ErrorClassifier {
     }
 
     // Add duration information for timeout errors
-    if (code.toString().includes('TIMEOUT') && context.duration) {
+    if (code.toString().includes("TIMEOUT") && context.duration) {
       enhancedMessage += ` (Duration: ${context.duration}ms)`;
     }
 
@@ -600,18 +665,18 @@ export class ErrorClassifier {
     context: Partial<ErrorContext>
   ): string | undefined {
     // Add platform-specific details
-    if (context.platform === 'win32' && code.toString().includes('PATH')) {
-      return 'Windows path handling requires specific format considerations. Check path separators and reserved names.';
+    if (context.platform === "win32" && code.toString().includes("PATH")) {
+      return "Windows path handling requires specific format considerations. Check path separators and reserved names.";
     }
 
     // Add network-specific details
-    if (code.toString().includes('NETWORK')) {
-      return 'Network connectivity issues may be temporary. Check your connection and try again.';
+    if (code.toString().includes("NETWORK")) {
+      return "Network connectivity issues may be temporary. Check your connection and try again.";
     }
 
     // Add LLM-specific details
-    if (code.toString().includes('LLM')) {
-      return `LLM Provider: ${context.provider || 'Unknown'}. Check your API credentials and quota limits.`;
+    if (code.toString().includes("LLM")) {
+      return `LLM Provider: ${context.provider || "Unknown"}. Check your API credentials and quota limits.`;
     }
 
     return undefined;
@@ -629,40 +694,45 @@ export class ErrorClassifier {
     const currentPlatform = context.platform || platform();
 
     // Path-related suggestions
-    if (category === ErrorCategory.PATH_VALIDATION || category === ErrorCategory.PATH_FORMAT) {
-      if (currentPlatform === 'win32') {
+    if (
+      category === ErrorCategory.PATH_VALIDATION ||
+      category === ErrorCategory.PATH_FORMAT
+    ) {
+      if (currentPlatform === "win32") {
         suggestions.push({
-          action: 'Use Windows path format',
-          description: 'Use backslashes (\\) or forward slashes (/) for Windows paths',
-          priority: 'high',
-          platform: 'windows',
+          action: "Use Windows path format",
+          description:
+            "Use backslashes (\\) or forward slashes (/) for Windows paths",
+          priority: "high",
+          platform: "windows",
         });
       }
 
       suggestions.push({
-        action: 'Verify path exists',
-        description: 'Check that the path exists using your file manager',
-        priority: 'high',
-        platform: 'all',
+        action: "Verify path exists",
+        description: "Check that the path exists using your file manager",
+        priority: "high",
+        platform: "all",
       });
     }
 
     // Permission-related suggestions
     if (category === ErrorCategory.PATH_PERMISSION) {
-      if (currentPlatform === 'win32') {
+      if (currentPlatform === "win32") {
         suggestions.push({
-          action: 'Run as Administrator',
-          description: 'Try running the application as Administrator',
-          priority: 'medium',
-          platform: 'windows',
+          action: "Run as Administrator",
+          description: "Try running the application as Administrator",
+          priority: "medium",
+          platform: "windows",
         });
       } else {
         suggestions.push({
-          action: 'Check permissions',
-          description: 'Use chmod to modify file permissions if you own the file',
-          command: 'chmod +r /path/to/file',
-          priority: 'medium',
-          platform: 'linux',
+          action: "Check permissions",
+          description:
+            "Use chmod to modify file permissions if you own the file",
+          command: "chmod +r /path/to/file",
+          priority: "medium",
+          platform: "linux",
         });
       }
     }
@@ -670,45 +740,50 @@ export class ErrorClassifier {
     // Network-related suggestions
     if (category === ErrorCategory.NETWORK) {
       suggestions.push({
-        action: 'Check network connection',
-        description: 'Verify your internet connection is working',
-        priority: 'high',
-        platform: 'all',
+        action: "Check network connection",
+        description: "Verify your internet connection is working",
+        priority: "high",
+        platform: "all",
       });
 
       suggestions.push({
-        action: 'Retry operation',
-        description: 'Network issues may be temporary, try again in a few moments',
-        priority: 'medium',
-        platform: 'all',
+        action: "Retry operation",
+        description:
+          "Network issues may be temporary, try again in a few moments",
+        priority: "medium",
+        platform: "all",
       });
     }
 
     // Timeout-related suggestions
     if (category === ErrorCategory.TIMEOUT) {
       suggestions.push({
-        action: 'Try smaller operation',
-        description: 'Break down the operation into smaller parts',
-        priority: 'high',
-        platform: 'all',
+        action: "Try smaller operation",
+        description: "Break down the operation into smaller parts",
+        priority: "high",
+        platform: "all",
       });
     }
 
     // LLM-related suggestions
-    if (category === ErrorCategory.LLM_PROVIDER || category === ErrorCategory.LLM_QUOTA) {
+    if (
+      category === ErrorCategory.LLM_PROVIDER ||
+      category === ErrorCategory.LLM_QUOTA
+    ) {
       suggestions.push({
-        action: 'Check API credentials',
-        description: 'Verify your LLM provider API key is valid and active',
-        priority: 'high',
-        platform: 'all',
+        action: "Check API credentials",
+        description: "Verify your LLM provider API key is valid and active",
+        priority: "high",
+        platform: "all",
       });
 
       if (code === ErrorCode.LLM_PROVIDER_QUOTA_EXCEEDED) {
         suggestions.push({
-          action: 'Check quota limits',
-          description: 'Review your API usage and quota limits with your provider',
-          priority: 'high',
-          platform: 'all',
+          action: "Check quota limits",
+          description:
+            "Review your API usage and quota limits with your provider",
+          priority: "high",
+          platform: "all",
         });
       }
     }
@@ -716,10 +791,11 @@ export class ErrorClassifier {
     // Add generic suggestion if no specific ones were added
     if (suggestions.length === 0) {
       suggestions.push({
-        action: 'Contact support',
-        description: 'If the issue persists, contact technical support for assistance',
-        priority: 'low',
-        platform: 'all',
+        action: "Contact support",
+        description:
+          "If the issue persists, contact technical support for assistance",
+        priority: "low",
+        platform: "all",
       });
     }
 
@@ -729,16 +805,19 @@ export class ErrorClassifier {
   /**
    * Get learn more URL for specific error codes
    */
-  private getLearnMoreUrl(code: ErrorCode, _category: ErrorCategory): string | undefined {
+  private getLearnMoreUrl(
+    code: ErrorCode,
+    _category: ErrorCategory
+  ): string | undefined {
     const urlMap: Partial<Record<ErrorCode, string>> = {
       [ErrorCode.PATH_INVALID_FORMAT]:
-        'https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file',
+        "https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file",
       [ErrorCode.PATH_INVALID_UNC]:
-        'https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#unc',
+        "https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#unc",
       [ErrorCode.PATH_TOO_LONG]:
-        'https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation',
+        "https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation",
       [ErrorCode.PATH_RESERVED_NAME]:
-        'https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions',
+        "https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions",
     };
 
     return urlMap[code];
@@ -781,7 +860,10 @@ export class ErrorClassifier {
   /**
    * Update correlation mapping
    */
-  private updateCorrelationMapping(correlationId: string, errorId: string): void {
+  private updateCorrelationMapping(
+    correlationId: string,
+    errorId: string
+  ): void {
     const existingIds = this.correlationMap.get(correlationId) || [];
     existingIds.push(errorId);
     this.correlationMap.set(correlationId, existingIds);
@@ -803,7 +885,9 @@ export class ErrorClassifier {
   /**
    * Group errors by category for statistics
    */
-  private groupByCategory(errors: ClassifiedError[]): Record<ErrorCategory, number> {
+  private groupByCategory(
+    errors: ClassifiedError[]
+  ): Record<ErrorCategory, number> {
     const grouped = {} as Record<ErrorCategory, number>;
 
     // Initialize all categories with 0
@@ -822,7 +906,9 @@ export class ErrorClassifier {
   /**
    * Group errors by severity for statistics
    */
-  private groupBySeverity(errors: ClassifiedError[]): Record<ErrorSeverity, number> {
+  private groupBySeverity(
+    errors: ClassifiedError[]
+  ): Record<ErrorSeverity, number> {
     const grouped = {} as Record<ErrorSeverity, number>;
 
     // Initialize all severities with 0
@@ -882,24 +968,36 @@ export class ErrorClassifier {
   /**
    * Determine root cause from related errors
    */
-  private determineRootCause(errors: ClassifiedError[]): ClassifiedError | undefined {
+  private determineRootCause(
+    errors: ClassifiedError[]
+  ): ClassifiedError | undefined {
     if (errors.length === 0) return undefined;
     if (errors.length === 1) return errors[0];
 
     // First, try to find the earliest critical error
-    const criticalErrors = errors.filter((e) => e.severity === ErrorSeverity.CRITICAL);
+    const criticalErrors = errors.filter(
+      (e) => e.severity === ErrorSeverity.CRITICAL
+    );
     if (criticalErrors.length > 0) {
-      return criticalErrors.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0];
+      return criticalErrors.sort(
+        (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+      )[0];
     }
 
     // Then, try to find the earliest high severity error
-    const highSeverityErrors = errors.filter((e) => e.severity === ErrorSeverity.HIGH);
+    const highSeverityErrors = errors.filter(
+      (e) => e.severity === ErrorSeverity.HIGH
+    );
     if (highSeverityErrors.length > 0) {
-      return highSeverityErrors.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0];
+      return highSeverityErrors.sort(
+        (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+      )[0];
     }
 
     // Otherwise, return the first error chronologically
-    return errors.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0];
+    return errors.sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+    )[0];
   }
 
   /**
@@ -907,11 +1005,11 @@ export class ErrorClassifier {
    */
   private getPlatformDisplayName(platform: string): string {
     const platformMap: Record<string, string> = {
-      win32: 'Windows',
-      darwin: 'macOS',
-      linux: 'Linux',
-      freebsd: 'FreeBSD',
-      openbsd: 'OpenBSD',
+      win32: "Windows",
+      darwin: "macOS",
+      linux: "Linux",
+      freebsd: "FreeBSD",
+      openbsd: "OpenBSD",
     };
 
     return platformMap[platform] || platform;

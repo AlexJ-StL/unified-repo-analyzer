@@ -1,27 +1,36 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {
+import
+{
+  promisify;
+}
+from;
+('node:util');
+
+import { v4 as uuidv4 } from 'uuid';
+import { sortFilesByImportance } from './fileImportance';
+import { detectFrameworks, detectLanguage } from './languageDetection';
+
+import type {
+import type
+{
+  FileInfo;
+}
+from;
+('@unified-repo-analyzer/shared/src/types/repository');
+
 /**
  * Repository discovery and analysis utilities
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { promisify } from 'node:util';
-import type {
-  AnalysisOptions,
+AnalysisOptions,
   RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
-import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import { v4 as uuidv4 } from 'uuid';
-import { sortFilesByImportance } from './fileImportance';
-import {
-  extractDirectoryInfo,
-  FileSystemError,
-  FileSystemErrorType,
-  getCombinedIgnorePatterns,
-  type TraversalOptions,
+} from '@unified-repo-analyzer/shared/src/types/analysis'
+extractDirectoryInfo, FileSystemError, FileSystemErrorType, getCombinedIgnorePatterns, type;
+TraversalOptions,
   traverseDirectory,
-} from './fileSystem';
-import { detectFrameworks, detectLanguage } from './languageDetection';
-
+} from './fileSystem'
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 

@@ -1,3 +1,4 @@
+
 /**
  * Format file size in bytes to a human-readable string
  */

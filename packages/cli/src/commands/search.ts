@@ -1,6 +1,7 @@
-import type { SearchResult } from '@unified-repo-analyzer/shared';
 import chalk from 'chalk';
 import { ApiClient, formatBytes, formatDate, handleError, ProgressTracker } from '../utils';
+
+import type { SearchResult } from '@unified-repo-analyzer/shared';
 
 interface SearchCommandOptions {
   language?: string;

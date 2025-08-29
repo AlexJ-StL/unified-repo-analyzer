@@ -1,3 +1,4 @@
+
 /**
  * Validate if a string is a valid file path
  */

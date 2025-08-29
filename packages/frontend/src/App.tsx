@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+
 import { ErrorBoundary } from './components/error';
 import { ToastProvider } from './hooks/useToast';
 

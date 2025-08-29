@@ -34,6 +34,13 @@
     "monitor:stop": "bun run scripts/build-monitor.ts stop",
     "monitor:status": "bun run scripts/build-monitor.ts status",
     "test": "vitest run || bun test || npm test",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:watch": "vitest --coverage",
+    "test:coverage:analysis": "bun run scripts/coverage-analysis.ts",
+    "test:coverage:monitor": "bun run scripts/coverage-monitor.ts",
+    "test:coverage:monitor:watch": "bun run scripts/coverage-monitor.ts watch",
+    "test:coverage:badges": "bun run scripts/coverage-badge.ts",
+    "test:coverage:full": "bun run test:coverage && bun run test:coverage:analysis && bun run test:coverage:badges",
     "test:ci": "vitest run --config vitest.ci.config.ts",
     "test:ci:coverage": "vitest run --config vitest.ci.config.ts --coverage",
     "test:ci:reporter": "vitest run --config vitest.ci.config.ts --reporter=verbose --reporter=junit --reporter=json",
@@ -77,7 +84,10 @@
     "migrate:config": "bun run scripts/migrate-config.ts",
     "validate:compatibility": "bun run scripts/validate-compatibility.ts",
     "feature:rollout": "bun run scripts/feature-rollout.ts",
-    "verify:deployment": "bun run scripts/deployment-verification.ts"
+    "verify:deployment": "bun run scripts/deployment-verification.ts",
+    "bun:cleanup": "bun run scripts/fix-runaway-bun.ts cleanup",
+    "bun:monitor": "bun run scripts/fix-runaway-bun.ts monitor",
+    "bun:status": "bun run scripts/fix-runaway-bun.ts status"
   },
   "keywords": [
     "repository",
@@ -108,6 +118,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",
+    "@vitest/coverage-v8": "3.2.4",
     "bun-types": "^1.2.21",
     "cross-env": "^7.0.3",
     "jsdom": "^24.1.3",

@@ -1,9 +1,10 @@
+import logger from '../services/logger.service.js';
+
+import type { Request, Response } from 'express';
+
 /**
  * Enhanced logging utilities for better debugging and monitoring
  */
-
-import type { Request, Response } from 'express';
-import logger from '../services/logger.service.js';
 
 /**
  * Log levels with numeric values for filtering

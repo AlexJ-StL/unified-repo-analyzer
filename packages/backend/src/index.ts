@@ -1,25 +1,26 @@
-import { createServer } from 'node:http';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { Server } from 'socket.io';
-// Import error middleware
-import { errorHandler, notFound } from './api/middleware/error.middleware';
-// Import API routes
-import apiRoutes from './api/routes';
-// Import WebSocket handlers
-import { initializeWebSocketHandlers } from './api/websocket';
-// Import configuration and environment
-import { env, validateProductionConfig } from './config/environment';
-// Import core modules
+import { createServer } from 'node:http';
+
 import * as core from './core';
+import apiRoutes from './api/routes';
+import logger, { requestLogger } from './services/logger.service';
 import { backupService } from './services/backup.service';
 import { configurationService } from './services/config.service';
+import { env, validateProductionConfig } from './config/environment';
+import { errorHandler, notFound } from './api/middleware/error.middleware';
 import { healthService } from './services/health.service';
-import logger, { requestLogger } from './services/logger.service';
-// Import services
+import { initializeWebSocketHandlers } from './api/websocket';
 import { metricsService } from './services/metrics.service';
 
+// Import error middleware
+// Import API routes
+// Import WebSocket handlers
+// Import configuration and environment
+// Import core modules
+// Import services
 // Validate production configuration
 try {
   validateProductionConfig();

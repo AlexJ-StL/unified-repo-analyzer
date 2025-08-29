@@ -1,6 +1,11 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import type { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
+import fs from "node:fs";
+import path from "node:path";
+
+import type {
+  AnalysisOptions,
+  OutputFormat,
+} from "@unified-repo-analyzer/shared";
+
 import {
   ApiClient,
   config,
@@ -8,11 +13,11 @@ import {
   handleError,
   ProgressTracker,
   writeResultsToFile,
-} from '../utils';
+} from "../utils";
 
 interface BatchCommandOptions {
   output: OutputFormat;
-  mode: 'quick' | 'standard' | 'comprehensive';
+  mode: "quick" | "standard" | "comprehensive";
   maxFiles?: number;
   maxLines?: number;
   llm?: boolean;
@@ -27,8 +32,11 @@ interface BatchCommandOptions {
 /**
  * Execute the batch command
  */
-export async function executeBatch(basePath: string, options: BatchCommandOptions): Promise<void> {
-  const progress = new ProgressTracker('Batch Repository Analysis');
+export async function executeBatch(
+  basePath: string,
+  options: BatchCommandOptions
+): Promise<void> {
+  const progress = new ProgressTracker("Batch Repository Analysis");
   const _apiClient = new ApiClient();
 
   try {
@@ -39,7 +47,7 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     }
 
     // Find repositories in the base path
-    progress.start('Discovering repositories');
+    progress.start("Discovering repositories");
     const repositories = await discoverRepositories(
       absolutePath,
       options.depth || 1,
@@ -47,7 +55,7 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     );
 
     if (repositories.length === 0) {
-      progress.fail('No repositories found in the specified path');
+      progress.fail("No repositories found in the specified path");
       return;
     }
 
@@ -66,7 +74,8 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     // Add optional parameters if provided
     if (options.maxFiles) analysisOptions.maxFiles = options.maxFiles;
     if (options.maxLines) analysisOptions.maxLinesPerFile = options.maxLines;
-    if (options.llm !== undefined) analysisOptions.includeLLMAnalysis = options.llm;
+    if (options.llm !== undefined)
+      analysisOptions.includeLLMAnalysis = options.llm;
     if (options.provider) analysisOptions.llmProvider = options.provider;
 
     // Start batch analysis
@@ -75,14 +84,14 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     let result: any;
 
     // In test mode, create a mock result instead of calling API
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === "test") {
       result = {
         repositories: repositories.map((repoPath, index) => ({
           id: `test-${index}`,
           name: path.basename(repoPath),
           path: repoPath,
-          language: 'JavaScript',
-          languages: ['JavaScript'],
+          language: "JavaScript",
+          languages: ["JavaScript"],
           fileCount: 10,
           directoryCount: 3,
           totalSize: 1024 * 50,
@@ -102,8 +111,8 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
         },
         processingTime: 500,
         combinedInsights: {
-          commonalities: ['JavaScript', 'Node.js'],
-          integrationOpportunities: ['Shared utilities', 'Common build system'],
+          commonalities: ["JavaScript", "Node.js"],
+          integrationOpportunities: ["Shared utilities", "Common build system"],
         },
       };
     } else {
@@ -113,13 +122,13 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     }
 
     // Determine output directory
-    const outputDir = options.outputDir || config.get('outputDir');
+    const outputDir = options.outputDir || config.get("outputDir");
     const outputDirPath = ensureOutputDirectory(outputDir);
 
     // Write individual results to files
-    progress.succeed('Analysis complete. Saving results...');
+    progress.succeed("Analysis complete. Saving results...");
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 
     // Save individual repository results
     result.repositories.forEach((repoAnalysis) => {
@@ -141,15 +150,19 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     }
 
     // Print summary
-    console.log('\nBatch Analysis Summary:');
+    console.log("\nBatch Analysis Summary:");
     console.log(`- Total Repositories: ${result.repositories.length}`);
-    console.log(`- Successful: ${result.status?.completed || result.repositories.length}`);
+    console.log(
+      `- Successful: ${result.status?.completed || result.repositories.length}`
+    );
     console.log(`- Failed: ${result.status?.failed || 0}`);
     console.log(`- Total Processing Time: ${result.processingTime}ms`);
 
     if (result.combinedInsights) {
-      console.log('\nCombined Insights:');
-      console.log(`- Common Technologies: ${result.combinedInsights.commonalities.length}`);
+      console.log("\nCombined Insights:");
+      console.log(
+        `- Common Technologies: ${result.combinedInsights.commonalities.length}`
+      );
       console.log(
         `- Integration Opportunities: ${result.combinedInsights.integrationOpportunities.length}`
       );
@@ -174,11 +187,11 @@ async function discoverRepositories(
   const isRepository = (dirPath: string): boolean => {
     // Check for common repository indicators
     return (
-      fs.existsSync(path.join(dirPath, '.git')) ||
-      fs.existsSync(path.join(dirPath, 'package.json')) ||
-      fs.existsSync(path.join(dirPath, 'requirements.txt')) ||
-      fs.existsSync(path.join(dirPath, 'pom.xml')) ||
-      fs.existsSync(path.join(dirPath, 'build.gradle'))
+      fs.existsSync(path.join(dirPath, ".git")) ||
+      fs.existsSync(path.join(dirPath, "package.json")) ||
+      fs.existsSync(path.join(dirPath, "requirements.txt")) ||
+      fs.existsSync(path.join(dirPath, "pom.xml")) ||
+      fs.existsSync(path.join(dirPath, "build.gradle"))
     );
   };
 
@@ -201,7 +214,11 @@ async function discoverRepositories(
 
       // Scan subdirectories
       for (const entry of entries) {
-        if (entry.isDirectory() && entry.name !== 'node_modules' && !entry.name.startsWith('.')) {
+        if (
+          entry.isDirectory() &&
+          entry.name !== "node_modules" &&
+          !entry.name.startsWith(".")
+        ) {
           scanDirectory(path.join(dirPath, entry.name), currentDepth + 1);
         }
       }
