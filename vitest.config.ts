@@ -53,7 +53,7 @@ export default defineConfig({
 
     // Reduced retry for faster feedback
     retry: process.env.CI ? 1 : 0,
-    reporter: process.env.CI ? ["verbose", "junit"] : ["default"],
+    reporters: process.env.CI ? ["verbose", "junit"] : ["default"],
     outputFile: process.env.CI ? "./test-results.xml" : undefined,
 
     // Optimized parallel execution based on runtime
