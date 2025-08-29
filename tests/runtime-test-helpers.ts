@@ -26,7 +26,7 @@ export class RuntimeTestHelpers {
   /**
    * Create a runtime-aware mock that behaves consistently
    */
-  static createRuntimeMock<T extends (...args: any[]) => any>(
+  static createRuntimeMock<T extends (...args: unknown[]) => unknown>(
     implementation?: T,
     options: {
       deterministic?: boolean;
@@ -179,7 +179,7 @@ export class RuntimeTestHelpers {
   /**
    * Create a test wrapper that applies runtime-specific configurations
    */
-  static createRuntimeTest<T extends (...args: any[]) => any>(
+  static createRuntimeTest<T extends (...args: unknown[]) => unknown>(
     testName: string,
     testFn: T,
     options: {
@@ -194,7 +194,7 @@ export class RuntimeTestHelpers {
       expectRuntimeDifferences?: boolean;
     } = {}
   ): T {
-    return (async (...args: any[]) => {
+    return (async (...args: unknown[]) => {
       // Check skip conditions
       if (options.skipIf && RuntimeTestHelpers.skipIf(options.skipIf)) {
         return;

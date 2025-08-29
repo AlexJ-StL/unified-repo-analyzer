@@ -19,11 +19,11 @@ declare global {
     const clearAllMocks: typeof vi.clearAllMocks;
     const spyOn: typeof vi.spyOn;
 
-    interface MockedFunction<T extends (...args: any[]) => any> {
+    interface MockedFunction<T extends (...args: unknown[]) => unknown> {
       (...args: Parameters<T>): ReturnType<T>;
       mockReturnValue(value: ReturnType<T>): this;
       mockResolvedValue(value: Awaited<ReturnType<T>>): this;
-      mockRejectedValue(value: any): this;
+      mockRejectedValue(value: unknown): this;
       mockImplementation(fn: T): this;
       mockClear(): this;
       toHaveBeenCalled(): void;
@@ -32,14 +32,14 @@ declare global {
     }
 
     interface Mocked<_T> {
-      [key: string]: any;
+      [key: string]: unknown;
     }
 
     interface MockedClass<T> {
-      new (...args: any[]): Mocked<T>;
+      new (...args: unknown[]): Mocked<T>;
     }
 
-    interface Mock extends MockedFunction<any> {}
+    interface Mock extends MockedFunction<unknown> {}
   }
 }
 

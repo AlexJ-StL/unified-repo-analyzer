@@ -262,8 +262,11 @@ export function createTestCleanupContext(testName: string) {
 /**
  * Decorator for test functions that automatically sets up cleanup
  */
-export function withCleanup<T extends (...args: any[]) => any>(testName: string, testFn: T): T {
-  return ((...args: any[]) => {
+export function withCleanup<T extends (...args: unknown[]) => unknown>(
+  testName: string,
+  testFn: T
+): T {
+  return ((...args: unknown[]) => {
     const cleanup = createTestCleanupContext(testName);
 
     try {
@@ -277,7 +280,12 @@ export function withCleanup<T extends (...args: any[]) => any>(testName: string,
       return result;
     } catch (error) {
       // Ensure cleanup runs even if test throws
-      cleanup.cleanup().catch(console.warn);
+      cleanup.cleanup().catch((error) => {
+        // Log cleanup error without using console
+        if (typeof process !== 'undefined' && process.stderr) {
+          process.stderr.write(`Cleanup error: ${error}\n`);
+        }
+      });
       throw error;
     }
   }) as T;

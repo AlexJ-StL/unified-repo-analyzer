@@ -31,7 +31,7 @@ export class MockValidation {
   /**
    * Creates a properly typed mock function with validation
    */
-  static createValidatedMock<T extends (...args: any[]) => any>(
+  static createValidatedMock<T extends (...args: unknown[]) => unknown>(
     name: string,
     implementation?: T
   ): MockedFunction<T> {
@@ -81,7 +81,7 @@ export class MockValidation {
   /**
    * Ensures proper mock cleanup
    */
-  static ensureMockCleanup(mocks: Array<MockedFunction<any>>): void {
+  static ensureMockCleanup(mocks: Array<MockedFunction<unknown>>): void {
     for (const mock of mocks) {
       try {
         if (mock && typeof mock.mockClear === 'function') {
@@ -102,7 +102,7 @@ export class APICompletenessValidator {
   /**
    * Validates that IndexSystem has all required methods
    */
-  static validateIndexSystemAPI(indexSystemClass: any): void {
+  static validateIndexSystemAPI(indexSystemClass: unknown): void {
     const requiredMethods = [
       'addRepository',
       'updateRepository',
@@ -140,7 +140,7 @@ export class APICompletenessValidator {
   /**
    * Validates method signatures match expected patterns
    */
-  static validateMethodSignatures(obj: any, expectedSignatures: Record<string, number>): void {
+  static validateMethodSignatures(obj: unknown, expectedSignatures: Record<string, number>): void {
     for (const [methodName, expectedParamCount] of Object.entries(expectedSignatures)) {
       const method = obj[methodName] || obj.prototype?.[methodName];
 
@@ -161,7 +161,7 @@ export class APICompletenessValidator {
   /**
    * Validates that async methods return promises
    */
-  static async validateAsyncMethods(instance: any, asyncMethods: string[]): Promise<void> {
+  static async validateAsyncMethods(instance: unknown, asyncMethods: string[]): Promise<void> {
     for (const methodName of asyncMethods) {
       const method = instance[methodName];
 

@@ -84,6 +84,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
                 <p className="text-xs text-gray-500">{Math.round(progress.progress)}%</p>
               </div>
               <button
+                type="button"
                 onClick={handleCancel}
                 className="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs rounded-md transition-colors"
               >
@@ -112,6 +113,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
+                  aria-label="Success"
                 >
                   <path
                     fillRule="evenodd"
@@ -137,6 +139,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
+                  aria-label="Error"
                 >
                   <path
                     fillRule="evenodd"
@@ -180,6 +183,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
       {logs.length > 0 && (
         <div className="mt-3">
           <button
+            type="button"
             onClick={() => setShowLogs(!showLogs)}
             className="text-xs text-blue-600 flex items-center"
           >
@@ -188,6 +192,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
               className={`ml-1 h-3 w-3 transform ${showLogs ? 'rotate-180' : ''}`}
               fill="currentColor"
               viewBox="0 0 20 20"
+              aria-label={showLogs ? 'Hide logs' : 'Show logs'}
             >
               <path
                 fillRule="evenodd"

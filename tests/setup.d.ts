@@ -5,9 +5,9 @@
 declare global {
   // Enhanced global test utilities
   namespace Vi {
-    interface MockedFunction<T extends (...args: any[]) => any> extends MockedFunction<T> {
+    interface MockedFunction<T extends (...args: unknown[]) => unknown> extends MockedFunction<T> {
       mockResolvedValue(value: Awaited<ReturnType<T>>): this;
-      mockRejectedValue(value: any): this;
+      mockRejectedValue(value: unknown): this;
     }
   }
 
@@ -21,15 +21,15 @@ declare global {
 
   // Enhanced console interface for tests
   interface Console {
-    debug: (...args: any[]) => void;
-    trace: (...args: any[]) => void;
+    debug: (...args: unknown[]) => void;
+    trace: (...args: unknown[]) => void;
   }
 }
 
 // Module augmentation for better mock typing
 declare module 'vitest' {
-  interface MockedFunction<T extends (...args: any[]) => any> {
+  interface MockedFunction<T extends (...args: unknown[]) => unknown> {
     mockResolvedValue(value: Awaited<ReturnType<T>>): this;
-    mockRejectedValue(value: any): this;
+    mockRejectedValue(value: unknown): this;
   }
 }

@@ -58,8 +58,9 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
           <nav className="flex -mb-px overflow-x-auto" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
+                type="button"
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as string)}
                 className={`whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm mr-6 ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
@@ -74,6 +75,7 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
 
           <div className="flex items-center space-x-3">
             <button
+              type="button"
               onClick={handlePrint}
               className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
@@ -208,7 +210,10 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.commonalities.map((item, index) => (
-                        <li key={index} className="text-sm text-blue-800 flex items-start">
+                        <li
+                          key={`commonality-${index}-${item.slice(0, 20)}`}
+                          className="text-sm text-blue-800 flex items-start"
+                        >
                           <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>
@@ -222,7 +227,10 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                   <div className="bg-yellow-50 p-4 rounded-lg">
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.differences.map((item, index) => (
-                        <li key={index} className="text-sm text-yellow-800 flex items-start">
+                        <li
+                          key={`difference-${index}-${item.slice(0, 20)}`}
+                          className="text-sm text-yellow-800 flex items-start"
+                        >
                           <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>

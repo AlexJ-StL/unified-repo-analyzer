@@ -11,15 +11,15 @@ describe('Type Checking Tests', () => {
     it('should have proper TypeScript interface for IndexSystem', () => {
       // Define the expected interface
       interface ExpectedIndexSystemInterface {
-        repositories: Map<string, any>;
+        repositories: Map<string, unknown>;
         globalTags: Set<string>;
 
-        addRepository(repository: any): string;
-        updateRepository(id: string, updates: any): void;
+        addRepository(repository: Record<string, unknown>): string;
+        updateRepository(id: string, updates: Record<string, unknown>): void;
         removeRepository(id: string): boolean;
-        searchRepositories(query: any): any[];
-        findSimilarRepositories(id: string): any[];
-        suggestCombinations(ids: string[]): any[];
+        searchRepositories(query: Record<string, unknown>): unknown[];
+        findSimilarRepositories(id: string): unknown[];
+        suggestCombinations(ids: string[]): unknown[];
         addTag(repositoryId: string, tag: string): void;
         removeTag(repositoryId: string, tag: string): void;
         addGlobalTag(tag: string): void;
@@ -58,9 +58,9 @@ describe('Type Checking Tests', () => {
         addRepository: string;
         updateRepository: undefined;
         removeRepository: boolean;
-        searchRepositories: any[];
-        findSimilarRepositories: any[];
-        suggestCombinations: any[];
+        searchRepositories: unknown[];
+        findSimilarRepositories: unknown[];
+        suggestCombinations: unknown[];
         addTag: undefined;
         removeTag: undefined;
         addGlobalTag: undefined;
@@ -132,7 +132,7 @@ describe('Type Checking Tests', () => {
 
     it('should ensure mock function type compatibility', () => {
       // Define a function type
-      type AsyncFunction = (id: string) => Promise<any[]>;
+      type AsyncFunction = (id: string) => Promise<unknown[]>;
 
       // This should compile without errors
       const createMockAsyncFunction = (): MockedFunction<AsyncFunction> => {
@@ -150,29 +150,35 @@ describe('Type Checking Tests', () => {
       interface TestUtilityTypes {
         mockValidation: {
           validateMockingInfrastructure: () => void;
-          createValidatedMock: <T extends (...args: any[]) => any>(
+          createValidatedMock: <T extends (...args: unknown[]) => unknown>(
             name: string,
             implementation?: T
           ) => MockedFunction<T>;
           validateMock: <T>(mock: MockedFunction<T>, name: string) => void;
-          ensureMockCleanup: (mocks: Array<MockedFunction<any>>) => void;
+          ensureMockCleanup: (mocks: Array<MockedFunction<unknown>>) => void;
         };
 
         apiValidation: {
-          validateIndexSystemAPI: (indexSystemClass: any) => void;
-          validateMethodSignatures: (obj: any, expectedSignatures: Record<string, number>) => void;
-          validateAsyncMethods: (instance: any, asyncMethods: string[]) => Promise<void>;
+          validateIndexSystemAPI: (indexSystemClass: unknown) => void;
+          validateMethodSignatures: (
+            obj: unknown,
+            expectedSignatures: Record<string, number>
+          ) => void;
+          validateAsyncMethods: (instance: unknown, asyncMethods: string[]) => Promise<void>;
         };
 
         assertionValidation: {
-          validateExpectationPatterns: (testResults: any[], expectedPatterns: any[]) => void;
+          validateExpectationPatterns: (
+            testResults: unknown[],
+            expectedPatterns: unknown[]
+          ) => void;
           validateArrayStructure: <T>(
             array: T[],
             validator: (item: T, index: number) => void,
             minLength?: number,
             maxLength?: number
           ) => void;
-          validateSearchResults: (results: any[], expectedProperties: string[]) => void;
+          validateSearchResults: (results: unknown[], expectedProperties: string[]) => void;
         };
       }
 
@@ -180,7 +186,7 @@ describe('Type Checking Tests', () => {
       const utilityTypes: TestUtilityTypes = {
         mockValidation: {
           validateMockingInfrastructure: () => {},
-          createValidatedMock: () => ({}) as any,
+          createValidatedMock: () => ({}) as unknown,
           validateMock: () => {},
           ensureMockCleanup: () => {},
         },
@@ -273,8 +279,8 @@ describe('Type Checking Tests', () => {
         assertionError: {
           name: string;
           message: string;
-          expected?: any;
-          actual?: any;
+          expected?: unknown;
+          actual?: unknown;
         };
 
         timeoutError: {
@@ -372,7 +378,7 @@ describe('Type Checking Tests', () => {
 
       const stringPromise: PromiseReturningFunction<string> = async () => 'result';
       const numberPromise: PromiseReturningFunction<number> = async () => 42;
-      const arrayPromise: PromiseReturningFunction<any[]> = async () => [];
+      const arrayPromise: PromiseReturningFunction<unknown[]> = async () => [];
 
       const stringResult = await stringPromise();
       const numberResult = await numberPromise();
