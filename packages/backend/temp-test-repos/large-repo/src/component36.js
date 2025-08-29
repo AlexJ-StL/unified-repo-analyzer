@@ -1,5 +1,3 @@
-
-          export default function Component36() {
-            return <div>Component 36</div>;
-          }
-        
+export default function Component36() {
+  return <div>Component 36</div>;
+}

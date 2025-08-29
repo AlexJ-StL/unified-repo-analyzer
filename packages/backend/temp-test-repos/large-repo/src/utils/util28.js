@@ -1,5 +1,3 @@
-
-          export function util28() {
-            return 'utility function 28';
-          }
-        
+export function util28() {
+  return 'utility function 28';
+}

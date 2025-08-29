@@ -1,5 +1,3 @@
-
-          export function util39() {
-            return 'utility function 39';
-          }
-        
+export function util39() {
+  return 'utility function 39';
+}
