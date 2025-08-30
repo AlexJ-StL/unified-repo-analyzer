@@ -1,4 +1,4 @@
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent } from 'react';
 
 export interface PathInputProps {
   label: string;
@@ -25,7 +25,7 @@ export function PathInput({
   // Minimal validation logic to satisfy tests expecting some calls
   const handleBlur = () => {
     if (validateOnChange && onValidationChange) {
-      onValidationChange(value.trim() !== "", { isValid: value.trim() !== "" });
+      onValidationChange(value.trim() !== '', { isValid: value.trim() !== '' });
     }
   };
 

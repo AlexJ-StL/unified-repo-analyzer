@@ -1,6 +1,6 @@
-import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 
 // Cleanup after each test case
 afterEach(() => {
@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -32,7 +32,7 @@ global.ResizeObserver = class ResizeObserver {
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   root: Element | null = null;
-  rootMargin: string = "0px";
+  rootMargin = '0px';
   thresholds: number[];
 
   constructor(
@@ -40,7 +40,7 @@ global.IntersectionObserver = class IntersectionObserver {
     public options?: IntersectionObserverInit
   ) {
     this.root = options?.root ? (options.root as Element) : null; // Cast Element | Document | null to Element | null
-    this.rootMargin = options?.rootMargin || "0px";
+    this.rootMargin = options?.rootMargin || '0px';
     this.thresholds = Array.isArray(options?.threshold)
       ? options.threshold
       : options?.threshold !== undefined

@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom/vitest";
+import '@testing-library/jest-dom/vitest';
 
-declare const _default: import("vite").UserConfig;
+declare const _default: import('vite').UserConfig;
 export default _default;
