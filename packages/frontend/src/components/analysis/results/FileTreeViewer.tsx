@@ -1,4 +1,9 @@
-import type { FileInfo, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type {
+  ClassInfo,
+  FileInfo,
+  FunctionInfo,
+} from '@unified-repo-analyzer/shared/src/types/repository';
 import type React from 'react';
 import { useState } from 'react';
 
@@ -29,17 +34,17 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
 
     // Map to store file info by path for quick lookup
     const fileInfoMap = new Map<string, FileInfo>();
-    analysis.structure.keyFiles.forEach((file) => {
+    analysis.structure.keyFiles.forEach((file: FileInfo) => {
       fileInfoMap.set(file.path, file);
     });
 
     // Process each file path
-    analysis.structure.keyFiles.forEach((file) => {
+    analysis.structure.keyFiles.forEach((file: FileInfo) => {
       const pathParts = file.path.split('/').filter(Boolean);
       let currentNode = root;
 
       // Create path nodes
-      pathParts.forEach((part, index) => {
+      pathParts.forEach((part: string, index: number) => {
         const isLastPart = index === pathParts.length - 1;
         const currentPath = pathParts.slice(0, index + 1).join('/');
 
@@ -133,7 +138,9 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
                 // Alphabetical sort within each group
                 return a.name.localeCompare(b.name);
               })
-              .map((child) => renderTreeNode(child, depth + 1))}
+              .map((child) => (
+                <div key={child.path}>{renderTreeNode(child, depth + 1)}</div>
+              ))}
           </div>
         )}
       </div>
@@ -206,8 +213,11 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
                 <div>
                   <h4 className="text-sm font-medium text-gray-700">Functions</h4>
                   <ul className="mt-1 space-y-1">
-                    {selectedFile.functions.map((func, index) => (
-                      <li key={index} className="text-sm text-gray-600">
+                    {selectedFile.functions.map((func: FunctionInfo, index: number) => (
+                      <li
+                        key={`${selectedFile.path}-func-${func.name}-${index}`}
+                        className="text-sm text-gray-600"
+                      >
                         <span className="font-mono">{func.name}</span>
                         {func.description && (
                           <span className="text-xs text-gray-500 ml-2">- {func.description}</span>
@@ -222,8 +232,11 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
                 <div>
                   <h4 className="text-sm font-medium text-gray-700">Classes</h4>
                   <ul className="mt-1 space-y-1">
-                    {selectedFile.classes.map((cls, index) => (
-                      <li key={index} className="text-sm text-gray-600">
+                    {selectedFile.classes.map((cls: ClassInfo, index: number) => (
+                      <li
+                        key={`${selectedFile.path}-class-${cls.name}-${index}`}
+                        className="text-sm text-gray-600"
+                      >
                         <span className="font-mono">{cls.name}</span>
                         {cls.description && (
                           <span className="text-xs text-gray-500 ml-2">- {cls.description}</span>

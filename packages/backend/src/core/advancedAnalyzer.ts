@@ -386,9 +386,13 @@ export class AdvancedAnalyzer {
     const pattern =
       methodPatterns[language.toLowerCase() as keyof typeof methodPatterns] ||
       methodPatterns.javascript;
-    let match;
+    let match: RegExpExecArray | null;
 
-    while ((match = pattern.exec(content)) !== null) {
+    while (true) {
+      match = pattern.exec(content);
+      if (!match) {
+        break;
+      }
       const methodName = match[1];
       if (methodName) {
         // Estimate method length (simplified)
@@ -1233,7 +1237,7 @@ export class AdvancedAnalyzer {
   /**
    * Extracts trend data from git history
    */
-  private async extractTrendsFromGitHistory(_repoPath: string): Promise<RepositoryTrend[]> {
+  private async extractTrendsFromGitHistory(repoPath: string): Promise<RepositoryTrend[]> {
     // This is a simplified implementation
     // In practice, you would use git commands to analyze history
     const trends: RepositoryTrend[] = [];

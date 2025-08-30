@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "cross-env LOG_LEVEL=debug bun --watch src/index.ts || npm run dev:node",
     "dev:node": "ts-node src/index.ts",
-    "build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
+    "build": "rimraf dist && bunx tsc --project tsconfig.json",
     "build:tsc": "bunx tsc --project tsconfig.prod.json",
     "build:prod": "cross-env NODE_ENV=production bun run build --minify || cross-env NODE_ENV=production npm run build:tsc",
     "start": "bun dist/index.js || node dist/index.js",

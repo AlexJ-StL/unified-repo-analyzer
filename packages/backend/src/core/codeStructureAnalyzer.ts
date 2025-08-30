@@ -190,7 +190,7 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
 
   // Find functions
   const functionMatches = new Set<string>();
-  let match;
+  let match: RegExpExecArray | null;
 
   // Reset regex lastIndex
   patterns.function.lastIndex = 0;

@@ -40,7 +40,7 @@ export interface LogAlert {
   type: 'DISK_USAGE' | 'FILE_SIZE' | 'ERROR_RATE' | 'CLEANUP_FAILED';
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   message: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   timestamp: Date;
 }
 
@@ -87,9 +87,19 @@ export class LogManagementService extends EventEmitter {
       );
     });
 
-    this.on('cleanup-completed', (stats: any) => {
-      logger.info('Log cleanup completed', stats, 'log-management');
-    });
+    this.on(
+      'cleanup-completed',
+      (stats: {
+        filesRemoved: number;
+        spaceFreed: number;
+        errors: string[];
+        duration: string;
+        totalFiles: number;
+        filesChecked: number;
+      }) => {
+        logger.info('Log cleanup completed', stats, 'log-management');
+      }
+    );
 
     this.on('cleanup-failed', (error: Error) => {
       logger.error('Log cleanup failed', error, {}, 'log-management');
@@ -530,7 +540,13 @@ export class LogManagementService extends EventEmitter {
     return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   }
 
-  private async checkDiskUsage(stats: any): Promise<void> {
+  private async checkDiskUsage(stats: {
+    totalFiles: number;
+    totalSize: number;
+    oldestFile: Date | null;
+    newestFile: Date | null;
+    averageFileSize: number;
+  }): Promise<void> {
     try {
       // This is a simplified check - in a real implementation, you might want to check actual disk usage
       const threshold = this.config.alertThresholds.diskUsage;
@@ -571,7 +587,7 @@ export class LogManagementService extends EventEmitter {
     type: LogAlert['type'],
     severity: LogAlert['severity'],
     message: string,
-    details: Record<string, any>
+    details: Record<string, unknown>
   ): void {
     const alert: LogAlert = {
       type,

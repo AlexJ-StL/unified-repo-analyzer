@@ -12,14 +12,29 @@ import {
   handleError,
 } from '../../utils/error-handler.js';
 
+// Define a type for the error response body
+interface ErrorResponse {
+  success: boolean;
+  message: string;
+  error?: {
+    code: string;
+    severity: string;
+    category: string;
+    details?: Record<string, unknown>;
+    stack?: string;
+  };
+  requestId?: string;
+  timestamp: string;
+}
+
 /**
  * Legacy API error class for backward compatibility
  */
 export class ApiError extends Error {
-  status: number;
-  errors?: any[];
+  public readonly status: number;
+  public readonly errors?: unknown[];
 
-  constructor(status: number, message: string, errors?: any[]) {
+  constructor(status: number, message: string, errors?: unknown[]) {
     super(message);
     this.status = status;
     this.errors = errors;
@@ -56,8 +71,8 @@ export const errorHandler = (
   req: Request,
   res: Response,
   _next: NextFunction
-): Response<any, Record<string, any>> => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+): Response<ErrorResponse, Record<string, string>> => {
+  const isDevelopment = process.env.NODE_ENV === ('development' as const);
 
   // Handle legacy ApiError
   if (err instanceof ApiError) {
@@ -96,7 +111,9 @@ export const errorHandler = (
 /**
  * Async error wrapper for route handlers
  */
-export const asyncHandler = (fn: Function) => {
+export const asyncHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+) => {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };

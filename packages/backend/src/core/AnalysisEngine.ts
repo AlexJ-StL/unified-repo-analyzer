@@ -26,7 +26,7 @@ import {
 } from '../utils/repositoryDiscovery';
 import { AdvancedAnalyzer } from './advancedAnalyzer';
 import { analyzeCodeStructure } from './codeStructureAnalyzer';
-import type { RepositoryMatch } from './IndexSystem';
+import type { IndexSystem, RepositoryMatch } from './IndexSystem';
 import { countTokens } from './tokenAnalyzer';
 
 /**
@@ -425,11 +425,12 @@ export class AnalysisEngine {
     };
 
     // Process repositories sequentially to avoid overwhelming the system
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (let i = 0; i < repoPaths.length; i++) {
       const repoPath = repoPaths[i];
 
       // Narrow status reference for safe mutations (non-null: initialized above)
-      const status = batchResult.status!;
+      const status = batchResult.status as NonNullable<BatchAnalysisResult['status']>;
 
       // Update status
       status.pending--;
@@ -480,7 +481,18 @@ export class AnalysisEngine {
     repoPaths: string[],
     options: AnalysisOptions,
     concurrency = 2,
-    progressCallback?: (progress: any) => void
+    progressCallback?: (progress: {
+      batchId: string;
+      status: {
+        total: number;
+        completed: number;
+        failed: number;
+        inProgress: number;
+        pending: number;
+        progress: number;
+      };
+      currentRepository: string[];
+    }) => void
   ): Promise<BatchAnalysisResult> {
     const timer = metricsService.createTimer('batch.analysis.duration', {
       mode: options.mode,
@@ -595,19 +607,37 @@ export class AnalysisEngine {
   }> {
     // Find common languages
     const languageSets = repositories.map((repo) => new Set(repo.languages));
-    const commonLanguages = Array.from(
-      languageSets.reduce((common, languages) => {
-        return new Set([...common].filter((lang) => languages.has(lang)));
-      }, languageSets[0] || new Set())
-    );
+    let commonLanguages: string[] = [];
+    if (languageSets.length > 0) {
+      const firstSet = languageSets[0];
+      const common = new Set<string>(firstSet);
+      for (let i = 1; i < languageSets.length; i++) {
+        const currentSet = languageSets[i];
+        for (const item of common) {
+          if (!currentSet.has(item)) {
+            common.delete(item);
+          }
+        }
+      }
+      commonLanguages = Array.from(common);
+    }
 
     // Find common frameworks
     const frameworkSets = repositories.map((repo) => new Set(repo.frameworks));
-    const commonFrameworks = Array.from(
-      frameworkSets.reduce((common, frameworks) => {
-        return new Set([...common].filter((framework) => frameworks.has(framework)));
-      }, frameworkSets[0] || new Set())
-    );
+    let commonFrameworks: string[] = [];
+    if (frameworkSets.length > 0) {
+      const firstSet = frameworkSets[0];
+      const common = new Set<string>(firstSet);
+      for (let i = 1; i < frameworkSets.length; i++) {
+        const currentSet = frameworkSets[i];
+        for (const item of common) {
+          if (!currentSet.has(item)) {
+            common.delete(item);
+          }
+        }
+      }
+      commonFrameworks = Array.from(common);
+    }
 
     // Find unique languages per repository
     const uniqueLanguages = repositories.map((repo) => {
@@ -718,7 +748,7 @@ export class AnalysisEngine {
    *
    * @returns IndexSystem instance
    */
-  private async getIndexSystem(): Promise<any> {
+  private async getIndexSystem(): Promise<IndexSystem> {
     // This is a placeholder that will be replaced with proper dependency injection
     // For now, we'll just import the IndexSystem directly
     const { IndexSystem } = await import('./IndexSystem');
@@ -732,7 +762,7 @@ export class AnalysisEngine {
   }
 
   // Private instance of IndexSystem
-  private _indexSystem: any;
+  private _indexSystem: IndexSystem | null = null;
 
   /**
    * Processes files for detailed code analysis
@@ -825,7 +855,7 @@ export class AnalysisEngine {
    * @param repoIds - Repository IDs to suggest combinations for
    * @returns Promise resolving to combination suggestions
    */
-  public async suggestCombinations(repoIds: string[]): Promise<any[]> {
+  public async suggestCombinations(repoIds: string[]): Promise<Array<unknown>> {
     const indexSystem = await this.getIndexSystem();
     return indexSystem.suggestCombinations(repoIds);
   }

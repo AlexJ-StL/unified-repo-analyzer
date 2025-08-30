@@ -112,9 +112,16 @@ export class ConfigurationService {
   /**
    * Update specific preference section
    */
-  async updatePreferences(section: keyof UserPreferences, updates: any): Promise<UserPreferences> {
+  async updatePreferences<T extends keyof UserPreferences>(
+    section: T,
+    updates: Partial<UserPreferences[T]>
+  ): Promise<UserPreferences> {
     const preferences = await this.getUserPreferences();
-    preferences[section] = { ...preferences[section], ...updates };
+    const currentSection = preferences[section];
+    preferences[section] = {
+      ...currentSection,
+      ...updates,
+    } as UserPreferences[T];
     await this.saveUserPreferences(preferences);
     return preferences;
   }
@@ -436,7 +443,12 @@ export class ConfigurationService {
       }
 
       // Merge preferences: user < workspace < project
-      return this.mergePreferences(userPrefs, workspacePrefs, project.preferences);
+      const mergedPrefs = this.mergePreferences(
+        userPrefs,
+        workspacePrefs,
+        project.preferences
+      ) as UserPreferences;
+      return this.mergeWithDefaults(mergedPrefs, DEFAULT_USER_PREFERENCES);
     } catch (error) {
       logger.error('Failed to get effective preferences:', error);
       return await this.getUserPreferences();
@@ -454,9 +466,9 @@ export class ConfigurationService {
         errors: [],
         warnings: [],
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errors =
-        error.errors?.map((err: any) => ({
+        (error as any).errors?.map((err: any) => ({
           field: err.path.join('.'),
           message: err.message,
           code: err.code,
@@ -544,7 +556,10 @@ export class ConfigurationService {
     }
   }
 
-  private mergeWithDefaults(preferences: any, defaults: UserPreferences): UserPreferences {
+  private mergeWithDefaults(
+    preferences: UserPreferences,
+    defaults: UserPreferences
+  ): UserPreferences {
     return {
       general: { ...defaults.general, ...preferences.general },
       analysis: { ...defaults.analysis, ...preferences.analysis },
@@ -561,8 +576,10 @@ export class ConfigurationService {
     };
   }
 
-  private mergePreferences(...preferences: any[]): UserPreferences {
-    return preferences.reduce((merged, prefs) => {
+  private mergePreferences(
+    ...preferences: (UserPreferences | Partial<UserPreferences>)[]
+  ): UserPreferences {
+    return preferences.reduce((merged: UserPreferences, prefs: Partial<UserPreferences>) => {
       if (!prefs) return merged;
 
       return {
@@ -579,7 +596,7 @@ export class ConfigurationService {
         export: { ...merged.export, ...prefs.export },
         ui: { ...merged.ui, ...prefs.ui },
       };
-    });
+    }, DEFAULT_USER_PREFERENCES);
   }
 }
 

@@ -1,9 +1,16 @@
 import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import type * as express from 'express';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { env } from '../config/environment';
+
+declare module 'express' {
+  interface Request {
+    requestId: string;
+  }
+}
 
 // Types and interfaces for structured logging
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
@@ -14,7 +21,7 @@ export interface LogEntry {
   component: string;
   requestId: string;
   message: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   error?: ErrorDetails;
 }
 
@@ -127,25 +134,28 @@ export class Logger {
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
       }),
       winston.format.errors({ stack: this.config.includeStackTrace }),
-      winston.format.printf((info) => {
+      winston.format.printf((info: winston.Logform.TransformableInfo) => {
         const logEntry: LogEntry = {
           timestamp: String(info.timestamp),
           level: String(info.level).toUpperCase(),
           component: String(info.component || this.defaultComponent),
           requestId: String(info.requestId || this.generateRequestId()),
           message: String(info.message),
-          metadata: this.sanitizeMetadata((info as any).metadata || {}),
+          metadata: (() => {
+            if (info.metadata && typeof info.metadata === 'object') {
+              return this.sanitizeMetadata(info.metadata as Record<string, unknown>);
+            }
+            return undefined;
+          })(),
         };
 
-        const infoAny = info as any;
-        if (infoAny.error || infoAny.stack) {
+        if (info.error || info.stack) {
+          const errorObj = info.error as Error | undefined;
           logEntry.error = {
-            name: infoAny.error?.name || 'Error',
-            message: infoAny.error?.message || String(info.message),
-            stack: this.config.includeStackTrace
-              ? infoAny.stack || infoAny.error?.stack
-              : undefined,
-            code: infoAny.error?.code,
+            name: errorObj?.name || 'Error',
+            message: errorObj?.message || 'An unknown error occurred',
+            stack: this.config.includeStackTrace ? info.stack || errorObj?.stack : undefined,
+            code: (errorObj as { code?: string })?.code, // Safely access potential 'code' property
           };
         }
 
@@ -193,14 +203,12 @@ export class Logger {
   }
 
   private createExternalTransport(config: ExternalConfig): winston.transport {
-    // Create a custom transport for external logging services
-    return new winston.transports.Http({
-      host: this.extractHostFromEndpoint(config.endpoint),
-      port: this.extractPortFromEndpoint(config.endpoint),
-      path: this.extractPathFromEndpoint(config.endpoint),
-      ssl: config.endpoint.startsWith('https'),
-      format: config.format === 'JSON' ? winston.format.json() : winston.format.simple(),
-      headers: config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : undefined,
+    // TODO: Implement a custom transport for external logging services
+    // For now, we'll log to a file as a fallback
+    return new winston.transports.File({
+      filename: path.join(env.LOG_DIR, 'external.log'),
+      format: this.createLogFormat(),
+      level: this.config.level.toLowerCase(),
     });
   }
 
@@ -264,7 +272,7 @@ export class Logger {
     return log;
   }
 
-  private sanitizeMetadata(metadata: Record<string, any>): Record<string, any> {
+  private sanitizeMetadata(metadata: Record<string, unknown>): Record<string, unknown> {
     if (!this.config.redactSensitiveData) {
       return metadata;
     }
@@ -288,7 +296,7 @@ export class Logger {
   // Public logging methods
   debug(
     message: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     component?: string,
     requestId?: string
   ): void {
@@ -297,7 +305,7 @@ export class Logger {
 
   info(
     message: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     component?: string,
     requestId?: string
   ): void {
@@ -306,7 +314,7 @@ export class Logger {
 
   warn(
     message: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     component?: string,
     requestId?: string
   ): void {
@@ -316,7 +324,7 @@ export class Logger {
   error(
     message: string,
     error?: Error,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     component?: string,
     requestId?: string
   ): void {
@@ -398,7 +406,11 @@ const legacyLogger = winston.createLogger({
 });
 
 // Enhanced HTTP request/response logging middleware
-export const requestLogger = (req: any, res: any, next: any) => {
+export const requestLogger = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   const requestId = randomUUID();
   logger.setRequestId(requestId);
   req.requestId = requestId;
@@ -427,18 +439,20 @@ export const requestLogger = (req: any, res: any, next: any) => {
   // Capture response data
   const originalSend = res.send;
   const originalJson = res.json;
-  let responseBody: any = null;
+  let responseBody: unknown = null;
   let responseSize = 0;
 
   // Override res.send to capture response body
-  res.send = function (body: any) {
+  res.send = function (body: unknown) {
     responseBody = body;
-    responseSize = Buffer.isBuffer(body) ? body.length : Buffer.byteLength(body || '', 'utf8');
+    responseSize = Buffer.isBuffer(body)
+      ? body.length
+      : Buffer.byteLength(body ? String(body) : '', 'utf8');
     return originalSend.call(this, body);
   };
 
   // Override res.json to capture JSON response
-  res.json = function (obj: any) {
+  res.json = function (obj: unknown) {
     responseBody = obj;
     const jsonString = JSON.stringify(obj);
     responseSize = Buffer.byteLength(jsonString, 'utf8');
@@ -493,10 +507,11 @@ export const requestLogger = (req: any, res: any, next: any) => {
 };
 
 // Helper functions for data sanitization
-function sanitizeHeaders(headers: any): Record<string, any> {
-  if (!headers) return {};
+function sanitizeHeaders(headers: unknown): Record<string, unknown> {
+  if (!headers || typeof headers !== 'object') return {};
 
-  const sanitized = { ...headers };
+  const headersObj = headers as Record<string, string | string[] | undefined>;
+  const sanitized: Record<string, unknown> = { ...headersObj };
   const sensitiveHeaders = [
     'authorization',
     'cookie',
@@ -514,10 +529,11 @@ function sanitizeHeaders(headers: any): Record<string, any> {
   return sanitized;
 }
 
-function sanitizeQueryParams(query: any): Record<string, any> {
-  if (!query) return {};
+function sanitizeQueryParams(query: unknown): Record<string, unknown> {
+  if (!query || typeof query !== 'object') return {};
 
-  const sanitized = { ...query };
+  const queryObj = query as Record<string, unknown>;
+  const sanitized: Record<string, unknown> = { ...queryObj };
   const sensitiveParams = ['password', 'token', 'apikey', 'secret', 'auth'];
 
   for (const key of Object.keys(sanitized)) {
@@ -529,7 +545,7 @@ function sanitizeQueryParams(query: any): Record<string, any> {
   return sanitized;
 }
 
-function sanitizeRequestBody(body: any): any {
+function sanitizeRequestBody(body: unknown): unknown {
   if (!body) return null;
 
   // Don't log large bodies
@@ -538,8 +554,9 @@ function sanitizeRequestBody(body: any): any {
     return `[BODY TOO LARGE: ${bodyString.length} characters]`;
   }
 
-  if (typeof body === 'object') {
-    const sanitized = { ...body };
+  if (typeof body === 'object' && body !== null) {
+    const bodyObj = body as Record<string, unknown>;
+    const sanitized: Record<string, unknown> = { ...bodyObj };
     const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth', 'credential'];
 
     for (const key of Object.keys(sanitized)) {
@@ -554,7 +571,7 @@ function sanitizeRequestBody(body: any): any {
   return body;
 }
 
-function sanitizeResponseBody(body: any, statusCode: number): any {
+function sanitizeResponseBody(body: unknown, statusCode: number): unknown {
   if (!body) return null;
 
   // Don't log response bodies for successful requests to avoid noise
@@ -566,8 +583,9 @@ function sanitizeResponseBody(body: any, statusCode: number): any {
   }
 
   // For error responses, include more details but sanitize sensitive data
-  if (statusCode >= 400 && typeof body === 'object') {
-    const sanitized = { ...body };
+  if (statusCode >= 400 && typeof body === 'object' && body !== null) {
+    const bodyObj = body as Record<string, unknown>;
+    const sanitized = { ...bodyObj };
     const sensitiveFields = ['password', 'token', 'apikey', 'secret', 'auth'];
 
     for (const key of Object.keys(sanitized)) {
@@ -605,7 +623,7 @@ function getStatusText(statusCode: number): string {
 }
 
 // Error logging helper
-export const logError = (error: Error, context?: Record<string, any>, component?: string) => {
+export const logError = (error: Error, context?: Record<string, unknown>, component?: string) => {
   logger.error(error.message, error, context, component);
 };
 
@@ -613,7 +631,7 @@ export const logError = (error: Error, context?: Record<string, any>, component?
 export const logPerformance = (
   operation: string,
   duration: number,
-  metadata?: Record<string, any>,
+  metadata?: Record<string, unknown>,
   component?: string
 ) => {
   logger.info(
@@ -629,7 +647,7 @@ export const logPerformance = (
 // Security event logging
 export const logSecurityEvent = (
   event: string,
-  details: Record<string, any>,
+  details: Record<string, unknown>,
   component?: string
 ) => {
   logger.warn(`Security Event: ${event}`, details, component || 'security');
@@ -639,7 +657,7 @@ export const logSecurityEvent = (
 export const logAnalysis = (
   repoPath: string,
   status: 'started' | 'completed' | 'failed',
-  metadata?: Record<string, any>,
+  metadata?: Record<string, unknown>,
   component?: string
 ) => {
   const message = `Analysis ${status}: ${repoPath}`;

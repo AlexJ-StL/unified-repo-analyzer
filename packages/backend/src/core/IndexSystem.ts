@@ -68,7 +68,7 @@ export class IndexSystem {
         }
 
         if (loadedIndex.repositories) {
-          loadedIndex.repositories.forEach((repo: any) => {
+          loadedIndex.repositories.forEach((repo: IndexedRepository) => {
             if (repo.lastAnalyzed) {
               repo.lastAnalyzed = new Date(repo.lastAnalyzed);
             }
@@ -82,7 +82,7 @@ export class IndexSystem {
           tags: loadedIndex.tags || [],
           lastUpdated: loadedIndex.lastUpdated || new Date(),
         };
-      } catch (_error) {
+      } catch (_error: unknown) {
         this.initializeEmptyIndex();
       }
     } else {
@@ -436,11 +436,11 @@ export class IndexSystem {
     }
 
     // Filter by date range if specified
-    if (query.dateRange?.start && query.dateRange.end) {
+    if (query.dateRange?.start && query.dateRange?.end) {
       results = results.filter(
         (result) =>
-          result.repository.lastAnalyzed >= query.dateRange?.start &&
-          result.repository.lastAnalyzed <= query.dateRange?.end
+          result.repository.lastAnalyzed >= query.dateRange.start &&
+          result.repository.lastAnalyzed <= query.dateRange.end
       );
     }
 

@@ -9,7 +9,7 @@ import { logger } from '../../utils/logger';
 
 interface PerformanceRequest extends Request {
   startTime?: number;
-  requestId?: string;
+  requestId: string;
 }
 
 /**
@@ -30,7 +30,12 @@ export function performanceMiddleware() {
 
     // Override res.end to capture response metrics
     const originalEnd = res.end;
-    res.end = function (chunk?: any, encoding?: any): Response<any, Record<string, any>> {
+    res.end = function (
+      this: Response<unknown, Record<string, string | string[]>>,
+      chunk?: unknown,
+      encoding?: BufferEncoding | (() => void) | undefined,
+      cb?: (() => void) | undefined
+    ): Response<unknown, Record<string, string | string[]>> {
       const duration = performance.now() - (req.startTime || 0);
 
       // Record request metrics
@@ -45,7 +50,20 @@ export function performanceMiddleware() {
       });
 
       // Call original end method
-      return originalEnd.call(this, chunk, encoding);
+      if (typeof encoding === 'function') {
+        // If encoding is a callback, it's the old signature: (chunk, cb)
+        return originalEnd.call(this, chunk, encoding);
+      }
+      if (typeof cb === 'function') {
+        // If cb is a function, it's the signature: (chunk, encoding, cb)
+        // Ensure encoding is a BufferEncoding if provided
+        const finalEncoding = (encoding as BufferEncoding) || undefined;
+        return originalEnd.call(this, chunk, finalEncoding, cb);
+      }
+      // Otherwise, it's (chunk, encoding)
+      // Ensure encoding is a BufferEncoding if provided
+      const finalEncoding = (encoding as BufferEncoding) || undefined;
+      return originalEnd.call(this, chunk, finalEncoding);
     };
 
     next();
@@ -110,7 +128,11 @@ export function memoryTrackingMiddleware() {
 
     res.on('finish', () => {
       const finalMemory = process.memoryUsage();
-      const memoryDelta = {
+      const memoryDelta: {
+        heapUsed: number;
+        heapTotal: number;
+        external: number;
+      } = {
         heapUsed: finalMemory.heapUsed - initialMemory.heapUsed,
         heapTotal: finalMemory.heapTotal - initialMemory.heapTotal,
         external: finalMemory.external - initialMemory.external,
@@ -183,7 +205,7 @@ export function adaptiveRateLimitMiddleware() {
           retryAfter: Math.ceil((clientData.resetTime - now) / 1000),
           maxRequests,
           currentLoad: avgResponseTime > 500 ? 'high' : 'normal',
-        });
+        } as const);
       }
       clientData.count++;
     } else {
@@ -229,7 +251,7 @@ export function performanceCacheMiddleware() {
     // Add ETag for conditional requests
     res.on('finish', () => {
       if (res.statusCode === 200 && !res.get('ETag')) {
-        const etag = `"${Date.now()}-${Math.random().toString(36).substr(2, 9)}"`;
+        const etag = `etag_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
         res.set('ETag', etag);
       }
     });
