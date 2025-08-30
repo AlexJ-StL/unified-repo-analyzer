@@ -4,24 +4,26 @@ import {
   InformationCircleIcon,
   XCircleIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline';
-import type React from 'react';
-import { useEffect, useState } from 'react';
+} from "@heroicons/react/24/outline";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 interface ToastAction {
   label: string;
   onClick: () => void;
 }
 
+export interface ToastData {
+  id: string;
+  type: "success" | "error" | "warning" | "info";
+  title: string;
+  message?: string;
+  duration?: number;
+  action?: ToastAction;
+}
+
 interface ToastProps {
-  toast: {
-    id: string;
-    type: 'success' | 'error' | 'warning' | 'info';
-    title: string;
-    message?: string;
-    duration?: number;
-    action?: ToastAction;
-  };
+  toast: ToastData;
   onClose: (id: string) => void;
 }
 
@@ -56,53 +58,53 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
 
   const getIcon = () => {
     switch (toast.type) {
-      case 'success':
+      case "success":
         return <CheckCircleIcon className="w-5 h-5 text-green-400" />;
-      case 'error':
+      case "error":
         return <XCircleIcon className="w-5 h-5 text-red-400" />;
-      case 'warning':
+      case "warning":
         return <ExclamationTriangleIcon className="w-5 h-5 text-yellow-400" />;
-      case 'info':
+      case "info":
         return <InformationCircleIcon className="w-5 h-5 text-blue-400" />;
     }
   };
 
   const getBackgroundColor = () => {
     switch (toast.type) {
-      case 'success':
-        return 'bg-green-50 border-green-200';
-      case 'error':
-        return 'bg-red-50 border-red-200';
-      case 'warning':
-        return 'bg-yellow-50 border-yellow-200';
-      case 'info':
-        return 'bg-blue-50 border-blue-200';
+      case "success":
+        return "bg-green-50 border-green-200";
+      case "error":
+        return "bg-red-50 border-red-200";
+      case "warning":
+        return "bg-yellow-50 border-yellow-200";
+      case "info":
+        return "bg-blue-50 border-blue-200";
     }
   };
 
   const getTitleColor = () => {
     switch (toast.type) {
-      case 'success':
-        return 'text-green-800';
-      case 'error':
-        return 'text-red-800';
-      case 'warning':
-        return 'text-yellow-800';
-      case 'info':
-        return 'text-blue-800';
+      case "success":
+        return "text-green-800";
+      case "error":
+        return "text-red-800";
+      case "warning":
+        return "text-yellow-800";
+      case "info":
+        return "text-blue-800";
     }
   };
 
   const getMessageColor = () => {
     switch (toast.type) {
-      case 'success':
-        return 'text-green-700';
-      case 'error':
-        return 'text-red-700';
-      case 'warning':
-        return 'text-yellow-700';
-      case 'info':
-        return 'text-blue-700';
+      case "success":
+        return "text-green-700";
+      case "error":
+        return "text-red-700";
+      case "warning":
+        return "text-yellow-700";
+      case "info":
+        return "text-blue-700";
     }
   };
 
@@ -110,7 +112,7 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
     <div
       className={`
         transform transition-all duration-300 ease-in-out
-        ${isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
+        ${isVisible && !isLeaving ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}
         max-w-sm w-full ${getBackgroundColor()} border rounded-lg shadow-lg pointer-events-auto
       `}
     >
@@ -118,9 +120,13 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
         <div className="flex items-start">
           <div className="flex-shrink-0">{getIcon()}</div>
           <div className="ml-3 w-0 flex-1">
-            <p className={`text-sm font-medium ${getTitleColor()}`}>{toast.title}</p>
+            <p className={`text-sm font-medium ${getTitleColor()}`}>
+              {toast.title}
+            </p>
             {toast.message && (
-              <p className={`mt-1 text-sm ${getMessageColor()}`}>{toast.message}</p>
+              <p className={`mt-1 text-sm ${getMessageColor()}`}>
+                {toast.message}
+              </p>
             )}
             {toast.action && (
               <div className="mt-3">
@@ -129,10 +135,10 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
                   onClick={toast.action.onClick}
                   className={`
                     text-sm font-medium underline hover:no-underline focus:outline-none
-                    ${toast.type === 'success' ? 'text-green-600 hover:text-green-500' : ''}
-                    ${toast.type === 'error' ? 'text-red-600 hover:text-red-500' : ''}
-                    ${toast.type === 'warning' ? 'text-yellow-600 hover:text-yellow-500' : ''}
-                    ${toast.type === 'info' ? 'text-blue-600 hover:text-blue-500' : ''}
+                    ${toast.type === "success" ? "text-green-600 hover:text-green-500" : ""}
+                    ${toast.type === "error" ? "text-red-600 hover:text-red-500" : ""}
+                    ${toast.type === "warning" ? "text-yellow-600 hover:text-yellow-500" : ""}
+                    ${toast.type === "info" ? "text-blue-600 hover:text-blue-500" : ""}
                   `}
                 >
                   {toast.action.label}
@@ -146,10 +152,10 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
               onClick={handleClose}
               className={`
                 inline-flex rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2
-                ${toast.type === 'success' ? 'text-green-400 hover:text-green-500 focus:ring-green-500' : ''}
-                ${toast.type === 'error' ? 'text-red-400 hover:text-red-500 focus:ring-red-500' : ''}
-                ${toast.type === 'warning' ? 'text-yellow-400 hover:text-yellow-500 focus:ring-yellow-500' : ''}
-                ${toast.type === 'info' ? 'text-blue-400 hover:text-blue-500 focus:ring-blue-500' : ''}
+                ${toast.type === "success" ? "text-green-400 hover:text-green-500 focus:ring-green-500" : ""}
+                ${toast.type === "error" ? "text-red-400 hover:text-red-500 focus:ring-red-500" : ""}
+                ${toast.type === "warning" ? "text-yellow-400 hover:text-yellow-500 focus:ring-yellow-500" : ""}
+                ${toast.type === "info" ? "text-blue-400 hover:text-blue-500 focus:ring-blue-500" : ""}
               `}
             >
               <span className="sr-only">Close</span>

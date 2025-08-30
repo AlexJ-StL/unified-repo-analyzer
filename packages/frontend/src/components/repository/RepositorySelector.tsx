@@ -1,25 +1,30 @@
-import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import { type DirectoryItem, fileSystemService } from '../../services/fileSystem';
-import type { PathValidationResult } from '../../services/pathValidation';
-import { useAnalysisStore } from '../../store/useAnalysisStore';
-import PathInput from '../common/PathInput';
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  type DirectoryItem,
+  fileSystemService,
+} from "../../services/fileSystem";
+import type { PathValidationResult } from "../../services/pathValidation";
+import { useAnalysisStore } from "../../store/useAnalysisStore";
+import PathInput from "@/components/common/PathInput";
 
 interface RepositorySelectorProps {
   onSelect?: (path: string) => void;
   className?: string;
 }
 
-const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, className = '' }) => {
+const RepositorySelector: React.FC<RepositorySelectorProps> = ({
+  onSelect,
+  className = "",
+}) => {
   const { setRepositoryPath } = useAnalysisStore();
-  const [currentPath, setCurrentPath] = useState<string>('');
+  const [currentPath, setCurrentPath] = useState<string>("");
   const [directoryItems, setDirectoryItems] = useState<DirectoryItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isPathValid, setIsPathValid] = useState<boolean>(false);
-  const [pathValidationResult, setPathValidationResult] = useState<PathValidationResult | null>(
-    null
-  );
+  const [pathValidationResult, setPathValidationResult] =
+    useState<PathValidationResult | null>(null);
   const [recentRepositories, setRecentRepositories] = useState<string[]>([]);
 
   // Define before useEffect to avoid \"used before declaration\" and to stabilize identity
@@ -32,7 +37,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
       setDirectoryItems(response.items);
       setCurrentPath(response.path);
     } catch (_error) {
-      setError('Failed to browse directory');
+      setError("Failed to browse directory");
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +51,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
         setCurrentPath(homePath);
         browseDirectory(homePath);
       } catch (_error) {
-        setError('Failed to load home directory');
+        setError("Failed to load home directory");
       }
     };
 
@@ -69,7 +74,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
     // Extract parent directory path
     const pathParts = currentPath.split(/[/\\]/);
     pathParts.pop(); // Remove last part
-    const parentPath = pathParts.join('/');
+    const parentPath = pathParts.join("/");
 
     if (parentPath) {
       browseDirectory(parentPath);
@@ -86,7 +91,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
         onSelect(pathToUse);
       }
     } else {
-      setError('Please fix the path validation errors before selecting');
+      setError("Please fix the path validation errors before selecting");
     }
   };
 
@@ -101,20 +106,16 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
         <PathInput
           label="Repository Path"
           value={currentPath}
-          onChange={(path) => {
-            setCurrentPath(path);
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setCurrentPath(e.target.value);
             setError(null);
           }}
-          onValidationChange={(isValid, result) => {
+          onValidationChange={(isValid: boolean, result: any) => {
             setIsPathValid(isValid);
             setPathValidationResult(result || null);
           }}
-          placeholder="/path/to/repository"
           showFormatHints={true}
           validateOnChange={true}
-          validateExistence={true}
-          validatePermissions={true}
-          className="mb-2"
         />
 
         <div className="flex items-center space-x-2">
@@ -132,7 +133,9 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
 
       {recentRepositories.length > 0 && (
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-1">Recent Repositories</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-1">
+            Recent Repositories
+          </h3>
           <div className="flex flex-wrap gap-2">
             {recentRepositories.map((repo, index) => (
               <button
@@ -170,7 +173,9 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
             </svg>
             Parent Directory
           </button>
-          <span className="text-xs text-gray-500 truncate max-w-xs">{currentPath}</span>
+          <span className="text-xs text-gray-500 truncate max-w-xs">
+            {currentPath}
+          </span>
         </div>
 
         <div className="directory-list max-h-60 overflow-y-auto p-2">
@@ -206,7 +211,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
                   <button
                     type="button"
                     className={`w-full text-left px-2 py-1 rounded-md hover:bg-gray-100 flex items-center ${
-                      item.isDirectory ? 'text-blue-600' : 'text-gray-700'
+                      item.isDirectory ? "text-blue-600" : "text-gray-700"
                     }`}
                     onClick={() => handleDirectoryClick(item)}
                   >
@@ -256,8 +261,8 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
           disabled={!isPathValid || !currentPath.trim()}
           className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
             isPathValid && currentPath.trim()
-              ? 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-              : 'bg-gray-400 cursor-not-allowed'
+              ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              : "bg-gray-400 cursor-not-allowed"
           }`}
           onClick={handleSelectRepository}
         >
