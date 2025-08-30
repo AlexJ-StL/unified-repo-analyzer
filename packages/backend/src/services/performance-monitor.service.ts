@@ -1,5 +1,5 @@
-import { EventEmitter } from "node:events";
-import logger from "./logger.service.js";
+import { EventEmitter } from 'node:events';
+import logger from './logger.service.js';
 
 /**
  * Performance metric data structure
@@ -78,8 +78,7 @@ export class PerformanceMonitor extends EventEmitter {
   private timings: OperationTiming[] = [];
   private baselines: Map<string, PerformanceBaseline> = new Map();
   private resourceHistory: ResourceUsage[] = [];
-  private activeOperations: Map<string, { startTime: number; metadata?: any }> =
-    new Map();
+  private activeOperations: Map<string, { startTime: number; metadata?: any }> = new Map();
   private resourceMonitorInterval?: NodeJS.Timeout;
 
   constructor(config?: Partial<PerformanceConfig>) {
@@ -102,9 +101,7 @@ export class PerformanceMonitor extends EventEmitter {
   /**
    * Get singleton instance
    */
-  public static getInstance(
-    config?: Partial<PerformanceConfig>
-  ): PerformanceMonitor {
+  public static getInstance(config?: Partial<PerformanceConfig>): PerformanceMonitor {
     if (!PerformanceMonitor.instance) {
       PerformanceMonitor.instance = new PerformanceMonitor(config);
     }
@@ -114,11 +111,7 @@ export class PerformanceMonitor extends EventEmitter {
   /**
    * Start timing an operation
    */
-  public startOperation(
-    operationId: string,
-    operationName: string,
-    metadata?: any
-  ): void {
+  public startOperation(operationId: string, operationName: string, metadata?: any): void {
     if (!this.config.enabled || Math.random() > this.config.sampleRate) {
       return;
     }
@@ -128,7 +121,7 @@ export class PerformanceMonitor extends EventEmitter {
       metadata: { operation: operationName, ...metadata },
     });
 
-    logger.debug("Performance monitoring started", {
+    logger.debug('Performance monitoring started', {
       operationId,
       operationName,
       metadata,
@@ -138,18 +131,14 @@ export class PerformanceMonitor extends EventEmitter {
   /**
    * End timing an operation
    */
-  public endOperation(
-    operationId: string,
-    success = true,
-    error?: string
-  ): OperationTiming | null {
+  public endOperation(operationId: string, success = true, error?: string): OperationTiming | null {
     if (!this.config.enabled) {
       return null;
     }
 
     const activeOp = this.activeOperations.get(operationId);
     if (!activeOp) {
-      logger.warn("Attempted to end unknown operation", { operationId });
+      logger.warn('Attempted to end unknown operation', { operationId });
       return null;
     }
 
@@ -157,7 +146,7 @@ export class PerformanceMonitor extends EventEmitter {
     const duration = endTime - activeOp.startTime;
 
     const timing: OperationTiming = {
-      operation: activeOp.metadata?.operation || "unknown",
+      operation: activeOp.metadata?.operation || 'unknown',
       duration,
       startTime: activeOp.startTime,
       endTime,
@@ -178,14 +167,14 @@ export class PerformanceMonitor extends EventEmitter {
     this.updateBaseline(timing.operation, duration);
     this.checkForRegression(timing.operation, duration);
 
-    logger.debug("Performance monitoring completed", {
+    logger.debug('Performance monitoring completed', {
       operationId,
       operation: timing.operation,
       duration,
       success,
     });
 
-    this.emit("operationCompleted", timing);
+    this.emit('operationCompleted', timing);
     return timing;
   }
 
@@ -219,8 +208,8 @@ export class PerformanceMonitor extends EventEmitter {
       this.metrics = this.metrics.slice(-this.config.maxMetricsHistory);
     }
 
-    logger.debug("Performance metric recorded", metric);
-    this.emit("metricRecorded", metric);
+    logger.debug('Performance metric recorded', metric);
+    this.emit('metricRecorded', metric);
   }
 
   /**
@@ -268,32 +257,25 @@ export class PerformanceMonitor extends EventEmitter {
 
         // Trim history if needed
         if (this.resourceHistory.length > this.config.maxMetricsHistory) {
-          this.resourceHistory = this.resourceHistory.slice(
-            -this.config.maxMetricsHistory
-          );
+          this.resourceHistory = this.resourceHistory.slice(-this.config.maxMetricsHistory);
         }
 
         // Record as metrics
-        this.recordMetric("memory.used", usage.memory.used, "bytes", {
-          type: "heap",
+        this.recordMetric('memory.used', usage.memory.used, 'bytes', {
+          type: 'heap',
         });
-        this.recordMetric(
-          "memory.percentage",
-          usage.memory.percentage,
-          "percent",
-          {
-            type: "heap",
-          }
-        );
-        this.recordMetric("cpu.percentage", usage.cpu.percentage, "percent");
-        this.recordMetric("eventloop.delay", usage.eventLoop.delay, "ms");
+        this.recordMetric('memory.percentage', usage.memory.percentage, 'percent', {
+          type: 'heap',
+        });
+        this.recordMetric('cpu.percentage', usage.cpu.percentage, 'percent');
+        this.recordMetric('eventloop.delay', usage.eventLoop.delay, 'ms');
 
-        this.emit("resourceUsageUpdated", usage);
+        this.emit('resourceUsageUpdated', usage);
       } catch (error) {
         if (error instanceof Error) {
-          logger.error("Resource monitoring error", error);
+          logger.error('Resource monitoring error', error);
         } else {
-          logger.error("Resource monitoring error", new Error(String(error)));
+          logger.error('Resource monitoring error', new Error(String(error)));
         }
       }
     }, this.config.resourceMonitoringInterval);
@@ -329,17 +311,14 @@ export class PerformanceMonitor extends EventEmitter {
 
     // Update with exponential moving average
     const alpha = 0.1; // Smoothing factor
-    existing.averageDuration =
-      existing.averageDuration * (1 - alpha) + duration * alpha;
+    existing.averageDuration = existing.averageDuration * (1 - alpha) + duration * alpha;
     existing.sampleCount++;
     existing.lastUpdated = now;
 
     // Update percentiles (simplified calculation)
     const recentTimings = this.timings
       .filter(
-        (t) =>
-          t.operation === operation &&
-          t.endTime > now - this.config.baselineUpdateInterval
+        (t) => t.operation === operation && t.endTime > now - this.config.baselineUpdateInterval
       )
       .map((t) => t.duration)
       .sort((a, b) => a - b);
@@ -371,8 +350,8 @@ export class PerformanceMonitor extends EventEmitter {
         timestamp: Date.now(),
       };
 
-      logger.warn("Performance regression detected", regressionData);
-      this.emit("performanceRegression", regressionData);
+      logger.warn('Performance regression detected', regressionData);
+      this.emit('performanceRegression', regressionData);
     }
   }
 
@@ -408,15 +387,12 @@ export class PerformanceMonitor extends EventEmitter {
       };
     }
 
-    const durations = relevantTimings
-      .map((t) => t.duration)
-      .sort((a, b) => a - b);
+    const durations = relevantTimings.map((t) => t.duration).sort((a, b) => a - b);
     const successCount = relevantTimings.filter((t) => t.success).length;
 
     return {
       count: relevantTimings.length,
-      averageDuration:
-        durations.reduce((sum, d) => sum + d, 0) / durations.length,
+      averageDuration: durations.reduce((sum, d) => sum + d, 0) / durations.length,
       minDuration: durations[0],
       maxDuration: durations[durations.length - 1],
       p95Duration: durations[Math.floor(durations.length * 0.95)] || 0,
@@ -457,7 +433,7 @@ export class PerformanceMonitor extends EventEmitter {
     this.baselines.clear();
     this.activeOperations.clear();
 
-    logger.info("Performance monitoring data cleared");
+    logger.info('Performance monitoring data cleared');
   }
 
   /**
@@ -473,7 +449,7 @@ export class PerformanceMonitor extends EventEmitter {
       this.stopResourceMonitoring();
     }
 
-    logger.info("Performance monitoring configuration updated", {
+    logger.info('Performance monitoring configuration updated', {
       config: this.config,
     });
   }
@@ -519,51 +495,40 @@ export class PerformanceMonitor extends EventEmitter {
   } {
     const cutoff = Date.now() - timeWindow;
     const recentTimings = this.timings.filter((t) => t.endTime > cutoff);
-    const recentResources = this.resourceHistory.filter(
-      (r) => r.timestamp > cutoff
-    );
+    const recentResources = this.resourceHistory.filter((r) => r.timestamp > cutoff);
 
     // Get unique operations
-    const operations = Array.from(
-      new Set(recentTimings.map((t) => t.operation))
-    );
+    const operations = Array.from(new Set(recentTimings.map((t) => t.operation)));
 
     // Calculate averages
     const avgMemory =
       recentResources.length > 0
-        ? recentResources.reduce((sum, r) => sum + r.memory.percentage, 0) /
-          recentResources.length
+        ? recentResources.reduce((sum, r) => sum + r.memory.percentage, 0) / recentResources.length
         : 0;
     const avgCpu =
       recentResources.length > 0
-        ? recentResources.reduce((sum, r) => sum + r.cpu.percentage, 0) /
-          recentResources.length
+        ? recentResources.reduce((sum, r) => sum + r.cpu.percentage, 0) / recentResources.length
         : 0;
     const avgEventLoop =
       recentResources.length > 0
-        ? recentResources.reduce((sum, r) => sum + r.eventLoop.delay, 0) /
-          recentResources.length
+        ? recentResources.reduce((sum, r) => sum + r.eventLoop.delay, 0) / recentResources.length
         : 0;
 
     // Generate alerts
     const alerts: string[] = [];
-    if (avgMemory > 80)
-      alerts.push(`High memory usage: ${avgMemory.toFixed(1)}%`);
-    if (avgEventLoop > 100)
-      alerts.push(`High event loop delay: ${avgEventLoop.toFixed(1)}ms`);
+    if (avgMemory > 80) alerts.push(`High memory usage: ${avgMemory.toFixed(1)}%`);
+    if (avgEventLoop > 100) alerts.push(`High event loop delay: ${avgEventLoop.toFixed(1)}ms`);
 
     return {
       summary: {
         totalOperations: recentTimings.length,
         averageResponseTime:
           recentTimings.length > 0
-            ? recentTimings.reduce((sum, t) => sum + t.duration, 0) /
-              recentTimings.length
+            ? recentTimings.reduce((sum, t) => sum + t.duration, 0) / recentTimings.length
             : 0,
         successRate:
           recentTimings.length > 0
-            ? recentTimings.filter((t) => t.success).length /
-              recentTimings.length
+            ? recentTimings.filter((t) => t.success).length / recentTimings.length
             : 0,
         regressionCount: 0, // Would need to track this separately
       },
@@ -572,10 +537,7 @@ export class PerformanceMonitor extends EventEmitter {
         stats: this.getOperationStats(op, timeWindow),
       })),
       resourceUsage: {
-        current:
-          recentResources.length > 0
-            ? recentResources[recentResources.length - 1]
-            : null,
+        current: recentResources.length > 0 ? recentResources[recentResources.length - 1] : null,
         average: {
           memoryUsage: avgMemory,
           cpuUsage: avgCpu,

@@ -1237,7 +1237,7 @@ export class AdvancedAnalyzer {
   /**
    * Extracts trend data from git history
    */
-  private async extractTrendsFromGitHistory(repoPath: string): Promise<RepositoryTrend[]> {
+  private async extractTrendsFromGitHistory(_repoPath: string): Promise<RepositoryTrend[]> {
     // This is a simplified implementation
     // In practice, you would use git commands to analyze history
     const trends: RepositoryTrend[] = [];

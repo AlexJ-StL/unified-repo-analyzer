@@ -118,7 +118,6 @@ export interface PathCacheStats {
 export class PathHandler {
   private static instance: PathHandler;
   private readonly isWindows: boolean;
-  private pathSeparator: string;
 
   // Path validation cache
   private pathCache: CacheService<PathValidationResult>;
@@ -157,6 +156,7 @@ export class PathHandler {
 
   // Default timeout settings
   private readonly defaultTimeoutMs = 5000; // 5 seconds
+  pathSeparator: string;
 
   constructor(
     platformOverride?: string,

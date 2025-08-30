@@ -2,12 +2,12 @@
   "extends": "./tsconfig.json", // Extend your main tsconfig.json
   "compilerOptions": {
     // Override or add specific compiler options for tests if needed
-    "types": ["jest", "node"] // Example for Jest and Node.js types
+    "types": ["vitest", "node"] // Use Vitest types instead of Jest
   },
   "include": [
     "src/**/*.ts", // Include regular source if tests depend on it
     "__tests__/**/*.ts", // Explicitly include test files
-    "jest.config.ts" // Include Jest config if needed
+    "vitest.config.ts" // Include Vitest config if needed
   ],
   "exclude": ["node_modules", "dist", "build"]
 }
