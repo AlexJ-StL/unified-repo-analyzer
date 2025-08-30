@@ -46,28 +46,7 @@
   resolved "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.28.0.tgz"
   integrity sha512-60X7qkglvrap8mn1lh2ebxXdZYtUcpd7gsmy9kLaBJ4i/WdY8PqTSdxyA8qraikqKQK5C1KRBKXqznrVapyNaw==
 
-"@babel/core@^7.0.0", "@babel/core@^7.0.0-0":
-  version "7.28.0"
-  resolved "https://registry.npmjs.org/@babel/core/-/core-7.28.0.tgz"
-  integrity sha512-UlLAnTPrFdNGoFtbSXwcGFQBtQZJCNjaN6hQNP3UPvuNXT1i82N26KL3dZeIpNalWywr9IuQuncaAfUaS1g6sQ==
-  dependencies:
-    "@ampproject/remapping" "^2.2.0"
-    "@babel/code-frame" "^7.27.1"
-    "@babel/generator" "^7.28.0"
-    "@babel/helper-compilation-targets" "^7.27.2"
-    "@babel/helper-module-transforms" "^7.27.3"
-    "@babel/helpers" "^7.27.6"
-    "@babel/parser" "^7.28.0"
-    "@babel/template" "^7.27.2"
-    "@babel/traverse" "^7.28.0"
-    "@babel/types" "^7.28.0"
-    convert-source-map "^2.0.0"
-    debug "^4.1.0"
-    gensync "^1.0.0-beta.2"
-    json5 "^2.2.3"
-    semver "^6.3.1"
-
-"@babel/core@^7.0.0", "@babel/core@^7.28.3":
+"@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/core/-/core-7.28.3.tgz"
   integrity sha512-yDBHV9kQNcr2/sUr9jghVyz9C3Y5G2zUM2H2lo+9mKv4sFgbA8s8Z9t8D1jiTkGoO/NoIfKMyKWr4s6CN23ZwQ==
@@ -134,15 +113,6 @@
     "@babel/traverse" "^7.27.1"
     "@babel/types" "^7.27.1"
 
-"@babel/helper-module-transforms@^7.27.3":
-  version "7.27.3"
-  resolved "https://registry.npmjs.org/@babel/helper-module-transforms/-/helper-module-transforms-7.27.3.tgz"
-  integrity sha512-dSOvYwvyLsWBeIRyOeHXp5vPj5l1I011r52FM1+r1jCERv+aFXYk4whgQccYEGYxK2H3ZAIA8nuPkQ0HaUo3qg==
-  dependencies:
-    "@babel/helper-module-imports" "^7.27.1"
-    "@babel/helper-validator-identifier" "^7.27.1"
-    "@babel/traverse" "^7.27.3"
-
 "@babel/helper-module-transforms@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/helper-module-transforms/-/helper-module-transforms-7.28.3.tgz"
@@ -171,14 +141,6 @@
   version "7.27.1"
   resolved "https://registry.npmjs.org/@babel/helper-validator-option/-/helper-validator-option-7.27.1.tgz"
   integrity sha512-YvjJow9FxbhFFKDSuFnVCe2WxXk1zWc22fFePVNEaWJEu8IrZVlda6N0uHwzZrUM1il7NC9Mlp4MaJYbYd9JSg==
-
-"@babel/helpers@^7.27.6":
-  version "7.28.2"
-  resolved "https://registry.npmjs.org/@babel/helpers/-/helpers-7.28.2.tgz"
-  integrity sha512-/V9771t+EgXz62aCcyofnQhGM8DQACbRhvzKFsXKC9QM+5MadF8ZmIm0crDMaz3+o0h0zXfJnd4EhbYbxsrcFw==
-  dependencies:
-    "@babel/template" "^7.27.2"
-    "@babel/types" "^7.28.2"
 
 "@babel/helpers@^7.28.3":
   version "7.28.3"
@@ -230,7 +192,7 @@
     "@babel/parser" "^7.27.2"
     "@babel/types" "^7.27.1"
 
-"@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0":
+"@babel/traverse@^7.27.1":
   version "7.28.0"
   resolved "https://registry.npmjs.org/@babel/traverse/-/traverse-7.28.0.tgz"
   integrity sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==
@@ -1904,7 +1866,7 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz"
   integrity sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==
 
-"@unified-repo-analyzer/backend@packages/backend":
+"@unified-repo-analyzer/backend@^workspace:packages/backend":
   version "workspace:packages/backend"
   resolved "workspace:packages/backend"
   devDependencies:
@@ -1934,7 +1896,7 @@
     winston-daily-rotate-file "^5.0.0"
     zod "^3.22.4"
 
-"@unified-repo-analyzer/cli@packages/cli":
+"@unified-repo-analyzer/cli@^workspace:packages/cli":
   version "workspace:packages/cli"
   resolved "workspace:packages/cli"
   devDependencies:
@@ -1953,7 +1915,7 @@
     ora "^5.4.1"
     undici "^6.0.0"
 
-"@unified-repo-analyzer/frontend@packages/frontend":
+"@unified-repo-analyzer/frontend@^workspace:packages/frontend":
   version "workspace:packages/frontend"
   resolved "workspace:packages/frontend"
   devDependencies:
@@ -1986,7 +1948,7 @@
     socket.io-client "^4.7.5"
     zustand "^4.5.2"
 
-"@unified-repo-analyzer/shared@packages/shared", "@unified-repo-analyzer/shared@workspace:*":
+"@unified-repo-analyzer/shared@^workspace:packages/shared", "@unified-repo-analyzer/shared@workspace:*":
   version "workspace:packages/shared"
   resolved "workspace:packages/shared"
   devDependencies:
@@ -6984,10 +6946,12 @@ vite@^5.0.0:
     rollup "^4.43.0"
     tinyglobby "^0.2.14"
 
-"vite@^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0", vite@^7.1.3:
+"vite@^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0", "vite@^5.0.0 || ^6.0.0 || ^7.0.0-0", vite@^7.1.3:
   version "7.1.3"
   resolved "https://registry.npmjs.org/vite/-/vite-7.1.3.tgz"
   integrity sha512-OOUi5zjkDxYrKhTV3V7iKsoS37VUM7v40+HuwEmcrsf11Cdx9y3DIr2Px6liIcZFwt3XSRpQvFpL3WVy7ApkGw==
+  optionalDependencies:
+    fsevents "~2.3.3"
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
@@ -6995,8 +6959,6 @@ vite@^5.0.0:
     postcss "^8.5.6"
     rollup "^4.43.0"
     tinyglobby "^0.2.14"
-  optionalDependencies:
-    fsevents "~2.3.3"
 
 vite-node@1.6.1:
   version "1.6.1"

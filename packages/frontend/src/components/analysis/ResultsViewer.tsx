@@ -1,14 +1,14 @@
-import { PrinterIcon } from "@heroicons/react/24/outline";
-import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared";
-import type React from "react";
-import { useState } from "react";
-import DependencyGraph from "./results/DependencyGraph";
-import ExecutiveSummary from "./results/ExecutiveSummary";
-import ExportButton from "./results/ExportButton";
-import ExportHistory from "./results/ExportHistory";
-import FileTreeViewer from "./results/FileTreeViewer";
-import PrintableReport from "./results/PrintableReport";
-import TechnicalBreakdown from "./results/TechnicalBreakdown";
+import { PrinterIcon } from '@heroicons/react/24/outline';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type React from 'react';
+import { useState } from 'react';
+import DependencyGraph from './results/DependencyGraph';
+import ExecutiveSummary from './results/ExecutiveSummary';
+import ExportButton from './results/ExportButton';
+import ExportHistory from './results/ExportHistory';
+import FileTreeViewer from './results/FileTreeViewer';
+import PrintableReport from './results/PrintableReport';
+import TechnicalBreakdown from './results/TechnicalBreakdown';
 
 interface ResultsViewerProps {
   analysis: RepositoryAnalysis | null | undefined;
@@ -16,8 +16,8 @@ interface ResultsViewerProps {
 
 const ResultsViewer: React.FC<ResultsViewerProps> = ({ analysis }) => {
   const [activeTab, setActiveTab] = useState<
-    "summary" | "technical" | "files" | "dependencies" | "exports"
-  >("summary");
+    'summary' | 'technical' | 'files' | 'dependencies' | 'exports'
+  >('summary');
   const [showPrintView, setShowPrintView] = useState(false);
 
   // Type guard to ensure analysis is valid
@@ -27,8 +27,8 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({ analysis }) => {
     return (
       analysis !== null &&
       analysis !== undefined &&
-      typeof analysis === "object" &&
-      "id" in analysis
+      typeof analysis === 'object' &&
+      'id' in analysis
     );
   };
 
@@ -41,11 +41,11 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({ analysis }) => {
   }
 
   const tabs = [
-    { id: "summary", label: "Executive Summary" },
-    { id: "technical", label: "Technical Breakdown" },
-    { id: "files", label: "File Structure" },
-    { id: "dependencies", label: "Dependencies" },
-    { id: "exports", label: "Export & Share" },
+    { id: 'summary', label: 'Executive Summary' },
+    { id: 'technical', label: 'Technical Breakdown' },
+    { id: 'files', label: 'File Structure' },
+    { id: 'dependencies', label: 'Dependencies' },
+    { id: 'exports', label: 'Export & Share' },
   ];
 
   const handlePrint = () => {
@@ -71,20 +71,15 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({ analysis }) => {
                 key={tab.id}
                 onClick={() =>
                   setActiveTab(
-                    tab.id as
-                      | "summary"
-                      | "technical"
-                      | "files"
-                      | "dependencies"
-                      | "exports"
+                    tab.id as 'summary' | 'technical' | 'files' | 'dependencies' | 'exports'
                   )
                 }
                 className={`whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm mr-6 ${
                   activeTab === tab.id
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
-                aria-current={activeTab === tab.id ? "page" : undefined}
+                aria-current={activeTab === tab.id ? 'page' : undefined}
               >
                 {tab.label}
               </button>
@@ -107,15 +102,11 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({ analysis }) => {
       </div>
 
       <div className="p-6">
-        {activeTab === "summary" && <ExecutiveSummary analysis={analysis} />}
-        {activeTab === "technical" && (
-          <TechnicalBreakdown analysis={analysis} />
-        )}
-        {activeTab === "files" && <FileTreeViewer analysis={analysis} />}
-        {activeTab === "dependencies" && (
-          <DependencyGraph analysis={analysis} />
-        )}
-        {activeTab === "exports" && <ExportHistory />}
+        {activeTab === 'summary' && <ExecutiveSummary analysis={analysis} />}
+        {activeTab === 'technical' && <TechnicalBreakdown analysis={analysis} />}
+        {activeTab === 'files' && <FileTreeViewer analysis={analysis} />}
+        {activeTab === 'dependencies' && <DependencyGraph analysis={analysis} />}
+        {activeTab === 'exports' && <ExportHistory />}
       </div>
     </div>
   );

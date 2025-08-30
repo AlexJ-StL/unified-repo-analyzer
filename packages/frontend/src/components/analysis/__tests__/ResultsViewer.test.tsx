@@ -1,9 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared";
-import React from "react";
-import { describe, test, expect } from "vitest";
-import { vi } from "vitest"; // vi is often part of vitest, but if it's for mocking, it's fine.
+import { describe, expect, test, vi } from "vitest"; // vi is often part of vitest, but if it's for mocking, it's fine.
 import ResultsViewer from "../ResultsViewer";
+import React from "react";
 
 // Mock the child components
 vi.mock("../results/ExecutiveSummary", () => ({

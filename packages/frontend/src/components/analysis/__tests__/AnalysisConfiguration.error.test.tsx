@@ -1,44 +1,44 @@
 /* @vitest-environment jsdom */
-import React from "react";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import type { ReactElement } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ToastProvider } from "../../../hooks/useToast";
-import AnalysisConfiguration from "../AnalysisConfiguration";
+
+import { fireEvent, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import '@testing-library/jest-dom';
+import type { ReactElement } from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ToastProvider } from '../../../hooks/useToast';
+import AnalysisConfiguration from '../AnalysisConfiguration';
 
 // Mock the stores
 const mockUseAnalysisStore = vi.fn();
 const mockUseSettingsStore = vi.fn();
 
-vi.mock("../../../store/useAnalysisStore", () => ({
+vi.mock('../../../store/useAnalysisStore', () => ({
   useAnalysisStore: () => mockUseAnalysisStore(),
 }));
 
-vi.mock("../../../store/useSettingsStore", () => ({
+vi.mock('../../../store/useSettingsStore', () => ({
   useSettingsStore: () => mockUseSettingsStore(),
 }));
 
 // Mock validators
-vi.mock("../../../utils/validators", () => ({
+vi.mock('../../../utils/validators', () => ({
   validateAnalysisOptions: vi.fn(() => []),
 }));
 
 const renderWithProviders = (component: ReactElement) => {
   // Ensure we only attempt rendering when a DOM-like environment exists.
-  if (typeof document === "undefined") {
+  if (typeof document === 'undefined') {
     throw new Error(
       'DOM environment not available. Run tests with a browser-like environment (e.g., Vitest test.environment="jsdom" or "happy-dom").'
     );
   }
   // Lazy require to avoid touching DOM at module evaluation time in non-DOM environments
-  const { render } =
-    require("@testing-library/react") as typeof import("@testing-library/react");
+  const { render } = require('@testing-library/react') as typeof import('@testing-library/react');
   // Use JSX now that React is a value import
   return render(React.createElement(ToastProvider, null, component));
 };
 
-describe("AnalysisConfiguration Error Handling", () => {
+describe('AnalysisConfiguration Error Handling', () => {
   const mockSetOptions = vi.fn();
   const mockOnConfigChange = vi.fn();
 
@@ -47,9 +47,9 @@ describe("AnalysisConfiguration Error Handling", () => {
 
     mockUseAnalysisStore.mockReturnValue({
       options: {
-        mode: "standard",
-        llmProvider: "claude",
-        outputFormats: ["json"],
+        mode: 'standard',
+        llmProvider: 'claude',
+        outputFormats: ['json'],
         maxFiles: 100,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: true,
@@ -61,17 +61,17 @@ describe("AnalysisConfiguration Error Handling", () => {
     mockUseSettingsStore.mockReturnValue({
       settings: {
         general: {
-          defaultAnalysisMode: "standard",
-          defaultExportFormat: "json",
+          defaultAnalysisMode: 'standard',
+          defaultExportFormat: 'json',
         },
         llmProvider: {
-          defaultProvider: "claude",
+          defaultProvider: 'claude',
         },
       },
     });
   });
 
-  it("handles initialization errors gracefully", async () => {
+  it('handles initialization errors gracefully', async () => {
     // Mock settings to cause an error
     mockUseSettingsStore.mockReturnValue({
       settings: null, // This should cause an error
@@ -84,32 +84,26 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Should show loading initially
-    expect(screen.getByText("Loading configuration...")).toBeInTheDocument();
+    expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
 
     // Should recover with safe defaults
     await waitFor(() => {
-      expect(
-        screen.queryByText("Loading configuration...")
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading configuration...')).not.toBeInTheDocument();
     });
 
     // Should have called setOptions with safe defaults
     expect(mockSetOptions).toHaveBeenCalledWith(
       expect.objectContaining({
-        mode: "standard",
-        llmProvider: "claude",
-        outputFormats: ["json"],
+        mode: 'standard',
+        llmProvider: 'claude',
+        outputFormats: ['json'],
       })
     );
   });
 
-  it("shows validation errors with recovery option", async () => {
-    const { validateAnalysisOptions } = await import(
-      "../../../utils/validators"
-    );
-    vi.mocked(validateAnalysisOptions).mockReturnValue([
-      "Invalid max files value",
-    ]);
+  it('shows validation errors with recovery option', async () => {
+    const { validateAnalysisOptions } = await import('../../../utils/validators');
+    vi.mocked(validateAnalysisOptions).mockReturnValue(['Invalid max files value']);
 
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
@@ -118,17 +112,17 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Change mode to trigger validation
-    const modeSelect = screen.getByLabelText("Analysis Mode");
-    fireEvent.change(modeSelect, { target: { value: "comprehensive" } });
+    const modeSelect = screen.getByLabelText('Analysis Mode');
+    fireEvent.change(modeSelect, { target: { value: 'comprehensive' } });
 
     await waitFor(() => {
-      expect(screen.getByText("Configuration Issues")).toBeInTheDocument();
-      expect(screen.getByText("Invalid max files value")).toBeInTheDocument();
-      expect(screen.getByText("Reset to Defaults")).toBeInTheDocument();
+      expect(screen.getByText('Configuration Issues')).toBeInTheDocument();
+      expect(screen.getByText('Invalid max files value')).toBeInTheDocument();
+      expect(screen.getByText('Reset to Defaults')).toBeInTheDocument();
     });
   });
 
-  it("handles provider change errors", async () => {
+  it('handles provider change errors', async () => {
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
         onConfigChange: mockOnConfigChange,
@@ -136,20 +130,18 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Mock validation to fail
-    const { validateAnalysisOptions } = await import(
-      "../../../utils/validators"
-    );
-    vi.mocked(validateAnalysisOptions).mockReturnValue(["Invalid provider"]);
+    const { validateAnalysisOptions } = await import('../../../utils/validators');
+    vi.mocked(validateAnalysisOptions).mockReturnValue(['Invalid provider']);
 
-    const providerSelect = screen.getByLabelText("LLM Provider");
-    fireEvent.change(providerSelect, { target: { value: "invalid-provider" } });
+    const providerSelect = screen.getByLabelText('LLM Provider');
+    fireEvent.change(providerSelect, { target: { value: 'invalid-provider' } });
 
     await waitFor(() => {
-      expect(screen.getByText("Configuration Issues")).toBeInTheDocument();
+      expect(screen.getByText('Configuration Issues')).toBeInTheDocument();
     });
   });
 
-  it("disables controls during loading", async () => {
+  it('disables controls during loading', async () => {
     // Mock a slow initialization
     mockUseAnalysisStore.mockReturnValue({
       options: { mode: undefined }, // This will trigger initialization
@@ -163,16 +155,16 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Controls should be disabled during loading
-    const modeSelect = screen.getByLabelText("Analysis Mode");
-    const providerSelect = screen.getByLabelText("LLM Provider");
-    const maxFilesInput = screen.getByLabelText("Max Files to Process");
+    const modeSelect = screen.getByLabelText('Analysis Mode');
+    const providerSelect = screen.getByLabelText('LLM Provider');
+    const maxFilesInput = screen.getByLabelText('Max Files to Process');
 
     expect(modeSelect).toBeDisabled();
     expect(providerSelect).toBeDisabled();
     expect(maxFilesInput).toBeDisabled();
   });
 
-  it("shows graceful degradation for unavailable providers", () => {
+  it('shows graceful degradation for unavailable providers', () => {
     // Mock empty providers array to simulate unavailability
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
@@ -182,14 +174,12 @@ describe("AnalysisConfiguration Error Handling", () => {
 
     // The GracefulDegradation component should handle this case
     // In a real scenario, you might mock the availableProviders state
-    expect(screen.getByLabelText("LLM Provider")).toBeInTheDocument();
+    expect(screen.getByLabelText('LLM Provider')).toBeInTheDocument();
   });
 
-  it("resets to defaults when reset button is clicked", async () => {
-    const { validateAnalysisOptions } = await import(
-      "../../../utils/validators"
-    );
-    vi.mocked(validateAnalysisOptions).mockReturnValue(["Some error"]);
+  it('resets to defaults when reset button is clicked', async () => {
+    const { validateAnalysisOptions } = await import('../../../utils/validators');
+    vi.mocked(validateAnalysisOptions).mockReturnValue(['Some error']);
 
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
@@ -198,22 +188,22 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Trigger validation error
-    const modeSelect = screen.getByLabelText("Analysis Mode");
-    fireEvent.change(modeSelect, { target: { value: "comprehensive" } });
+    const modeSelect = screen.getByLabelText('Analysis Mode');
+    fireEvent.change(modeSelect, { target: { value: 'comprehensive' } });
 
     await waitFor(() => {
-      expect(screen.getByText("Reset to Defaults")).toBeInTheDocument();
+      expect(screen.getByText('Reset to Defaults')).toBeInTheDocument();
     });
 
     // Click reset button
-    fireEvent.click(screen.getByText("Reset to Defaults"));
+    fireEvent.click(screen.getByText('Reset to Defaults'));
 
     await waitFor(() => {
       expect(mockSetOptions).toHaveBeenCalledWith(
         expect.objectContaining({
-          mode: "standard",
-          llmProvider: "claude",
-          outputFormats: ["json"],
+          mode: 'standard',
+          llmProvider: 'claude',
+          outputFormats: ['json'],
           maxFiles: 100,
           maxLinesPerFile: 1000,
           includeLLMAnalysis: true,
@@ -223,34 +213,30 @@ describe("AnalysisConfiguration Error Handling", () => {
     });
   });
 
-  it("shows success toast on successful configuration changes", async () => {
+  it('shows success toast on successful configuration changes', async () => {
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
         onConfigChange: mockOnConfigChange,
       })
     );
 
-    const modeSelect = screen.getByLabelText("Analysis Mode");
-    fireEvent.change(modeSelect, { target: { value: "quick" } });
+    const modeSelect = screen.getByLabelText('Analysis Mode');
+    fireEvent.change(modeSelect, { target: { value: 'quick' } });
 
     await waitFor(() => {
-      expect(screen.getByText("Configuration Updated")).toBeInTheDocument();
-      expect(
-        screen.getByText("Analysis mode changed to quick")
-      ).toBeInTheDocument();
+      expect(screen.getByText('Configuration Updated')).toBeInTheDocument();
+      expect(screen.getByText('Analysis mode changed to quick')).toBeInTheDocument();
     });
   });
 
-  it("handles component errors with error boundary", () => {
+  it('handles component errors with error boundary', () => {
     // Mock setOptions to throw an error
     mockSetOptions.mockImplementation(() => {
-      throw new Error("Store error");
+      throw new Error('Store error');
     });
 
     // Mock console.error to avoid noise in tests
-    const consoleError = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
@@ -259,23 +245,17 @@ describe("AnalysisConfiguration Error Handling", () => {
     );
 
     // Should show error boundary fallback
-    expect(screen.getByText("Configuration Error")).toBeInTheDocument();
+    expect(screen.getByText('Configuration Error')).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /The analysis configuration component encountered an error/
-      )
+      screen.getByText(/The analysis configuration component encountered an error/)
     ).toBeInTheDocument();
 
     consoleError.mockRestore();
   });
 
-  it("shows warning toast for configuration issues", async () => {
-    const { validateAnalysisOptions } = await import(
-      "../../../utils/validators"
-    );
-    vi.mocked(validateAnalysisOptions).mockReturnValue([
-      "Warning: Large file limit",
-    ]);
+  it('shows warning toast for configuration issues', async () => {
+    const { validateAnalysisOptions } = await import('../../../utils/validators');
+    vi.mocked(validateAnalysisOptions).mockReturnValue(['Warning: Large file limit']);
 
     renderWithProviders(
       React.createElement(AnalysisConfiguration, {
@@ -283,11 +263,11 @@ describe("AnalysisConfiguration Error Handling", () => {
       })
     );
 
-    const maxFilesInput = screen.getByLabelText("Max Files to Process");
-    fireEvent.change(maxFilesInput, { target: { value: "1000" } });
+    const maxFilesInput = screen.getByLabelText('Max Files to Process');
+    fireEvent.change(maxFilesInput, { target: { value: '1000' } });
 
     await waitFor(() => {
-      expect(screen.getByText("Configuration Issues")).toBeInTheDocument();
+      expect(screen.getByText('Configuration Issues')).toBeInTheDocument();
     });
   });
 });

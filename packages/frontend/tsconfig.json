@@ -28,17 +28,20 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/**/*.d.ts",
     "postcss.config.ts",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "build",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/test/**",
-    "src/test/**"
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

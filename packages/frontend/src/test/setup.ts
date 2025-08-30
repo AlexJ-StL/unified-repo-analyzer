@@ -1,9 +1,6 @@
-import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
-
-// Extend Vitest's expect with jest-dom matchers
-expect.extend({});
+import "@testing-library/jest-dom/vitest";
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
 
 // Cleanup after each test case
 afterEach(() => {
@@ -11,7 +8,7 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -34,7 +31,27 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  root: Element | null = null;
+  rootMargin: string = "0px";
+  thresholds: number[];
+
+  constructor(
+    public callback: IntersectionObserverCallback,
+    public options?: IntersectionObserverInit
+  ) {
+    this.root = options?.root ? (options.root as Element) : null; // Cast Element | Document | null to Element | null
+    this.rootMargin = options?.rootMargin || "0px";
+    this.thresholds = Array.isArray(options?.threshold)
+      ? options.threshold
+      : options?.threshold !== undefined
+        ? [options.threshold]
+        : [0]; // Default to [0] if not specified
+  }
+
   observe() {}
   unobserve() {}
   disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
 };

@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import React from "react";
 import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared";
-import { describe, test, expect, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import ExecutiveSummary from "../results/ExecutiveSummary";
+import React from "react";
 
 // Mock ReactMarkdown to avoid issues with markdown parsing in tests
-vi.mock("react-markdown", () => ({
+// This vi should be the one from the vitest import, not the global (if global is broken)
+vi.doMock("react-markdown", () => ({
   __esModule: true,
   default: ({ children }: { children: string }) => (
     <div data-testid="markdown">{children}</div>

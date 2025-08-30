@@ -1,10 +1,10 @@
-import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { apiService } from "../../../services/api";
 import websocketService from "../../../services/websocket";
 import { useAnalysisStore } from "../../../store/useAnalysisStore";
 import ProgressTracker from "../ProgressTracker";
+import React from "react";
 
 // Mock the dependencies
 vi.mock("../../../store/useAnalysisStore");
