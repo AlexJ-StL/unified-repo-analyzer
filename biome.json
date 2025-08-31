@@ -2,11 +2,11 @@
   "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "files": {
     "includes": [
-      "**/*.{js,ts,tsx,jsx}",
-      "packages/**/*.{js,ts,tsx,jsx}",
+      "**/*.{js,ts,tsx,jsx,cjs}",
+      "packages/**/*.{js,ts,tsx,jsx,cjs}",
       "scripts/**/*.{js,ts}",
-      "tests/**/*.{js,ts,tsx}",
-      "*.{js,ts,tsx,jsx}"
+      "tests/**/*.{js,ts,tsx,cjs}",
+      "*.{js,ts,tsx,jsx,cjs}"
     ],
     "maxSize": 12582912,
     "ignoreUnknown": false,

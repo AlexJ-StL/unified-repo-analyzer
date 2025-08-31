@@ -1,7 +1,7 @@
 /**
  * Performance monitoring middleware for Express
  */
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 interface PerformanceRequest extends Request {
   startTime?: number;
   __perfRequestId__?: string;

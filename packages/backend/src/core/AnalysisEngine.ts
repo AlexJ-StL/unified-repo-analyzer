@@ -4,11 +4,8 @@
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import path from "node:path";
-import {
-  type ErrorContext,
-  errorClassifier,
-} from "@unified-repo-analyzer/shared";
+import path from 'node:path';
+import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import type {
   AnalysisOptions,
   BatchAnalysisResult,
@@ -16,25 +13,21 @@ import type {
   RepositoryAnalysis,
   SearchQuery,
   SearchResult,
-} from "@unified-repo-analyzer/shared/src/types/analysis";
-import { v4 as uuidv4 } from "uuid";
-import { cacheService } from "../services/cache.service";
-import { deduplicationService } from "../services/deduplication.service";
-import {
-  logAnalysis,
-  logger,
-  logPerformance,
-} from "../services/logger.service.js";
-import { metricsService } from "../services/metrics.service";
-import { readFileWithErrorHandling } from "../utils/fileSystem";
+} from '@unified-repo-analyzer/shared/src/types/analysis';
+import { v4 as uuidv4 } from 'uuid';
+import { cacheService } from '../services/cache.service';
+import { deduplicationService } from '../services/deduplication.service';
+import { logAnalysis, logger, logPerformance } from '../services/logger.service.js';
+import { metricsService } from '../services/metrics.service';
+import { readFileWithErrorHandling } from '../utils/fileSystem';
 import {
   analysisOptionsToDiscoveryOptions,
   discoverRepository,
-} from "../utils/repositoryDiscovery";
-import { AdvancedAnalyzer } from "./advancedAnalyzer";
-import { analyzeCodeStructure } from "./codeStructureAnalyzer";
-import type { IndexSystem, RepositoryMatch } from "./IndexSystem";
-import { countTokens } from "./tokenAnalyzer";
+} from '../utils/repositoryDiscovery';
+import { AdvancedAnalyzer } from './advancedAnalyzer';
+import { analyzeCodeStructure } from './codeStructureAnalyzer';
+import type { IndexSystem, RepositoryMatch } from './IndexSystem';
+import { countTokens } from './tokenAnalyzer';
 
 /**
  * Core Analysis Engine for repository processing
@@ -62,16 +55,16 @@ export class AnalysisEngine {
     // Log analysis start
     logAnalysis(
       repoPath,
-      "started",
+      'started',
       {
         mode: options.mode,
         requestId,
       },
-      "analysis-engine"
+      'analysis-engine'
     );
 
     logger.info(
-      "Starting repository analysis",
+      'Starting repository analysis',
       {
         repositoryPath: repoPath,
         analysisMode: options.mode,
@@ -81,298 +74,282 @@ export class AnalysisEngine {
           includeTree: options.includeTree,
         },
       },
-      "analysis-engine",
+      'analysis-engine',
       requestId
     );
 
-    const timer = metricsService.createTimer("analysis.duration", {
+    const timer = metricsService.createTimer('analysis.duration', {
       mode: options.mode,
     });
 
     try {
-      return await deduplicationService.deduplicateAnalysis(
-        repoPath,
-        options,
-        async () => {
-          // Check cache first
-          logger.debug(
-            "Checking cache for existing analysis",
-            {
-              repositoryPath: repoPath,
-              analysisMode: options.mode,
-            },
-            "analysis-engine",
-            requestId
-          );
+      return await deduplicationService.deduplicateAnalysis(repoPath, options, async () => {
+        // Check cache first
+        logger.debug(
+          'Checking cache for existing analysis',
+          {
+            repositoryPath: repoPath,
+            analysisMode: options.mode,
+          },
+          'analysis-engine',
+          requestId
+        );
 
-          const cached = await cacheService.getCachedAnalysis(
-            repoPath,
-            options
-          );
-          if (cached) {
-            const duration = Date.now() - startTime;
-            timer.end();
-
-            logger.info(
-              "Analysis completed from cache",
-              {
-                repositoryPath: repoPath,
-                fileCount: cached.fileCount,
-                totalSize: cached.totalSize,
-                duration: `${duration}ms`,
-                cacheHit: true,
-              },
-              "analysis-engine",
-              requestId
-            );
-
-            logAnalysis(
-              repoPath,
-              "completed",
-              {
-                fileCount: cached.fileCount,
-                totalSize: cached.totalSize,
-                duration,
-                cacheHit: true,
-                requestId,
-              },
-              "analysis-engine"
-            );
-
-            metricsService.recordAnalysis(
-              repoPath,
-              options.mode,
-              0, // No processing time for cached results
-              cached.fileCount,
-              cached.totalSize,
-              true, // Cache hit
-              false // Not deduplicated (this is the original request)
-            );
-            return cached;
-          }
-
-          logger.debug(
-            "No cached analysis found, proceeding with fresh analysis",
-            {
-              repositoryPath: repoPath,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          // Convert analysis options to discovery options
-          logger.debug(
-            "Converting analysis options to discovery options",
-            {
-              analysisMode: options.mode,
-              includeTree: options.includeTree,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          const discoveryOptions = analysisOptionsToDiscoveryOptions(options);
-
-          // Discover repository structure
-          logger.info(
-            "Starting repository discovery",
-            {
-              repositoryPath: repoPath,
-              discoveryOptions: {
-                maxFiles: discoveryOptions.maxFiles,
-                maxLinesPerFile: discoveryOptions.maxLinesPerFile,
-                includeTree: discoveryOptions.includeTree,
-              },
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          const discoveryStartTime = Date.now();
-          const analysis = await discoverRepository(repoPath, discoveryOptions);
-          const discoveryDuration = Date.now() - discoveryStartTime;
-
-          logger.info(
-            "Repository discovery completed",
-            {
-              repositoryPath: repoPath,
-              fileCount: analysis.fileCount,
-              totalSize: analysis.totalSize,
-              languageCount: Object.keys(analysis.languages).length,
-              duration: `${discoveryDuration}ms`,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          // Update analysis mode
-          analysis.metadata.analysisMode = options.mode;
-          analysis.metadata.llmProvider = options.includeLLMAnalysis
-            ? options.llmProvider
-            : "none";
-
-          // Process files for code structure analysis
-          logger.debug(
-            "Processing files for code structure analysis",
-            {
-              fileCount: analysis.fileCount,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          const structureStartTime = Date.now();
-          await this.processFilesForAnalysis(analysis, options);
-          const structureDuration = Date.now() - structureStartTime;
-
-          logger.debug(
-            "Code structure analysis completed",
-            {
-              duration: `${structureDuration}ms`,
-              complexity: analysis.codeAnalysis.complexity,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          // Perform advanced analysis if in comprehensive mode or if LLM analysis is requested
-          if (options.mode === "comprehensive" || options.includeLLMAnalysis) {
-            logger.info(
-              "Starting comprehensive advanced analysis",
-              {
-                repositoryPath: repoPath,
-              },
-              "analysis-engine",
-              requestId
-            );
-
-            const advancedStartTime = Date.now();
-            const advancedResults =
-              await this.advancedAnalyzer.analyzeRepository(analysis);
-            const advancedDuration = Date.now() - advancedStartTime;
-
-            logger.info(
-              "Advanced analysis completed",
-              {
-                duration: `${advancedDuration}ms`,
-                securityVulnerabilities:
-                  advancedResults.security.vulnerabilities.length,
-                architectureRecommendations:
-                  advancedResults.architecture.recommendations.length,
-                codeQualityScore: advancedResults.codeQuality.overallScore,
-              },
-              "analysis-engine",
-              requestId
-            );
-
-            // Update analysis with advanced results
-            analysis.codeAnalysis.complexity =
-              advancedResults.codeQuality.overallScore > 0
-                ? analysis.codeAnalysis.complexity
-                : analysis.codeAnalysis.complexity;
-
-            // Store advanced results in insights
-            analysis.insights.recommendations.push(
-              ...advancedResults.security.recommendations
-            );
-            analysis.insights.recommendations.push(
-              ...advancedResults.architecture.recommendations
-            );
-
-            // Add security and quality information to potential issues
-            const securityIssues = advancedResults.security.vulnerabilities
-              .filter((v) => v.severity === "high" || v.severity === "critical")
-              .map((v) => `Security: ${v.description}`);
-            analysis.insights.potentialIssues.push(...securityIssues);
-
-            const qualityIssues = advancedResults.codeQuality.technicalDebt
-              .filter((d) => d.severity === "high")
-              .map((d) => `Quality: ${d.description}`);
-            analysis.insights.potentialIssues.push(...qualityIssues);
-
-            logger.debug(
-              "Advanced analysis results integrated",
-              {
-                totalRecommendations: analysis.insights.recommendations.length,
-                potentialIssues: analysis.insights.potentialIssues.length,
-              },
-              "analysis-engine",
-              requestId
-            );
-          }
-
-          const processingTime = Date.now() - startTime;
-          analysis.metadata.processingTime = processingTime;
-
-          // Cache the result
-          logger.debug(
-            "Caching analysis result",
-            {
-              repositoryPath: repoPath,
-              analysisMode: options.mode,
-            },
-            "analysis-engine",
-            requestId
-          );
-
-          await cacheService.setCachedAnalysis(repoPath, options, analysis);
-
+        const cached = await cacheService.getCachedAnalysis(repoPath, options);
+        if (cached) {
+          const duration = Date.now() - startTime;
           timer.end();
 
           logger.info(
-            "Repository analysis completed successfully",
+            'Analysis completed from cache',
             {
               repositoryPath: repoPath,
-              fileCount: analysis.fileCount,
-              totalSize: analysis.totalSize,
-              processingTime: `${processingTime}ms`,
-              analysisMode: options.mode,
-              cacheHit: false,
+              fileCount: cached.fileCount,
+              totalSize: cached.totalSize,
+              duration: `${duration}ms`,
+              cacheHit: true,
             },
-            "analysis-engine",
+            'analysis-engine',
             requestId
           );
 
           logAnalysis(
             repoPath,
-            "completed",
+            'completed',
             {
-              fileCount: analysis.fileCount,
-              totalSize: analysis.totalSize,
-              duration: processingTime,
-              cacheHit: false,
+              fileCount: cached.fileCount,
+              totalSize: cached.totalSize,
+              duration,
+              cacheHit: true,
               requestId,
             },
-            "analysis-engine"
-          );
-
-          // Log performance metrics
-          logPerformance(
-            "repository_analysis",
-            processingTime,
-            {
-              repositoryPath: repoPath,
-              fileCount: analysis.fileCount,
-              totalSizeBytes: analysis.totalSize,
-              analysisMode: options.mode,
-              languageCount: Object.keys(analysis.languages).length,
-            },
-            "analysis-engine"
+            'analysis-engine'
           );
 
           metricsService.recordAnalysis(
             repoPath,
             options.mode,
-            processingTime,
-            analysis.fileCount,
-            analysis.totalSize,
-            false, // Not a cache hit
+            0, // No processing time for cached results
+            cached.fileCount,
+            cached.totalSize,
+            true, // Cache hit
             false // Not deduplicated (this is the original request)
           );
-
-          return analysis;
+          return cached;
         }
-      );
+
+        logger.debug(
+          'No cached analysis found, proceeding with fresh analysis',
+          {
+            repositoryPath: repoPath,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        // Convert analysis options to discovery options
+        logger.debug(
+          'Converting analysis options to discovery options',
+          {
+            analysisMode: options.mode,
+            includeTree: options.includeTree,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        const discoveryOptions = analysisOptionsToDiscoveryOptions(options);
+
+        // Discover repository structure
+        logger.info(
+          'Starting repository discovery',
+          {
+            repositoryPath: repoPath,
+            discoveryOptions: {
+              maxFiles: discoveryOptions.maxFiles,
+              maxLinesPerFile: discoveryOptions.maxLinesPerFile,
+              includeTree: discoveryOptions.includeTree,
+            },
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        const discoveryStartTime = Date.now();
+        const analysis = await discoverRepository(repoPath, discoveryOptions);
+        const discoveryDuration = Date.now() - discoveryStartTime;
+
+        logger.info(
+          'Repository discovery completed',
+          {
+            repositoryPath: repoPath,
+            fileCount: analysis.fileCount,
+            totalSize: analysis.totalSize,
+            languageCount: Object.keys(analysis.languages).length,
+            duration: `${discoveryDuration}ms`,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        // Update analysis mode
+        analysis.metadata.analysisMode = options.mode;
+        analysis.metadata.llmProvider = options.includeLLMAnalysis ? options.llmProvider : 'none';
+
+        // Process files for code structure analysis
+        logger.debug(
+          'Processing files for code structure analysis',
+          {
+            fileCount: analysis.fileCount,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        const structureStartTime = Date.now();
+        await this.processFilesForAnalysis(analysis, options);
+        const structureDuration = Date.now() - structureStartTime;
+
+        logger.debug(
+          'Code structure analysis completed',
+          {
+            duration: `${structureDuration}ms`,
+            complexity: analysis.codeAnalysis.complexity,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        // Perform advanced analysis if in comprehensive mode or if LLM analysis is requested
+        if (options.mode === 'comprehensive' || options.includeLLMAnalysis) {
+          logger.info(
+            'Starting comprehensive advanced analysis',
+            {
+              repositoryPath: repoPath,
+            },
+            'analysis-engine',
+            requestId
+          );
+
+          const advancedStartTime = Date.now();
+          const advancedResults = await this.advancedAnalyzer.analyzeRepository(analysis);
+          const advancedDuration = Date.now() - advancedStartTime;
+
+          logger.info(
+            'Advanced analysis completed',
+            {
+              duration: `${advancedDuration}ms`,
+              securityVulnerabilities: advancedResults.security.vulnerabilities.length,
+              architectureRecommendations: advancedResults.architecture.recommendations.length,
+              codeQualityScore: advancedResults.codeQuality.overallScore,
+            },
+            'analysis-engine',
+            requestId
+          );
+
+          // Update analysis with advanced results
+          analysis.codeAnalysis.complexity =
+            advancedResults.codeQuality.overallScore > 0
+              ? analysis.codeAnalysis.complexity
+              : analysis.codeAnalysis.complexity;
+
+          // Store advanced results in insights
+          analysis.insights.recommendations.push(...advancedResults.security.recommendations);
+          analysis.insights.recommendations.push(...advancedResults.architecture.recommendations);
+
+          // Add security and quality information to potential issues
+          const securityIssues = advancedResults.security.vulnerabilities
+            .filter((v) => v.severity === 'high' || v.severity === 'critical')
+            .map((v) => `Security: ${v.description}`);
+          analysis.insights.potentialIssues.push(...securityIssues);
+
+          const qualityIssues = advancedResults.codeQuality.technicalDebt
+            .filter((d) => d.severity === 'high')
+            .map((d) => `Quality: ${d.description}`);
+          analysis.insights.potentialIssues.push(...qualityIssues);
+
+          logger.debug(
+            'Advanced analysis results integrated',
+            {
+              totalRecommendations: analysis.insights.recommendations.length,
+              potentialIssues: analysis.insights.potentialIssues.length,
+            },
+            'analysis-engine',
+            requestId
+          );
+        }
+
+        const processingTime = Date.now() - startTime;
+        analysis.metadata.processingTime = processingTime;
+
+        // Cache the result
+        logger.debug(
+          'Caching analysis result',
+          {
+            repositoryPath: repoPath,
+            analysisMode: options.mode,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        await cacheService.setCachedAnalysis(repoPath, options, analysis);
+
+        timer.end();
+
+        logger.info(
+          'Repository analysis completed successfully',
+          {
+            repositoryPath: repoPath,
+            fileCount: analysis.fileCount,
+            totalSize: analysis.totalSize,
+            processingTime: `${processingTime}ms`,
+            analysisMode: options.mode,
+            cacheHit: false,
+          },
+          'analysis-engine',
+          requestId
+        );
+
+        logAnalysis(
+          repoPath,
+          'completed',
+          {
+            fileCount: analysis.fileCount,
+            totalSize: analysis.totalSize,
+            duration: processingTime,
+            cacheHit: false,
+            requestId,
+          },
+          'analysis-engine'
+        );
+
+        // Log performance metrics
+        logPerformance(
+          'repository_analysis',
+          processingTime,
+          {
+            repositoryPath: repoPath,
+            fileCount: analysis.fileCount,
+            totalSizeBytes: analysis.totalSize,
+            analysisMode: options.mode,
+            languageCount: Object.keys(analysis.languages).length,
+          },
+          'analysis-engine'
+        );
+
+        metricsService.recordAnalysis(
+          repoPath,
+          options.mode,
+          processingTime,
+          analysis.fileCount,
+          analysis.totalSize,
+          false, // Not a cache hit
+          false // Not deduplicated (this is the original request)
+        );
+
+        return analysis;
+      });
     } catch (error) {
       const duration = Date.now() - startTime;
       const context: Partial<ErrorContext> = {
@@ -380,18 +357,15 @@ export class AnalysisEngine {
         requestId,
         duration,
         metadata: {
-          operation: "repository_analysis",
+          operation: 'repository_analysis',
           analysisMode: options.mode,
         },
       };
 
-      const classifiedError = errorClassifier.classifyError(
-        error as Error,
-        context
-      );
+      const classifiedError = errorClassifier.classifyError(error as Error, context);
 
       logger.error(
-        "Repository analysis failed",
+        'Repository analysis failed',
         classifiedError.originalError,
         {
           repositoryPath: repoPath,
@@ -400,20 +374,20 @@ export class AnalysisEngine {
           errorId: classifiedError.id,
           errorCode: classifiedError.code,
         },
-        "analysis-engine",
+        'analysis-engine',
         requestId
       );
 
       logAnalysis(
         repoPath,
-        "failed",
+        'failed',
         {
           duration,
           error: classifiedError.message,
           errorCode: classifiedError.code,
           requestId,
         },
-        "analysis-engine"
+        'analysis-engine'
       );
 
       // Re-throw the original error to maintain existing error handling
@@ -457,16 +431,12 @@ export class AnalysisEngine {
       const repoPath = repoPaths[i];
 
       // Narrow status reference for safe mutations (non-null: initialized above)
-      const status = batchResult.status as NonNullable<
-        BatchAnalysisResult["status"]
-      >;
+      const status = batchResult.status as NonNullable<BatchAnalysisResult['status']>;
 
       // Update status
       status.pending--;
       status.inProgress++;
-      status.progress = Math.round(
-        ((status.completed + status.failed) / status.total) * 100
-      );
+      status.progress = Math.round(((status.completed + status.failed) / status.total) * 100);
 
       try {
         // Analyze repository
@@ -485,16 +455,12 @@ export class AnalysisEngine {
       }
 
       // Update progress
-      status.progress = Math.round(
-        ((status.completed + status.failed) / status.total) * 100
-      );
+      status.progress = Math.round(((status.completed + status.failed) / status.total) * 100);
     }
 
     // Generate combined insights if multiple repositories were analyzed successfully
     if (batchResult.repositories.length > 1) {
-      batchResult.combinedInsights = await this.generateCombinedInsights(
-        batchResult.repositories
-      );
+      batchResult.combinedInsights = await this.generateCombinedInsights(batchResult.repositories);
     }
 
     // Calculate processing time
@@ -529,115 +495,104 @@ export class AnalysisEngine {
       currentRepository: string[];
     }) => void
   ): Promise<BatchAnalysisResult> {
-    const timer = metricsService.createTimer("batch.analysis.duration", {
+    const timer = metricsService.createTimer('batch.analysis.duration', {
       mode: options.mode,
       repositoryCount: repoPaths.length.toString(),
     });
 
-    return deduplicationService.deduplicateBatch(
-      repoPaths,
-      options,
-      async () => {
-        // Check cache first
-        const cached = await cacheService.getCachedBatchAnalysis(
-          repoPaths,
-          options
-        );
-        if (cached) {
-          timer.end();
-          return cached;
-        }
+    return deduplicationService.deduplicateBatch(repoPaths, options, async () => {
+      // Check cache first
+      const cached = await cacheService.getCachedBatchAnalysis(repoPaths, options);
+      if (cached) {
+        timer.end();
+        return cached;
+      }
 
-        const startTime = Date.now();
-        const batchId = uuidv4();
+      const startTime = Date.now();
+      const batchId = uuidv4();
 
-        // Import TaskQueue
-        const { TaskQueue, QueueEvent } = await import("../utils/queue");
+      // Import TaskQueue
+      const { TaskQueue, QueueEvent } = await import('../utils/queue');
 
-        // Create queue for processing repositories
-        const queue = new TaskQueue(
-          async (repoPath: string) => this.analyzeRepository(repoPath, options),
-          { concurrency }
-        );
+      // Create queue for processing repositories
+      const queue = new TaskQueue(
+        async (repoPath: string) => this.analyzeRepository(repoPath, options),
+        { concurrency }
+      );
 
-        // Create batch analysis result
-        const batchResult: BatchAnalysisResult = {
-          id: batchId,
-          repositories: [],
-          createdAt: new Date(),
-          processingTime: 0,
-          status: {
-            total: repoPaths.length,
-            completed: 0,
-            failed: 0,
-            inProgress: 0,
-            pending: repoPaths.length,
-            progress: 0,
-          },
+      // Create batch analysis result
+      const batchResult: BatchAnalysisResult = {
+        id: batchId,
+        repositories: [],
+        createdAt: new Date(),
+        processingTime: 0,
+        status: {
+          total: repoPaths.length,
+          completed: 0,
+          failed: 0,
+          inProgress: 0,
+          pending: repoPaths.length,
+          progress: 0,
+        },
+      };
+
+      // Set up progress tracking
+      queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
+        // Update batch status
+        batchResult.status = {
+          total: progress.total,
+          completed: progress.completed,
+          failed: progress.failed,
+          inProgress: progress.running,
+          pending: progress.pending,
+          progress: progress.progress,
         };
 
-        // Set up progress tracking
-        queue.on(QueueEvent.QUEUE_PROGRESS, (progress) => {
-          // Update batch status
-          batchResult.status = {
-            total: progress.total,
-            completed: progress.completed,
-            failed: progress.failed,
-            inProgress: progress.running,
-            pending: progress.pending,
-            progress: progress.progress,
-          };
-
-          // Call progress callback if provided
-          if (progressCallback) {
-            progressCallback({
-              batchId,
-              status: batchResult.status,
-              currentRepository: Array.from(queue.getAllTasks())
-                .filter((task) => task.status === "running")
-                .map((task) => task.data),
-            });
-          }
-        });
-
-        // Set up completion handlers
-        queue.on(QueueEvent.TASK_COMPLETED, (task) => {
-          if (task.result) {
-            batchResult.repositories.push(task.result);
-          }
-        });
-
-        // Add all repositories to the queue
-        for (const repoPath of repoPaths) {
-          queue.addTask(uuidv4(), repoPath);
+        // Call progress callback if provided
+        if (progressCallback) {
+          progressCallback({
+            batchId,
+            status: batchResult.status,
+            currentRepository: Array.from(queue.getAllTasks())
+              .filter((task) => task.status === 'running')
+              .map((task) => task.data),
+          });
         }
+      });
 
-        // Wait for all tasks to complete
-        await new Promise<void>((resolve) => {
-          queue.on(QueueEvent.QUEUE_DRAINED, resolve);
-        });
-
-        // Generate combined insights if multiple repositories were analyzed successfully
-        if (batchResult.repositories.length > 1) {
-          batchResult.combinedInsights = await this.generateCombinedInsights(
-            batchResult.repositories
-          );
+      // Set up completion handlers
+      queue.on(QueueEvent.TASK_COMPLETED, (task) => {
+        if (task.result) {
+          batchResult.repositories.push(task.result);
         }
+      });
 
-        // Calculate processing time
-        batchResult.processingTime = Date.now() - startTime;
-
-        // Cache the result
-        await cacheService.setCachedBatchAnalysis(
-          repoPaths,
-          options,
-          batchResult
-        );
-
-        timer.end();
-        return batchResult;
+      // Add all repositories to the queue
+      for (const repoPath of repoPaths) {
+        queue.addTask(uuidv4(), repoPath);
       }
-    );
+
+      // Wait for all tasks to complete
+      await new Promise<void>((resolve) => {
+        queue.on(QueueEvent.QUEUE_DRAINED, resolve);
+      });
+
+      // Generate combined insights if multiple repositories were analyzed successfully
+      if (batchResult.repositories.length > 1) {
+        batchResult.combinedInsights = await this.generateCombinedInsights(
+          batchResult.repositories
+        );
+      }
+
+      // Calculate processing time
+      batchResult.processingTime = Date.now() - startTime;
+
+      // Cache the result
+      await cacheService.setCachedBatchAnalysis(repoPaths, options, batchResult);
+
+      timer.end();
+      return batchResult;
+    });
   }
 
   /**
@@ -646,9 +601,7 @@ export class AnalysisEngine {
    * @param repositories - Repository analyses
    * @returns Combined insights
    */
-  private async generateCombinedInsights(
-    repositories: RepositoryAnalysis[]
-  ): Promise<{
+  private async generateCombinedInsights(repositories: RepositoryAnalysis[]): Promise<{
     commonalities: string[];
     differences: string[];
     integrationOpportunities: string[];
@@ -691,9 +644,7 @@ export class AnalysisEngine {
     const uniqueLanguages = repositories.map((repo) => {
       return {
         name: repo.name,
-        languages: repo.languages.filter(
-          (lang) => !commonLanguages.includes(lang)
-        ),
+        languages: repo.languages.filter((lang) => !commonLanguages.includes(lang)),
       };
     });
 
@@ -701,36 +652,30 @@ export class AnalysisEngine {
     const uniqueFrameworks = repositories.map((repo) => {
       return {
         name: repo.name,
-        frameworks: repo.frameworks.filter(
-          (framework) => !commonFrameworks.includes(framework)
-        ),
+        frameworks: repo.frameworks.filter((framework) => !commonFrameworks.includes(framework)),
       };
     });
 
     // Generate commonalities
     const commonalities: string[] = [
       commonLanguages.length > 0
-        ? `All repositories use the following languages: ${commonLanguages.join(", ")}`
-        : "No common languages found across all repositories",
+        ? `All repositories use the following languages: ${commonLanguages.join(', ')}`
+        : 'No common languages found across all repositories',
       commonFrameworks.length > 0
-        ? `All repositories use the following frameworks: ${commonFrameworks.join(", ")}`
-        : "No common frameworks found across all repositories",
+        ? `All repositories use the following frameworks: ${commonFrameworks.join(', ')}`
+        : 'No common frameworks found across all repositories',
     ];
 
     // Generate differences
     const differences: string[] = [];
     uniqueLanguages.forEach((repo) => {
       if (repo.languages.length > 0) {
-        differences.push(
-          `${repo.name} uniquely uses: ${repo.languages.join(", ")}`
-        );
+        differences.push(`${repo.name} uniquely uses: ${repo.languages.join(', ')}`);
       }
     });
     uniqueFrameworks.forEach((repo) => {
       if (repo.frameworks.length > 0) {
-        differences.push(
-          `${repo.name} uniquely uses frameworks: ${repo.frameworks.join(", ")}`
-        );
+        differences.push(`${repo.name} uniquely uses frameworks: ${repo.frameworks.join(', ')}`);
       }
     });
 
@@ -740,28 +685,22 @@ export class AnalysisEngine {
     // Check for complementary technologies
     if (commonLanguages.length > 0 || commonFrameworks.length > 0) {
       integrationOpportunities.push(
-        "Repositories share common technologies which could facilitate integration"
+        'Repositories share common technologies which could facilitate integration'
       );
     }
 
     // Check for frontend/backend pairs
     const hasFrontend = repositories.some((repo) =>
-      repo.frameworks.some((f) =>
-        ["react", "vue", "angular", "svelte"].includes(f.toLowerCase())
-      )
+      repo.frameworks.some((f) => ['react', 'vue', 'angular', 'svelte'].includes(f.toLowerCase()))
     );
     const hasBackend = repositories.some((repo) =>
       repo.frameworks.some((f) =>
-        ["express", "nest", "django", "flask", "spring"].includes(
-          f.toLowerCase()
-        )
+        ['express', 'nest', 'django', 'flask', 'spring'].includes(f.toLowerCase())
       )
     );
 
     if (hasFrontend && hasBackend) {
-      integrationOpportunities.push(
-        "Potential for frontend-backend integration detected"
-      );
+      integrationOpportunities.push('Potential for frontend-backend integration detected');
     }
 
     return {
@@ -783,9 +722,7 @@ export class AnalysisEngine {
     format: OutputFormat
   ): Promise<string> {
     // Import export service
-    const { default: exportService } = await import(
-      "../services/export.service"
-    );
+    const { default: exportService } = await import('../services/export.service');
 
     // Use export service to generate content
     return exportService.exportAnalysis(analysis, format);
@@ -815,7 +752,7 @@ export class AnalysisEngine {
   private async getIndexSystem(): Promise<IndexSystem> {
     // This is a placeholder that will be replaced with proper dependency injection
     // For now, we'll just import the IndexSystem directly
-    const { IndexSystem } = await import("./IndexSystem");
+    const { IndexSystem } = await import('./IndexSystem');
 
     // Create a new instance if needed
     if (!this._indexSystem) {
@@ -860,10 +797,7 @@ export class AnalysisEngine {
         totalTokenCount += tokenCount;
 
         // Analyze code structure
-        const structureAnalysis = analyzeCodeStructure(
-          content,
-          fileInfo.language
-        );
+        const structureAnalysis = analyzeCodeStructure(content, fileInfo.language);
 
         // Update file info with structure analysis
         fileInfo.functions = structureAnalysis.functions;
@@ -911,9 +845,7 @@ export class AnalysisEngine {
    * @param repoId - Repository ID to find similar repositories for
    * @returns Promise resolving to repository matches
    */
-  public async findSimilarRepositories(
-    repoId: string
-  ): Promise<RepositoryMatch[]> {
+  public async findSimilarRepositories(repoId: string): Promise<RepositoryMatch[]> {
     const indexSystem = await this.getIndexSystem();
     return indexSystem.findSimilarRepositories(repoId);
   }
