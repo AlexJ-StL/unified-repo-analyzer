@@ -1,3 +1,4 @@
+/// <reference types="vitest/globals" />
 /**
  * Configuration service tests
  */
@@ -26,7 +27,7 @@ vi.mock('os', () => ({
 const mockFs = fs as any;
 const mockHomeDir = '/mock/home';
 
-const _mockDefaultPreferences = {
+const DEFAULT_USER_PREFERENCES = {
   general: {
     autoSave: true,
     autoIndex: true,

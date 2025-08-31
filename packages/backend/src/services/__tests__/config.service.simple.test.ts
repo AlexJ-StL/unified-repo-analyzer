@@ -1,7 +1,9 @@
+/// <reference types="vitest/globals" />
 /**
  * Simple configuration service tests
  */
 
+import fs from 'node:fs/promises';
 import { vi } from 'vitest';
 import { ConfigurationService } from '../config.service';
 
@@ -12,6 +14,8 @@ vi.mock('fs/promises', () => ({
   readFile: vi.fn(),
   access: vi.fn().mockRejectedValue(new Error('File not found')),
 }));
+
+const mockFs = fs as any;
 
 vi.mock('os', () => ({
   homedir: () => '/mock/home',
@@ -35,7 +39,7 @@ describe('ConfigurationService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Setup default mock responses
-    mockReadFile.mockImplementation((path: string) => {
+    mockFs.readFile.mockImplementation((path: string) => {
       if (
         path.includes('workspaces.json') ||
         path.includes('projects.json') ||
@@ -67,7 +71,12 @@ describe('ConfigurationService', () => {
           llmProvider: {
             defaultProvider: 'claude',
             providers: {
-              claude: { name: 'Claude', maxTokens: 8000, temperature: 0.7, enabled: true },
+              claude: {
+                name: 'Claude',
+                maxTokens: 8000,
+                temperature: 0.7,
+                enabled: true,
+              },
             },
           },
           export: {

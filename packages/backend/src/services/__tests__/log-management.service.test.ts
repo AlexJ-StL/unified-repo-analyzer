@@ -336,13 +336,13 @@ describe('LogManagementService', () => {
 
   describe('Service Lifecycle', () => {
     it('should start and stop service correctly', async () => {
-      expect(service.isRunning).toBe(false);
+      expect(service.isServiceRunning()).toBe(false);
 
       await service.start();
-      expect(service.isRunning).toBe(true);
+      expect(service.isServiceRunning()).toBe(true);
 
       await service.stop();
-      expect(service.isRunning).toBe(false);
+      expect(service.isServiceRunning()).toBe(false);
     });
 
     it('should not start service twice', async () => {
@@ -351,13 +351,13 @@ describe('LogManagementService', () => {
       // Starting again should not throw error
       await service.start();
 
-      expect(service.isRunning).toBe(true);
+      expect(service.isServiceRunning()).toBe(true);
     });
 
     it('should handle stop when not running', async () => {
       // Should not throw error when stopping a service that's not running
       await service.stop();
-      expect(service.isRunning).toBe(false);
+      expect(service.isServiceRunning()).toBe(false);
     });
   });
 

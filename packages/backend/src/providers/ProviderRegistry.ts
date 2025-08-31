@@ -2,12 +2,12 @@
  * Registry for managing LLM providers
  */
 
-import type { ProviderConfig } from "@unified-repo-analyzer/shared/src/types/provider";
-import { ClaudeProvider } from "./ClaudeProvider";
-import { GeminiProvider } from "./GeminiProvider";
-import type { LLMProvider } from "./LLMProvider";
-import { MockProvider } from "./MockProvider";
-import { OpenRouterProvider } from "./OpenRouterProvider";
+import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
+import { ClaudeProvider } from './ClaudeProvider';
+import { GeminiProvider } from './GeminiProvider';
+import type { LLMProvider } from './LLMProvider';
+import { MockProvider } from './MockProvider';
+import { OpenRouterProvider } from './OpenRouterProvider';
 
 /**
  * Provider factory function type
@@ -29,16 +29,13 @@ export class ProviderRegistry {
   private constructor() {
     this.providers = new Map();
     this.providerConfigs = new Map();
-    this.defaultProvider = "mock";
+    this.defaultProvider = 'mock';
 
     // Register built-in providers
-    this.registerProvider("claude", (config) => new ClaudeProvider(config));
-    this.registerProvider("gemini", (config) => new GeminiProvider(config));
-    this.registerProvider(
-      "openrouter",
-      (config) => new OpenRouterProvider(config)
-    );
-    this.registerProvider("mock", (config) => new MockProvider(config));
+    this.registerProvider('claude', (config) => new ClaudeProvider(config));
+    this.registerProvider('gemini', (config) => new GeminiProvider(config));
+    this.registerProvider('openrouter', (config) => new OpenRouterProvider(config));
+    this.registerProvider('mock', (config) => new MockProvider(config));
   }
 
   /**
@@ -112,10 +109,7 @@ export class ProviderRegistry {
    * @returns Provider instance
    * @throws Error if provider is not registered
    */
-  public createProvider(
-    name?: string,
-    overrideConfig?: ProviderConfig
-  ): LLMProvider {
+  public createProvider(name?: string, overrideConfig?: ProviderConfig): LLMProvider {
     const providerName = name ? name.toLowerCase() : this.defaultProvider;
     const factory = this.providers.get(providerName);
 
@@ -124,9 +118,7 @@ export class ProviderRegistry {
     }
 
     const baseConfig = this.providerConfigs.get(providerName) || {};
-    const config = overrideConfig
-      ? { ...baseConfig, ...overrideConfig }
-      : baseConfig;
+    const config = overrideConfig ? { ...baseConfig, ...overrideConfig } : baseConfig;
 
     return factory(config);
   }
@@ -156,15 +148,12 @@ export class ProviderRegistry {
   public reset(): void {
     this.providers.clear();
     this.providerConfigs.clear();
-    this.defaultProvider = "mock";
+    this.defaultProvider = 'mock';
 
     // Re-register built-in providers
-    this.registerProvider("claude", (config) => new ClaudeProvider(config));
-    this.registerProvider("gemini", (config) => new GeminiProvider(config));
-    this.registerProvider(
-      "openrouter",
-      (config) => new OpenRouterProvider(config)
-    );
-    this.registerProvider("mock", (config) => new MockProvider(config));
+    this.registerProvider('claude', (config) => new ClaudeProvider(config));
+    this.registerProvider('gemini', (config) => new GeminiProvider(config));
+    this.registerProvider('openrouter', (config) => new OpenRouterProvider(config));
+    this.registerProvider('mock', (config) => new MockProvider(config));
   }
 }

@@ -1,3 +1,4 @@
+/// <reference types="vitest/globals" />
 /**
  * Basic configuration service tests
  */

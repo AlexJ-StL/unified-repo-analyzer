@@ -6,9 +6,9 @@ import type {
   LLMResponse,
   ProjectInfo,
   ProviderConfig,
-} from "@unified-repo-analyzer/shared/src/types/provider";
-import axios from "axios";
-import { LLMProvider } from "./LLMProvider";
+} from '@unified-repo-analyzer/shared/src/types/provider';
+import axios from 'axios';
+import { LLMProvider } from './LLMProvider';
 
 /**
  * OpenRouter API response interface
@@ -33,13 +33,13 @@ interface OpenRouterAPIResponse {
  * OpenRouter LLM provider implementation
  */
 export class OpenRouterProvider extends LLMProvider {
-  private readonly API_URL = "https://openrouter.ai/api/v1/chat/completions";
+  private readonly API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
   /**
    * Gets the name of the provider
    */
   get name(): string {
-    return "openrouter";
+    return 'openrouter';
   }
 
   /**
@@ -51,12 +51,12 @@ export class OpenRouterProvider extends LLMProvider {
    */
   protected validateAndNormalizeConfig(config: ProviderConfig): ProviderConfig {
     if (!config.apiKey) {
-      throw new Error("OpenRouter API key is required");
+      throw new Error('OpenRouter API key is required');
     }
 
     return {
       ...config,
-      model: config.model || "openrouter/auto",
+      model: config.model || 'openrouter/auto',
       maxTokens: config.maxTokens || 4000,
       temperature: config.temperature !== undefined ? config.temperature : 0.7,
     };
@@ -74,16 +74,16 @@ Analyze this codebase and provide both an executive summary and a technical brea
 
 # Repository Information
 - Name: ${projectInfo.name}
-- Primary Language: ${projectInfo.language || "Unknown"}
+- Primary Language: ${projectInfo.language || 'Unknown'}
 - File Count: ${projectInfo.fileCount}
 - Directory Count: ${projectInfo.directoryCount}
 
-${projectInfo.description ? `# Description\n${projectInfo.description}\n` : ""}
+${projectInfo.description ? `# Description\n${projectInfo.description}\n` : ''}
 
-${projectInfo.readme ? `# README\n${projectInfo.readme}\n` : ""}
+${projectInfo.readme ? `# README\n${projectInfo.readme}\n` : ''}
 
 # Key Directories
-${projectInfo.directories.map((dir) => `- ${dir}`).join("\n")}
+${projectInfo.directories.map((dir) => `- ${dir}`).join('\n')}
 
 # Key Files
 ${projectInfo.fileAnalysis
@@ -93,25 +93,25 @@ ${projectInfo.fileAnalysis
 - Functions: ${file.functionCount}
 - Classes: ${file.classCount}
 - Imports: ${file.importCount}
-${file.sample ? `\`\`\`\n${file.sample}\n\`\`\`` : ""}
+${file.sample ? `\`\`\`\n${file.sample}\n\`\`\`` : ''}
 `;
   })
-  .join("\n")}
+  .join('\n')}
 
 ${
   projectInfo.dependencies
     ? `# Dependencies\n${Object.entries(projectInfo.dependencies)
         .map(([name, version]) => `- ${name}: ${version}`)
-        .join("\n")}\n`
-    : ""
+        .join('\n')}\n`
+    : ''
 }
 
 ${
   projectInfo.devDependencies
     ? `# Dev Dependencies\n${Object.entries(projectInfo.devDependencies)
         .map(([name, version]) => `- ${name}: ${version}`)
-        .join("\n")}\n`
-    : ""
+        .join('\n')}\n`
+    : ''
 }
 
 Please provide:
@@ -139,7 +139,7 @@ Please provide:
           model: this.config.model,
           messages: [
             {
-              role: "user",
+              role: 'user',
               content: prompt,
             },
           ],
@@ -148,10 +148,10 @@ Please provide:
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${this.config.apiKey}`,
-            "HTTP-Referer": "https://unified-repo-analyzer.com", // Optional, for OpenRouter analytics
-            "X-Title": "Unified Repo Analyzer", // Optional, for OpenRouter analytics
+            'HTTP-Referer': 'https://unified-repo-analyzer.com', // Optional, for OpenRouter analytics
+            'X-Title': 'Unified Repo Analyzer', // Optional, for OpenRouter analytics
           },
           timeout: 60000, // 60 second timeout
         }
@@ -159,12 +159,12 @@ Please provide:
 
       // Check if we have a valid response
       if (!response.data.choices || response.data.choices.length === 0) {
-        throw new Error("OpenRouter returned no choices");
+        throw new Error('OpenRouter returned no choices');
       }
 
       const choice = response.data.choices[0];
       if (!choice.message || !choice.message.content) {
-        throw new Error("OpenRouter returned no content");
+        throw new Error('OpenRouter returned no content');
       }
 
       return {

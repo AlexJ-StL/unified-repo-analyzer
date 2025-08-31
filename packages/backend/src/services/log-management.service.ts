@@ -399,6 +399,13 @@ export class LogManagementService extends EventEmitter {
     return { ...this.config };
   }
 
+  /**
+   * Check if the service is currently running
+   */
+  isServiceRunning(): boolean {
+    return this.isRunning;
+  }
+
   private async ensureLogDirectory(): Promise<void> {
     try {
       await access(this.config.logDirectory);
