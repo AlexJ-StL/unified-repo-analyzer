@@ -30,13 +30,13 @@ router.post(
       .isBoolean()
       .withMessage('validatePermissions must be a boolean'),
   ],
-  pathController.validatePath
+  pathController.validatePath as any
 );
 
 /**
  * GET /api/path/format-info
  * Get platform-specific path format information
  */
-router.get('/format-info', pathController.getPathFormatInfo);
+router.get('/format-info', pathController.getPathFormatInfo as any);
 
 export default router;

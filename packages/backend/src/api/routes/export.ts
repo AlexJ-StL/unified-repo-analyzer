@@ -21,7 +21,7 @@ router.post(
       .withMessage('Format must be json, markdown, or html'),
     body('analysis').optional().isObject(),
   ],
-  exportController.exportAnalysis
+  exportController.exportAnalysis as any
 );
 
 /**
@@ -37,7 +37,7 @@ router.post(
       .withMessage('Format must be json, markdown, or html'),
     body('batchAnalysis').optional().isObject(),
   ],
-  exportController.exportBatchAnalysis
+  exportController.exportBatchAnalysis as any
 );
 
 /**
@@ -47,14 +47,14 @@ router.post(
 router.get(
   '/download/:exportId',
   [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
-  exportController.downloadExport
+  exportController.downloadExport as any
 );
 
 /**
  * GET /api/export/history
  * Get export history
  */
-router.get('/history', exportController.getExportHistory);
+router.get('/history', exportController.getExportHistory as any);
 
 /**
  * DELETE /api/export/:exportId
@@ -63,7 +63,7 @@ router.get('/history', exportController.getExportHistory);
 router.delete(
   '/:exportId',
   [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
-  exportController.deleteExport
+  exportController.deleteExport as any
 );
 
 export default router;

@@ -12,13 +12,13 @@ const router = Router();
  * GET /api/repositories
  * Get all indexed repositories
  */
-router.get('/', repositoriesController.getAllRepositories);
+router.get('/', repositoriesController.getAllRepositories as any);
 
 /**
  * GET /api/repositories/:id
  * Get a specific repository by ID
  */
-router.get('/:id', repositoriesController.getRepositoryById);
+router.get('/:id', repositoriesController.getRepositoryById as any);
 
 /**
  * GET /api/repositories/search
@@ -34,37 +34,40 @@ router.get(
     query('dateRange.start').optional().isISO8601(),
     query('dateRange.end').optional().isISO8601(),
   ],
-  repositoriesController.searchRepositories
+  repositoriesController.searchRepositories as any
 );
 
 /**
  * GET /api/repositories/:id/similar
  * Find similar repositories to the specified repository
  */
-router.get('/:id/similar', repositoriesController.getSimilarRepositories);
+router.get('/:id/similar', repositoriesController.getSimilarRepositories as any);
 
 /**
  * POST /api/repositories/combinations
  * Suggest combinations of repositories
  */
-router.post('/combinations', repositoriesController.suggestCombinations);
+router.post('/combinations', repositoriesController.suggestCombinations as any);
 
 /**
  * GET /api/repositories/relationships/graph
  * Get relationship graph for visualization
  */
-router.get('/relationships/graph', repositoriesController.getRelationshipGraph);
+router.get('/relationships/graph', repositoriesController.getRelationshipGraph as any);
 
 /**
  * POST /api/repositories/relationships/opportunities
  * Analyze integration opportunities
  */
-router.post('/relationships/opportunities', repositoriesController.getIntegrationOpportunities);
+router.post(
+  '/relationships/opportunities',
+  repositoriesController.getIntegrationOpportunities as any
+);
 
 /**
  * GET /api/repositories/relationships/insights
  * Get relationship insights and statistics
  */
-router.get('/relationships/insights', repositoriesController.getRelationshipInsights);
+router.get('/relationships/insights', repositoriesController.getRelationshipInsights as any);
 
 export default router;
