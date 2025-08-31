@@ -3,9 +3,9 @@
  * Utilities for tests that need custom cleanup beyond the standard cleanup
  */
 
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { registerCleanupTask } from './cleanup-manager';
+import fs from "node:fs/promises";
+import path from "node:path";
+import { registerCleanupTask } from "./cleanup-manager";
 
 /**
  * Cleanup helper for tests that create temporary files
@@ -31,8 +31,8 @@ export class TempFileCleanup {
   /**
    * Create a temporary file and register it for cleanup
    */
-  async createTempFile(fileName: string, content = ''): Promise<string> {
-    const tempPath = path.join(process.cwd(), 'test-temp', fileName);
+  async createTempFile(fileName: string, content = ""): Promise<string> {
+    const tempPath = path.join(process.cwd(), "test-temp", fileName);
     await fs.mkdir(path.dirname(tempPath), { recursive: true });
     await fs.writeFile(tempPath, content);
     this.addTempFile(tempPath);
@@ -43,7 +43,7 @@ export class TempFileCleanup {
    * Create a temporary directory and register it for cleanup
    */
   async createTempDir(dirName: string): Promise<string> {
-    const tempPath = path.join(process.cwd(), 'test-temp', dirName);
+    const tempPath = path.join(process.cwd(), "test-temp", dirName);
     await fs.mkdir(tempPath, { recursive: true });
     this.addTempDir(tempPath);
     return tempPath;
@@ -273,7 +273,11 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
       const result = testFn(...args);
 
       // If the test function returns a promise, add cleanup to the chain
-      if (result && typeof result.then === 'function' && typeof result.finally === 'function') {
+      if (
+        result &&
+        typeof (result as any).then === "function" &&
+        typeof (result as any).finally === "function"
+      ) {
         return (result as Promise<unknown>).finally(() => cleanup.cleanup());
       }
 
@@ -282,7 +286,7 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
       // Ensure cleanup runs even if test throws
       cleanup.cleanup().catch((error) => {
         // Log cleanup error without using console
-        if (typeof process !== 'undefined' && process.stderr) {
+        if (typeof process !== "undefined" && process.stderr) {
           process.stderr.write(`Cleanup error: ${error}\n`);
         }
       });
@@ -294,7 +298,9 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
 /**
  * Utility to wait for all pending operations to complete
  */
-export async function waitForPendingOperations(timeoutMs = 1000): Promise<void> {
+export async function waitForPendingOperations(
+  timeoutMs = 1000
+): Promise<void> {
   return new Promise((resolve) => {
     // Wait for next tick to allow pending operations to complete
     setImmediate(() => {

@@ -6,28 +6,28 @@
 /// <reference types="vitest" />
 /// <reference types="node" />
 
-import '@testing-library/jest-dom/vitest';
-import { join } from 'node:path';
-import { config } from 'dotenv';
-import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
+import "@testing-library/jest-dom/vitest";
+import { join } from "node:path";
+import { config } from "dotenv";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
 // Export mocking utilities for easy access in tests
-export { vi } from 'vitest';
+export { vi } from "vitest";
 
 // Create a safe mocked function that works with both Bun and Vitest
 export const mocked = <T>(item: T): T => {
-  if (typeof vi.mocked === 'function') {
-    return vi.mocked(item);
+  if (typeof vi.mocked === "function") {
+    return vi.mocked(item) as unknown as T;
   }
   // Fallback for when vi.mocked is not available
   return item as T;
 };
 
 // Re-export CI/CD utilities
-export * from './ci-test-utils';
+export * from "./ci-test-utils";
 
 // Re-export cleanup utilities (conditional to avoid circular imports)
-export * from './cleanup-manager';
+export * from "./cleanup-manager";
 // Re-export enhanced mock utilities (selective to avoid circular dependencies)
 export {
   commonMocks,
@@ -36,35 +36,37 @@ export {
   mockRejected,
   mockTimers,
   spyOn,
-} from './mock-utils';
-export * from './parallel-test-utils';
+} from "./mock-utils";
+export * from "./parallel-test-utils";
 // Re-export runtime-specific helpers
-export * from './runtime-test-helpers';
-export * from './test-cleanup-helpers';
+export * from "./runtime-test-helpers";
+export * from "./test-cleanup-helpers";
 // Re-export isolation and parallel test utilities
-export * from './test-isolation';
+export * from "./test-isolation";
 
 // Load test environment variables
-config({ path: join(__dirname, '../.env.test') });
+config({ path: join(__dirname, "../.env.test") });
 
 // Global test configuration
 beforeAll(async () => {
   // Set test environment
-  process.env.NODE_ENV = 'test';
+  process.env.NODE_ENV = "test";
 
   // Initialize CI utilities and log environment info
-  const { logEnvironmentInfo, EnvironmentDetector } = await import('./ci-test-utils');
+  const { logEnvironmentInfo, EnvironmentDetector } = await import(
+    "./ci-test-utils"
+  );
   logEnvironmentInfo();
 
   // Enhanced CI configuration
   if (EnvironmentDetector.isCI()) {
-    process.env.TEST_TIMEOUT = '120000'; // Increased for CI
-    process.env.SILENT_TESTS = 'true'; // Reduce noise in CI
-    process.env.TEST_PARALLEL = 'true'; // Enable parallel execution
+    process.env.TEST_TIMEOUT = "120000"; // Increased for CI
+    process.env.SILENT_TESTS = "true"; // Reduce noise in CI
+    process.env.TEST_PARALLEL = "true"; // Enable parallel execution
   }
 
   // Enhanced console mocking for test environment
-  if (process.env.SILENT_TESTS === 'true') {
+  if (process.env.SILENT_TESTS === "true") {
     global.console = {
       ...console,
       log: vi.fn(),
@@ -77,14 +79,14 @@ beforeAll(async () => {
   }
 
   // Setup global error handlers for better test debugging
-  process.on('unhandledRejection', (_reason, _promise) => {});
+  process.on("unhandledRejection", (_reason, _promise) => {});
 
-  process.on('uncaughtException', (_error) => {});
+  process.on("uncaughtException", (_error) => {});
 
   // Setup DOM environment if jsdom is available
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     // Mock window.matchMedia for frontend tests
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: (query: string): MediaQueryList => ({
         matches: false,
@@ -125,7 +127,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Final comprehensive cleanup after all tests
-  const { runCleanup, emergencyCleanup } = await import('./cleanup-manager');
+  const { runCleanup, emergencyCleanup } = await import("./cleanup-manager");
 
   try {
     const stats = await runCleanup();
@@ -150,9 +152,9 @@ beforeEach(async () => {
   vi.resetModules();
 
   // Cleanup DOM if in jsdom environment
-  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  if (typeof window !== "undefined" && typeof document !== "undefined") {
     try {
-      const { cleanup } = await import('@testing-library/react');
+      const { cleanup } = await import("@testing-library/react");
       cleanup();
     } catch (_error) {
       // @testing-library/react not available, skip
@@ -160,15 +162,15 @@ beforeEach(async () => {
   }
 
   // Reset environment variables that might be modified by tests
-  if (process.env.NODE_ENV !== 'test') {
-    process.env.NODE_ENV = 'test';
+  if (process.env.NODE_ENV !== "test") {
+    process.env.NODE_ENV = "test";
   }
 
   // Memory usage check for performance monitoring
-  if (process.env.DEBUG_MEMORY === 'true') {
-    const { MemoryUsageChecker } = await import('./performance-monitor');
+  if (process.env.DEBUG_MEMORY === "true") {
+    const { MemoryUsageChecker } = await import("./performance-monitor");
     const memoryStatus = MemoryUsageChecker.checkMemoryUsage();
-    if (memoryStatus.status === 'critical') {
+    if (memoryStatus.status === "critical") {
       await MemoryUsageChecker.forceGarbageCollection();
     }
   }
@@ -176,7 +178,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Run comprehensive cleanup after each test
-  const { runCleanup } = await import('./cleanup-manager');
+  const { runCleanup } = await import("./cleanup-manager");
   const stats = await runCleanup();
 
   // Log cleanup warnings if there were errors (but don't fail tests)
@@ -191,15 +193,15 @@ afterEach(async () => {
  */
 async function _cleanupTestArtifacts(): Promise<void> {
   try {
-    const fs = await import('node:fs/promises');
-    const path = await import('node:path');
+    const fs = await import("node:fs/promises");
+    const path = await import("node:path");
 
     // Common test artifact patterns to clean up
     const testDirs = [
-      'test-logging-integration',
-      'test-repo-analysis',
-      'test-cache',
-      'test-output',
+      "test-logging-integration",
+      "test-repo-analysis",
+      "test-cache",
+      "test-output",
     ];
 
     for (const dir of testDirs) {
@@ -230,7 +232,7 @@ export function createMockFunction<T extends (...args: unknown[]) => unknown>(
  * Mock a module with type safety
  */
 export function mockModule<T>(modulePath: string, factory?: () => T): void {
-  vi.mock(modulePath, factory);
+  vi.mock(modulePath, factory as any);
 }
 
 /**

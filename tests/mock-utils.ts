@@ -3,7 +3,7 @@
  * Provides type-safe mocking helpers and common mock patterns
  */
 
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 /**
  * Enhanced mock function with better type inference
@@ -25,7 +25,7 @@ export function mockModule<T extends Record<string, any>>(
   modulePath: string,
   mockImplementation: Partial<T>
 ): void {
-  if (typeof vi.mock === 'function') {
+  if (typeof vi.mock === "function") {
     vi.mock(modulePath, () => mockImplementation);
   } else {
   }
@@ -34,7 +34,9 @@ export function mockModule<T extends Record<string, any>>(
 /**
  * Create a partial mock of an object with type safety
  */
-export function createPartialMock<T extends Record<string, any>>(partial: Partial<T>): T {
+export function createPartialMock<T extends Record<string, any>>(
+  partial: Partial<T>
+): T {
   return partial as T;
 }
 
@@ -69,21 +71,21 @@ export const mockNodeModules = {
   }),
 
   path: () => ({
-    join: vi.fn((...args) => args.join('/')),
-    resolve: vi.fn((...args) => args.join('/')),
-    dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
-    basename: vi.fn((p) => p.split('/').pop()),
+    join: vi.fn((...args) => args.join("/")),
+    resolve: vi.fn((...args) => args.join("/")),
+    dirname: vi.fn((p) => p.split("/").slice(0, -1).join("/")),
+    basename: vi.fn((p) => p.split("/").pop()),
     extname: vi.fn((p) => {
-      const parts = p.split('.');
-      return parts.length > 1 ? `.${parts.pop()}` : '';
+      const parts = p.split(".");
+      return parts.length > 1 ? `.${parts.pop()}` : "";
     }),
   }),
 
   crypto: () => ({
-    randomUUID: vi.fn(() => 'mock-uuid-123'),
+    randomUUID: vi.fn(() => "mock-uuid-123"),
     createHash: vi.fn(() => ({
       update: vi.fn().mockReturnThis(),
-      digest: vi.fn(() => 'mock-hash'),
+      digest: vi.fn(() => "mock-hash"),
     })),
   }),
 };
@@ -91,7 +93,9 @@ export const mockNodeModules = {
 /**
  * Mock async functions with proper promise handling
  */
-export function mockAsync<T>(implementation?: () => Promise<T> | T): ReturnType<typeof vi.fn> {
+export function mockAsync<T>(
+  implementation?: () => Promise<T> | T
+): ReturnType<typeof vi.fn> {
   const mockFn = vi.fn();
 
   if (implementation) {
@@ -111,7 +115,7 @@ export function mockAsync<T>(implementation?: () => Promise<T> | T): ReturnType<
  */
 export function mockRejected(error: Error | string): ReturnType<typeof vi.fn> {
   const mockFn = vi.fn();
-  const errorObj = typeof error === 'string' ? new Error(error) : error;
+  const errorObj = typeof error === "string" ? new Error(error) : error;
   mockFn.mockRejectedValue(errorObj);
   return mockFn;
 }
@@ -119,11 +123,11 @@ export function mockRejected(error: Error | string): ReturnType<typeof vi.fn> {
 /**
  * Create a spy on an existing object method
  */
-export function spyOn<T extends Record<string, any>, K extends keyof T>(
+export function spyOn<T extends Record<string, any>>(
   object: T,
-  method: K
+  method: keyof T
 ): ReturnType<typeof vi.spyOn> {
-  return vi.spyOn(object, method);
+  return vi.spyOn(object, method as any);
 }
 
 /**
@@ -131,28 +135,28 @@ export function spyOn<T extends Record<string, any>, K extends keyof T>(
  */
 export const mockTimers = {
   setup: () => {
-    if (typeof vi.useFakeTimers === 'function') {
+    if (typeof vi.useFakeTimers === "function") {
       vi.useFakeTimers();
     }
   },
 
   cleanup: () => {
-    if (typeof vi.clearAllTimers === 'function') {
+    if (typeof vi.clearAllTimers === "function") {
       vi.clearAllTimers();
     }
-    if (typeof vi.useRealTimers === 'function') {
+    if (typeof vi.useRealTimers === "function") {
       vi.useRealTimers();
     }
   },
 
   advanceTime: (ms: number) => {
-    if (typeof vi.advanceTimersByTime === 'function') {
+    if (typeof vi.advanceTimersByTime === "function") {
       vi.advanceTimersByTime(ms);
     }
   },
 
   runAllTimers: () => {
-    if (typeof vi.runAllTimers === 'function') {
+    if (typeof vi.runAllTimers === "function") {
       vi.runAllTimers();
     }
   },
@@ -161,18 +165,18 @@ export const mockTimers = {
    * Setup timers with automatic cleanup registration
    */
   setupWithCleanup: async () => {
-    if (typeof vi.useFakeTimers === 'function') {
+    if (typeof vi.useFakeTimers === "function") {
       vi.useFakeTimers();
     }
     try {
-      const { registerCleanupTask } = await import('./cleanup-manager');
+      const { registerCleanupTask } = await import("./cleanup-manager");
       registerCleanupTask(
-        'mock-timers',
+        "mock-timers",
         () => {
-          if (typeof vi.clearAllTimers === 'function') {
+          if (typeof vi.clearAllTimers === "function") {
             vi.clearAllTimers();
           }
-          if (typeof vi.useRealTimers === 'function') {
+          if (typeof vi.useRealTimers === "function") {
             vi.useRealTimers();
           }
         },

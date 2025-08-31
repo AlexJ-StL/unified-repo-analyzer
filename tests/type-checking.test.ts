@@ -3,12 +3,12 @@
  * Ensures TypeScript types are properly maintained and prevent regression
  */
 
-import type { MockedFunction } from 'vitest';
-import { describe, expect, it } from 'vitest';
+import type { MockedFunction } from "vitest";
+import { describe, expect, it } from "vitest";
 
-describe('Type Checking Tests', () => {
-  describe('IndexSystem Type Completeness', () => {
-    it('should have proper TypeScript interface for IndexSystem', () => {
+describe("Type Checking Tests", () => {
+  describe("IndexSystem Type Completeness", () => {
+    it("should have proper TypeScript interface for IndexSystem", () => {
       // Define the expected interface
       interface ExpectedIndexSystemInterface {
         repositories: Map<string, unknown>;
@@ -34,7 +34,7 @@ describe('Type Checking Tests', () => {
         repositories: new Map(),
         globalTags: new Set(),
 
-        addRepository: () => 'id',
+        addRepository: () => "id",
         updateRepository: () => {},
         removeRepository: () => true,
         searchRepositories: () => [],
@@ -52,7 +52,7 @@ describe('Type Checking Tests', () => {
       expect(mockImplementation).toBeDefined();
     });
 
-    it('should have proper return types for IndexSystem methods', () => {
+    it("should have proper return types for IndexSystem methods", () => {
       // Test that method return types are as expected
       interface MethodReturnTypes {
         addRepository: string;
@@ -72,7 +72,7 @@ describe('Type Checking Tests', () => {
 
       // This ensures TypeScript compilation validates return types
       const returnTypes: MethodReturnTypes = {
-        addRepository: 'string',
+        addRepository: "string",
         updateRepository: undefined,
         removeRepository: true,
         searchRepositories: [],
@@ -91,12 +91,12 @@ describe('Type Checking Tests', () => {
     });
   });
 
-  describe('Mock Function Type Safety', () => {
-    it('should properly type mock functions', () => {
+  describe("Mock Function Type Safety", () => {
+    it("should properly type mock functions", () => {
       // Test that MockedFunction type works correctly
       type TestFunction = (param: string) => number;
 
-      const mockFn: MockedFunction<TestFunction> = {
+      const mockFn = {
         mockClear: () => mockFn,
         mockReset: () => mockFn,
         mockRestore: () => void 0,
@@ -108,7 +108,7 @@ describe('Type Checking Tests', () => {
         mockRejectedValueOnce: () => mockFn,
         mockImplementation: () => mockFn,
         mockImplementationOnce: () => mockFn,
-        getMockName: () => 'mock',
+        getMockName: () => "mock",
         mock: {
           calls: [],
           contexts: [],
@@ -121,16 +121,16 @@ describe('Type Checking Tests', () => {
         mockName: () => mockFn,
         getMockImplementation: () => undefined,
         withImplementation: () => mockFn,
-      } as MockedFunction<TestFunction>;
+      } as unknown as MockedFunction<TestFunction>;
 
       // Add the actual function behavior
       Object.assign(mockFn, () => 42);
 
-      expect(typeof mockFn).toBe('object');
+      expect(typeof mockFn).toBe("object");
       expect(mockFn.mockClear).toBeDefined();
     });
 
-    it('should ensure mock function type compatibility', () => {
+    it("should ensure mock function type compatibility", () => {
       // Define a function type
       type AsyncFunction = (id: string) => Promise<unknown[]>;
 
@@ -144,18 +144,23 @@ describe('Type Checking Tests', () => {
     });
   });
 
-  describe('Test Utility Type Safety', () => {
-    it('should have proper types for test utilities', () => {
+  describe("Test Utility Type Safety", () => {
+    it("should have proper types for test utilities", () => {
       // Define expected test utility types
       interface TestUtilityTypes {
         mockValidation: {
           validateMockingInfrastructure: () => void;
-          createValidatedMock: <T extends (...args: unknown[]) => unknown>(
+          createValidatedMock: <T extends (...args: any[]) => any>(
             name: string,
             implementation?: T
           ) => MockedFunction<T>;
-          validateMock: <T>(mock: MockedFunction<T>, name: string) => void;
-          ensureMockCleanup: (mocks: Array<MockedFunction<unknown>>) => void;
+          validateMock: <T extends (...args: any[]) => any>(
+            mock: MockedFunction<T>,
+            name: string
+          ) => void;
+          ensureMockCleanup: (
+            mocks: Array<MockedFunction<(...args: any[]) => any>>
+          ) => void;
         };
 
         apiValidation: {
@@ -164,7 +169,10 @@ describe('Type Checking Tests', () => {
             obj: unknown,
             expectedSignatures: Record<string, number>
           ) => void;
-          validateAsyncMethods: (instance: unknown, asyncMethods: string[]) => Promise<void>;
+          validateAsyncMethods: (
+            instance: unknown,
+            asyncMethods: string[]
+          ) => Promise<void>;
         };
 
         assertionValidation: {
@@ -178,7 +186,10 @@ describe('Type Checking Tests', () => {
             minLength?: number,
             maxLength?: number
           ) => void;
-          validateSearchResults: (results: unknown[], expectedProperties: string[]) => void;
+          validateSearchResults: (
+            results: unknown[],
+            expectedProperties: string[]
+          ) => void;
         };
       }
 
@@ -186,7 +197,8 @@ describe('Type Checking Tests', () => {
       const utilityTypes: TestUtilityTypes = {
         mockValidation: {
           validateMockingInfrastructure: () => {},
-          createValidatedMock: () => ({}) as unknown,
+          createValidatedMock: <T extends (...args: any[]) => any>() =>
+            ({}) as unknown as MockedFunction<T>,
           validateMock: () => {},
           ensureMockCleanup: () => {},
         },
@@ -206,8 +218,8 @@ describe('Type Checking Tests', () => {
     });
   });
 
-  describe('Configuration Type Safety', () => {
-    it('should have proper types for test configuration', () => {
+  describe("Configuration Type Safety", () => {
+    it("should have proper types for test configuration", () => {
       // Define expected configuration types
       interface TestConfigTypes {
         timeouts: {
@@ -253,7 +265,7 @@ describe('Type Checking Tests', () => {
           isCI: false,
           isBun: true,
           isNode: false,
-          platform: 'win32',
+          platform: "win32",
         },
         concurrency: {
           maxConcurrency: 4,
@@ -266,8 +278,8 @@ describe('Type Checking Tests', () => {
     });
   });
 
-  describe('Error Type Safety', () => {
-    it('should have proper error types for test failures', () => {
+  describe("Error Type Safety", () => {
+    it("should have proper error types for test failures", () => {
       // Define expected error types
       interface TestErrorTypes {
         mockError: {
@@ -293,21 +305,21 @@ describe('Type Checking Tests', () => {
 
       const errorTypes: TestErrorTypes = {
         mockError: {
-          name: 'MockError',
-          message: 'Mock function failed',
-          mockName: 'testMock',
+          name: "MockError",
+          message: "Mock function failed",
+          mockName: "testMock",
         },
         assertionError: {
-          name: 'AssertionError',
-          message: 'Assertion failed',
-          expected: 'expected value',
-          actual: 'actual value',
+          name: "AssertionError",
+          message: "Assertion failed",
+          expected: "expected value",
+          actual: "actual value",
         },
         timeoutError: {
-          name: 'TimeoutError',
-          message: 'Operation timed out',
+          name: "TimeoutError",
+          message: "Operation timed out",
           timeout: 5000,
-          operation: 'testOperation',
+          operation: "testOperation",
         },
       };
 
@@ -315,18 +327,20 @@ describe('Type Checking Tests', () => {
     });
   });
 
-  describe('Generic Type Safety', () => {
-    it('should handle generic types properly in test utilities', () => {
+  describe("Generic Type Safety", () => {
+    it("should handle generic types properly in test utilities", () => {
       // Test generic function types
       type GenericValidator<T> = (item: T, index: number) => void;
       type GenericAsyncFunction<T, R> = (input: T) => Promise<R>;
 
       const stringValidator: GenericValidator<string> = (item, index) => {
-        expect(typeof item).toBe('string');
-        expect(typeof index).toBe('number');
+        expect(typeof item).toBe("string");
+        expect(typeof index).toBe("number");
       };
 
-      const numberAsyncFunction: GenericAsyncFunction<number, string> = async (input) => {
+      const numberAsyncFunction: GenericAsyncFunction<number, string> = async (
+        input
+      ) => {
         return input.toString();
       };
 
@@ -334,26 +348,29 @@ describe('Type Checking Tests', () => {
       expect(numberAsyncFunction).toBeDefined();
     });
 
-    it('should handle union types in test scenarios', () => {
+    it("should handle union types in test scenarios", () => {
       // Test union types that might appear in test scenarios
       type TestResult = string | number | boolean | object | null;
-      type TestStatus = 'pass' | 'fail' | 'skip' | 'pending';
+      type TestStatus = "pass" | "fail" | "skip" | "pending";
 
-      const handleTestResult = (result: TestResult, status: TestStatus): void => {
+      const handleTestResult = (
+        result: TestResult,
+        status: TestStatus
+      ): void => {
         expect(result).toBeDefined();
-        expect(['pass', 'fail', 'skip', 'pending']).toContain(status);
+        expect(["pass", "fail", "skip", "pending"]).toContain(status);
       };
 
-      handleTestResult('test', 'pass');
-      handleTestResult(42, 'fail');
-      handleTestResult(true, 'skip');
-      handleTestResult({}, 'pending');
-      handleTestResult(null, 'pass');
+      handleTestResult("test", "pass");
+      handleTestResult(42, "fail");
+      handleTestResult(true, "skip");
+      handleTestResult({}, "pending");
+      handleTestResult(null, "pass");
     });
   });
 
-  describe('Async Type Safety', () => {
-    it('should properly type async test functions', async () => {
+  describe("Async Type Safety", () => {
+    it("should properly type async test functions", async () => {
       // Test async function types
       type AsyncTestFunction = () => Promise<void>;
       type AsyncValidatorFunction<T> = (input: T) => Promise<boolean>;
@@ -364,19 +381,20 @@ describe('Type Checking Tests', () => {
 
       const asyncValidator: AsyncValidatorFunction<string> = async (input) => {
         await new Promise((resolve) => setTimeout(resolve, 1));
-        return typeof input === 'string';
+        return typeof input === "string";
       };
 
       await asyncTest();
-      const result = await asyncValidator('test');
+      const result = await asyncValidator("test");
       expect(result).toBe(true);
     });
 
-    it('should handle Promise types correctly', async () => {
+    it("should handle Promise types correctly", async () => {
       // Test Promise return types
       type PromiseReturningFunction<T> = () => Promise<T>;
 
-      const stringPromise: PromiseReturningFunction<string> = async () => 'result';
+      const stringPromise: PromiseReturningFunction<string> = async () =>
+        "result";
       const numberPromise: PromiseReturningFunction<number> = async () => 42;
       const arrayPromise: PromiseReturningFunction<unknown[]> = async () => [];
 
@@ -384,8 +402,8 @@ describe('Type Checking Tests', () => {
       const numberResult = await numberPromise();
       const arrayResult = await arrayPromise();
 
-      expect(typeof stringResult).toBe('string');
-      expect(typeof numberResult).toBe('number');
+      expect(typeof stringResult).toBe("string");
+      expect(typeof numberResult).toBe("number");
       expect(Array.isArray(arrayResult)).toBe(true);
     });
   });
