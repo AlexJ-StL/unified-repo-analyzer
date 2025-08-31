@@ -1,5 +1,3 @@
-
-          export function util8() {
-            return 'utility function 8';
-          }
-        
+export function util8() {
+  return 'utility function 8';
+}
