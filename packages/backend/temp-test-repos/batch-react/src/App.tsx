@@ -1,4 +1,5 @@
-import type React from 'react';
+
+import React from 'react';
 
 interface Props {
   title: string;
