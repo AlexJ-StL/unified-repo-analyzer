@@ -3,8 +3,8 @@
  * Provides utilities to prevent future test infrastructure issues
  */
 
-import type { MockedFunction } from "vitest";
-import { vi } from "vitest";
+import type { MockedFunction } from 'vitest';
+import { vi } from 'vitest';
 
 /**
  * Mock validation utilities to prevent future mocking issues
@@ -15,16 +15,16 @@ export class MockValidation {
    */
   static validateMockingInfrastructure(): void {
     // Test that vi.fn is available and functional (this is the core requirement)
-    if (typeof vi.fn !== "function") {
-      throw new Error("vi.fn is not available - check vitest configuration");
+    if (typeof vi.fn !== 'function') {
+      throw new Error('vi.fn is not available - check vitest configuration');
     }
 
     // Test that vi.mocked is available and functional
-    if (typeof vi.mocked !== "function") {
+    if (typeof vi.mocked !== 'function') {
     }
 
     // vi.mock might not be available in all contexts, so we check more carefully
-    if (typeof vi.mock !== "function") {
+    if (typeof vi.mock !== 'function') {
     }
   }
 
@@ -68,7 +68,7 @@ export class MockValidation {
       throw new Error(`Mock ${name} is undefined or null`);
     }
 
-    if (typeof mock !== "function") {
+    if (typeof mock !== 'function') {
       throw new Error(`Mock ${name} is not a function`);
     }
 
@@ -76,7 +76,7 @@ export class MockValidation {
       throw new Error(`Mock ${name} is missing mockClear method`);
     }
 
-    if (typeof mock.mockImplementation !== "function") {
+    if (typeof mock.mockImplementation !== 'function') {
       throw new Error(`Mock ${name} is missing mockImplementation method`);
     }
   }
@@ -84,15 +84,13 @@ export class MockValidation {
   /**
    * Ensures proper mock cleanup
    */
-  static ensureMockCleanup(
-    mocks: Array<MockedFunction<(...args: any[]) => any>>
-  ): void {
+  static ensureMockCleanup(mocks: Array<MockedFunction<(...args: any[]) => any>>): void {
     for (const mock of mocks) {
       try {
-        if (mock && typeof mock.mockClear === "function") {
+        if (mock && typeof mock.mockClear === 'function') {
           mock.mockClear();
         }
-        if (mock && typeof mock.mockReset === "function") {
+        if (mock && typeof mock.mockReset === 'function') {
           mock.mockReset();
         }
       } catch (_error) {}
@@ -107,30 +105,28 @@ export class APICompletenessValidator {
   /**
    * Validates that IndexSystem has all required methods
    */
-  static validateIndexSystemAPI(
-    indexSystemClass: new () => { [key: string]: any }
-  ): void {
+  static validateIndexSystemAPI(indexSystemClass: new () => { [key: string]: any }): void {
     const requiredMethods = [
-      "addRepository",
-      "updateRepository",
-      "removeRepository",
-      "searchRepositories",
-      "findSimilarRepositories",
-      "suggestCombinations",
-      "addTag",
-      "removeTag",
-      "addGlobalTag",
-      "removeGlobalTag",
-      "getRepositoryCount",
-      "save",
-      "load",
+      'addRepository',
+      'updateRepository',
+      'removeRepository',
+      'searchRepositories',
+      'findSimilarRepositories',
+      'suggestCombinations',
+      'addTag',
+      'removeTag',
+      'addGlobalTag',
+      'removeGlobalTag',
+      'getRepositoryCount',
+      'save',
+      'load',
     ];
 
-    const requiredProperties = ["repositories", "globalTags"];
+    const requiredProperties = ['repositories', 'globalTags'];
 
     // Check methods
     for (const method of requiredMethods) {
-      if (typeof (indexSystemClass as any).prototype[method] !== "function") {
+      if (typeof (indexSystemClass as any).prototype[method] !== 'function') {
         throw new Error(`IndexSystem is missing required method: ${method}`);
       }
     }
@@ -139,9 +135,7 @@ export class APICompletenessValidator {
     const instance = new indexSystemClass();
     for (const property of requiredProperties) {
       if (!(property in instance)) {
-        throw new Error(
-          `IndexSystem is missing required property: ${property}`
-        );
+        throw new Error(`IndexSystem is missing required property: ${property}`);
       }
     }
   }
@@ -153,16 +147,14 @@ export class APICompletenessValidator {
     obj: { [key: string]: any },
     expectedSignatures: Record<string, number>
   ): void {
-    for (const [methodName, expectedParamCount] of Object.entries(
-      expectedSignatures
-    )) {
+    for (const [methodName, expectedParamCount] of Object.entries(expectedSignatures)) {
       const method = obj[methodName] || obj.prototype?.[methodName];
 
       if (!method) {
         throw new Error(`Method ${methodName} not found`);
       }
 
-      if (typeof method !== "function") {
+      if (typeof method !== 'function') {
         throw new Error(`${methodName} is not a function`);
       }
 
@@ -213,10 +205,7 @@ export class AssertionValidation {
   /**
    * Validates that test expectations match actual behavior patterns
    */
-  static validateExpectationPatterns(
-    testResults: any[],
-    expectedPatterns: any[]
-  ): void {
+  static validateExpectationPatterns(testResults: any[], expectedPatterns: any[]): void {
     if (testResults.length !== expectedPatterns.length) {
       throw new Error(
         `Test results length (${testResults.length}) doesn't match expected patterns length (${expectedPatterns.length})`
@@ -227,12 +216,8 @@ export class AssertionValidation {
       const result = testResults[i];
       const pattern = expectedPatterns[i];
 
-      if (typeof pattern === "object" && pattern !== null) {
-        AssertionValidation.validateObjectPattern(
-          result,
-          pattern,
-          `index ${i}`
-        );
+      if (typeof pattern === 'object' && pattern !== null) {
+        AssertionValidation.validateObjectPattern(result, pattern, `index ${i}`);
       } else if (result !== pattern) {
         throw new Error(
           `Test result at index ${i} (${result}) doesn't match expected pattern (${pattern})`
@@ -244,22 +229,14 @@ export class AssertionValidation {
   /**
    * Validates object patterns recursively
    */
-  private static validateObjectPattern(
-    obj: any,
-    pattern: any,
-    context: string
-  ): void {
+  private static validateObjectPattern(obj: any, pattern: any, context: string): void {
     for (const [key, expectedValue] of Object.entries(pattern)) {
       if (!(key in obj)) {
         throw new Error(`Missing property ${key} in ${context}`);
       }
 
-      if (typeof expectedValue === "object" && expectedValue !== null) {
-        AssertionValidation.validateObjectPattern(
-          obj[key],
-          expectedValue,
-          `${context}.${key}`
-        );
+      if (typeof expectedValue === 'object' && expectedValue !== null) {
+        AssertionValidation.validateObjectPattern(obj[key], expectedValue, `${context}.${key}`);
       } else if (obj[key] !== expectedValue) {
         throw new Error(
           `Property ${key} in ${context} has value ${obj[key]}, expected ${expectedValue}`
@@ -278,24 +255,18 @@ export class AssertionValidation {
     maxLength?: number
   ): void {
     if (minLength !== undefined && array.length < minLength) {
-      throw new Error(
-        `Array length ${array.length} is less than minimum ${minLength}`
-      );
+      throw new Error(`Array length ${array.length} is less than minimum ${minLength}`);
     }
 
     if (maxLength !== undefined && array.length > maxLength) {
-      throw new Error(
-        `Array length ${array.length} is greater than maximum ${maxLength}`
-      );
+      throw new Error(`Array length ${array.length} is greater than maximum ${maxLength}`);
     }
 
     array.forEach((item, index) => {
       try {
         validator(item, index);
       } catch (error) {
-        throw new Error(
-          `Array item at index ${index} failed validation: ${error}`
-        );
+        throw new Error(`Array item at index ${index} failed validation: ${error}`);
       }
     });
   }
@@ -303,16 +274,11 @@ export class AssertionValidation {
   /**
    * Validates that search results have expected properties
    */
-  static validateSearchResults(
-    results: any[],
-    expectedProperties: string[]
-  ): void {
+  static validateSearchResults(results: any[], expectedProperties: string[]): void {
     AssertionValidation.validateArrayStructure(results, (item, index) => {
       for (const prop of expectedProperties) {
         if (!(prop in item)) {
-          throw new Error(
-            `Search result at index ${index} missing property: ${prop}`
-          );
+          throw new Error(`Search result at index ${index} missing property: ${prop}`);
         }
       }
     });
@@ -328,34 +294,29 @@ export class TestEnvironmentValidator {
    */
   static validateTestEnvironment(): void {
     // Check Node.js/Bun environment
-    if (typeof process === "undefined") {
-      throw new Error(
-        "Process object not available - invalid test environment"
-      );
+    if (typeof process === 'undefined') {
+      throw new Error('Process object not available - invalid test environment');
     }
 
     // Check that we're in test mode
-    if (process.env.NODE_ENV !== "test") {
+    if (process.env.NODE_ENV !== 'test') {
     }
 
     // Check vitest globals - these should be available in the test context
     // We use globalThis to check for globals that might be injected
     if (
-      typeof (globalThis as any).expect === "undefined" &&
-      typeof (expect as any) === "undefined"
+      typeof (globalThis as any).expect === 'undefined' &&
+      typeof (expect as any) === 'undefined'
     ) {
     }
 
     if (
-      typeof (globalThis as any).describe === "undefined" &&
-      typeof (describe as any) === "undefined"
+      typeof (globalThis as any).describe === 'undefined' &&
+      typeof (describe as any) === 'undefined'
     ) {
     }
 
-    if (
-      typeof (globalThis as any).it === "undefined" &&
-      typeof (it as any) === "undefined"
-    ) {
+    if (typeof (globalThis as any).it === 'undefined' && typeof (it as any) === 'undefined') {
     }
   }
 
@@ -364,29 +325,22 @@ export class TestEnvironmentValidator {
    */
   static validateTestUtilities(): void {
     // Check vi utilities
-    if (typeof vi === "undefined") {
-      throw new Error("vi is not available - check vitest imports");
+    if (typeof vi === 'undefined') {
+      throw new Error('vi is not available - check vitest imports');
     }
 
     // Check specific vi methods - some may not be available in all contexts
-    const coreViMethods = ["fn"];
-    const optionalViMethods = [
-      "mock",
-      "mocked",
-      "clearAllMocks",
-      "resetAllMocks",
-    ];
+    const coreViMethods = ['fn'];
+    const optionalViMethods = ['mock', 'mocked', 'clearAllMocks', 'resetAllMocks'];
 
     for (const method of coreViMethods) {
-      if (typeof (vi as any)[method] !== "function") {
-        throw new Error(
-          `vi.${method} is not available - check vitest configuration`
-        );
+      if (typeof (vi as any)[method] !== 'function') {
+        throw new Error(`vi.${method} is not available - check vitest configuration`);
       }
     }
 
     for (const method of optionalViMethods) {
-      if (typeof (vi as any)[method] !== "function") {
+      if (typeof (vi as any)[method] !== 'function') {
       }
     }
   }
@@ -400,7 +354,7 @@ export class TestEnvironmentValidator {
     }
 
     // Check for leaked timers
-    if (typeof vi.getTimerCount === "function" && vi.getTimerCount() > 0) {
+    if (typeof vi.getTimerCount === 'function' && vi.getTimerCount() > 0) {
     }
   }
 }
@@ -449,7 +403,7 @@ export class PerformanceValidator {
    * Validates memory usage doesn't exceed expected bounds
    */
   static validateMemoryUsage(maxMemoryMB: number, operationName: string): void {
-    if (typeof process.memoryUsage === "function") {
+    if (typeof process.memoryUsage === 'function') {
       const usage = process.memoryUsage();
       const heapUsedMB = usage.heapUsed / 1024 / 1024;
 
@@ -474,7 +428,7 @@ export class RegressionPrevention {
     TestEnvironmentValidator.validateTestUtilities();
     MockValidation.validateMockingInfrastructure();
 
-    console.log("✅ All regression prevention checks passed");
+    console.log('✅ All regression prevention checks passed');
   }
 
   /**
@@ -487,7 +441,7 @@ export class RegressionPrevention {
   ): void {
     // Check methods on prototype
     for (const method of requiredMethods) {
-      if (typeof classConstructor.prototype[method] !== "function") {
+      if (typeof classConstructor.prototype[method] !== 'function') {
         throw new Error(`Class is missing required method: ${method}`);
       }
     }

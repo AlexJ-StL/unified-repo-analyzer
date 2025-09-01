@@ -16,8 +16,8 @@ export interface TestPoolConfig {
  * Default test pool configuration based on environment
  */
 export const getDefaultPoolConfig = (): TestPoolConfig => {
-  const isCI = process.env.CI === "true";
-  const isBun = typeof (globalThis as any).Bun !== "undefined";
+  const isCI = process.env.CI === 'true';
+  const isBun = typeof (globalThis as any).Bun !== 'undefined';
 
   return {
     maxConcurrency: isCI ? (isBun ? 8 : 6) : isBun ? 4 : 3,
@@ -40,9 +40,7 @@ export class TestResourceManager {
 
   static getInstance(config?: TestPoolConfig): TestResourceManager {
     if (!TestResourceManager.instance) {
-      TestResourceManager.instance = new TestResourceManager(
-        config || getDefaultPoolConfig()
-      );
+      TestResourceManager.instance = new TestResourceManager(config || getDefaultPoolConfig());
     }
     return TestResourceManager.instance;
   }
@@ -118,7 +116,7 @@ export class TestMemoryManager {
   private static memoryThreshold = 500 * 1024 * 1024; // 500MB
 
   static checkMemoryUsage(): boolean {
-    if (typeof process !== "undefined" && process.memoryUsage) {
+    if (typeof process !== 'undefined' && process.memoryUsage) {
       const usage = process.memoryUsage();
       return usage.heapUsed < TestMemoryManager.memoryThreshold;
     }
@@ -126,7 +124,7 @@ export class TestMemoryManager {
   }
 
   static async forceGarbageCollection(): Promise<void> {
-    if (typeof global !== "undefined" && global.gc) {
+    if (typeof global !== 'undefined' && global.gc) {
       global.gc();
     }
 
@@ -141,7 +139,7 @@ export class TestMemoryManager {
 export function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
-  errorMessage = "Test timed out"
+  errorMessage = 'Test timed out'
 ): Promise<T> {
   return Promise.race([
     promise,

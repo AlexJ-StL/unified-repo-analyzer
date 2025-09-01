@@ -3,8 +3,8 @@
  * Provides helpers for running tests in automated environments
  */
 
-import { performance } from "node:perf_hooks";
-import { vi } from "vitest";
+import { performance } from 'node:perf_hooks';
+import { vi } from 'vitest';
 
 /**
  * Environment detection utilities
@@ -24,14 +24,14 @@ export class EnvironmentDetector {
   }
 
   static isBun(): boolean {
-    return typeof globalThis.Bun !== "undefined";
+    return typeof globalThis.Bun !== 'undefined';
   }
 
   static isNode(): boolean {
     return (
-      typeof process !== "undefined" &&
+      typeof process !== 'undefined' &&
       !!process.versions?.node &&
-      typeof globalThis.Bun === "undefined"
+      typeof globalThis.Bun === 'undefined'
     );
   }
 
@@ -40,9 +40,7 @@ export class EnvironmentDetector {
   }
 
   static getBunVersion(): string | undefined {
-    return typeof globalThis.Bun !== "undefined"
-      ? globalThis.Bun.version
-      : undefined;
+    return typeof globalThis.Bun !== 'undefined' ? globalThis.Bun.version : undefined;
   }
 
   static getPlatform(): string {
@@ -54,12 +52,12 @@ export class EnvironmentDetector {
   }
 
   static getCIProvider(): string | undefined {
-    if (process.env.GITHUB_ACTIONS) return "github-actions";
-    if (process.env.GITLAB_CI) return "gitlab-ci";
-    if (process.env.JENKINS_URL) return "jenkins";
-    if (process.env.TRAVIS) return "travis";
-    if (process.env.CIRCLECI) return "circleci";
-    if (process.env.CI) return "generic-ci";
+    if (process.env.GITHUB_ACTIONS) return 'github-actions';
+    if (process.env.GITLAB_CI) return 'gitlab-ci';
+    if (process.env.JENKINS_URL) return 'jenkins';
+    if (process.env.TRAVIS) return 'travis';
+    if (process.env.CIRCLECI) return 'circleci';
+    if (process.env.CI) return 'generic-ci';
     return undefined;
   }
 }
@@ -71,25 +69,23 @@ export class CITimeoutManager {
   private static readonly BASE_TIMEOUT = 5000;
   private static readonly CI_MULTIPLIER = EnvironmentDetector.isBun() ? 3 : 4; // Bun is faster
 
-  static getTimeout(
-    operation: "fast" | "normal" | "slow" | "very-slow" = "normal"
-  ): number {
+  static getTimeout(operation: 'fast' | 'normal' | 'slow' | 'very-slow' = 'normal'): number {
     const baseTimeout = CITimeoutManager.BASE_TIMEOUT;
     const isCI = EnvironmentDetector.isCI();
 
     let multiplier = 1;
 
     switch (operation) {
-      case "fast":
+      case 'fast':
         multiplier = 0.5;
         break;
-      case "normal":
+      case 'normal':
         multiplier = 1;
         break;
-      case "slow":
+      case 'slow':
         multiplier = 2;
         break;
-      case "very-slow":
+      case 'very-slow':
         multiplier = 4;
         break;
     }
@@ -101,9 +97,7 @@ export class CITimeoutManager {
     return Math.floor(baseTimeout * multiplier);
   }
 
-  static getRetryCount(
-    operation: "fast" | "normal" | "slow" = "normal"
-  ): number {
+  static getRetryCount(operation: 'fast' | 'normal' | 'slow' = 'normal'): number {
     const isCI = EnvironmentDetector.isCI();
     const isBun = EnvironmentDetector.isBun();
 
@@ -113,11 +107,11 @@ export class CITimeoutManager {
     const bunMultiplier = isBun ? 0.7 : 1;
 
     switch (operation) {
-      case "fast":
+      case 'fast':
         return Math.ceil(2 * bunMultiplier);
-      case "normal":
+      case 'normal':
         return Math.ceil(3 * bunMultiplier);
-      case "slow":
+      case 'slow':
         return Math.ceil(5 * bunMultiplier);
       default:
         return Math.ceil(3 * bunMultiplier);
@@ -135,7 +129,7 @@ export class CIPerformanceMonitor {
 
   constructor(private testName: string) {
     this.startTime = performance.now();
-    this.recordMemoryUsage("start");
+    this.recordMemoryUsage('start');
   }
 
   checkpoint(name: string): void {
@@ -150,9 +144,7 @@ export class CIPerformanceMonitor {
   }
 
   getElapsedTime(checkpoint?: string): number {
-    const endTime = checkpoint
-      ? this.checkpoints.get(checkpoint)
-      : performance.now();
+    const endTime = checkpoint ? this.checkpoints.get(checkpoint) : performance.now();
     return endTime ? endTime - this.startTime : 0;
   }
 
@@ -170,18 +162,15 @@ export class CIPerformanceMonitor {
     report.push(`Total Time: ${totalTime.toFixed(2)}ms`);
 
     if (this.checkpoints.size > 0) {
-      report.push("Checkpoints:");
+      report.push('Checkpoints:');
       for (const [name, time] of this.checkpoints) {
         const elapsed = time - this.startTime;
         report.push(`  ${name}: ${elapsed.toFixed(2)}ms`);
       }
     }
 
-    if (
-      this.memoryUsage.size > 0 &&
-      (EnvironmentDetector.isCI() || process.env.DEBUG_MEMORY)
-    ) {
-      report.push("Memory Usage:");
+    if (this.memoryUsage.size > 0 && (EnvironmentDetector.isCI() || process.env.DEBUG_MEMORY)) {
+      report.push('Memory Usage:');
       for (const [name, usage] of this.memoryUsage) {
         const heapUsed = (usage.heapUsed / 1024 / 1024).toFixed(2);
         const heapTotal = (usage.heapTotal / 1024 / 1024).toFixed(2);
@@ -189,7 +178,7 @@ export class CIPerformanceMonitor {
       }
     }
 
-    return report.join("\n");
+    return report.join('\n');
   }
 
   logReport(): void {
@@ -206,7 +195,7 @@ export class CIAsyncOperations {
   static async withTimeout<T>(
     operation: () => Promise<T>,
     timeoutMs: number,
-    operationName = "operation"
+    operationName = 'operation'
   ): Promise<T> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -224,7 +213,7 @@ export class CIAsyncOperations {
     operation: () => Promise<T>,
     maxRetries = 3,
     delayMs = 1000,
-    operationName = "operation"
+    operationName = 'operation'
   ): Promise<T> {
     let lastError: Error | undefined;
 
@@ -237,15 +226,13 @@ export class CIAsyncOperations {
         if (attempt <= maxRetries) {
           if (EnvironmentDetector.isCI() || process.env.DEBUG_RETRY) {
           }
-          await new Promise((resolve) =>
-            setTimeout(resolve, delayMs * attempt)
-          );
+          await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
         }
       }
     }
 
     throw new Error(
-      `${operationName} failed after ${maxRetries + 1} attempts. Last error: ${lastError?.message || "Unknown error"}`
+      `${operationName} failed after ${maxRetries + 1} attempts. Last error: ${lastError?.message || 'Unknown error'}`
     );
   }
 
@@ -254,7 +241,7 @@ export class CIAsyncOperations {
     timeoutMs: number,
     maxRetries = 3,
     delayMs = 1000,
-    operationName = "operation"
+    operationName = 'operation'
   ): Promise<T> {
     return CIAsyncOperations.withRetry(
       () => CIAsyncOperations.withTimeout(operation, timeoutMs, operationName),
@@ -315,17 +302,17 @@ export class CIMockUtils {
     cleanup: () => void;
   } {
     // Check if fake timers are available
-    if (typeof vi.useFakeTimers === "function") {
+    if (typeof vi.useFakeTimers === 'function') {
       vi.useFakeTimers();
 
       return {
         advanceTime: (ms: number) => {
-          if (typeof vi.advanceTimersByTime === "function") {
+          if (typeof vi.advanceTimersByTime === 'function') {
             vi.advanceTimersByTime(ms);
           }
         },
         cleanup: () => {
-          if (typeof vi.useRealTimers === "function") {
+          if (typeof vi.useRealTimers === 'function') {
             vi.useRealTimers();
           }
         },
@@ -355,15 +342,15 @@ export class CITestConfig {
 
     return {
       // Timeouts
-      defaultTimeout: CITimeoutManager.getTimeout("normal"),
-      fastTimeout: CITimeoutManager.getTimeout("fast"),
-      slowTimeout: CITimeoutManager.getTimeout("slow"),
-      verySlowTimeout: CITimeoutManager.getTimeout("very-slow"),
+      defaultTimeout: CITimeoutManager.getTimeout('normal'),
+      fastTimeout: CITimeoutManager.getTimeout('fast'),
+      slowTimeout: CITimeoutManager.getTimeout('slow'),
+      verySlowTimeout: CITimeoutManager.getTimeout('very-slow'),
 
       // Retries
-      defaultRetries: CITimeoutManager.getRetryCount("normal"),
-      fastRetries: CITimeoutManager.getRetryCount("fast"),
-      slowRetries: CITimeoutManager.getRetryCount("slow"),
+      defaultRetries: CITimeoutManager.getRetryCount('normal'),
+      fastRetries: CITimeoutManager.getRetryCount('fast'),
+      slowRetries: CITimeoutManager.getRetryCount('slow'),
 
       // Environment flags
       isCI,
@@ -375,14 +362,14 @@ export class CITestConfig {
       maxConcurrency: isCI ? 6 : 3,
 
       // Logging
-      verbose: isCI || process.env.DEBUG_TESTS === "true",
-      silent: process.env.SILENT_TESTS === "true",
+      verbose: isCI || process.env.DEBUG_TESTS === 'true',
+      silent: process.env.SILENT_TESTS === 'true',
 
       // Memory
-      trackMemory: isCI || process.env.DEBUG_MEMORY === "true",
+      trackMemory: isCI || process.env.DEBUG_MEMORY === 'true',
 
       // Performance
-      trackPerformance: isCI || process.env.DEBUG_PERFORMANCE === "true",
+      trackPerformance: isCI || process.env.DEBUG_PERFORMANCE === 'true',
     };
   }
 }
@@ -394,8 +381,8 @@ export function ciTest<T extends (...args: any[]) => any>(
   testName: string,
   testFn: T,
   options: {
-    timeout?: "fast" | "normal" | "slow" | "very-slow";
-    retries?: "fast" | "normal" | "slow";
+    timeout?: 'fast' | 'normal' | 'slow' | 'very-slow';
+    retries?: 'fast' | 'normal' | 'slow';
     trackPerformance?: boolean;
     skipInCI?: boolean;
     skipInLocal?: boolean;
@@ -434,13 +421,11 @@ export function ciTest<T extends (...args: any[]) => any>(
         : null;
 
     try {
-      monitor?.checkpoint("test-start");
+      monitor?.checkpoint('test-start');
 
       // Apply timeout and retry logic
-      const timeout = CITimeoutManager.getTimeout(options.timeout || "normal");
-      const retries = CITimeoutManager.getRetryCount(
-        options.retries || "normal"
-      );
+      const timeout = CITimeoutManager.getTimeout(options.timeout || 'normal');
+      const retries = CITimeoutManager.getRetryCount(options.retries || 'normal');
 
       const result = await CIAsyncOperations.withTimeoutAndRetry(
         () => testFn(...args),
@@ -450,7 +435,7 @@ export function ciTest<T extends (...args: any[]) => any>(
         testName // operationName
       );
 
-      monitor?.checkpoint("test-end");
+      monitor?.checkpoint('test-end');
       return result;
     } finally {
       monitor?.logReport();
@@ -506,7 +491,7 @@ export class CrossRuntimeValidator {
     } catch (error) {
       results.consistent = false;
       results.differences = [
-        `Runtime error in ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"}: ${error}`,
+        `Runtime error in ${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'}: ${error}`,
       ];
     }
 
@@ -520,28 +505,28 @@ export class CrossRuntimeValidator {
     testName: string,
     testFn: () => Promise<T>,
     options: {
-      skipInRuntime?: "bun" | "node";
+      skipInRuntime?: 'bun' | 'node';
       expectDifferences?: boolean;
       tolerance?: number;
     } = {}
   ) {
     return async () => {
-      if (options.skipInRuntime === "bun" && EnvironmentDetector.isBun()) {
+      if (options.skipInRuntime === 'bun' && EnvironmentDetector.isBun()) {
         console.log(`Skipping ${testName} in Bun runtime`);
         return;
       }
 
-      if (options.skipInRuntime === "node" && !EnvironmentDetector.isBun()) {
+      if (options.skipInRuntime === 'node' && !EnvironmentDetector.isBun()) {
         console.log(`Skipping ${testName} in Node.js runtime`);
         return;
       }
 
       const monitor = new CIPerformanceMonitor(
-        `${testName} (${EnvironmentDetector.isBun() ? "Bun" : "Node.js"})`
+        `${testName} (${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'})`
       );
-      monitor.checkpoint("test-start");
+      monitor.checkpoint('test-start');
       const result = await testFn();
-      monitor.checkpoint("test-end");
+      monitor.checkpoint('test-end');
 
       // Log runtime-specific performance data
       if (EnvironmentDetector.isCI() || process.env.DEBUG_CROSS_RUNTIME) {
@@ -570,19 +555,19 @@ export class CIErrorReporter {
     } = {}
   ): string {
     const lines = [
-      `❌ Test Error: ${context.testName || "Unknown Test"}`,
-      `Runtime: ${context.runtime || EnvironmentDetector.isBun() ? "Bun" : "Node.js"}`,
+      `❌ Test Error: ${context.testName || 'Unknown Test'}`,
+      `Runtime: ${context.runtime || EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'}`,
       `Platform: ${context.platform || EnvironmentDetector.getPlatform()}`,
-      `CI Provider: ${context.ciProvider || EnvironmentDetector.getCIProvider() || "Local"}`,
+      `CI Provider: ${context.ciProvider || EnvironmentDetector.getCIProvider() || 'Local'}`,
       `Error: ${error.message}`,
     ];
 
     if (error.stack) {
-      lines.push("Stack Trace:");
+      lines.push('Stack Trace:');
       lines.push(error.stack);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -618,24 +603,18 @@ export class CIErrorReporter {
  */
 export function logEnvironmentInfo(): void {
   if (EnvironmentDetector.isCI() || process.env.DEBUG_ENV) {
-    console.log("Test Environment Information:");
+    console.log('Test Environment Information:');
     console.log(`  CI: ${EnvironmentDetector.isCI()}`);
-    console.log(
-      `  CI Provider: ${EnvironmentDetector.getCIProvider() || "none"}`
-    );
-    console.log(
-      `  Runtime: ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"}`
-    );
+    console.log(`  CI Provider: ${EnvironmentDetector.getCIProvider() || 'none'}`);
+    console.log(`  Runtime: ${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'}`);
     console.log(
       `  Version: ${EnvironmentDetector.getBunVersion() || EnvironmentDetector.getNodeVersion()}`
     );
     console.log(`  Platform: ${EnvironmentDetector.getPlatform()}`);
     console.log(`  Architecture: ${EnvironmentDetector.getArchitecture()}`);
-    console.log(
-      `  Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB`
-    );
-    console.log(`  Max Memory: ${process.env.NODE_OPTIONS || "default"}`);
-    console.log(`  Test Timeout: ${process.env.TEST_TIMEOUT || "default"}`);
-    console.log(`  Parallel Tests: ${process.env.TEST_PARALLEL || "false"}`);
+    console.log(`  Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB`);
+    console.log(`  Max Memory: ${process.env.NODE_OPTIONS || 'default'}`);
+    console.log(`  Test Timeout: ${process.env.TEST_TIMEOUT || 'default'}`);
+    console.log(`  Parallel Tests: ${process.env.TEST_PARALLEL || 'false'}`);
   }
 }
