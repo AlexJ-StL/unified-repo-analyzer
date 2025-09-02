@@ -1,37 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { useAnalysisRequests } from "../../hooks/useAnalysisRequests";
-import type { AnalysisRequest } from "../../services/api";
+import type React from 'react';
+import { useState } from 'react';
+import { useAnalysisRequests } from '../../hooks/useAnalysisRequests';
+import type { AnalysisRequest } from '../../services/api';
 
 interface AnalysisRequestsProps {
   className?: string;
 }
 
-const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
-  className = "",
-}) => {
-  const { requests, stats, loading, error, refreshRequests, refreshStats } =
-    useAnalysisRequests();
-  const [filter, setFilter] = useState<string>("all");
+const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({ className = '' }) => {
+  const { requests, stats, loading, error, refreshRequests, refreshStats } = useAnalysisRequests();
+  const [filter, setFilter] = useState<string>('all');
 
   const filteredRequests =
-    filter === "all"
-      ? requests
-      : requests.filter((request) => request.status === filter);
+    filter === 'all' ? requests : requests.filter((request) => request.status === filter);
 
-  const getStatusColor = (status: AnalysisRequest["status"]) => {
+  const getStatusColor = (status: AnalysisRequest['status']) => {
     switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "processing":
-        return "bg-blue-100 text-blue-800";
-      case "queued":
-        return "bg-yellow-100 text-yellow-800";
-      case "failed":
-        return "bg-red-100 text-red-800";
-      case "cancelled":
-        return "bg-gray-100 text-gray-800";
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'processing':
+        return 'bg-blue-100 text-blue-800';
+      case 'queued':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'failed':
+        return 'bg-red-100 text-red-800';
+      case 'cancelled':
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -55,9 +51,7 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
 
   if (error) {
     return (
-      <div
-        className={`p-4 bg-red-50 border border-red-200 rounded ${className}`}
-      >
+      <div className={`p-4 bg-red-50 border border-red-200 rounded ${className}`}>
         <div className="text-red-800">Error: {error}</div>
         <button
           onClick={() => {
@@ -109,21 +103,15 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
           </div>
           <div className="bg-white p-3 rounded shadow">
             <div className="text-sm text-gray-500">Queued</div>
-            <div className="text-xl font-bold text-yellow-600">
-              {stats.queued}
-            </div>
+            <div className="text-xl font-bold text-yellow-600">{stats.queued}</div>
           </div>
           <div className="bg-white p-3 rounded shadow">
             <div className="text-sm text-gray-500">Processing</div>
-            <div className="text-xl font-bold text-blue-600">
-              {stats.processing}
-            </div>
+            <div className="text-xl font-bold text-blue-600">{stats.processing}</div>
           </div>
           <div className="bg-white p-3 rounded shadow">
             <div className="text-sm text-gray-500">Completed</div>
-            <div className="text-xl font-bold text-green-600">
-              {stats.completed}
-            </div>
+            <div className="text-xl font-bold text-green-600">{stats.completed}</div>
           </div>
           <div className="bg-white p-3 rounded shadow">
             <div className="text-sm text-gray-500">Failed</div>
@@ -134,16 +122,14 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
             <div className="text-xl font-bold">
               {stats.averageProcessingTime > 0
                 ? formatDuration(stats.averageProcessingTime)
-                : "N/A"}
+                : 'N/A'}
             </div>
           </div>
         </div>
       )}
 
       {filteredRequests.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          No analysis requests found
-        </div>
+        <div className="text-center py-8 text-gray-500">No analysis requests found</div>
       ) : (
         <div className="bg-white rounded shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
@@ -186,20 +172,20 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {request.status === "processing" ? (
+                    {request.status === 'processing' ? (
                       <div className="flex items-center">
                         <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                           <div
                             className="bg-blue-600 h-2 rounded-full"
                             style={{ width: `${request.progress}%` }}
-                          ></div>
+                          />
                         </div>
                         {Math.round(request.progress)}%
                       </div>
                     ) : request.progress === 100 ? (
-                      "100%"
+                      '100%'
                     ) : (
-                      "N/A"
+                      'N/A'
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -213,7 +199,7 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({
                             new Date(request.endTime).getTime() -
                               new Date(request.startTime).getTime()
                           )
-                        : "N/A"}
+                        : 'N/A'}
                   </td>
                 </tr>
               ))}
