@@ -6,9 +6,9 @@ import type {
   LLMResponse,
   ProjectInfo,
   ProviderConfig,
-} from "@unified-repo-analyzer/shared/src/types/provider";
-import axios from "axios";
-import { LLMProvider } from "./LLMProvider";
+} from '@unified-repo-analyzer/shared/src/types/provider';
+import axios from 'axios';
+import { LLMProvider } from './LLMProvider';
 
 /**
  * OpenRouter API response interface
@@ -33,14 +33,14 @@ interface OpenRouterAPIResponse {
  * OpenRouter LLM provider implementation
  */
 export class OpenRouterProvider extends LLMProvider {
-  private readonly API_URL = "https://openrouter.ai/api/v1/chat/completions";
-  private readonly MODELS_URL = "https://openrouter.ai/api/v1/models";
+  private readonly API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+  private readonly MODELS_URL = 'https://openrouter.ai/api/v1/models';
 
   /**
    * Gets the name of the provider
    */
   get name(): string {
-    return "openrouter";
+    return 'openrouter';
   }
 
   /**
@@ -52,12 +52,12 @@ export class OpenRouterProvider extends LLMProvider {
    */
   protected validateAndNormalizeConfig(config: ProviderConfig): ProviderConfig {
     if (!config.apiKey) {
-      throw new Error("OpenRouter API key is required");
+      throw new Error('OpenRouter API key is required');
     }
 
     return {
       ...config,
-      model: config.model || "openrouter/auto",
+      model: config.model || 'openrouter/auto',
       maxTokens: config.maxTokens || 4000,
       temperature: config.temperature !== undefined ? config.temperature : 0.7,
     };
@@ -75,16 +75,16 @@ Analyze this codebase and provide both an executive summary and a technical brea
 
 # Repository Information
 - Name: ${projectInfo.name}
-- Primary Language: ${projectInfo.language || "Unknown"}
+- Primary Language: ${projectInfo.language || 'Unknown'}
 - File Count: ${projectInfo.fileCount}
 - Directory Count: ${projectInfo.directoryCount}
 
-${projectInfo.description ? `# Description\n${projectInfo.description}\n` : ""}
+${projectInfo.description ? `# Description\n${projectInfo.description}\n` : ''}
 
-${projectInfo.readme ? `# README\n${projectInfo.readme}\n` : ""}
+${projectInfo.readme ? `# README\n${projectInfo.readme}\n` : ''}
 
 # Key Directories
-${projectInfo.directories.map((dir) => `- ${dir}`).join("\n")}
+${projectInfo.directories.map((dir) => `- ${dir}`).join('\n')}
 
 # Key Files
 ${projectInfo.fileAnalysis
@@ -94,25 +94,25 @@ ${projectInfo.fileAnalysis
 - Functions: ${file.functionCount}
 - Classes: ${file.classCount}
 - Imports: ${file.importCount}
-${file.sample ? `\`\`\`\n${file.sample}\n\`\`\`` : ""}
+${file.sample ? `\`\`\`\n${file.sample}\n\`\`\`` : ''}
 `;
   })
-  .join("\n")}
+  .join('\n')}
 
 ${
   projectInfo.dependencies
     ? `# Dependencies\n${Object.entries(projectInfo.dependencies)
         .map(([name, version]) => `- ${name}: ${version}`)
-        .join("\n")}\n`
-    : ""
+        .join('\n')}\n`
+    : ''
 }
 
 ${
   projectInfo.devDependencies
     ? `# Dev Dependencies\n${Object.entries(projectInfo.devDependencies)
         .map(([name, version]) => `- ${name}: ${version}`)
-        .join("\n")}\n`
-    : ""
+        .join('\n')}\n`
+    : ''
 }
 
 Please provide:
@@ -140,7 +140,7 @@ Please provide:
           model: this.config.model,
           messages: [
             {
-              role: "user",
+              role: 'user',
               content: prompt,
             },
           ],
@@ -149,10 +149,10 @@ Please provide:
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${this.config.apiKey}`,
-            "HTTP-Referer": "https://unified-repo-analyzer.com", // Optional, for OpenRouter analytics
-            "X-Title": "Unified Repo Analyzer", // Optional, for OpenRouter analytics
+            'HTTP-Referer': 'https://unified-repo-analyzer.com', // Optional, for OpenRouter analytics
+            'X-Title': 'Unified Repo Analyzer', // Optional, for OpenRouter analytics
           },
           timeout: 60000, // 60 second timeout
         }
@@ -160,12 +160,12 @@ Please provide:
 
       // Check if we have a valid response
       if (!response.data.choices || response.data.choices.length === 0) {
-        throw new Error("OpenRouter returned no choices");
+        throw new Error('OpenRouter returned no choices');
       }
 
       const choice = response.data.choices[0];
       if (!choice.message || !choice.message.content) {
-        throw new Error("OpenRouter returned no content");
+        throw new Error('OpenRouter returned no content');
       }
 
       return {
@@ -198,14 +198,41 @@ Please provide:
     try {
       const response = await axios.get(this.MODELS_URL, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${apiKey}`,
         },
         timeout: 10000, // 10 second timeout
       });
 
       // Return the models array from the response
-      return response.data?.data || [];
+      const models = response.data?.data || [];
+
+      // Filter and sort models for better usability
+      return models
+        .filter((model: any) => model.id && model.name)
+        .sort((a: any, b: any) => {
+          // Sort by name, but prioritize popular models
+          const popularModels = [
+            'anthropic/claude-3-haiku',
+            'anthropic/claude-3-sonnet',
+            'anthropic/claude-3-opus',
+            'openai/gpt-4',
+            'openai/gpt-3.5-turbo',
+            'meta-llama/llama-2-70b-chat',
+            'google/gemini-pro',
+          ];
+
+          const aIndex = popularModels.findIndex((popular) => a.id.includes(popular));
+          const bIndex = popularModels.findIndex((popular) => b.id.includes(popular));
+
+          if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex - bIndex;
+          }
+          if (aIndex !== -1) return -1;
+          if (bIndex !== -1) return 1;
+
+          return a.name.localeCompare(b.name);
+        });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(
@@ -216,5 +243,82 @@ Please provide:
         `OpenRouter Models API error: ${error instanceof Error ? error.message : String(error)}`
       );
     }
+  }
+
+  /**
+   * Validates a specific model configuration
+   *
+   * @param modelId - Model ID to validate
+   * @param apiKey - OpenRouter API key
+   * @returns Promise resolving to validation result
+   */
+  async validateModel(
+    modelId: string,
+    apiKey: string
+  ): Promise<{
+    valid: boolean;
+    model?: any;
+    error?: string;
+  }> {
+    try {
+      const models = await this.fetchModels(apiKey);
+      const model = models.find((m: any) => m.id === modelId);
+
+      if (!model) {
+        return {
+          valid: false,
+          error: `Model '${modelId}' not found in available models`,
+        };
+      }
+
+      return {
+        valid: true,
+        model,
+      };
+    } catch (error) {
+      return {
+        valid: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
+   * Gets model-specific configuration recommendations
+   *
+   * @param modelId - Model ID
+   * @returns Recommended configuration for the model
+   */
+  getModelRecommendations(modelId: string): Partial<ProviderConfig> {
+    const recommendations: Record<string, Partial<ProviderConfig>> = {
+      // Claude models
+      'anthropic/claude-3-haiku': { maxTokens: 4000, temperature: 0.7 },
+      'anthropic/claude-3-sonnet': { maxTokens: 4000, temperature: 0.7 },
+      'anthropic/claude-3-opus': { maxTokens: 4000, temperature: 0.7 },
+
+      // GPT models
+      'openai/gpt-4': { maxTokens: 4000, temperature: 0.7 },
+      'openai/gpt-3.5-turbo': { maxTokens: 4000, temperature: 0.7 },
+
+      // Llama models
+      'meta-llama/llama-2-70b-chat': { maxTokens: 4000, temperature: 0.8 },
+
+      // Gemini models
+      'google/gemini-pro': { maxTokens: 4000, temperature: 0.7 },
+    };
+
+    // Find exact match or partial match
+    const exactMatch = recommendations[modelId];
+    if (exactMatch) return exactMatch;
+
+    // Try partial matching for model families
+    for (const [key, config] of Object.entries(recommendations)) {
+      if (modelId.includes(key.split('/')[1]?.split('-')[0] || '')) {
+        return config;
+      }
+    }
+
+    // Default recommendations
+    return { maxTokens: 4000, temperature: 0.7 };
   }
 }

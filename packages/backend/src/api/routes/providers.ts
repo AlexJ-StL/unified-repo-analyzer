@@ -2,8 +2,8 @@
  * Provider discovery API routes
  */
 
-import { Router } from "express";
-import { ProviderRegistry } from "../../providers/ProviderRegistry";
+import { Router } from 'express';
+import { ProviderRegistry } from '../../providers/ProviderRegistry';
 
 const router = Router();
 
@@ -12,7 +12,7 @@ const router = Router();
  *
  * Get all available LLM providers with their status and configuration information
  */
-router.get("/", (req, res) => {
+router.get('/', (_req, res) => {
   try {
     const registry = ProviderRegistry.getInstance();
     const defaultProvider = registry.getDefaultProviderName();
@@ -23,10 +23,9 @@ router.get("/", (req, res) => {
       defaultProvider,
     });
   } catch (error) {
-    console.error("Error fetching providers:", error);
     res.status(500).json({
-      error: "Failed to fetch providers",
-      message: error instanceof Error ? error.message : "Unknown error",
+      error: 'Failed to fetch providers',
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
@@ -36,7 +35,7 @@ router.get("/", (req, res) => {
  *
  * Test a provider's connection and configuration
  */
-router.post("/:name/test", async (req, res) => {
+router.post('/:name/test', async (req, res) => {
   try {
     const registry = ProviderRegistry.getInstance();
     const providerName = req.params.name.toLowerCase();
@@ -44,7 +43,7 @@ router.post("/:name/test", async (req, res) => {
     // Check if provider exists
     if (!registry.hasProvider(providerName)) {
       res.status(404).json({
-        error: "Provider not found",
+        error: 'Provider not found',
         message: `Provider '${providerName}' is not registered`,
       });
       return;
@@ -62,10 +61,9 @@ router.post("/:name/test", async (req, res) => {
       errorMessage: statusInfo.errorMessage,
     });
   } catch (error) {
-    console.error("Error testing provider:", error);
     res.status(500).json({
-      error: "Failed to test provider",
-      message: error instanceof Error ? error.message : "Unknown error",
+      error: 'Failed to test provider',
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
@@ -75,7 +73,7 @@ router.post("/:name/test", async (req, res) => {
  *
  * Get available models for a provider (currently only supported for OpenRouter)
  */
-router.get("/:name/models", async (req, res) => {
+router.get('/:name/models', async (req, res) => {
   try {
     const registry = ProviderRegistry.getInstance();
     const providerName = req.params.name.toLowerCase();
@@ -83,7 +81,7 @@ router.get("/:name/models", async (req, res) => {
     // Check if provider exists
     if (!registry.hasProvider(providerName)) {
       res.status(404).json({
-        error: "Provider not found",
+        error: 'Provider not found',
         message: `Provider '${providerName}' is not registered`,
       });
       return;
@@ -93,27 +91,105 @@ router.get("/:name/models", async (req, res) => {
     const config = registry.getProviderConfig(providerName);
     if (!config.apiKey) {
       res.status(400).json({
-        error: "API key required",
+        error: 'API key required',
         message: `Provider '${providerName}' requires an API key to fetch models`,
       });
       return;
     }
 
     // Fetch models
-    const models = await registry.fetchProviderModels(
-      providerName,
-      config.apiKey
-    );
+    const models = await registry.fetchProviderModels(providerName, config.apiKey);
 
     res.json({
       provider: providerName,
       models,
     });
   } catch (error) {
-    console.error("Error fetching provider models:", error);
     res.status(500).json({
-      error: "Failed to fetch provider models",
-      message: error instanceof Error ? error.message : "Unknown error",
+      error: 'Failed to fetch provider models',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * POST /api/providers/:name/models/:modelId/validate
+ *
+ * Validate a specific model for a provider
+ */
+router.post('/:name/models/:modelId/validate', async (req, res) => {
+  try {
+    const registry = ProviderRegistry.getInstance();
+    const providerName = req.params.name.toLowerCase();
+    const modelId = req.params.modelId;
+
+    // Check if provider exists
+    if (!registry.hasProvider(providerName)) {
+      res.status(404).json({
+        error: 'Provider not found',
+        message: `Provider '${providerName}' is not registered`,
+      });
+      return;
+    }
+
+    // Get provider config to get API key
+    const config = registry.getProviderConfig(providerName);
+    if (!config.apiKey) {
+      res.status(400).json({
+        error: 'API key required',
+        message: `Provider '${providerName}' requires an API key to validate models`,
+      });
+      return;
+    }
+
+    // Validate model
+    const validation = await registry.validateProviderModel(providerName, modelId, config.apiKey);
+
+    res.json({
+      provider: providerName,
+      modelId,
+      ...validation,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to validate provider model',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/providers/:name/models/:modelId/recommendations
+ *
+ * Get configuration recommendations for a specific model
+ */
+router.get('/:name/models/:modelId/recommendations', (req, res) => {
+  try {
+    const registry = ProviderRegistry.getInstance();
+    const providerName = req.params.name.toLowerCase();
+    const modelId = req.params.modelId;
+
+    // Check if provider exists
+    if (!registry.hasProvider(providerName)) {
+      res.status(404).json({
+        error: 'Provider not found',
+        message: `Provider '${providerName}' is not registered`,
+      });
+      return;
+    }
+
+    // Get model recommendations
+    const recommendations = registry.getProviderModelRecommendations(providerName, modelId);
+
+    res.json({
+      provider: providerName,
+      modelId,
+      recommendations,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to get model recommendations',
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
