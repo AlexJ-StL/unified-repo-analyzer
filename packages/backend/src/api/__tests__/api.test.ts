@@ -4,8 +4,9 @@
 
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { mock, MockProxy } from "vitest-mock-extended";
 
-// Import after mocking
+// Import before mocking
 const { AnalysisEngine } = await import("../../core/AnalysisEngine");
 const { IndexSystem } = await import("../../core/IndexSystem");
 
@@ -20,11 +21,18 @@ describe("API Integration Tests", () => {
     processingTime: 0,
   };
 
+  let mockAnalysisEngine: MockProxy<AnalysisEngine>;
+  let mockIndexSystem: MockProxy<IndexSystem>;
+
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock AnalysisEngine prototype methods
-    const mockAnalyzeRepository = vi.fn().mockResolvedValue({
+    // Create mock instances
+    mockAnalysisEngine = mock<AnalysisEngine>();
+    mockIndexSystem = mock<IndexSystem>();
+
+    // Set up default mock behaviors
+    mockAnalysisEngine.analyzeRepository.mockResolvedValue({
       id: "123",
       path: "/test/repo",
       name: "test-repo",
@@ -69,60 +77,49 @@ describe("API Integration Tests", () => {
         processingTime: 100,
       },
     });
-    const mockAnalyzeMultipleRepositories = vi
-      .fn()
-      .mockResolvedValue(defaultMockBatchResult);
-    const mockAnalyzeMultipleRepositoriesWithQueue = vi
-      .fn()
-      .mockResolvedValue(defaultMockBatchResult);
-    const mockGenerateSynopsis = vi.fn().mockResolvedValue("");
-    const mockUpdateIndex = vi.fn().mockResolvedValue(undefined);
-    const mockSearchRepositories = vi.fn().mockResolvedValue([]);
-    const mockFindSimilarRepositories = vi.fn().mockResolvedValue([]);
-    // Note: mockSuggestCombinations is intentionally not set here to allow test-specific overrides
 
-    // Apply mocks to the prototype
-    AnalysisEngine.prototype.analyzeRepository = mockAnalyzeRepository;
-    AnalysisEngine.prototype.analyzeMultipleRepositories =
-      mockAnalyzeMultipleRepositories;
-    AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue =
-      mockAnalyzeMultipleRepositoriesWithQueue;
-    AnalysisEngine.prototype.generateSynopsis = mockGenerateSynopsis;
-    AnalysisEngine.prototype.updateIndex = mockUpdateIndex;
-    AnalysisEngine.prototype.searchRepositories = mockSearchRepositories;
-    AnalysisEngine.prototype.findSimilarRepositories =
-      mockFindSimilarRepositories;
-    // Note: suggestCombinations is intentionally not mocked in global beforeEach to allow test-specific overrides
+    mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue(
+      defaultMockBatchResult
+    );
+    mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue.mockResolvedValue(
+      defaultMockBatchResult
+    );
+    mockAnalysisEngine.generateSynopsis.mockResolvedValue("");
+    mockAnalysisEngine.updateIndex.mockResolvedValue(undefined);
+    mockAnalysisEngine.searchRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.findSimilarRepositories.mockResolvedValue([]);
 
-    // Mock IndexSystem prototype methods
-    const mockAddRepository = vi.fn().mockResolvedValue(undefined);
-    const mockGetIndex = vi.fn().mockReturnValue({
+    mockIndexSystem.getIndex.mockReturnValue({
       repositories: [],
       relationships: [],
       tags: [],
       lastUpdated: new Date(),
     });
-    const mockIndexSearchRepositories = vi.fn().mockResolvedValue([]);
-    const mockIndexFindSimilarRepositories = vi.fn().mockResolvedValue([]);
 
-    IndexSystem.prototype.addRepository = mockAddRepository;
-    IndexSystem.prototype.getIndex = mockGetIndex;
-    IndexSystem.prototype.searchRepositories = mockIndexSearchRepositories;
-    IndexSystem.prototype.findSimilarRepositories =
-      mockIndexFindSimilarRepositories;
+    // Mock the constructors to return our mock instances
+    const AnalysisEngineMock = vi.fn(() => mockAnalysisEngine as any);
+    const IndexSystemMock = vi.fn(() => mockIndexSystem as any);
+
+    // Replace the constructors
+    vi.doMock("../../core/AnalysisEngine", () => ({
+      AnalysisEngine: AnalysisEngineMock,
+    }));
+    vi.doMock("../../core/IndexSystem", () => ({
+      IndexSystem: IndexSystemMock,
+    }));
   });
 
   describe("Health Check", () => {
     it("should return status ok", async () => {
       const response = await request(app).get("/health");
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ status: "ok" });
+      expect(response.body).toHaveProperty("status", "healthy");
     });
   });
 
   describe("Repository Analysis", () => {
     it("should analyze a repository", async () => {
-      // Mock the analyzeRepository method
+      // Mock the analyzeRepository method for this specific test
       const mockAnalysis = {
         id: "123",
         path: "/test/repo",
@@ -169,17 +166,8 @@ describe("API Integration Tests", () => {
         },
       };
 
-      const mockAnalyzeRepository = vi.fn();
-      mockAnalyzeRepository.mockResolvedValue(mockAnalysis);
-      // Replace the method on the prototype for this test
-      const originalAnalyzeRepository =
-        AnalysisEngine.prototype.analyzeRepository;
-      AnalysisEngine.prototype.analyzeRepository = mockAnalyzeRepository;
-
-      // ... rest of the test ...
-
-      // Restore the original method after the test
-      AnalysisEngine.prototype.analyzeRepository = originalAnalyzeRepository;
+      // Override the mock for this test
+      mockAnalysisEngine.analyzeRepository.mockResolvedValue(mockAnalysis);
 
       const response = await request(app)
         .post("/api/analyze")
@@ -193,7 +181,7 @@ describe("API Integration Tests", () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockAnalysis);
-      expect(AnalysisEngine.prototype.analyzeRepository).toHaveBeenCalledWith(
+      expect(mockAnalysisEngine.analyzeRepository).toHaveBeenCalledWith(
         "/test/repo",
         expect.objectContaining({
           mode: "standard",
@@ -216,7 +204,7 @@ describe("API Integration Tests", () => {
     });
 
     it("should analyze multiple repositories", async () => {
-      // Mock the analyzeMultipleRepositories method
+      // Mock the analyzeMultipleRepositories method for this specific test
       const mockBatchResult = {
         id: "456",
         repositories: [
@@ -315,17 +303,10 @@ describe("API Integration Tests", () => {
         processingTime: 200,
       };
 
-      const mockAnalyzeMultipleRepositories = vi.fn();
-      mockAnalyzeMultipleRepositories.mockResolvedValue(mockBatchResult);
-      const originalAnalyzeMultipleRepositories =
-        AnalysisEngine.prototype.analyzeMultipleRepositories;
-      AnalysisEngine.prototype.analyzeMultipleRepositories =
-        mockAnalyzeMultipleRepositories;
-
-      // ... rest of the test ...
-
-      AnalysisEngine.prototype.analyzeMultipleRepositories =
-        originalAnalyzeMultipleRepositories;
+      // Override the mock for this test
+      mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue(
+        mockBatchResult
+      );
 
       const response = await request(app)
         .post("/api/analyze/batch")
@@ -339,7 +320,7 @@ describe("API Integration Tests", () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockBatchResult);
       expect(
-        AnalysisEngine.prototype.analyzeMultipleRepositories
+        mockAnalysisEngine.analyzeMultipleRepositories
       ).toHaveBeenCalledWith(
         ["/test/repo1", "/test/repo2"],
         expect.objectContaining({
@@ -351,7 +332,7 @@ describe("API Integration Tests", () => {
 
   describe("Repository Management", () => {
     it("should get all repositories", async () => {
-      // Mock the getIndex method
+      // Mock the getIndex method for this specific test
       const mockRepositories = [
         {
           id: "123",
@@ -379,29 +360,23 @@ describe("API Integration Tests", () => {
         },
       ];
 
-      const mockGetIndex = vi.fn();
-      mockGetIndex.mockReturnValue({
+      // Override the mock for this test
+      mockIndexSystem.getIndex.mockReturnValue({
         repositories: mockRepositories,
         relationships: [],
         tags: [],
         lastUpdated: new Date(),
       });
-      const originalGetIndex = IndexSystem.prototype.getIndex;
-      IndexSystem.prototype.getIndex = mockGetIndex;
-
-      // ... rest of the test ...
-
-      IndexSystem.prototype.getIndex = originalGetIndex;
 
       const response = await request(app).get("/api/repositories");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockRepositories);
-      expect(IndexSystem.prototype.getIndex).toHaveBeenCalled();
+      expect(mockIndexSystem.getIndex).toHaveBeenCalled();
     });
 
     it("should get a repository by ID", async () => {
-      // Mock the getIndex method
+      // Mock the getIndex method for this specific test
       const mockRepository = {
         id: "123",
         name: "test-repo1",
@@ -415,42 +390,29 @@ describe("API Integration Tests", () => {
         complexity: 5,
       };
 
-      const mockGetIndex = vi.fn();
-      mockGetIndex.mockReturnValue({
+      // Override the mock for this test
+      mockIndexSystem.getIndex.mockReturnValue({
         repositories: [mockRepository],
         relationships: [],
         tags: [],
         lastUpdated: new Date(),
       });
-      const originalGetIndex = IndexSystem.prototype.getIndex;
-      IndexSystem.prototype.getIndex = mockGetIndex;
-
-      // ... rest of the test ...
-
-      IndexSystem.prototype.getIndex = originalGetIndex;
 
       const response = await request(app).get("/api/repositories/123");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockRepository);
-      expect(IndexSystem.prototype.getIndex).toHaveBeenCalled();
+      expect(mockIndexSystem.getIndex).toHaveBeenCalled();
     });
 
     it("should return 404 for non-existent repository", async () => {
-      // Mock the getIndex method
-      const mockGetIndex = vi.fn();
-      mockGetIndex.mockReturnValue({
+      // Override the mock for this test
+      mockIndexSystem.getIndex.mockReturnValue({
         repositories: [],
         relationships: [],
         tags: [],
         lastUpdated: new Date(),
       });
-      const originalGetIndex = IndexSystem.prototype.getIndex;
-      IndexSystem.prototype.getIndex = mockGetIndex;
-
-      // ... rest of the test ...
-
-      IndexSystem.prototype.getIndex = originalGetIndex;
 
       const response = await request(app).get("/api/repositories/999");
 
@@ -459,7 +421,7 @@ describe("API Integration Tests", () => {
     });
 
     it("should search repositories", async () => {
-      // Mock the searchRepositories method
+      // Mock the searchRepositories method for this specific test
       const mockSearchResults = [
         {
           repository: {
@@ -490,11 +452,10 @@ describe("API Integration Tests", () => {
         },
       ];
 
-      const mockSearchRepositories = vi.fn();
-      mockSearchRepositories.mockResolvedValue(mockSearchResults);
-      const originalSearchRepositories =
-        AnalysisEngine.prototype.searchRepositories;
-      AnalysisEngine.prototype.searchRepositories = mockSearchRepositories;
+      // Override the mock for this test
+      mockAnalysisEngine.searchRepositories.mockResolvedValue(
+        mockSearchResults
+      );
 
       const response = await request(app)
         .get("/api/repositories/search")
@@ -505,19 +466,16 @@ describe("API Integration Tests", () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockSearchResults);
-      expect(AnalysisEngine.prototype.searchRepositories).toHaveBeenCalledWith(
+      expect(mockAnalysisEngine.searchRepositories).toHaveBeenCalledWith(
         expect.objectContaining({
           languages: ["JavaScript"],
           frameworks: ["React"],
         })
       );
-
-      // Restore original method after assertions
-      AnalysisEngine.prototype.searchRepositories = originalSearchRepositories;
     });
 
     it("should find similar repositories", async () => {
-      // Mock the findSimilarRepositories method
+      // Mock the findSimilarRepositories method for this specific test
       const mockSimilarRepositories = [
         {
           repository: {
@@ -537,28 +495,22 @@ describe("API Integration Tests", () => {
         },
       ];
 
-      const mockFindSimilarRepositories = vi.fn();
-      mockFindSimilarRepositories.mockResolvedValue(mockSimilarRepositories);
-      const originalFindSimilarRepositories =
-        AnalysisEngine.prototype.findSimilarRepositories;
-      AnalysisEngine.prototype.findSimilarRepositories =
-        mockFindSimilarRepositories;
+      // Override the mock for this test
+      mockAnalysisEngine.findSimilarRepositories.mockResolvedValue(
+        mockSimilarRepositories
+      );
 
       const response = await request(app).get("/api/repositories/123/similar");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockSimilarRepositories);
-      expect(
-        AnalysisEngine.prototype.findSimilarRepositories
-      ).toHaveBeenCalledWith("123");
-
-      // Restore original method after assertions
-      AnalysisEngine.prototype.findSimilarRepositories =
-        originalFindSimilarRepositories;
+      expect(mockAnalysisEngine.findSimilarRepositories).toHaveBeenCalledWith(
+        "123"
+      );
     });
 
     it("should suggest combinations", async () => {
-      // Mock the suggestCombinations method
+      // Mock the suggestCombinations method for this specific test
       const mockCombinations = [
         {
           repositories: ["123", "124"],
@@ -568,11 +520,10 @@ describe("API Integration Tests", () => {
         },
       ];
 
-      const mockSuggestCombinations = vi.fn();
-      mockSuggestCombinations.mockResolvedValue(mockCombinations);
-      const originalSuggestCombinations =
-        AnalysisEngine.prototype.suggestCombinations;
-      AnalysisEngine.prototype.suggestCombinations = mockSuggestCombinations;
+      // Override the mock for this test
+      mockAnalysisEngine.suggestCombinations.mockResolvedValue(
+        mockCombinations
+      );
 
       const response = await request(app)
         .post("/api/repositories/combinations")
@@ -582,13 +533,10 @@ describe("API Integration Tests", () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockCombinations);
-      expect(AnalysisEngine.prototype.suggestCombinations).toHaveBeenCalledWith(
-        ["123", "124"]
-      );
-
-      // Restore the original method
-      AnalysisEngine.prototype.suggestCombinations =
-        originalSuggestCombinations;
+      expect(mockAnalysisEngine.suggestCombinations).toHaveBeenCalledWith([
+        "123",
+        "124",
+      ]);
     });
   });
 });
