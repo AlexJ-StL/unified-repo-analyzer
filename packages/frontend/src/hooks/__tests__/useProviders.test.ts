@@ -1,26 +1,24 @@
-import { act, renderHook } from "@testing-library/react";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { useProviders } from "../useProviders";
+import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import * as apiModule from '../../services/api';
+import { useProviders } from '../useProviders';
 
 // Mock the apiService
 const mockGetProviders = vi.fn();
 const mockTestProvider = vi.fn();
 const mockGetProviderModels = vi.fn();
 
-vi.mock("../../services/api", () => ({
-  apiService: {
-    getProviders: mockGetProviders,
-    testProvider: mockTestProvider,
-    getProviderModels: mockGetProviderModels,
-  },
-}));
-
-describe("useProviders", () => {
+describe('useProviders', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Mock the apiService methods
+    vi.spyOn(apiModule.apiService, 'getProviders').mockImplementation(mockGetProviders);
+    vi.spyOn(apiModule.apiService, 'testProvider').mockImplementation(mockTestProvider);
+    vi.spyOn(apiModule.apiService, 'getProviderModels').mockImplementation(mockGetProviderModels);
   });
 
-  test("should initialize with empty providers and no loading/error state", () => {
+  test('should initialize with empty providers and no loading/error state', () => {
     const { result } = renderHook(() => useProviders());
 
     expect(result.current.providers).toEqual([]);
@@ -29,33 +27,33 @@ describe("useProviders", () => {
     expect(result.current.defaultProvider).toBeNull();
   });
 
-  test("should fetch providers successfully", async () => {
+  test('should fetch providers successfully', async () => {
     const mockProviders = [
       {
-        id: "openrouter",
-        name: "openrouter",
-        displayName: "OpenRouter",
+        id: 'openrouter',
+        name: 'openrouter',
+        displayName: 'OpenRouter',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "model-selection"],
-        status: "active",
-        model: "openrouter/auto",
+        capabilities: ['text-generation', 'model-selection'],
+        status: 'active',
+        model: 'openrouter/auto',
       },
       {
-        id: "claude",
-        name: "claude",
-        displayName: "Anthropic Claude",
+        id: 'claude',
+        name: 'claude',
+        displayName: 'Anthropic Claude',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "code-analysis"],
-        status: "active",
-        model: "claude-3-haiku-20240307",
+        capabilities: ['text-generation', 'code-analysis'],
+        status: 'active',
+        model: 'claude-3-haiku-20240307',
       },
     ];
 
     const mockResponse = {
       providers: mockProviders,
-      defaultProvider: "openrouter",
+      defaultProvider: 'openrouter',
     };
 
     mockGetProviders.mockResolvedValue(mockResponse);
@@ -67,13 +65,13 @@ describe("useProviders", () => {
     });
 
     expect(result.current.providers).toEqual(mockProviders);
-    expect(result.current.defaultProvider).toBe("openrouter");
+    expect(result.current.defaultProvider).toBe('openrouter');
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
   });
 
-  test("should handle fetch providers error", async () => {
-    mockGetProviders.mockRejectedValue(new Error("Network error"));
+  test('should handle fetch providers error', async () => {
+    mockGetProviders.mockRejectedValue(new Error('Network error'));
 
     const { result } = renderHook(() => useProviders());
 
@@ -84,34 +82,34 @@ describe("useProviders", () => {
     expect(result.current.providers).toEqual([]);
     expect(result.current.defaultProvider).toBeNull();
     expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBe("Failed to fetch providers");
+    expect(result.current.error).toBe('Failed to fetch providers');
   });
 
-  test("should test provider successfully", async () => {
+  test('should test provider successfully', async () => {
     const mockProviders = [
       {
-        id: "openrouter",
-        name: "openrouter",
-        displayName: "OpenRouter",
+        id: 'openrouter',
+        name: 'openrouter',
+        displayName: 'OpenRouter',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "model-selection"],
-        status: "inactive",
-        model: "openrouter/auto",
+        capabilities: ['text-generation', 'model-selection'],
+        status: 'inactive',
+        model: 'openrouter/auto',
       },
     ];
 
     const mockResponse = {
       providers: mockProviders,
-      defaultProvider: "openrouter",
+      defaultProvider: 'openrouter',
     };
 
     mockGetProviders.mockResolvedValue(mockResponse);
 
     const mockTestResponse = {
-      provider: "openrouter",
+      provider: 'openrouter',
       working: true,
-      status: "active",
+      status: 'active',
       lastTested: new Date().toISOString(),
     };
 
@@ -127,35 +125,35 @@ describe("useProviders", () => {
     // Then test a provider
     let testResult: boolean | undefined;
     await act(async () => {
-      testResult = await result.current.testProvider("openrouter");
+      testResult = await result.current.testProvider('openrouter');
     });
 
     expect(testResult).toBe(true);
     // Check that the provider status was updated
-    expect(result.current.providers[0].status).toBe("active");
+    expect(result.current.providers[0].status).toBe('active');
   });
 
-  test("should handle test provider error", async () => {
+  test('should handle test provider error', async () => {
     const mockProviders = [
       {
-        id: "openrouter",
-        name: "openrouter",
-        displayName: "OpenRouter",
+        id: 'openrouter',
+        name: 'openrouter',
+        displayName: 'OpenRouter',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "model-selection"],
-        status: "inactive",
-        model: "openrouter/auto",
+        capabilities: ['text-generation', 'model-selection'],
+        status: 'inactive',
+        model: 'openrouter/auto',
       },
     ];
 
     const mockResponse = {
       providers: mockProviders,
-      defaultProvider: "openrouter",
+      defaultProvider: 'openrouter',
     };
 
     mockGetProviders.mockResolvedValue(mockResponse);
-    mockTestProvider.mockRejectedValue(new Error("Test failed"));
+    mockTestProvider.mockRejectedValue(new Error('Test failed'));
 
     const { result } = renderHook(() => useProviders());
 
@@ -167,53 +165,53 @@ describe("useProviders", () => {
     // Then test a provider
     let testResult: boolean | undefined;
     await act(async () => {
-      testResult = await result.current.testProvider("openrouter");
+      testResult = await result.current.testProvider('openrouter');
     });
 
     expect(testResult).toBe(false);
-    expect(result.current.error).toBe("Failed to test provider openrouter");
+    expect(result.current.error).toBe('Failed to test provider openrouter');
   });
 
-  test("should fetch provider models successfully", async () => {
+  test('should fetch provider models successfully', async () => {
     const mockProviders = [
       {
-        id: "openrouter",
-        name: "openrouter",
-        displayName: "OpenRouter",
+        id: 'openrouter',
+        name: 'openrouter',
+        displayName: 'OpenRouter',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "model-selection"],
-        status: "active",
-        model: "openrouter/auto",
+        capabilities: ['text-generation', 'model-selection'],
+        status: 'active',
+        model: 'openrouter/auto',
       },
     ];
 
     const mockResponse = {
       providers: mockProviders,
-      defaultProvider: "openrouter",
+      defaultProvider: 'openrouter',
     };
 
     mockGetProviders.mockResolvedValue(mockResponse);
 
     const mockModels = [
       {
-        id: "openai/gpt-3.5-turbo",
-        name: "OpenAI GPT-3.5 Turbo",
-        description: "Fast and affordable model",
+        id: 'openai/gpt-3.5-turbo',
+        name: 'OpenAI GPT-3.5 Turbo',
+        description: 'Fast and affordable model',
         pricing: {
           prompt: 0.001,
           completion: 0.002,
         },
         context_length: 4096,
         architecture: {
-          modality: "text",
-          tokenizer: "openai",
+          modality: 'text',
+          tokenizer: 'openai',
         },
       },
     ];
 
     mockGetProviderModels.mockResolvedValue({
-      provider: "openrouter",
+      provider: 'openrouter',
       models: mockModels,
     });
 
@@ -227,33 +225,33 @@ describe("useProviders", () => {
     // Then fetch models
     let models: any[] | undefined;
     await act(async () => {
-      models = await result.current.fetchProviderModels("openrouter");
+      models = await result.current.fetchProviderModels('openrouter');
     });
 
     expect(models).toEqual(mockModels);
   });
 
-  test("should handle fetch provider models error", async () => {
+  test('should handle fetch provider models error', async () => {
     const mockProviders = [
       {
-        id: "openrouter",
-        name: "openrouter",
-        displayName: "OpenRouter",
+        id: 'openrouter',
+        name: 'openrouter',
+        displayName: 'OpenRouter',
         available: true,
         configured: true,
-        capabilities: ["text-generation", "model-selection"],
-        status: "active",
-        model: "openrouter/auto",
+        capabilities: ['text-generation', 'model-selection'],
+        status: 'active',
+        model: 'openrouter/auto',
       },
     ];
 
     const mockResponse = {
       providers: mockProviders,
-      defaultProvider: "openrouter",
+      defaultProvider: 'openrouter',
     };
 
     mockGetProviders.mockResolvedValue(mockResponse);
-    mockGetProviderModels.mockRejectedValue(new Error("Models fetch failed"));
+    mockGetProviderModels.mockRejectedValue(new Error('Models fetch failed'));
 
     const { result } = renderHook(() => useProviders());
 
@@ -265,12 +263,10 @@ describe("useProviders", () => {
     // Then try to fetch models
     let models: any[] | undefined;
     await act(async () => {
-      models = await result.current.fetchProviderModels("openrouter");
+      models = await result.current.fetchProviderModels('openrouter');
     });
 
     expect(models).toEqual([]);
-    expect(result.current.error).toBe(
-      "Failed to fetch models for provider openrouter"
-    );
+    expect(result.current.error).toBe('Failed to fetch models for provider openrouter');
   });
 });

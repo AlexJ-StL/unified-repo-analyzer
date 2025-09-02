@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
-import { apiService } from "../services/api";
-import { useApi } from "./useApi";
+import { useCallback, useState } from 'react';
+import { apiService } from '../services/api';
+import { useApi } from './useApi';
 
 export interface Provider {
   id: string;
@@ -9,7 +9,7 @@ export interface Provider {
   available: boolean;
   configured: boolean;
   capabilities: string[];
-  status: "active" | "inactive" | "error" | "testing";
+  status: 'active' | 'inactive' | 'error' | 'testing';
   errorMessage?: string;
   model?: string;
 }
@@ -37,6 +37,15 @@ interface UseProvidersReturn {
   refreshProviders: () => Promise<void>;
   testProvider: (providerId: string) => Promise<boolean>;
   fetchProviderModels: (providerId: string) => Promise<OpenRouterModel[]>;
+  validateProviderModel: (
+    providerId: string,
+    modelId: string
+  ) => Promise<{
+    valid: boolean;
+    model?: any;
+    error?: string;
+  }>;
+  getModelRecommendations: (providerId: string, modelId: string) => Promise<any>;
   defaultProvider: string | null;
 }
 
@@ -70,6 +79,22 @@ export const useProviders = (): UseProvidersReturn => {
     showErrorToast: false,
   });
 
+  const {
+    execute: validateProviderModelApi,
+    isLoading: isValidatingModel,
+    error: validateModelError,
+  } = useApi(apiService.validateProviderModel, {
+    showErrorToast: false,
+  });
+
+  const {
+    execute: getModelRecommendationsApi,
+    isLoading: isFetchingRecommendations,
+    error: recommendationsError,
+  } = useApi(apiService.getModelRecommendations, {
+    showErrorToast: false,
+  });
+
   const refreshProviders = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -80,8 +105,8 @@ export const useProviders = (): UseProvidersReturn => {
         setProviders(response.providers);
         setDefaultProvider(response.defaultProvider);
       }
-    } catch (err) {
-      setError(fetchError || "Failed to fetch providers");
+    } catch (_err) {
+      setError(fetchError || 'Failed to fetch providers');
     } finally {
       setLoading(false);
     }
@@ -108,7 +133,7 @@ export const useProviders = (): UseProvidersReturn => {
           return response.working;
         }
         return false;
-      } catch (err) {
+      } catch (_err) {
         setError(testError || `Failed to test provider ${providerId}`);
         return false;
       }
@@ -124,24 +149,83 @@ export const useProviders = (): UseProvidersReturn => {
           return response.models as OpenRouterModel[];
         }
         return [];
-      } catch (err) {
-        setError(
-          fetchModelsError ||
-            `Failed to fetch models for provider ${providerId}`
-        );
+      } catch (_err) {
+        setError(fetchModelsError || `Failed to fetch models for provider ${providerId}`);
         return [];
       }
     },
     [fetchProviderModelsApi, fetchModelsError]
   );
 
+  const validateProviderModel = useCallback(
+    async (
+      providerId: string,
+      modelId: string
+    ): Promise<{
+      valid: boolean;
+      model?: any;
+      error?: string;
+    }> => {
+      try {
+        const response = await validateProviderModelApi(providerId, modelId);
+        if (response) {
+          return {
+            valid: response.valid,
+            model: response.model,
+            error: response.error,
+          };
+        }
+        return { valid: false, error: 'No response received' };
+      } catch (_err) {
+        setError(
+          validateModelError || `Failed to validate model ${modelId} for provider ${providerId}`
+        );
+        return {
+          valid: false,
+          error: validateModelError || 'Validation failed',
+        };
+      }
+    },
+    [validateProviderModelApi, validateModelError]
+  );
+
+  const getModelRecommendations = useCallback(
+    async (providerId: string, modelId: string): Promise<any> => {
+      try {
+        const response = await getModelRecommendationsApi(providerId, modelId);
+        if (response) {
+          return response.recommendations;
+        }
+        return {};
+      } catch (_err) {
+        setError(recommendationsError || `Failed to get recommendations for model ${modelId}`);
+        return {};
+      }
+    },
+    [getModelRecommendationsApi, recommendationsError]
+  );
+
   return {
     providers,
-    loading: isFetching || isTesting || isFetchingModels || loading,
-    error: error || fetchError || testError || fetchModelsError,
+    loading:
+      isFetching ||
+      isTesting ||
+      isFetchingModels ||
+      isValidatingModel ||
+      isFetchingRecommendations ||
+      loading,
+    error:
+      error ||
+      fetchError ||
+      testError ||
+      fetchModelsError ||
+      validateModelError ||
+      recommendationsError,
     refreshProviders,
     testProvider,
     fetchProviderModels,
+    validateProviderModel,
+    getModelRecommendations,
     defaultProvider,
   };
 };

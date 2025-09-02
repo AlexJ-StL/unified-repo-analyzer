@@ -2,13 +2,13 @@ import type {
   OutputFormat,
   RepositoryAnalysis,
   AnalysisOptions as SharedAnalysisOptions,
-} from "@unified-repo-analyzer/shared";
-import { create } from "zustand";
+} from '@unified-repo-analyzer/shared';
+import { create } from 'zustand';
 
 export interface AnalysisOptions extends SharedAnalysisOptions {}
 
 export interface AnalysisProgress {
-  status: "idle" | "initializing" | "processing" | "completed" | "failed";
+  status: 'idle' | 'initializing' | 'processing' | 'completed' | 'failed';
   currentStep: string;
   progress: number;
   totalSteps: number;
@@ -34,18 +34,18 @@ interface AnalysisState {
 }
 
 const defaultOptions: AnalysisOptions = {
-  mode: "standard",
+  mode: 'standard',
   maxFiles: 100,
   maxLinesPerFile: 1000,
   includeLLMAnalysis: true,
-  llmProvider: "claude",
-  outputFormats: ["json"] as OutputFormat[],
+  llmProvider: 'claude',
+  outputFormats: ['json'] as OutputFormat[],
   includeTree: true,
 };
 
 const defaultProgress: AnalysisProgress = {
-  status: "idle",
-  currentStep: "",
+  status: 'idle',
+  currentStep: '',
   progress: 0,
   totalSteps: 0,
   filesProcessed: 0,
@@ -56,7 +56,7 @@ const defaultProgress: AnalysisProgress = {
 };
 
 export const useAnalysisStore = create<AnalysisState>((set) => ({
-  repositoryPath: "",
+  repositoryPath: '',
   options: defaultOptions,
   progress: defaultProgress,
   results: null,
@@ -77,7 +77,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
 
   resetAnalysis: () =>
     set({
-      repositoryPath: "",
+      repositoryPath: '',
       options: defaultOptions,
       progress: defaultProgress,
       results: null,

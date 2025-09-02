@@ -1,13 +1,13 @@
-import { renderHook, act } from "@testing-library/react";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { useAnalysisRequests } from "../useAnalysisRequests";
+import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { useAnalysisRequests } from '../useAnalysisRequests';
 
 // Mock the apiService
 const mockGetAnalysisRequests = vi.fn();
 const mockGetAnalysisRequestStats = vi.fn();
 const mockGetAnalysisRequest = vi.fn();
 
-vi.mock("../../services/api", () => ({
+vi.mock('../../services/api', () => ({
   apiService: {
     getAnalysisRequests: mockGetAnalysisRequests,
     getAnalysisRequestStats: mockGetAnalysisRequestStats,
@@ -15,26 +15,26 @@ vi.mock("../../services/api", () => ({
   },
 }));
 
-describe("useAnalysisRequests", () => {
+describe('useAnalysisRequests', () => {
   const mockRequests = [
     {
-      id: "1",
-      path: "/test/path1",
+      id: '1',
+      path: '/test/path1',
       options: {},
-      status: "completed",
+      status: 'completed',
       progress: 100,
-      startTime: "2023-01-01T00:00:00Z",
-      endTime: "2023-01-01T00:01:00Z",
+      startTime: '2023-01-01T00:00:00Z',
+      endTime: '2023-01-01T00:01:00Z',
       processingTime: 60000,
     },
     {
-      id: "2",
-      path: "/test/path2",
+      id: '2',
+      path: '/test/path2',
       options: {},
-      status: "processing",
+      status: 'processing',
       progress: 50,
-      startTime: "2023-01-01T00:00:00Z",
-      currentFile: "file2.js",
+      startTime: '2023-01-01T00:00:00Z',
+      currentFile: 'file2.js',
     },
   ];
 
@@ -52,7 +52,7 @@ describe("useAnalysisRequests", () => {
     vi.clearAllMocks();
   });
 
-  test("should fetch requests and stats on mount", async () => {
+  test('should fetch requests and stats on mount', async () => {
     mockGetAnalysisRequests.mockResolvedValue({
       data: mockRequests,
     });
@@ -76,9 +76,9 @@ describe("useAnalysisRequests", () => {
     expect(mockGetAnalysisRequestStats).toHaveBeenCalledWith();
   });
 
-  test("should handle fetch errors", async () => {
-    mockGetAnalysisRequests.mockRejectedValue(new Error("Failed to fetch"));
-    mockGetAnalysisRequestStats.mockRejectedValue(new Error("Failed to fetch"));
+  test('should handle fetch errors', async () => {
+    mockGetAnalysisRequests.mockRejectedValue(new Error('Failed to fetch'));
+    mockGetAnalysisRequestStats.mockRejectedValue(new Error('Failed to fetch'));
 
     const { result } = renderHook(() => useAnalysisRequests());
 
@@ -87,12 +87,12 @@ describe("useAnalysisRequests", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(result.current.error).toBe("Failed to fetch");
+    expect(result.current.error).toBe('Failed to fetch');
     expect(result.current.requests).toEqual([]);
     expect(result.current.stats).toBeNull();
   });
 
-  test("should refresh requests", async () => {
+  test('should refresh requests', async () => {
     mockGetAnalysisRequests
       .mockResolvedValueOnce({
         data: [],
@@ -122,7 +122,7 @@ describe("useAnalysisRequests", () => {
     expect(mockGetAnalysisRequests).toHaveBeenCalledTimes(2);
   });
 
-  test("should fetch a specific request", async () => {
+  test('should fetch a specific request', async () => {
     const mockRequest = mockRequests[0];
     mockGetAnalysisRequest.mockResolvedValue({
       data: mockRequest,
@@ -132,10 +132,10 @@ describe("useAnalysisRequests", () => {
 
     let request: any;
     await act(async () => {
-      request = await result.current.getRequest("1");
+      request = await result.current.getRequest('1');
     });
 
     expect(request).toEqual(mockRequest);
-    expect(mockGetAnalysisRequest).toHaveBeenCalledWith("1");
+    expect(mockGetAnalysisRequest).toHaveBeenCalledWith('1');
   });
 });

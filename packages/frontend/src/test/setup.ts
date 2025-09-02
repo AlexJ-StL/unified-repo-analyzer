@@ -55,3 +55,26 @@ global.IntersectionObserver = class IntersectionObserver {
     return [];
   }
 };
+
+// Mock PerformanceObserver
+global.PerformanceObserver = class PerformanceObserver {
+  constructor(public callback: PerformanceObserverCallback) {}
+
+  observe() {}
+  disconnect() {}
+  takeRecords(): PerformanceEntryList {
+    return [];
+  }
+};
+
+// Mock performance.getEntriesByType
+Object.defineProperty(window, 'performance', {
+  writable: true,
+  value: {
+    ...window.performance,
+    getEntriesByType: () => [],
+    mark: () => {},
+    measure: () => {},
+    now: () => Date.now(),
+  },
+});

@@ -1,5 +1,5 @@
-import { io, type Socket } from "socket.io-client";
-import { useAnalysisStore } from "../store/useAnalysisStore";
+import { io, type Socket } from 'socket.io-client';
+import { useAnalysisStore } from '../store/useAnalysisStore';
 
 class WebSocketService {
   private socket: Socket | null = null;
@@ -14,7 +14,7 @@ class WebSocketService {
       return;
     }
 
-    this.socket = io("http://localhost:3001", {
+    this.socket = io('http://localhost:3001', {
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectDelay,
       autoConnect: true,
@@ -41,12 +41,12 @@ class WebSocketService {
   // Subscribe to analysis progress updates
   public subscribeToAnalysis(analysisId: string): void {
     if (this.socket) {
-      this.socket.emit("register-analysis", analysisId);
+      this.socket.emit('register-analysis', analysisId);
     }
   }
 
   // Unsubscribe from analysis progress updates
-  public unsubscribeFromAnalysis(analysisId: string): void {
+  public unsubscribeFromAnalysis(_analysisId: string): void {
     if (this.socket) {
       // No explicit unsubscribe needed as rooms are cleaned up on disconnect
     }
@@ -57,18 +57,18 @@ class WebSocketService {
     if (!this.socket) return;
 
     // Connection events
-    this.socket.on("connect", () => {
-      console.log("WebSocket connected");
+    this.socket.on('connect', () => {
+      console.log('WebSocket connected');
       this.reconnectAttempts = 0;
       this.connected = true;
 
       // Update store with connection status
       useAnalysisStore.getState().setProgress({
-        log: "WebSocket connected",
+        log: 'WebSocket connected',
       });
     });
 
-    this.socket.on("disconnect", (reason) => {
+    this.socket.on('disconnect', (reason) => {
       console.log(`WebSocket disconnected: ${reason}`);
       this.connected = false;
 
@@ -78,7 +78,7 @@ class WebSocketService {
       });
     });
 
-    this.socket.on("connect_error", (error) => {
+    this.socket.on('connect_error', (error) => {
       this.reconnectAttempts++;
       this.connected = false;
 
@@ -92,13 +92,13 @@ class WebSocketService {
 
         // Update store with max reconnect attempts reached
         useAnalysisStore.getState().setProgress({
-          log: "Max reconnect attempts reached, giving up",
+          log: 'Max reconnect attempts reached, giving up',
         });
       }
     });
 
     // Analysis progress events
-    this.socket.on("analysis-progress", (data) => {
+    this.socket.on('analysis-progress', (data) => {
       const {
         status,
         currentFile,
@@ -112,8 +112,8 @@ class WebSocketService {
         tokensUsed,
       } = data;
       useAnalysisStore.getState().setProgress({
-        status: status || "processing",
-        currentStep: currentFile || "Processing files",
+        status: status || 'processing',
+        currentStep: currentFile || 'Processing files',
         progress: progress || 0,
         totalSteps: total || 100,
         filesProcessed: filesProcessed || processed || 0,
@@ -121,21 +121,21 @@ class WebSocketService {
         timeElapsed: timeElapsed || 0,
         timeRemaining: timeRemaining || 0,
         tokensUsed: tokensUsed || 0,
-        log: `Processing: ${currentFile || "files"}`,
+        log: `Processing: ${currentFile || 'files'}`,
       });
     });
 
-    this.socket.on("analysis-complete", (data) => {
+    this.socket.on('analysis-complete', (data) => {
       useAnalysisStore.getState().setProgress({
-        status: "completed",
+        status: 'completed',
         progress: 100,
         totalSteps: 100,
-        log: "Analysis completed successfully",
+        log: 'Analysis completed successfully',
       });
       useAnalysisStore.getState().setResults(data);
     });
 
-    this.socket.on("batch-analysis-progress", (data) => {
+    this.socket.on('batch-analysis-progress', (data) => {
       const {
         status,
         currentRepositories,
@@ -147,11 +147,11 @@ class WebSocketService {
         timeRemaining,
       } = data;
       useAnalysisStore.getState().setProgress({
-        status: status || "processing",
+        status: status || 'processing',
         currentStep:
           currentRepositories?.length > 0
-            ? `Processing: ${currentRepositories.join(", ")}`
-            : "Processing batch",
+            ? `Processing: ${currentRepositories.join(', ')}`
+            : 'Processing batch',
         progress: progress || 0,
         totalSteps: total || 100,
         filesProcessed: completed || 0,
@@ -162,12 +162,12 @@ class WebSocketService {
       });
     });
 
-    this.socket.on("batch-analysis-complete", (data) => {
+    this.socket.on('batch-analysis-complete', (data) => {
       useAnalysisStore.getState().setProgress({
-        status: "completed",
+        status: 'completed',
         progress: 100,
         totalSteps: 100,
-        log: "Batch analysis completed successfully",
+        log: 'Batch analysis completed successfully',
       });
       // For batch analysis, we might want to handle results differently
       // For now, we'll just set the first repository's results

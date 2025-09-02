@@ -4,16 +4,16 @@ import type {
   OutputFormat,
   RepositoryAnalysis,
   SearchQuery,
-} from "@unified-repo-analyzer/shared";
-import axios, { type AxiosError, type AxiosResponse } from "axios";
-import { performanceService } from "./performance.service";
+} from '@unified-repo-analyzer/shared';
+import axios, { type AxiosError, type AxiosResponse } from 'axios';
+import { performanceService } from './performance.service';
 
 // Analysis request types
 export interface AnalysisRequest {
   id: string;
   path: string;
   options: any;
-  status: "queued" | "processing" | "completed" | "failed" | "cancelled";
+  status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
   progress: number;
   currentFile?: string;
   startTime: string;
@@ -41,10 +41,10 @@ export interface AnalysisRequestStats {
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: 'http://localhost:3000/api',
   timeout: 30000, // 30 seconds
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -52,10 +52,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Add performance timing
-    (config as typeof config & { metadata?: { startTime: number } }).metadata =
-      {
-        startTime: performance.now(),
-      };
+    (config as typeof config & { metadata?: { startTime: number } }).metadata = {
+      startTime: performance.now(),
+    };
 
     // You can add auth tokens here if needed
     return config;
@@ -74,12 +73,11 @@ api.interceptors.response.use(
     };
     if (config.metadata?.startTime) {
       const duration = performance.now() - config.metadata.startTime;
-      const endpoint =
-        config.url?.replace(config.baseURL || "", "") || "unknown";
+      const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
 
       performanceService.recordApiCall(
         endpoint,
-        config.method?.toUpperCase() || "GET",
+        config.method?.toUpperCase() || 'GET',
         duration,
         response.status
       );
@@ -95,14 +93,12 @@ api.interceptors.response.use(
       metadata?: { startTime: number };
     };
     if (config && configWithMetadata?.metadata?.startTime) {
-      const duration =
-        performance.now() - configWithMetadata.metadata.startTime;
-      const endpoint =
-        config.url?.replace(config.baseURL || "", "") || "unknown";
+      const duration = performance.now() - configWithMetadata.metadata.startTime;
+      const endpoint = config.url?.replace(config.baseURL || '', '') || 'unknown';
 
       performanceService.recordApiCall(
         endpoint,
-        config.method?.toUpperCase() || "GET",
+        config.method?.toUpperCase() || 'GET',
         duration,
         response?.status || 0
       );
@@ -136,7 +132,7 @@ export const apiService = {
     path: string,
     options: AnalysisOptions
   ): Promise<AxiosResponse<{ analysisId: string }>> => {
-    return api.post("/analyze", { path, options });
+    return api.post('/analyze', { path, options });
   },
 
   // Batch analysis
@@ -144,22 +140,20 @@ export const apiService = {
     paths: string[],
     options: AnalysisOptions
   ): Promise<AxiosResponse<{ batchId: string }>> => {
-    return api.post("/analyze/batch", { paths, options });
+    return api.post('/analyze/batch', { paths, options });
   },
 
   // Get repositories
   getRepositories: (): Promise<AxiosResponse<RepositoryAnalysis[]>> => {
-    return api.get("/repositories");
+    return api.get('/repositories');
   },
 
   // Search repositories
   searchRepositories: (
     query: string,
     filters: SearchQuery
-  ): Promise<
-    AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>
-  > => {
-    return api.get("/repositories/search", { params: { query, ...filters } });
+  ): Promise<AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>> => {
+    return api.get('/repositories/search', { params: { query, ...filters } });
   },
 
   // Get analysis results
@@ -172,14 +166,12 @@ export const apiService = {
     analysis: RepositoryAnalysis,
     format: OutputFormat,
     download = false
-  ): Promise<
-    AxiosResponse<Blob | { exportId: string; downloadUrl: string }>
-  > => {
+  ): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
     return api.post(
-      "/export",
+      '/export',
       { analysis, format },
       {
-        responseType: download ? "blob" : "json",
+        responseType: download ? 'blob' : 'json',
         params: { download: download.toString() },
       }
     );
@@ -190,14 +182,12 @@ export const apiService = {
     batchAnalysis: BatchAnalysisResult,
     format: OutputFormat,
     download = false
-  ): Promise<
-    AxiosResponse<Blob | { exportId: string; downloadUrl: string }>
-  > => {
+  ): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
     return api.post(
-      "/export/batch",
+      '/export/batch',
       { batchAnalysis, format },
       {
-        responseType: download ? "blob" : "json",
+        responseType: download ? 'blob' : 'json',
         params: { download: download.toString() },
       }
     );
@@ -205,7 +195,7 @@ export const apiService = {
 
   // Download export file
   downloadExport: (exportId: string): Promise<AxiosResponse<Blob>> => {
-    return api.get(`/export/download/${exportId}`, { responseType: "blob" });
+    return api.get(`/export/download/${exportId}`, { responseType: 'blob' });
   },
 
   // Get export history
@@ -219,20 +209,16 @@ export const apiService = {
       }>;
     }>
   > => {
-    return api.get("/export/history");
+    return api.get('/export/history');
   },
 
   // Delete export
-  deleteExport: (
-    exportId: string
-  ): Promise<AxiosResponse<{ success: boolean }>> => {
+  deleteExport: (exportId: string): Promise<AxiosResponse<{ success: boolean }>> => {
     return api.delete(`/export/${exportId}`);
   },
 
   // Cancel analysis
-  cancelAnalysis: (
-    id: string
-  ): Promise<AxiosResponse<{ success: boolean }>> => {
+  cancelAnalysis: (id: string): Promise<AxiosResponse<{ success: boolean }>> => {
     return api.post(`/analysis/${id}/cancel`);
   },
 
@@ -246,14 +232,14 @@ export const apiService = {
         available: boolean;
         configured: boolean;
         capabilities: string[];
-        status: "active" | "inactive" | "error" | "testing";
+        status: 'active' | 'inactive' | 'error' | 'testing';
         errorMessage?: string;
         model?: string;
       }>;
       defaultProvider: string;
     }>
   > => {
-    return api.get("/providers");
+    return api.get('/providers');
   },
 
   // Test a provider
@@ -263,7 +249,7 @@ export const apiService = {
     AxiosResponse<{
       provider: string;
       working: boolean;
-      status: "active" | "inactive" | "error" | "testing";
+      status: 'active' | 'inactive' | 'error' | 'testing';
       lastTested?: string;
       errorMessage?: string;
     }>
@@ -283,13 +269,45 @@ export const apiService = {
     return api.get(`/providers/${providerId}/models`);
   },
 
+  // Validate a provider model
+  validateProviderModel: (
+    providerId: string,
+    modelId: string
+  ): Promise<
+    AxiosResponse<{
+      provider: string;
+      modelId: string;
+      valid: boolean;
+      model?: any;
+      error?: string;
+    }>
+  > => {
+    return api.post(`/providers/${providerId}/models/${encodeURIComponent(modelId)}/validate`);
+  },
+
+  // Get model recommendations
+  getModelRecommendations: (
+    providerId: string,
+    modelId: string
+  ): Promise<
+    AxiosResponse<{
+      provider: string;
+      modelId: string;
+      recommendations: any;
+    }>
+  > => {
+    return api.get(
+      `/providers/${providerId}/models/${encodeURIComponent(modelId)}/recommendations`
+    );
+  },
+
   // Get analysis requests
   getAnalysisRequests: (params?: {
     status?: string;
     clientId?: string;
     limit?: number;
   }): Promise<AxiosResponse<AnalysisRequest[]>> => {
-    return api.get("/analysis-requests", { params });
+    return api.get('/analysis-requests', { params });
   },
 
   // Get a specific analysis request
@@ -299,7 +317,7 @@ export const apiService = {
 
   // Get analysis request statistics
   getAnalysisRequestStats: (): Promise<AxiosResponse<AnalysisRequestStats>> => {
-    return api.get("/analysis-requests/stats");
+    return api.get('/analysis-requests/stats');
   },
 };
 
@@ -320,7 +338,7 @@ export const handleApiError = (error: unknown): string => {
 
       // For path-related errors, prefer the detailed message from PathHandler/ErrorMessageService
       const errorMessage = data?.message || data?.error;
-      if (typeof errorMessage === "string" && errorMessage.trim()) {
+      if (typeof errorMessage === 'string' && errorMessage.trim()) {
         return errorMessage;
       }
 
@@ -328,7 +346,7 @@ export const handleApiError = (error: unknown): string => {
     }
     if (axiosError.request) {
       // The request was made but no response was received
-      return "No response received from server. Please check your connection.";
+      return 'No response received from server. Please check your connection.';
     }
     // Something happened in setting up the request that triggered an Error
     return `Error: ${axiosError.message}`;
@@ -340,11 +358,11 @@ export const handleApiError = (error: unknown): string => {
   }
 
   // Fallback for unknown error types
-  if (typeof error === "string") {
+  if (typeof error === 'string') {
     return error;
   }
 
-  return "An unknown error occurred";
+  return 'An unknown error occurred';
 };
 
 // Enhanced error response interface for path-related errors
@@ -363,22 +381,20 @@ export interface PathErrorResponse {
 }
 
 // Extract detailed error information for path-related errors
-export const extractPathErrorDetails = (
-  error: unknown
-): PathErrorResponse | null => {
+export const extractPathErrorDetails = (error: unknown): PathErrorResponse | null => {
   if (axios.isAxiosError(error) && error.response) {
     const data = error.response.data as any;
 
     // Check if this is a path-related error response
     if (
       data &&
-      typeof data === "object" &&
-      "suggestions" in data &&
+      typeof data === 'object' &&
+      'suggestions' in data &&
       Array.isArray(data.suggestions)
     ) {
       return {
-        error: data.error || "Path Error",
-        message: data.message || "An error occurred with the repository path",
+        error: data.error || 'Path Error',
+        message: data.message || 'An error occurred with the repository path',
         details: data.details,
         path: data.path,
         normalizedPath: data.normalizedPath,
@@ -408,7 +424,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       options: AnalysisOptions
     ): Promise<AxiosResponse<{ analysisId: string }>> => {
       try {
-        return await api.post("/analyze", { path, options });
+        return await api.post('/analyze', { path, options });
       } catch (error) {
         return handleError(error);
       }
@@ -420,7 +436,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       options: AnalysisOptions
     ): Promise<AxiosResponse<{ batchId: string }>> => {
       try {
-        return await api.post("/analyze/batch", { paths, options });
+        return await api.post('/analyze/batch', { paths, options });
       } catch (error) {
         return handleError(error);
       }
@@ -429,7 +445,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     // Get repositories with error handling
     getRepositories: async (): Promise<AxiosResponse<RepositoryAnalysis[]>> => {
       try {
-        return await api.get("/repositories");
+        return await api.get('/repositories');
       } catch (error) {
         return handleError(error);
       }
@@ -439,11 +455,9 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     searchRepositories: async (
       query: string,
       filters: SearchQuery
-    ): Promise<
-      AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>
-    > => {
+    ): Promise<AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>> => {
       try {
-        return await api.get("/repositories/search", {
+        return await api.get('/repositories/search', {
           params: { query, ...filters },
         });
       } catch (error) {
@@ -452,9 +466,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     },
 
     // Get analysis results with error handling
-    getAnalysis: async (
-      id: string
-    ): Promise<AxiosResponse<RepositoryAnalysis>> => {
+    getAnalysis: async (id: string): Promise<AxiosResponse<RepositoryAnalysis>> => {
       try {
         return await api.get(`/analysis/${id}`);
       } catch (error) {
@@ -467,15 +479,13 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       analysis: RepositoryAnalysis,
       format: OutputFormat,
       download = false
-    ): Promise<
-      AxiosResponse<Blob | { exportId: string; downloadUrl: string }>
-    > => {
+    ): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
       try {
         return await api.post(
-          "/export",
+          '/export',
           { analysis, format },
           {
-            responseType: download ? "blob" : "json",
+            responseType: download ? 'blob' : 'json',
             params: { download: download.toString() },
           }
         );
@@ -489,15 +499,13 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       batchAnalysis: BatchAnalysisResult,
       format: OutputFormat,
       download = false
-    ): Promise<
-      AxiosResponse<Blob | { exportId: string; downloadUrl: string }>
-    > => {
+    ): Promise<AxiosResponse<Blob | { exportId: string; downloadUrl: string }>> => {
       try {
         return await api.post(
-          "/export/batch",
+          '/export/batch',
           { batchAnalysis, format },
           {
-            responseType: download ? "blob" : "json",
+            responseType: download ? 'blob' : 'json',
             params: { download: download.toString() },
           }
         );
@@ -510,7 +518,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     downloadExport: async (exportId: string): Promise<AxiosResponse<Blob>> => {
       try {
         return await api.get(`/export/download/${exportId}`, {
-          responseType: "blob",
+          responseType: 'blob',
         });
       } catch (error) {
         return handleError(error);
@@ -529,16 +537,14 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       }>
     > => {
       try {
-        return await api.get("/export/history");
+        return await api.get('/export/history');
       } catch (error) {
         return handleError(error);
       }
     },
 
     // Delete export with error handling
-    deleteExport: async (
-      exportId: string
-    ): Promise<AxiosResponse<{ success: boolean }>> => {
+    deleteExport: async (exportId: string): Promise<AxiosResponse<{ success: boolean }>> => {
       try {
         return await api.delete(`/export/${exportId}`);
       } catch (error) {
@@ -547,9 +553,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     },
 
     // Cancel analysis with error handling
-    cancelAnalysis: async (
-      id: string
-    ): Promise<AxiosResponse<{ success: boolean }>> => {
+    cancelAnalysis: async (id: string): Promise<AxiosResponse<{ success: boolean }>> => {
       try {
         return await api.post(`/analysis/${id}/cancel`);
       } catch (error) {
@@ -567,7 +571,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
           available: boolean;
           configured: boolean;
           capabilities: string[];
-          status: "active" | "inactive" | "error" | "testing";
+          status: 'active' | 'inactive' | 'error' | 'testing';
           errorMessage?: string;
           model?: string;
         }>;
@@ -575,7 +579,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       }>
     > => {
       try {
-        return await api.get("/providers");
+        return await api.get('/providers');
       } catch (error) {
         return handleError(error);
       }
@@ -588,7 +592,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       AxiosResponse<{
         provider: string;
         working: boolean;
-        status: "active" | "inactive" | "error" | "testing";
+        status: 'active' | 'inactive' | 'error' | 'testing';
         lastTested?: string;
         errorMessage?: string;
       }>
@@ -623,16 +627,14 @@ export const createApiService = (onError?: (error: unknown) => void) => {
       limit?: number;
     }): Promise<AxiosResponse<AnalysisRequest[]>> => {
       try {
-        return await api.get("/analysis-requests", { params });
+        return await api.get('/analysis-requests', { params });
       } catch (error) {
         return handleError(error);
       }
     },
 
     // Get a specific analysis request with error handling
-    getAnalysisRequest: async (
-      id: string
-    ): Promise<AxiosResponse<AnalysisRequest>> => {
+    getAnalysisRequest: async (id: string): Promise<AxiosResponse<AnalysisRequest>> => {
       try {
         return await api.get(`/analysis-requests/${id}`);
       } catch (error) {
@@ -641,11 +643,9 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     },
 
     // Get analysis request statistics with error handling
-    getAnalysisRequestStats: async (): Promise<
-      AxiosResponse<AnalysisRequestStats>
-    > => {
+    getAnalysisRequestStats: async (): Promise<AxiosResponse<AnalysisRequestStats>> => {
       try {
-        return await api.get("/analysis-requests/stats");
+        return await api.get('/analysis-requests/stats');
       } catch (error) {
         return handleError(error);
       }

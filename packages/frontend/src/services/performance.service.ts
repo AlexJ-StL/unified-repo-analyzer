@@ -47,7 +47,7 @@ export class PerformanceService {
    * Initialize performance observer for Web Vitals
    */
   private initializePerformanceObserver(): void {
-    if (!('PerformanceObserver' in window)) {
+    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
       return;
     }
 

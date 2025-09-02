@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { apiService } from "../services/api";
-import type { AnalysisRequest, AnalysisRequestStats } from "../services/api";
+import { useCallback, useEffect, useState } from 'react';
+import type { AnalysisRequest, AnalysisRequestStats } from '../services/api';
+import { apiService } from '../services/api';
 
 export interface UseAnalysisRequestsReturn {
   requests: AnalysisRequest[];
@@ -31,9 +31,7 @@ export const useAnalysisRequests = (initialParams?: {
         setRequests(response.data);
       } catch (err) {
         const errorMessage =
-          err instanceof Error
-            ? err.message
-            : "Failed to fetch analysis requests";
+          err instanceof Error ? err.message : 'Failed to fetch analysis requests';
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -50,9 +48,7 @@ export const useAnalysisRequests = (initialParams?: {
       setStats(response.data);
     } catch (err) {
       const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Failed to fetch analysis request stats";
+        err instanceof Error ? err.message : 'Failed to fetch analysis request stats';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -66,8 +62,7 @@ export const useAnalysisRequests = (initialParams?: {
       const response = await apiService.getAnalysisRequest(id);
       return response.data;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch analysis request";
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch analysis request';
       setError(errorMessage);
       return null;
     } finally {
