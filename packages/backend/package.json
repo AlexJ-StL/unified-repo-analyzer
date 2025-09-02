@@ -14,8 +14,8 @@
     "build:prod": "cross-env NODE_ENV=production bun run build --minify || cross-env NODE_ENV=production npm run build:tsc",
     "start": "bun dist/index.js || node dist/index.js",
     "start:prod": "cross-env NODE_ENV=production bun dist/index.js || cross-env NODE_ENV=production node dist/index.js",
-    "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
-    "test:prod": "cross-env NODE_ENV=production bun test --coverage || cross-env NODE_ENV=production npm test --silent",
+    "test": "vitest run || bun test || npm test --silent || echo \"No npm tests configured\"",
+    "test:prod": "cross-env NODE_ENV=production vitest run --coverage || cross-env NODE_ENV=production npm test --silent",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "clean": "rimraf dist"

@@ -2,18 +2,18 @@
  * API integration tests
  */
 
-import request from 'supertest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import request from "supertest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the AnalysisEngine and IndexSystem before importing
-vi.mock('../../core/AnalysisEngine', () => ({
+vi.mock("../../core/AnalysisEngine", () => ({
   AnalysisEngine: vi.fn().mockImplementation(() => ({
     analyzeRepository: vi.fn().mockResolvedValue({
-      name: 'test-repo',
-      path: '/test/path',
-      languages: ['JavaScript'],
-      frameworks: ['React'],
-      summary: 'Test repository',
+      name: "test-repo",
+      path: "/test/path",
+      languages: ["JavaScript"],
+      frameworks: ["React"],
+      summary: "Test repository",
       files: [],
       dependencies: {},
       metrics: { fileCount: 10, totalSize: 1000 },
@@ -21,7 +21,7 @@ vi.mock('../../core/AnalysisEngine', () => ({
   })),
 }));
 
-vi.mock('../../core/IndexSystem', () => ({
+vi.mock("../../core/IndexSystem", () => ({
   IndexSystem: vi.fn().mockImplementation(() => ({
     addRepository: vi.fn(),
     searchRepositories: vi.fn().mockReturnValue([]),
@@ -29,33 +29,33 @@ vi.mock('../../core/IndexSystem', () => ({
   })),
 }));
 
-import { AnalysisEngine } from '../../core/AnalysisEngine';
-import { IndexSystem } from '../../core/IndexSystem';
-import { app } from '../../index';
+import { AnalysisEngine } from "../../core/AnalysisEngine";
+import { IndexSystem } from "../../core/IndexSystem";
+import { app } from "../../index";
 
-describe('API Integration Tests', () => {
+describe("API Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Health Check', () => {
-    it('should return status ok', async () => {
-      const response = await request(app).get('/health');
+  describe("Health Check", () => {
+    it("should return status ok", async () => {
+      const response = await request(app).get("/health");
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ status: 'ok' });
+      expect(response.body).toEqual({ status: "ok" });
     });
   });
 
-  describe('Repository Analysis', () => {
-    it('should analyze a repository', async () => {
+  describe("Repository Analysis", () => {
+    it("should analyze a repository", async () => {
       // Mock the analyzeRepository method
       const mockAnalysis = {
-        id: '123',
-        path: '/test/repo',
-        name: 'test-repo',
-        language: 'JavaScript',
-        languages: ['JavaScript'],
-        frameworks: ['React'],
+        id: "123",
+        path: "/test/repo",
+        name: "test-repo",
+        language: "JavaScript",
+        languages: ["JavaScript"],
+        frameworks: ["React"],
         fileCount: 10,
         directoryCount: 5,
         totalSize: 1000,
@@ -64,7 +64,7 @@ describe('API Integration Tests', () => {
         structure: {
           directories: [],
           keyFiles: [],
-          tree: '',
+          tree: "",
         },
         codeAnalysis: {
           functionCount: 5,
@@ -73,8 +73,8 @@ describe('API Integration Tests', () => {
           complexity: {
             cyclomaticComplexity: 5,
             maintainabilityIndex: 80,
-            technicalDebt: 'low',
-            codeQuality: 'good' as const,
+            technicalDebt: "low",
+            codeQuality: "good" as const,
           },
           patterns: [],
         },
@@ -84,25 +84,27 @@ describe('API Integration Tests', () => {
           frameworks: [],
         },
         insights: {
-          executiveSummary: 'Test summary',
-          technicalBreakdown: 'Test breakdown',
+          executiveSummary: "Test summary",
+          technicalBreakdown: "Test breakdown",
           recommendations: [],
           potentialIssues: [],
         },
         metadata: {
-          analysisMode: 'standard' as const,
+          analysisMode: "standard" as const,
           processingTime: 100,
         },
       };
 
-      vi.mocked(AnalysisEngine.prototype.analyzeRepository).mockResolvedValue(mockAnalysis);
+      vi.mocked(AnalysisEngine.prototype.analyzeRepository).mockResolvedValue(
+        mockAnalysis
+      );
 
       const response = await request(app)
-        .post('/api/analyze')
+        .post("/api/analyze")
         .send({
-          path: '/test/repo',
+          path: "/test/repo",
           options: {
-            mode: 'standard',
+            mode: "standard",
             maxFiles: 100,
           },
         });
@@ -110,39 +112,39 @@ describe('API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockAnalysis);
       expect(AnalysisEngine.prototype.analyzeRepository).toHaveBeenCalledWith(
-        '/test/repo',
+        "/test/repo",
         expect.objectContaining({
-          mode: 'standard',
+          mode: "standard",
           maxFiles: 100,
         })
       );
     });
 
-    it('should return validation error for missing path', async () => {
+    it("should return validation error for missing path", async () => {
       const response = await request(app)
-        .post('/api/analyze')
+        .post("/api/analyze")
         .send({
           options: {
-            mode: 'standard',
+            mode: "standard",
           },
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('errors');
+      expect(response.body).toHaveProperty("errors");
     });
 
-    it('should analyze multiple repositories', async () => {
+    it("should analyze multiple repositories", async () => {
       // Mock the analyzeMultipleRepositories method
       const mockBatchResult = {
-        id: '456',
+        id: "456",
         repositories: [
           {
-            id: '123',
-            path: '/test/repo1',
-            name: 'test-repo1',
-            language: 'JavaScript',
-            languages: ['JavaScript'],
-            frameworks: ['React'],
+            id: "123",
+            path: "/test/repo1",
+            name: "test-repo1",
+            language: "JavaScript",
+            languages: ["JavaScript"],
+            frameworks: ["React"],
             fileCount: 10,
             directoryCount: 5,
             totalSize: 1000,
@@ -151,7 +153,7 @@ describe('API Integration Tests', () => {
             structure: {
               directories: [],
               keyFiles: [],
-              tree: '',
+              tree: "",
             },
             codeAnalysis: {
               functionCount: 5,
@@ -160,8 +162,8 @@ describe('API Integration Tests', () => {
               complexity: {
                 cyclomaticComplexity: 5,
                 maintainabilityIndex: 80,
-                technicalDebt: 'low',
-                codeQuality: 'good' as const,
+                technicalDebt: "low",
+                codeQuality: "good" as const,
               },
               patterns: [],
             },
@@ -171,23 +173,23 @@ describe('API Integration Tests', () => {
               frameworks: [],
             },
             insights: {
-              executiveSummary: 'Test summary',
-              technicalBreakdown: 'Test breakdown',
+              executiveSummary: "Test summary",
+              technicalBreakdown: "Test breakdown",
               recommendations: [],
               potentialIssues: [],
             },
             metadata: {
-              analysisMode: 'standard' as const,
+              analysisMode: "standard" as const,
               processingTime: 100,
             },
           },
           {
-            id: '124',
-            path: '/test/repo2',
-            name: 'test-repo2',
-            language: 'TypeScript',
-            languages: ['TypeScript'],
-            frameworks: ['Express'],
+            id: "124",
+            path: "/test/repo2",
+            name: "test-repo2",
+            language: "TypeScript",
+            languages: ["TypeScript"],
+            frameworks: ["Express"],
             fileCount: 15,
             directoryCount: 8,
             totalSize: 2000,
@@ -196,7 +198,7 @@ describe('API Integration Tests', () => {
             structure: {
               directories: [],
               keyFiles: [],
-              tree: '',
+              tree: "",
             },
             codeAnalysis: {
               functionCount: 8,
@@ -205,8 +207,8 @@ describe('API Integration Tests', () => {
               complexity: {
                 cyclomaticComplexity: 7,
                 maintainabilityIndex: 75,
-                technicalDebt: 'medium',
-                codeQuality: 'fair' as const,
+                technicalDebt: "medium",
+                codeQuality: "fair" as const,
               },
               patterns: [],
             },
@@ -216,13 +218,13 @@ describe('API Integration Tests', () => {
               frameworks: [],
             },
             insights: {
-              executiveSummary: 'Test summary 2',
-              technicalBreakdown: 'Test breakdown 2',
+              executiveSummary: "Test summary 2",
+              technicalBreakdown: "Test breakdown 2",
               recommendations: [],
               potentialIssues: [],
             },
             metadata: {
-              analysisMode: 'standard' as const,
+              analysisMode: "standard" as const,
               processingTime: 150,
             },
           },
@@ -231,54 +233,56 @@ describe('API Integration Tests', () => {
         processingTime: 200,
       };
 
-      vi.mocked(AnalysisEngine.prototype.analyzeMultipleRepositories).mockResolvedValue(
-        mockBatchResult
-      );
+      vi.mocked(
+        AnalysisEngine.prototype.analyzeMultipleRepositories
+      ).mockResolvedValue(mockBatchResult);
 
       const response = await request(app)
-        .post('/api/analyze/batch')
+        .post("/api/analyze/batch")
         .send({
-          paths: ['/test/repo1', '/test/repo2'],
+          paths: ["/test/repo1", "/test/repo2"],
           options: {
-            mode: 'quick',
+            mode: "quick",
           },
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockBatchResult);
-      expect(AnalysisEngine.prototype.analyzeMultipleRepositories).toHaveBeenCalledWith(
-        ['/test/repo1', '/test/repo2'],
+      expect(
+        AnalysisEngine.prototype.analyzeMultipleRepositories
+      ).toHaveBeenCalledWith(
+        ["/test/repo1", "/test/repo2"],
         expect.objectContaining({
-          mode: 'quick',
+          mode: "quick",
         })
       );
     });
   });
 
-  describe('Repository Management', () => {
-    it('should get all repositories', async () => {
+  describe("Repository Management", () => {
+    it("should get all repositories", async () => {
       // Mock the getIndex method
       const mockRepositories = [
         {
-          id: '123',
-          name: 'test-repo1',
-          path: '/test/repo1',
-          languages: ['JavaScript'],
-          frameworks: ['React'],
-          tags: ['frontend'],
-          summary: 'Test repo 1',
+          id: "123",
+          name: "test-repo1",
+          path: "/test/repo1",
+          languages: ["JavaScript"],
+          frameworks: ["React"],
+          tags: ["frontend"],
+          summary: "Test repo 1",
           lastAnalyzed: new Date(),
           size: 1000,
           complexity: 5,
         },
         {
-          id: '124',
-          name: 'test-repo2',
-          path: '/test/repo2',
-          languages: ['TypeScript'],
-          frameworks: ['Express'],
-          tags: ['backend'],
-          summary: 'Test repo 2',
+          id: "124",
+          name: "test-repo2",
+          path: "/test/repo2",
+          languages: ["TypeScript"],
+          frameworks: ["Express"],
+          tags: ["backend"],
+          summary: "Test repo 2",
           lastAnalyzed: new Date(),
           size: 2000,
           complexity: 8,
@@ -292,23 +296,23 @@ describe('API Integration Tests', () => {
         lastUpdated: new Date(),
       });
 
-      const response = await request(app).get('/api/repositories');
+      const response = await request(app).get("/api/repositories");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockRepositories);
       expect(IndexSystem.prototype.getIndex).toHaveBeenCalled();
     });
 
-    it('should get a repository by ID', async () => {
+    it("should get a repository by ID", async () => {
       // Mock the getIndex method
       const mockRepository = {
-        id: '123',
-        name: 'test-repo1',
-        path: '/test/repo1',
-        languages: ['JavaScript'],
-        frameworks: ['React'],
-        tags: ['frontend'],
-        summary: 'Test repo 1',
+        id: "123",
+        name: "test-repo1",
+        path: "/test/repo1",
+        languages: ["JavaScript"],
+        frameworks: ["React"],
+        tags: ["frontend"],
+        summary: "Test repo 1",
         lastAnalyzed: new Date(),
         size: 1000,
         complexity: 5,
@@ -321,14 +325,14 @@ describe('API Integration Tests', () => {
         lastUpdated: new Date(),
       });
 
-      const response = await request(app).get('/api/repositories/123');
+      const response = await request(app).get("/api/repositories/123");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockRepository);
       expect(IndexSystem.prototype.getIndex).toHaveBeenCalled();
     });
 
-    it('should return 404 for non-existent repository', async () => {
+    it("should return 404 for non-existent repository", async () => {
       // Mock the getIndex method
       vi.mocked(IndexSystem.prototype.getIndex).mockReturnValue({
         repositories: [],
@@ -337,24 +341,24 @@ describe('API Integration Tests', () => {
         lastUpdated: new Date(),
       });
 
-      const response = await request(app).get('/api/repositories/999');
+      const response = await request(app).get("/api/repositories/999");
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('error');
+      expect(response.body).toHaveProperty("error");
     });
 
-    it('should search repositories', async () => {
+    it("should search repositories", async () => {
       // Mock the searchRepositories method
       const mockSearchResults = [
         {
           repository: {
-            id: '123',
-            name: 'test-repo1',
-            path: '/test/repo1',
-            languages: ['JavaScript'],
-            frameworks: ['React'],
-            tags: ['frontend'],
-            summary: 'Test repo 1',
+            id: "123",
+            name: "test-repo1",
+            path: "/test/repo1",
+            languages: ["JavaScript"],
+            frameworks: ["React"],
+            tags: ["frontend"],
+            summary: "Test repo 1",
             lastAnalyzed: new Date(),
             size: 1000,
             complexity: 5,
@@ -362,92 +366,100 @@ describe('API Integration Tests', () => {
           score: 15,
           matches: [
             {
-              field: 'languages',
-              value: 'JavaScript',
+              field: "languages",
+              value: "JavaScript",
               score: 10,
             },
             {
-              field: 'frameworks',
-              value: 'React',
+              field: "frameworks",
+              value: "React",
               score: 5,
             },
           ],
         },
       ];
 
-      vi.mocked(AnalysisEngine.prototype.searchRepositories).mockResolvedValue(mockSearchResults);
+      vi.mocked(AnalysisEngine.prototype.searchRepositories).mockResolvedValue(
+        mockSearchResults
+      );
 
       const response = await request(app)
-        .get('/api/repositories/search')
+        .get("/api/repositories/search")
         .query({
-          languages: ['JavaScript'],
-          frameworks: ['React'],
+          languages: ["JavaScript"],
+          frameworks: ["React"],
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockSearchResults);
       expect(AnalysisEngine.prototype.searchRepositories).toHaveBeenCalledWith(
         expect.objectContaining({
-          languages: ['JavaScript'],
-          frameworks: ['React'],
+          languages: ["JavaScript"],
+          frameworks: ["React"],
         })
       );
     });
 
-    it('should find similar repositories', async () => {
+    it("should find similar repositories", async () => {
       // Mock the findSimilarRepositories method
       const mockSimilarRepositories = [
         {
           repository: {
-            id: '124',
-            name: 'test-repo2',
-            path: '/test/repo2',
-            languages: ['JavaScript'],
-            frameworks: ['React'],
-            tags: ['frontend'],
-            summary: 'Test repo 2',
+            id: "124",
+            name: "test-repo2",
+            path: "/test/repo2",
+            languages: ["JavaScript"],
+            frameworks: ["React"],
+            tags: ["frontend"],
+            summary: "Test repo 2",
             lastAnalyzed: new Date(),
             size: 2000,
             complexity: 6,
           },
           similarity: 0.8,
-          matchReason: 'Shares languages: JavaScript',
+          matchReason: "Shares languages: JavaScript",
         },
       ];
 
-      vi.mocked(AnalysisEngine.prototype.findSimilarRepositories).mockResolvedValue(
-        mockSimilarRepositories
-      );
+      vi.mocked(
+        AnalysisEngine.prototype.findSimilarRepositories
+      ).mockResolvedValue(mockSimilarRepositories);
 
-      const response = await request(app).get('/api/repositories/123/similar');
+      const response = await request(app).get("/api/repositories/123/similar");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockSimilarRepositories);
-      expect(AnalysisEngine.prototype.findSimilarRepositories).toHaveBeenCalledWith('123');
+      expect(
+        AnalysisEngine.prototype.findSimilarRepositories
+      ).toHaveBeenCalledWith("123");
     });
 
-    it('should suggest combinations', async () => {
+    it("should suggest combinations", async () => {
       // Mock the suggestCombinations method
       const mockCombinations = [
         {
-          repositories: ['123', '124'],
+          repositories: ["123", "124"],
           compatibility: 0.8,
-          rationale: 'Frontend-Backend pair',
-          integrationPoints: ['API integration', 'Shared data models'],
+          rationale: "Frontend-Backend pair",
+          integrationPoints: ["API integration", "Shared data models"],
         },
       ];
 
-      vi.mocked(AnalysisEngine.prototype.suggestCombinations).mockResolvedValue(mockCombinations);
+      vi.mocked(AnalysisEngine.prototype.suggestCombinations).mockResolvedValue(
+        mockCombinations
+      );
 
       const response = await request(app)
-        .post('/api/repositories/combinations')
+        .post("/api/repositories/combinations")
         .send({
-          repoIds: ['123', '124'],
+          repoIds: ["123", "124"],
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockCombinations);
-      expect(AnalysisEngine.prototype.suggestCombinations).toHaveBeenCalledWith(['123', '124']);
+      expect(AnalysisEngine.prototype.suggestCombinations).toHaveBeenCalledWith(
+        ["123", "124"]
+      );
     });
   });
 });
