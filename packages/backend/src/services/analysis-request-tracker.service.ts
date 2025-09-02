@@ -2,15 +2,15 @@
  * Service for tracking analysis requests
  */
 
-import { v4 as uuidv4 } from "uuid";
-import { metricsService } from "./metrics.service";
-import logger from "./logger.service";
+import { v4 as uuidv4 } from 'uuid';
+import logger from './logger.service';
+import { metricsService } from './metrics.service';
 
 export interface AnalysisRequest {
   id: string;
   path: string;
   options: any;
-  status: "queued" | "processing" | "completed" | "failed" | "cancelled";
+  status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
   progress: number;
   currentFile?: string;
   startTime: Date;
@@ -33,17 +33,13 @@ class AnalysisRequestTracker {
   /**
    * Create a new analysis request
    */
-  createRequest(
-    path: string,
-    options: any,
-    clientId?: string
-  ): AnalysisRequest {
+  createRequest(path: string, options: any, clientId?: string): AnalysisRequest {
     const requestId = uuidv4();
     const request: AnalysisRequest = {
       id: requestId,
       path,
       options,
-      status: "queued",
+      status: 'queued',
       progress: 0,
       startTime: new Date(),
       clientId,
@@ -59,7 +55,7 @@ class AnalysisRequestTracker {
     }
 
     logger.info(
-      "Analysis request created",
+      'Analysis request created',
       {
         path,
         clientId,
@@ -81,15 +77,12 @@ class AnalysisRequestTracker {
   /**
    * Update request status
    */
-  updateRequestStatus(
-    requestId: string,
-    status: AnalysisRequest["status"]
-  ): void {
+  updateRequestStatus(requestId: string, status: AnalysisRequest['status']): void {
     const request = this.requests.get(requestId);
     if (request) {
       request.status = status;
       logger.debug(
-        `Analysis request status updated`,
+        'Analysis request status updated',
         {
           status,
         },
@@ -102,11 +95,7 @@ class AnalysisRequestTracker {
   /**
    * Update request progress
    */
-  updateRequestProgress(
-    requestId: string,
-    progress: number,
-    currentFile?: string
-  ): void {
+  updateRequestProgress(requestId: string, progress: number, currentFile?: string): void {
     const request = this.requests.get(requestId);
     if (request) {
       request.progress = progress;
@@ -114,7 +103,7 @@ class AnalysisRequestTracker {
         request.currentFile = currentFile;
       }
       logger.debug(
-        `Analysis request progress updated`,
+        'Analysis request progress updated',
         {
           progress,
           currentFile,
@@ -131,16 +120,15 @@ class AnalysisRequestTracker {
   completeRequest(requestId: string, result?: any): void {
     const request = this.requests.get(requestId);
     if (request) {
-      request.status = "completed";
+      request.status = 'completed';
       request.endTime = new Date();
-      request.processingTime =
-        request.endTime.getTime() - request.startTime.getTime();
+      request.processingTime = request.endTime.getTime() - request.startTime.getTime();
       if (result) {
         request.result = result;
       }
 
       logger.info(
-        "Analysis request completed",
+        'Analysis request completed',
         {
           processingTime: request.processingTime,
           fileCount: result?.fileCount,
@@ -160,19 +148,18 @@ class AnalysisRequestTracker {
   failRequest(requestId: string, error: any): void {
     const request = this.requests.get(requestId);
     if (request) {
-      request.status = "failed";
+      request.status = 'failed';
       request.endTime = new Date();
-      request.processingTime =
-        request.endTime.getTime() - request.startTime.getTime();
+      request.processingTime = request.endTime.getTime() - request.startTime.getTime();
       request.error = {
-        message: error.message || "Unknown error",
-        code: error.code || "UNKNOWN_ERROR",
+        message: error.message || 'Unknown error',
+        code: error.code || 'UNKNOWN_ERROR',
         recoverable: error.recoverable !== undefined ? error.recoverable : true,
         context: error.context,
       };
 
       logger.error(
-        "Analysis request failed",
+        'Analysis request failed',
         error,
         {
           errorMessage: request.error.message,
@@ -194,13 +181,12 @@ class AnalysisRequestTracker {
   cancelRequest(requestId: string): void {
     const request = this.requests.get(requestId);
     if (request) {
-      request.status = "cancelled";
+      request.status = 'cancelled';
       request.endTime = new Date();
-      request.processingTime =
-        request.endTime.getTime() - request.startTime.getTime();
+      request.processingTime = request.endTime.getTime() - request.startTime.getTime();
 
       logger.info(
-        "Analysis request cancelled",
+        'Analysis request cancelled',
         {
           processingTime: request.processingTime,
         },
@@ -214,7 +200,7 @@ class AnalysisRequestTracker {
    * Get all requests (with optional filtering)
    */
   getRequests(filter?: {
-    status?: AnalysisRequest["status"];
+    status?: AnalysisRequest['status'];
     clientId?: string;
     limit?: number;
   }): AnalysisRequest[] {
@@ -233,9 +219,7 @@ class AnalysisRequestTracker {
     }
 
     // Return sorted by startTime (newest first)
-    return requests.sort(
-      (a, b) => b.startTime.getTime() - a.startTime.getTime()
-    );
+    return requests.sort((a, b) => b.startTime.getTime() - a.startTime.getTime());
   }
 
   /**
@@ -266,23 +250,23 @@ class AnalysisRequestTracker {
 
     for (const request of requests) {
       switch (request.status) {
-        case "queued":
+        case 'queued':
           stats.queued++;
           break;
-        case "processing":
+        case 'processing':
           stats.processing++;
           break;
-        case "completed":
+        case 'completed':
           stats.completed++;
           if (request.processingTime) {
             totalProcessingTime += request.processingTime;
             completedRequests++;
           }
           break;
-        case "failed":
+        case 'failed':
           stats.failed++;
           break;
-        case "cancelled":
+        case 'cancelled':
           stats.cancelled++;
           break;
       }
