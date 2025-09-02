@@ -496,10 +496,6 @@ describe("API Integration Tests", () => {
         AnalysisEngine.prototype.searchRepositories;
       AnalysisEngine.prototype.searchRepositories = mockSearchRepositories;
 
-      // ... rest of the test ...
-
-      AnalysisEngine.prototype.searchRepositories = originalSearchRepositories;
-
       const response = await request(app)
         .get("/api/repositories/search")
         .query({
@@ -515,6 +511,9 @@ describe("API Integration Tests", () => {
           frameworks: ["React"],
         })
       );
+
+      // Restore original method after assertions
+      AnalysisEngine.prototype.searchRepositories = originalSearchRepositories;
     });
 
     it("should find similar repositories", async () => {
@@ -529,7 +528,7 @@ describe("API Integration Tests", () => {
             frameworks: ["React"],
             tags: ["frontend"],
             summary: "Test repo 2",
-            lastAnalyzed: new Date(),
+            lastAnalyzed: "2025-09-02T13:15:22.944Z",
             size: 2000,
             complexity: 6,
           },
@@ -545,11 +544,6 @@ describe("API Integration Tests", () => {
       AnalysisEngine.prototype.findSimilarRepositories =
         mockFindSimilarRepositories;
 
-      // ... rest of the test ...
-
-      AnalysisEngine.prototype.findSimilarRepositories =
-        originalFindSimilarRepositories;
-
       const response = await request(app).get("/api/repositories/123/similar");
 
       expect(response.status).toBe(200);
@@ -557,6 +551,10 @@ describe("API Integration Tests", () => {
       expect(
         AnalysisEngine.prototype.findSimilarRepositories
       ).toHaveBeenCalledWith("123");
+
+      // Restore original method after assertions
+      AnalysisEngine.prototype.findSimilarRepositories =
+        originalFindSimilarRepositories;
     });
 
     it("should suggest combinations", async () => {
