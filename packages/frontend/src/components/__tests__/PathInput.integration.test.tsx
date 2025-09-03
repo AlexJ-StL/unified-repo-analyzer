@@ -1,54 +1,78 @@
 /**
  * Integration tests for PathInput component with real-time validation
+ * Fixed to use MockManager instead of broken vi.mock
  */
 
-import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type PathValidationResult, pathValidationService } from '../../services/pathValidation';
-import PathInput from '../common/PathInput';
+import "@testing-library/jest-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  mockFunction,
+  mockModule,
+  setupMocks,
+  cleanupMocks,
+} from "../../../../../tests/MockManager";
+import { type PathValidationResult } from "../../services/pathValidation";
+import PathInput from "../common/PathInput";
 
-// Mock the path validation service
-vi.mock('../../services/pathValidation', () => ({
-  pathValidationService: {
-    validatePath: vi.fn(),
-    getPathFormatHints: vi.fn(() => ({
-      platform: 'Windows',
-      examples: [
-        'C:\\Users\\Username\\Documents\\MyProject',
-        'C:/Users/Username/Documents\\MyProject',
-      ],
-      tips: [
-        'Use either forward slashes (/) or backslashes (\\)',
-        'Drive letters should be followed by a colon (C:)',
-      ],
-    })),
-    normalizePathForDisplay: vi.fn((path: string) => path),
-    isPathFormatValid: vi.fn(() => ({ isValid: true, errors: [] })),
-  },
+// Create mocked service using MockManager
+const mockPathValidationService = {
+  validatePath:
+    mockFunction<
+      (
+        path: string,
+        options?: any,
+        onProgress?: any
+      ) => Promise<PathValidationResult>
+    >(),
+  getPathFormatHints: mockFunction(() => ({
+    platform: "Windows",
+    examples: [
+      "C:\\Users\\Username\\Documents\\MyProject",
+      "C:/Users/Username/Documents\\MyProject",
+    ],
+    tips: [
+      "Use either forward slashes (/) or backslashes (\\)",
+      "Drive letters should be followed by a colon (C:)",
+    ],
+  })),
+  normalizePathForDisplay: mockFunction((path: string) => path),
+  isPathFormatValid: mockFunction(() => ({ isValid: true, errors: [] })),
+};
+
+// Mock the path validation service module
+mockModule("../../services/pathValidation", () => ({
+  pathValidationService: mockPathValidationService,
 }));
 
-describe('PathInput Integration Tests', () => {
-  const mockOnChange = vi.fn();
-  const mockOnValidationChange = vi.fn();
+describe("PathInput Integration Tests", () => {
+  const mockOnChange = mockFunction();
+  const mockOnValidationChange = mockFunction();
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    setupMocks();
+    // Reset all mock functions
+    mockOnChange.mockReset?.();
+    mockOnValidationChange.mockReset?.();
+    mockPathValidationService.validatePath.mockReset?.();
+    mockPathValidationService.getPathFormatHints.mockReset?.();
+    mockPathValidationService.normalizePathForDisplay.mockReset?.();
+    mockPathValidationService.isPathFormatValid.mockReset?.();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    cleanupMocks();
   });
 
-  describe('Real-time Validation', () => {
-    it('should validate path on input change with debouncing', async () => {
+  describe("Real-time Validation", () => {
+    it("should validate path on input change with debouncing", async () => {
       const user = userEvent.setup();
 
       // Mock successful validation
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: true,
-        normalizedPath: 'C:\\Users\\Test\\Documents',
+        normalizedPath: "C:\\Users\\Test\\Documents",
         errors: [],
         warnings: [],
         metadata: {
@@ -68,10 +92,10 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type a path
-      await user.type(input, 'C:\\Users\\Test\\Documents');
+      await user.type(input, "C:\\Users\\Test\\Documents");
 
       // Should call onChange for each character
       expect(mockOnChange).toHaveBeenCalledTimes(26); // Length of the path
@@ -79,8 +103,8 @@ describe('PathInput Integration Tests', () => {
       // Should debounce validation calls
       await waitFor(
         () => {
-          expect(pathValidationService.validatePath).toHaveBeenCalledWith(
-            'C:\\Users\\Test\\Documents',
+          expect(mockPathValidationService.validatePath).toHaveBeenCalledWith(
+            "C:\\Users\\Test\\Documents",
             expect.any(Object),
             expect.any(Function)
           );
@@ -94,23 +118,23 @@ describe('PathInput Integration Tests', () => {
           true,
           expect.objectContaining({
             isValid: true,
-            normalizedPath: 'C:\\Users\\Test\\Documents',
+            normalizedPath: "C:\\Users\\Test\\Documents",
           })
         );
       });
     });
 
-    it('should show validation errors for invalid paths', async () => {
+    it("should show validation errors for invalid paths", async () => {
       const user = userEvent.setup();
 
       // Mock validation failure
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: false,
         errors: [
           {
-            code: 'PATH_NOT_FOUND',
-            message: 'The specified path does not exist',
-            suggestions: ['Check if the path is spelled correctly'],
+            code: "PATH_NOT_FOUND",
+            message: "The specified path does not exist",
+            suggestions: ["Check if the path is spelled correctly"],
           },
         ],
         warnings: [],
@@ -131,10 +155,10 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type an invalid path
-      await user.type(input, 'C:\\NonExistent\\Path');
+      await user.type(input, "C:\\NonExistent\\Path");
 
       // Wait for validation to complete
       await waitFor(() => {
@@ -143,8 +167,12 @@ describe('PathInput Integration Tests', () => {
 
       // Should show error details
       expect(screen.getByText(/PATH_NOT_FOUND/i)).toBeInTheDocument();
-      expect(screen.getByText(/The specified path does not exist/i)).toBeInTheDocument();
-      expect(screen.getByText(/Check if the path is spelled correctly/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/The specified path does not exist/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Check if the path is spelled correctly/i)
+      ).toBeInTheDocument();
 
       // Should call validation change callback with error
       expect(mockOnValidationChange).toHaveBeenCalledWith(
@@ -153,14 +181,14 @@ describe('PathInput Integration Tests', () => {
           isValid: false,
           errors: expect.arrayContaining([
             expect.objectContaining({
-              code: 'PATH_NOT_FOUND',
+              code: "PATH_NOT_FOUND",
             }),
           ]),
         })
       );
     });
 
-    it('should show loading state during validation', async () => {
+    it("should show loading state during validation", async () => {
       const user = userEvent.setup();
 
       // Mock slow validation
@@ -168,7 +196,7 @@ describe('PathInput Integration Tests', () => {
       const validationPromise = new Promise((resolve) => {
         resolveValidation = resolve;
       });
-      vi.mocked(pathValidationService.validatePath).mockReturnValue(
+      mockPathValidationService.validatePath.mockReturnValue?.(
         validationPromise as Promise<PathValidationResult>
       );
 
@@ -182,20 +210,22 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type a path
-      await user.type(input, 'C:\\Users\\Test');
+      await user.type(input, "C:\\Users\\Test");
 
       // Should show loading state
       await waitFor(() => {
-        expect(screen.getByText(/Starting path validation/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Starting path validation/i)
+        ).toBeInTheDocument();
       });
 
       // Resolve validation
       resolveValidation?.({
         isValid: true,
-        normalizedPath: 'C:\\Users\\Test',
+        normalizedPath: "C:\\Users\\Test",
         errors: [],
         warnings: [],
         metadata: {
@@ -207,15 +237,19 @@ describe('PathInput Integration Tests', () => {
 
       // Loading state should disappear
       await waitFor(() => {
-        expect(screen.queryByText(/Starting path validation/i)).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(/Starting path validation/i)
+        ).not.toBeInTheDocument();
       });
     });
 
-    it('should handle validation timeout', async () => {
+    it("should handle validation timeout", async () => {
       const user = userEvent.setup();
 
       // Mock timeout error
-      vi.mocked(pathValidationService.validatePath).mockRejectedValue(new Error('Timeout'));
+      mockPathValidationService.validatePath.mockRejectedValue?.(
+        new Error("Timeout")
+      );
 
       render(
         <PathInput
@@ -228,10 +262,10 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type a path
-      await user.type(input, 'C:\\SlowPath');
+      await user.type(input, "C:\\SlowPath");
 
       // Should show timeout error
       await waitFor(() => {
@@ -245,7 +279,7 @@ describe('PathInput Integration Tests', () => {
           isValid: false,
           errors: expect.arrayContaining([
             expect.objectContaining({
-              code: 'VALIDATION_ERROR',
+              code: "VALIDATION_ERROR",
             }),
           ]),
         })
@@ -253,12 +287,17 @@ describe('PathInput Integration Tests', () => {
     });
   });
 
-  describe('Format Hints', () => {
-    it('should show format hints when requested', async () => {
+  describe("Format Hints", () => {
+    it("should show format hints when requested", async () => {
       const user = userEvent.setup();
 
       render(
-        <PathInput label="Test Path" value="" onChange={mockOnChange} showFormatHints={true} />
+        <PathInput
+          label="Test Path"
+          value=""
+          onChange={mockOnChange}
+          showFormatHints={true}
+        />
       );
 
       // Click format help button
@@ -267,15 +306,24 @@ describe('PathInput Integration Tests', () => {
 
       // Should show format hints
       expect(screen.getByText(/Windows Path Format/i)).toBeInTheDocument();
-      expect(screen.getByText(/C:\\Users\\Username\\Documents\\MyProject/i)).toBeInTheDocument();
-      expect(screen.getByText(/Use either forward slashes/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/C:\\Users\\Username\\Documents\\MyProject/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Use either forward slashes/i)
+      ).toBeInTheDocument();
     });
 
-    it('should hide format hints when toggled', async () => {
+    it("should hide format hints when toggled", async () => {
       const user = userEvent.setup();
 
       render(
-        <PathInput label="Test Path" value="" onChange={mockOnChange} showFormatHints={true} />
+        <PathInput
+          label="Test Path"
+          value=""
+          onChange={mockOnChange}
+          showFormatHints={true}
+        />
       );
 
       // Click format help button to show
@@ -287,17 +335,19 @@ describe('PathInput Integration Tests', () => {
       // Click again to hide
       await user.click(formatHelpButton);
 
-      expect(screen.queryByText(/Windows Path Format/i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/Windows Path Format/i)
+      ).not.toBeInTheDocument();
     });
   });
 
-  describe('Windows-specific Path Handling', () => {
-    it('should handle Windows backslash paths', async () => {
+  describe("Windows-specific Path Handling", () => {
+    it("should handle Windows backslash paths", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: true,
-        normalizedPath: 'C:\\Users\\Test\\Documents',
+        normalizedPath: "C:\\Users\\Test\\Documents",
         errors: [],
         warnings: [],
         metadata: {
@@ -317,14 +367,14 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type Windows path with backslashes
-      await user.type(input, 'C:\\Users\\Test\\Documents');
+      await user.type(input, "C:\\Users\\Test\\Documents");
 
       await waitFor(() => {
-        expect(pathValidationService.validatePath).toHaveBeenCalledWith(
-          'C:\\Users\\Test\\Documents',
+        expect(mockPathValidationService.validatePath).toHaveBeenCalledWith(
+          "C:\\Users\\Test\\Documents",
           expect.any(Object),
           expect.any(Function)
         );
@@ -336,12 +386,12 @@ describe('PathInput Integration Tests', () => {
       });
     });
 
-    it('should handle Windows forward slash paths', async () => {
+    it("should handle Windows forward slash paths", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: true,
-        normalizedPath: 'C:\\Users\\Test\\Documents',
+        normalizedPath: "C:\\Users\\Test\\Documents",
         errors: [],
         warnings: [],
         metadata: {
@@ -361,14 +411,14 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type Windows path with forward slashes
-      await user.type(input, 'C:/Users/Test/Documents');
+      await user.type(input, "C:/Users/Test/Documents");
 
       await waitFor(() => {
-        expect(pathValidationService.validatePath).toHaveBeenCalledWith(
-          'C:/Users/Test/Documents',
+        expect(mockPathValidationService.validatePath).toHaveBeenCalledWith(
+          "C:/Users/Test/Documents",
           expect.any(Object),
           expect.any(Function)
         );
@@ -377,20 +427,25 @@ describe('PathInput Integration Tests', () => {
       // Should show success state with normalized path
       await waitFor(() => {
         expect(screen.getByText(/Path is valid/i)).toBeInTheDocument();
-        expect(screen.getByText(/normalized: C:\\Users\\Test\\Documents/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/normalized: C:\\Users\\Test\\Documents/i)
+        ).toBeInTheDocument();
       });
     });
 
-    it('should handle UNC paths', async () => {
+    it("should handle UNC paths", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: false,
         errors: [
           {
-            code: 'NETWORK_ERROR',
-            message: 'Unable to access network location',
-            suggestions: ['Check network connectivity', 'Verify server is accessible'],
+            code: "NETWORK_ERROR",
+            message: "Unable to access network location",
+            suggestions: [
+              "Check network connectivity",
+              "Verify server is accessible",
+            ],
           },
         ],
         warnings: [],
@@ -411,14 +466,14 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type UNC path
-      await user.type(input, '\\\\server\\share\\folder');
+      await user.type(input, "\\\\server\\share\\folder");
 
       await waitFor(() => {
-        expect(pathValidationService.validatePath).toHaveBeenCalledWith(
-          '\\\\server\\share\\folder',
+        expect(mockPathValidationService.validatePath).toHaveBeenCalledWith(
+          "\\\\server\\share\\folder",
           expect.any(Object),
           expect.any(Function)
         );
@@ -428,20 +483,24 @@ describe('PathInput Integration Tests', () => {
       await waitFor(() => {
         expect(screen.getByText(/Path validation failed/i)).toBeInTheDocument();
         expect(screen.getByText(/NETWORK_ERROR/i)).toBeInTheDocument();
-        expect(screen.getByText(/Check network connectivity/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Check network connectivity/i)
+        ).toBeInTheDocument();
       });
     });
 
-    it('should detect reserved names', async () => {
+    it("should detect reserved names", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: false,
         errors: [
           {
-            code: 'RESERVED_NAME',
-            message: 'Path contains Windows reserved name: CON',
-            suggestions: ['Rename the file or directory to avoid reserved names'],
+            code: "RESERVED_NAME",
+            message: "Path contains Windows reserved name: CON",
+            suggestions: [
+              "Rename the file or directory to avoid reserved names",
+            ],
           },
         ],
         warnings: [],
@@ -462,21 +521,23 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Type path with reserved name
-      await user.type(input, 'C:\\Users\\CON\\Documents');
+      await user.type(input, "C:\\Users\\CON\\Documents");
 
       await waitFor(() => {
         expect(screen.getByText(/Path validation failed/i)).toBeInTheDocument();
         expect(screen.getByText(/RESERVED_NAME/i)).toBeInTheDocument();
-        expect(screen.getByText(/Path contains Windows reserved name: CON/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Path contains Windows reserved name: CON/i)
+        ).toBeInTheDocument();
       });
     });
   });
 
-  describe('User Experience', () => {
-    it('should provide visual feedback for validation states', async () => {
+  describe("User Experience", () => {
+    it("should provide visual feedback for validation states", async () => {
       const user = userEvent.setup();
 
       render(
@@ -489,32 +550,32 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
       // Initially should have default styling
-      expect(input).toHaveClass('border-gray-300');
+      expect(input).toHaveClass("border-gray-300");
 
       // Mock validation in progress
       let resolveValidation: (value: any) => void = () => {};
       const validationPromise = new Promise((resolve) => {
         resolveValidation = resolve;
       });
-      vi.mocked(pathValidationService.validatePath).mockReturnValue(
+      mockPathValidationService.validatePath.mockReturnValue?.(
         validationPromise as Promise<PathValidationResult>
       );
 
       // Type to trigger validation
-      await user.type(input, 'C:\\Test');
+      await user.type(input, "C:\\Test");
 
       // Should show validating state
       await waitFor(() => {
-        expect(input).toHaveClass('border-yellow-300');
+        expect(input).toHaveClass("border-yellow-300");
       });
 
       // Resolve with success
       resolveValidation?.({
         isValid: true,
-        normalizedPath: 'C:\\Test',
+        normalizedPath: "C:\\Test",
         errors: [],
         warnings: [],
         metadata: {
@@ -526,16 +587,16 @@ describe('PathInput Integration Tests', () => {
 
       // Should show success state
       await waitFor(() => {
-        expect(input).toHaveClass('border-green-300');
+        expect(input).toHaveClass("border-green-300");
       });
     });
 
-    it('should show error state for invalid paths', async () => {
+    it("should show error state for invalid paths", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: false,
-        errors: [{ code: 'PATH_NOT_FOUND', message: 'Path not found' }],
+        errors: [{ code: "PATH_NOT_FOUND", message: "Path not found" }],
         warnings: [],
         metadata: {
           exists: false,
@@ -554,17 +615,17 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
-      await user.type(input, 'C:\\Invalid');
+      await user.type(input, "C:\\Invalid");
 
       // Should show error state
       await waitFor(() => {
-        expect(input).toHaveClass('border-red-300');
+        expect(input).toHaveClass("border-red-300");
       });
     });
 
-    it('should disable validation when validateOnChange is false', async () => {
+    it("should disable validation when validateOnChange is false", async () => {
       const user = userEvent.setup();
 
       render(
@@ -577,23 +638,23 @@ describe('PathInput Integration Tests', () => {
         />
       );
 
-      const input = screen.getByLabelText('Test Path');
+      const input = screen.getByLabelText("Test Path");
 
-      await user.type(input, 'C:\\Test');
+      await user.type(input, "C:\\Test");
 
       // Should not trigger automatic validation
-      expect(pathValidationService.validatePath).not.toHaveBeenCalled();
+      expect(mockPathValidationService.validatePath).not.toHaveBeenCalled();
 
       // Should show manual validation button
       expect(screen.getByText(/Validate Path/i)).toBeInTheDocument();
     });
 
-    it('should trigger manual validation when button is clicked', async () => {
+    it("should trigger manual validation when button is clicked", async () => {
       const user = userEvent.setup();
 
-      vi.mocked(pathValidationService.validatePath).mockResolvedValue({
+      mockPathValidationService.validatePath.mockResolvedValue?.({
         isValid: true,
-        normalizedPath: 'C:\\Test',
+        normalizedPath: "C:\\Test",
         errors: [],
         warnings: [],
         metadata: {
@@ -616,38 +677,48 @@ describe('PathInput Integration Tests', () => {
       const validateButton = screen.getByText(/Validate Path/i);
       await user.click(validateButton);
 
-      expect(pathValidationService.validatePath).toHaveBeenCalledWith(
-        'C:\\Test',
+      expect(mockPathValidationService.validatePath).toHaveBeenCalledWith(
+        "C:\\Test",
         expect.any(Object),
         expect.any(Function)
       );
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels and descriptions', () => {
+  describe("Accessibility", () => {
+    it("should have proper ARIA labels and descriptions", () => {
       render(
-        <PathInput label="Repository Path" value="" onChange={mockOnChange} required={true} />
+        <PathInput
+          label="Repository Path"
+          value=""
+          onChange={mockOnChange}
+          required={true}
+        />
       );
 
       const input = screen.getByLabelText(/Repository Path/i);
-      expect(input).toHaveAttribute('id');
+      expect(input).toHaveAttribute("id");
       expect(input).toBeRequired();
 
       // Should have required indicator
-      expect(screen.getByText('*')).toBeInTheDocument();
+      expect(screen.getByText("*")).toBeInTheDocument();
     });
 
-    it('should be keyboard navigable', async () => {
+    it("should be keyboard navigable", async () => {
       const user = userEvent.setup();
 
       render(
-        <PathInput label="Test Path" value="" onChange={mockOnChange} showFormatHints={true} />
+        <PathInput
+          label="Test Path"
+          value=""
+          onChange={mockOnChange}
+          showFormatHints={true}
+        />
       );
 
       // Should be able to tab to input
       await user.tab();
-      expect(screen.getByLabelText('Test Path')).toHaveFocus();
+      expect(screen.getByLabelText("Test Path")).toHaveFocus();
 
       // Should be able to tab to format help button
       await user.tab();
@@ -655,7 +726,7 @@ describe('PathInput Integration Tests', () => {
 
       // Should be able to tab to browse button
       await user.tab();
-      expect(screen.getByRole('button', { name: /browse/i })).toHaveFocus();
+      expect(screen.getByRole("button", { name: /browse/i })).toHaveFocus();
     });
   });
 });

@@ -1,9 +1,29 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
+import { JSDOM } from "jsdom";
 
 // Export vi for global access
 export { vi };
+
+// Setup jsdom environment if not already available
+if (typeof document === "undefined") {
+  const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
+    url: "http://localhost:3000",
+    pretendToBeVisual: true,
+    resources: "usable",
+  });
+
+  // Make jsdom globals available
+  global.window = dom.window as any;
+  global.document = dom.window.document;
+  global.navigator = dom.window.navigator;
+  global.HTMLElement = dom.window.HTMLElement;
+  global.HTMLInputElement = dom.window.HTMLInputElement;
+  global.HTMLButtonElement = dom.window.HTMLButtonElement;
+  global.Element = dom.window.Element;
+  global.Node = dom.window.Node;
+}
 
 // Cleanup after each test case
 afterEach(() => {

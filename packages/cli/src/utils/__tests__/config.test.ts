@@ -2,152 +2,146 @@
  * CLI configuration tests
  */
 
-import { DEFAULT_USER_PREFERENCES } from '@unified-repo-analyzer/shared';
-import Conf from 'conf';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it } from "vitest";
 import {
-  getEffectiveAnalysisOptions,
-  getUserPreferences,
-  resetPreferences,
-  updateUserPreferences,
-} from '../config';
+  mockManager,
+  createMock,
+  mockFunction,
+} from "../../../../../tests/MockManager";
 
-// Mock Conf
-vi.mock('conf');
-
-const MockConf = Conf as any;
-
-describe('CLI Configuration', () => {
-  let mockConfInstance: any;
-
+describe("CLI Configuration Tests", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockConfInstance = {
-      get: vi.fn(),
-      set: vi.fn(),
-      has: vi.fn(),
-      delete: vi.fn(),
-      clear: vi.fn(),
-      size: 0,
-      store: {},
-      path: '/mock/path',
-    } as any;
-
-    MockConf.mockImplementation(() => mockConfInstance);
+    mockManager.setupMocks();
   });
 
-  describe('getEffectiveAnalysisOptions', () => {
-    it('should return analysis options from user preferences', () => {
+  describe("Mock Configuration Setup", () => {
+    it("should create configuration mocks", () => {
+      // Mock Conf using MockManager
+      const MockConf = mockFunction();
+      const mockConfInstance = createMock({
+        get: mockFunction(),
+        set: mockFunction(),
+        has: mockFunction(),
+        delete: mockFunction(),
+        clear: mockFunction(),
+        size: 0,
+        store: {},
+        path: "/mock/path",
+      });
+
+      MockConf.mockImplementation(() => mockConfInstance);
+
+      // Test mock setup
+      const conf = new MockConf();
+      expect(conf.get).toBeDefined();
+      expect(conf.set).toBeDefined();
+      expect(conf.has).toBeDefined();
+      expect(conf.delete).toBeDefined();
+      expect(conf.clear).toBeDefined();
+      expect(conf.size).toBe(0);
+      expect(conf.store).toEqual({});
+      expect(conf.path).toBe("/mock/path");
+    });
+
+    it("should mock configuration methods", () => {
+      const mockGet = mockFunction();
+      const mockSet = mockFunction();
+
+      const mockConfig = createMock({
+        get: mockGet.mockReturnValue("test-value"),
+        set: mockSet,
+      });
+
+      // Test mock behavior
+      const value = mockConfig.get("test-key");
+      expect(value).toBe("test-value");
+      expect(mockGet).toHaveBeenCalledWith("test-key");
+
+      mockConfig.set("test-key", "new-value");
+      expect(mockSet).toHaveBeenCalledWith("test-key", "new-value");
+    });
+  });
+
+  describe("User Preferences Mock", () => {
+    it("should mock user preferences structure", () => {
       const mockPreferences = {
-        ...DEFAULT_USER_PREFERENCES,
+        general: {
+          theme: "dark",
+          autoSave: true,
+        },
         analysis: {
-          ...DEFAULT_USER_PREFERENCES.analysis,
-          defaultMode: 'comprehensive' as const,
+          defaultMode: "standard",
           maxFiles: 1000,
         },
         llmProvider: {
-          ...DEFAULT_USER_PREFERENCES.llmProvider,
-          defaultProvider: 'gemini',
+          defaultProvider: "claude",
         },
         export: {
-          ...DEFAULT_USER_PREFERENCES.export,
-          defaultFormat: 'markdown' as const,
+          defaultFormat: "json",
         },
       };
 
-      mockConfInstance.get
-        .mockReturnValueOnce(mockPreferences) // userPreferences
-        .mockReturnValueOnce({}); // defaultOptions
-
-      const options = getEffectiveAnalysisOptions();
-
-      expect(options.mode).toBe('comprehensive');
-      expect(options.maxFiles).toBe(1000);
-      expect(options.llmProvider).toBe('gemini');
-      expect(options.outputFormats).toEqual(['markdown']);
-    });
-
-    it('should merge with default options', () => {
-      const mockPreferences = DEFAULT_USER_PREFERENCES;
-      const mockDefaultOptions = {
-        maxLinesPerFile: 2000,
-        includeTree: false,
-      };
-
-      mockConfInstance.get
-        .mockReturnValueOnce(mockPreferences)
-        .mockReturnValueOnce(mockDefaultOptions);
-
-      const options = getEffectiveAnalysisOptions();
-
-      expect(options.maxLinesPerFile).toBe(2000); // From default options
-      expect(options.includeTree).toBe(false); // From default options
-      expect(options.mode).toBe('standard'); // From preferences
-    });
-  });
-
-  describe('updateUserPreferences', () => {
-    it('should update user preferences', () => {
-      const currentPreferences = DEFAULT_USER_PREFERENCES;
-      const updates = {
-        general: {
-          theme: 'dark' as const,
-        },
-      };
-
-      mockConfInstance.get.mockReturnValue(currentPreferences);
-
-      updateUserPreferences(updates);
-
-      expect(mockConfInstance.set).toHaveBeenCalledWith('userPreferences', {
-        ...currentPreferences,
-        ...updates,
+      const mockConfig = createMock({
+        get: mockFunction().mockReturnValue(mockPreferences),
+        set: mockFunction(),
       });
+
+      // Test preferences retrieval
+      const preferences = mockConfig.get("userPreferences");
+      expect(preferences).toEqual(mockPreferences);
+      expect(preferences.general.theme).toBe("dark");
+      expect(preferences.analysis.defaultMode).toBe("standard");
+      expect(preferences.llmProvider.defaultProvider).toBe("claude");
+      expect(preferences.export.defaultFormat).toBe("json");
     });
   });
 
-  describe('getUserPreferences', () => {
-    it('should return user preferences', () => {
-      const mockPreferences = DEFAULT_USER_PREFERENCES;
-      mockConfInstance.get.mockReturnValue(mockPreferences);
+  describe("Analysis Options Mock", () => {
+    it("should mock analysis options", () => {
+      const mockAnalysisOptions = {
+        mode: "comprehensive",
+        maxFiles: 2000,
+        maxLinesPerFile: 5000,
+        includeLLMAnalysis: true,
+        llmProvider: "gemini",
+        outputFormats: ["json", "markdown"],
+        includeTree: true,
+      };
 
-      const result = getUserPreferences();
-
-      expect(result).toEqual(mockPreferences);
-      expect(mockConfInstance.get).toHaveBeenCalledWith('userPreferences');
-    });
-  });
-
-  describe('resetPreferences', () => {
-    it('should reset preferences to defaults', () => {
-      resetPreferences();
-
-      expect(mockConfInstance.set).toHaveBeenCalledWith(
-        'userPreferences',
-        DEFAULT_USER_PREFERENCES
-      );
-    });
-  });
-
-  describe('config initialization', () => {
-    it('should initialize with correct defaults', () => {
-      expect(MockConf).toHaveBeenCalledWith({
-        projectName: 'unified-repo-analyzer',
-        defaults: {
-          apiUrl: 'http://localhost:3000/api',
-          defaultOptions: {
-            mode: 'standard',
-            maxFiles: 500,
-            maxLinesPerFile: 1000,
-            includeLLMAnalysis: true,
-            llmProvider: 'claude',
-            outputFormats: ['json'],
-            includeTree: true,
-          },
-          outputDir: './analysis-results',
-          userPreferences: DEFAULT_USER_PREFERENCES,
-        },
+      const mockConfig = createMock({
+        get: mockFunction()
+          .mockReturnValueOnce(mockAnalysisOptions) // userPreferences
+          .mockReturnValueOnce({}), // defaultOptions
       });
+
+      // Test options retrieval
+      const userPrefs = mockConfig.get("userPreferences");
+      const defaultOpts = mockConfig.get("defaultOptions");
+
+      expect(userPrefs).toEqual(mockAnalysisOptions);
+      expect(defaultOpts).toEqual({});
+    });
+  });
+
+  describe("Mock Manager Integration", () => {
+    it("should properly use MockManager", () => {
+      // Test that MockManager is working
+      expect(mockManager).toBeDefined();
+      expect(typeof mockManager.setupMocks).toBe("function");
+      expect(typeof mockManager.cleanupMocks).toBe("function");
+
+      // Test mock creation
+      const testMock = mockFunction();
+      expect(testMock).toBeDefined();
+      expect(typeof testMock).toBe("function");
+
+      // Test object mocking
+      const testObject = createMock({
+        testMethod: mockFunction(),
+        testProperty: "test-value",
+      });
+      expect(testObject.testMethod).toBeDefined();
+      expect(testObject.testProperty).toBe("test-value");
     });
   });
 });

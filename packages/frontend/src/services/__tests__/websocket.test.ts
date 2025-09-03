@@ -1,24 +1,32 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import websocketService from '../websocket';
+import { beforeEach, afterEach, describe, expect, test } from "vitest";
+import {
+  mockFunction,
+  mockModule,
+  setupMocks,
+  cleanupMocks,
+} from "../../../../../tests/MockManager";
+import websocketService from "../websocket";
 
-// Mock socket.io-client
+// Create mocked socket using MockManager
 const mockSocket = {
-  on: vi.fn(),
-  off: vi.fn(),
-  emit: vi.fn(),
-  disconnect: vi.fn(),
+  on: mockFunction(),
+  off: mockFunction(),
+  emit: mockFunction(),
+  disconnect: mockFunction(),
   connected: true,
 };
 
-vi.mock('socket.io-client', () => ({
-  io: vi.fn(() => mockSocket),
+// Mock socket.io-client
+mockModule("socket.io-client", () => ({
+  io: mockFunction(() => mockSocket),
 }));
 
-// Mock the analysis store
-const mockSetProgress = vi.fn();
-const mockSetResults = vi.fn();
+// Create mocked store functions
+const mockSetProgress = mockFunction();
+const mockSetResults = mockFunction();
 
-vi.mock('../../store/useAnalysisStore', () => ({
+// Mock the analysis store
+mockModule("../../store/useAnalysisStore", () => ({
   useAnalysisStore: {
     getState: () => ({
       setProgress: mockSetProgress,
@@ -27,24 +35,35 @@ vi.mock('../../store/useAnalysisStore', () => ({
   },
 }));
 
-describe('WebSocketService', () => {
+describe("WebSocketService", () => {
   beforeEach(() => {
+    setupMocks();
+
     // Clear all mocks
-    vi.clearAllMocks();
+    mockSocket.on.mockReset?.();
+    mockSocket.off.mockReset?.();
+    mockSocket.emit.mockReset?.();
+    mockSocket.disconnect.mockReset?.();
+    mockSetProgress.mockReset?.();
+    mockSetResults.mockReset?.();
 
     // Reset the websocket service
     (websocketService as any).socket = null;
     (websocketService as any).connected = false;
   });
 
-  test('should connect to WebSocket server', () => {
+  afterEach(() => {
+    cleanupMocks();
+  });
+
+  test("should connect to WebSocket server", () => {
     websocketService.connect();
 
     expect((websocketService as any).socket).not.toBeNull();
     expect((websocketService as any).connected).toBe(false); // Not connected yet, waiting for connect event
   });
 
-  test('should disconnect from WebSocket server', () => {
+  test("should disconnect from WebSocket server", () => {
     websocketService.connect();
     websocketService.disconnect();
 
@@ -53,50 +72,57 @@ describe('WebSocketService', () => {
     expect((websocketService as any).connected).toBe(false);
   });
 
-  test('should subscribe to analysis progress', () => {
+  test("should subscribe to analysis progress", () => {
     websocketService.connect();
-    websocketService.subscribeToAnalysis('test-analysis-id');
+    websocketService.subscribeToAnalysis("test-analysis-id");
 
-    expect(mockSocket.emit).toHaveBeenCalledWith('register-analysis', 'test-analysis-id');
+    expect(mockSocket.emit).toHaveBeenCalledWith(
+      "register-analysis",
+      "test-analysis-id"
+    );
   });
 
-  test('should handle connect event', () => {
+  test("should handle connect event", () => {
     websocketService.connect();
 
     // Simulate connect event
-    const connectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'connect')[1];
+    const connectHandler = mockSocket.on.mock.calls.find(
+      (call) => call[0] === "connect"
+    )[1];
     connectHandler();
 
     expect((websocketService as any).connected).toBe(true);
     expect((websocketService as any).reconnectAttempts).toBe(0);
     expect(mockSetProgress).toHaveBeenCalledWith({
-      log: 'WebSocket connected',
+      log: "WebSocket connected",
     });
   });
 
-  test('should handle disconnect event', () => {
+  test("should handle disconnect event", () => {
     websocketService.connect();
 
     // Simulate disconnect event
-    const disconnectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'disconnect')[1];
-    disconnectHandler('test-reason');
+    const disconnectHandler = mockSocket.on.mock.calls.find(
+      (call) => call[0] === "disconnect"
+    )[1];
+    disconnectHandler("test-reason");
 
     expect((websocketService as any).connected).toBe(false);
     expect(mockSetProgress).toHaveBeenCalledWith({
-      log: 'WebSocket disconnected: test-reason',
+      log: "WebSocket disconnected: test-reason",
     });
   });
 
-  test('should handle analysis progress event', () => {
+  test("should handle analysis progress event", () => {
     websocketService.connect();
 
     // Simulate analysis progress event
     const progressHandler = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'analysis-progress'
+      (call) => call[0] === "analysis-progress"
     )[1];
     progressHandler({
-      status: 'processing',
-      currentFile: 'src/index.js',
+      status: "processing",
+      currentFile: "src/index.js",
       progress: 50,
       total: 100,
       processed: 50,
@@ -108,8 +134,8 @@ describe('WebSocketService', () => {
     });
 
     expect(mockSetProgress).toHaveBeenCalledWith({
-      status: 'processing',
-      currentStep: 'src/index.js',
+      status: "processing",
+      currentStep: "src/index.js",
       progress: 50,
       totalSteps: 100,
       filesProcessed: 50,
@@ -117,39 +143,39 @@ describe('WebSocketService', () => {
       timeElapsed: 10,
       timeRemaining: 20,
       tokensUsed: 1000,
-      log: 'Processing: src/index.js',
+      log: "Processing: src/index.js",
     });
   });
 
-  test('should handle analysis complete event', () => {
+  test("should handle analysis complete event", () => {
     websocketService.connect();
 
     // Simulate analysis complete event
     const completeHandler = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'analysis-complete'
+      (call) => call[0] === "analysis-complete"
     )[1];
-    const testData = { id: 'test-id', name: 'test-repo' };
+    const testData = { id: "test-id", name: "test-repo" };
     completeHandler(testData);
 
     expect(mockSetProgress).toHaveBeenCalledWith({
-      status: 'completed',
+      status: "completed",
       progress: 100,
       totalSteps: 100,
-      log: 'Analysis completed successfully',
+      log: "Analysis completed successfully",
     });
     expect(mockSetResults).toHaveBeenCalledWith(testData);
   });
 
-  test('should handle batch analysis progress event', () => {
+  test("should handle batch analysis progress event", () => {
     websocketService.connect();
 
     // Simulate batch analysis progress event
     const progressHandler = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'batch-analysis-progress'
+      (call) => call[0] === "batch-analysis-progress"
     )[1];
     progressHandler({
-      status: 'processing',
-      currentRepositories: ['repo1', 'repo2'],
+      status: "processing",
+      currentRepositories: ["repo1", "repo2"],
       progress: 75,
       total: 4,
       completed: 3,
@@ -159,42 +185,42 @@ describe('WebSocketService', () => {
     });
 
     expect(mockSetProgress).toHaveBeenCalledWith({
-      status: 'processing',
-      currentStep: 'Processing: repo1, repo2',
+      status: "processing",
+      currentStep: "Processing: repo1, repo2",
       progress: 75,
       totalSteps: 4,
       filesProcessed: 3,
       totalFiles: 4,
       timeElapsed: 30,
       timeRemaining: 10,
-      log: 'Batch progress: 3/4 completed, 0 failed',
+      log: "Batch progress: 3/4 completed, 0 failed",
     });
   });
 
-  test('should handle batch analysis complete event', () => {
+  test("should handle batch analysis complete event", () => {
     websocketService.connect();
 
     // Simulate batch analysis complete event
     const completeHandler = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'batch-analysis-complete'
+      (call) => call[0] === "batch-analysis-complete"
     )[1];
     const testData = {
       repositories: [
-        { id: 'repo1', name: 'test-repo-1' },
-        { id: 'repo2', name: 'test-repo-2' },
+        { id: "repo1", name: "test-repo-1" },
+        { id: "repo2", name: "test-repo-2" },
       ],
     };
     completeHandler(testData);
 
     expect(mockSetProgress).toHaveBeenCalledWith({
-      status: 'completed',
+      status: "completed",
       progress: 100,
       totalSteps: 100,
-      log: 'Batch analysis completed successfully',
+      log: "Batch analysis completed successfully",
     });
     expect(mockSetResults).toHaveBeenCalledWith({
-      id: 'repo1',
-      name: 'test-repo-1',
+      id: "repo1",
+      name: "test-repo-1",
     });
   });
 });

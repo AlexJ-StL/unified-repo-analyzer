@@ -1,15 +1,17 @@
-// Jest setup file for CLI tests
-// This file is executed before each test file
+/**
+ * CLI Test Setup
+ * Configures the test environment for CLI package tests
+ */
 
-// Mock console methods to reduce noise during tests
-global.console = {
-  ...console,
-  log: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-};
+import { beforeEach, afterEach } from "vitest";
+import { mockManager } from "../../../../tests/MockManager";
 
-// Reset all mocks before each test
+// Setup mocks before each test
 beforeEach(() => {
-  jest.clearAllMocks();
+  mockManager.setupMocks();
+});
+
+// Cleanup after each test
+afterEach(() => {
+  mockManager.cleanupMocks();
 });

@@ -93,30 +93,55 @@ export class MockManager {
       return mockFn;
     }
 
-    // Fallback implementation when vi.fn is not available
-    const fallbackMock = (() => {}) as MockedFunction<T>;
+    // Enhanced fallback implementation when vi.fn is not available
+    const calls: unknown[][] = [];
+    const fallbackMock = ((...args: unknown[]) => {
+      calls.push(args);
+      return undefined;
+    }) as MockedFunction<T>;
+
+    // Add mock properties and methods
+    (fallbackMock as unknown as Record<string, unknown>).mock = {
+      calls,
+      results: [],
+      instances: [],
+    };
+
     (fallbackMock as unknown as Record<string, unknown>).mockImplementation = (
       impl: T
     ) => {
       Object.assign(fallbackMock, impl);
       return fallbackMock;
     };
+
     (fallbackMock as unknown as Record<string, unknown>).mockResolvedValue = (
       value: unknown
     ) => {
       Object.assign(fallbackMock, () => Promise.resolve(value));
       return fallbackMock;
     };
+
     (fallbackMock as unknown as Record<string, unknown>).mockRejectedValue = (
       error: unknown
     ) => {
       Object.assign(fallbackMock, () => Promise.reject(error));
       return fallbackMock;
     };
+
     (fallbackMock as unknown as Record<string, unknown>).mockReturnValue = (
       value: unknown
     ) => {
       Object.assign(fallbackMock, () => value);
+      return fallbackMock;
+    };
+
+    (fallbackMock as unknown as Record<string, unknown>).mockReset = () => {
+      calls.length = 0;
+      return fallbackMock;
+    };
+
+    (fallbackMock as unknown as Record<string, unknown>).mockClear = () => {
+      calls.length = 0;
       return fallbackMock;
     };
 

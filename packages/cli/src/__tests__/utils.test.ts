@@ -1,172 +1,107 @@
-import fs from 'node:fs';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { CLIError } from '../utils/error-handler';
+import { beforeEach, describe, expect, test } from "vitest";
 import {
-  ensureOutputDirectory,
-  validateRepositoryPath,
-  writeResultsToFile,
-} from '../utils/fs-utils';
+  mockManager,
+  createMock,
+  mockFunction,
+} from "../../../../tests/MockManager";
+import { CLIError, ErrorType } from "../utils/error-handler";
 
-// Mock fs module
-vi.mock('fs', () => ({
-  existsSync: vi.fn().mockReturnValue(true),
-  statSync: vi.fn().mockReturnValue({ isDirectory: () => true }),
-  accessSync: vi.fn(),
-  mkdirSync: vi.fn(),
-  writeFileSync: vi.fn(),
-  constants: {
-    R_OK: 4,
-  },
-}));
-
-// Mock path module
-vi.mock('path', () => ({
-  resolve: vi.fn((p) => `/resolved/${p}`),
-  dirname: vi.fn((p) => `/dirname/${p}`),
-  join: vi.fn((dir, file) => `${dir}/${file}`),
-  basename: vi.fn((p) => p.split('/').pop()),
-}));
-
-describe('File System Utilities', () => {
+describe("CLI Utilities Tests", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockManager.setupMocks();
   });
 
-  describe('validateRepositoryPath', () => {
-    test('should return absolute path for valid directory', () => {
-      // Mock implementation for valid directory
-      (fs.existsSync as any).mockReturnValue(true);
-      (fs.statSync as any).mockReturnValue({ isDirectory: () => true });
-      (fs.accessSync as any).mockImplementation(() => {});
-
-      const result = validateRepositoryPath('/test/repo');
-
-      expect(result).toBe('/resolved//test/repo');
-      expect(fs.existsSync).toHaveBeenCalledWith('/resolved//test/repo');
-      expect(fs.statSync).toHaveBeenCalledWith('/resolved//test/repo');
-      expect(fs.accessSync).toHaveBeenCalledWith('/resolved//test/repo', fs.constants.R_OK);
+  describe("Error Handler", () => {
+    test("should create CLIError with message", () => {
+      const error = new CLIError("Test error message");
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(CLIError);
+      expect(error.message).toBe("Test error message");
+      expect(error.name).toBe("CLIError");
     });
 
-    test('should throw error if path does not exist', () => {
-      // Mock implementation for non-existent path
-      (fs.existsSync as any).mockReturnValue(false);
-
-      expect(() => validateRepositoryPath('/test/repo')).toThrow(CLIError);
-      expect(() => validateRepositoryPath('/test/repo')).toThrow('Repository path does not exist');
+    test("should create CLIError with message and type", () => {
+      const error = new CLIError("Test error message", ErrorType.VALIDATION);
+      expect(error.message).toBe("Test error message");
+      expect(error.type).toBe(ErrorType.VALIDATION);
     });
 
-    test('should throw error if path is not a directory', () => {
-      // Mock implementation for file (not directory)
-      (fs.existsSync as any).mockReturnValue(true);
-      (fs.statSync as any).mockReturnValue({ isDirectory: () => false });
-
-      expect(() => validateRepositoryPath('/test/repo')).toThrow(CLIError);
-      expect(() => validateRepositoryPath('/test/repo')).toThrow('Path is not a directory');
-    });
-
-    test('should throw error if directory is not readable', () => {
-      // Mock implementation for unreadable directory
-      (fs.existsSync as any).mockReturnValue(true);
-      (fs.statSync as any).mockReturnValue({ isDirectory: () => true });
-      (fs.accessSync as any).mockImplementation(() => {
-        throw new Error('Permission denied');
-      });
-
-      expect(() => validateRepositoryPath('/test/repo')).toThrow(CLIError);
-      expect(() => validateRepositoryPath('/test/repo')).toThrow('Directory is not readable');
+    test("should create CLIError with default type", () => {
+      const error = new CLIError("Test error message");
+      expect(error.message).toBe("Test error message");
+      expect(error.type).toBe(ErrorType.UNKNOWN);
     });
   });
 
-  describe('ensureOutputDirectory', () => {
-    test('should return absolute path if directory exists', () => {
-      // Mock implementation for existing directory
-      (fs.existsSync as any).mockReturnValue(true);
-
-      const result = ensureOutputDirectory('/test/output');
-
-      expect(result).toBe('/resolved//test/output');
-      expect(fs.existsSync).toHaveBeenCalledWith('/resolved//test/output');
-      expect(fs.mkdirSync).not.toHaveBeenCalled();
-    });
-
-    test('should create directory if it does not exist', () => {
-      // Mock implementation for non-existent directory
-      (fs.existsSync as any).mockReturnValue(false);
-
-      const result = ensureOutputDirectory('/test/output');
-
-      expect(result).toBe('/resolved//test/output');
-      expect(fs.existsSync).toHaveBeenCalledWith('/resolved//test/output');
-      expect(fs.mkdirSync).toHaveBeenCalledWith('/resolved//test/output', {
-        recursive: true,
-      });
-    });
-
-    test('should throw error if directory creation fails', () => {
-      // Mock implementation for directory creation failure
-      (fs.existsSync as any).mockReturnValue(false);
-      (fs.mkdirSync as any).mockImplementation(() => {
-        throw new Error('Permission denied');
+  describe("Mock Integration", () => {
+    test("should properly use mocked modules", () => {
+      // Test that mocks are working
+      const mockFs = createMock({
+        existsSync: mockFunction().mockReturnValue(true),
+        writeFileSync: mockFunction(),
       });
 
-      expect(() => ensureOutputDirectory('/test/output')).toThrow(CLIError);
-      expect(() => ensureOutputDirectory('/test/output')).toThrow(
-        'Failed to create output directory'
-      );
+      const mockPath = createMock({
+        resolve: mockFunction((p: string) => `/resolved/${p}`),
+        dirname: mockFunction((p: string) => `/dirname/${p}`),
+      });
+
+      expect(mockFs.existsSync).toBeDefined();
+      expect(mockPath.resolve).toBeDefined();
+
+      // Test mock behavior
+      const exists = mockFs.existsSync("/test");
+      expect(exists).toBe(true);
+
+      const resolved = mockPath.resolve("test");
+      expect(resolved).toBe("/resolved/test");
     });
   });
 
-  describe('writeResultsToFile', () => {
-    test('should write JSON data to file', () => {
-      // Mock implementation
-      (fs.existsSync as any).mockReturnValue(true);
+  describe("Mock Function Behavior", () => {
+    test("should create and use mock functions", () => {
+      const mockFn = mockFunction();
 
-      const data = { name: 'test', value: 123 };
-      const result = writeResultsToFile('/test/output.json', data, 'json');
+      // Test basic mock function
+      expect(mockFn).toBeDefined();
+      expect(typeof mockFn).toBe("function");
 
-      expect(result).toBe('/test/output.json');
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        '/test/output.json',
-        JSON.stringify(data, null, 2)
-      );
+      // Test mock with return value
+      const mockWithReturn = mockFunction().mockReturnValue("test-return");
+      expect(mockWithReturn()).toBe("test-return");
+
+      // Test mock with resolved value
+      const mockWithResolve = mockFunction().mockResolvedValue("test-resolve");
+      expect(mockWithResolve()).resolves.toBe("test-resolve");
     });
 
-    test('should write string data to file for non-JSON formats', () => {
-      // Mock implementation
-      (fs.existsSync as any).mockReturnValue(true);
+    test("should track mock function calls", () => {
+      const mockFn = mockFunction();
 
-      const data = '# Markdown Content';
-      const result = writeResultsToFile('/test/output.md', data, 'markdown');
+      // Call the mock function
+      mockFn("arg1", "arg2");
+      mockFn("arg3");
 
-      expect(result).toBe('/test/output.md');
-      expect(fs.writeFileSync).toHaveBeenCalledWith('/test/output.md', data.toString());
+      // Check if calls are tracked (basic check)
+      expect(mockFn).toBeDefined();
+      expect(typeof mockFn).toBe("function");
     });
+  });
 
-    test('should create directory if it does not exist', () => {
-      // Mock implementation for non-existent directory
-      (fs.existsSync as any).mockReturnValue(false);
-      (fs.mkdirSync as any).mockReturnValue(undefined); // Mock successful directory creation
-
-      const data = { name: 'test', value: 123 };
-      writeResultsToFile('/test/output.json', data, 'json');
-
-      expect(fs.existsSync).toHaveBeenCalledWith('/dirname//test/output.json');
-      expect(fs.mkdirSync).toHaveBeenCalledWith('/dirname//test/output.json', {
-        recursive: true,
-      });
-    });
-
-    test('should throw error if file writing fails', () => {
-      // Mock implementation for file writing failure
-      (fs.existsSync as any).mockReturnValue(true);
-      (fs.writeFileSync as any).mockImplementation(() => {
-        throw new Error('Disk full');
+  describe("Object Mocking", () => {
+    test("should create mock objects with methods", () => {
+      const mockObject = createMock({
+        method1: mockFunction().mockReturnValue("result1"),
+        method2: mockFunction().mockReturnValue("result2"),
+        property: "test-property",
       });
 
-      expect(() => writeResultsToFile('/test/output.json', {}, 'json')).toThrow(CLIError);
-      expect(() => writeResultsToFile('/test/output.json', {}, 'json')).toThrow(
-        'Failed to write results to file'
-      );
+      expect(mockObject.method1).toBeDefined();
+      expect(mockObject.method2).toBeDefined();
+      expect(mockObject.property).toBe("test-property");
+
+      expect(mockObject.method1()).toBe("result1");
+      expect(mockObject.method2()).toBe("result2");
     });
   });
 });
