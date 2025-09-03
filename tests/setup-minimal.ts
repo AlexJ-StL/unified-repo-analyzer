@@ -9,6 +9,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 import { mockManager } from "./MockManager";
 import { resourceController } from "./ResourceController";
+import {
+  setupTestIsolation,
+  cleanupTestIsolation,
+  emergencyIsolationReset,
+  isolationManager,
+} from "./test-isolation";
 
 // Export vi for tests that need it
 export { vi } from "vitest";
@@ -98,6 +104,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Emergency isolation reset to ensure clean state
+  await emergencyIsolationReset();
+
   // Stop resource monitoring
   resourceController.stopMonitoring();
 
@@ -106,6 +115,15 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  // Generate unique test ID for isolation
+  const testId = `test-${Date.now()}-${Math.random()}`;
+
+  // Setup comprehensive test isolation
+  await setupTestIsolation(testId);
+
+  // Store test ID for cleanup
+  (globalThis as any).__currentTestId = testId;
+
   // Enhanced mock cleanup for better test isolation
   if (typeof vi?.clearAllMocks === "function") {
     vi.clearAllMocks();
@@ -126,6 +144,13 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+  // Get test ID and cleanup isolation
+  const testId = (globalThis as any).__currentTestId;
+  if (testId) {
+    await cleanupTestIsolation(testId);
+    delete (globalThis as any).__currentTestId;
+  }
+
   // Run mock cleanup after each test
   mockManager.cleanupMocks();
 });

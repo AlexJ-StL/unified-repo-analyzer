@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { requestLogger } from '../logger.service.js';
+import { beforeEach, describe, expect, it } from "vitest";
+import { requestLogger } from "../logger.service.js";
+import { mockManager, mockFunction } from "../../../../../tests/MockManager";
 
-describe('HTTP Request/Response Logging', () => {
+describe("HTTP Request/Response Logging", () => {
   let mockReq: any;
   let mockRes: any;
   let mockNext: any;
@@ -10,66 +11,66 @@ describe('HTTP Request/Response Logging', () => {
 
   beforeEach(() => {
     mockReq = {
-      method: 'GET',
-      url: '/api/test',
-      path: '/api/test',
-      query: { param1: 'value1', password: 'secret123' },
+      method: "GET",
+      url: "/api/test",
+      path: "/api/test",
+      query: { param1: "value1", password: "secret123" },
       headers: {
-        'user-agent': 'test-agent',
-        authorization: 'Bearer token123',
-        'content-type': 'application/json',
-        'x-api-key': 'api-key-123',
+        "user-agent": "test-agent",
+        authorization: "Bearer token123",
+        "content-type": "application/json",
+        "x-api-key": "api-key-123",
       },
       body: {
-        username: 'testuser',
-        password: 'secret456',
-        data: 'normal-data',
+        username: "testuser",
+        password: "secret456",
+        data: "normal-data",
       },
-      get: vi.fn((header: string) => {
+      get: mockFunction((header: string) => {
         const headers: Record<string, string> = {
-          'User-Agent': 'test-agent',
-          'Content-Length': '100',
-          'Content-Type': 'application/json',
+          "User-Agent": "test-agent",
+          "Content-Length": "100",
+          "Content-Type": "application/json",
         };
         return headers[header];
       }),
-      ip: '127.0.0.1',
-      connection: { remoteAddress: '192.168.1.1' },
-      socket: { remoteAddress: '10.0.0.1' },
+      ip: "127.0.0.1",
+      connection: { remoteAddress: "192.168.1.1" },
+      socket: { remoteAddress: "10.0.0.1" },
     };
 
     mockRes = {
       statusCode: 200,
-      on: vi.fn((event: string, callback: Function) => {
-        if (event === 'finish') {
+      on: mockFunction((event: string, callback: Function) => {
+        if (event === "finish") {
           finishCallback = callback;
-        } else if (event === 'error') {
+        } else if (event === "error") {
           errorCallback = callback;
         }
       }),
-      send: vi.fn(),
-      json: vi.fn(),
-      getHeaders: vi.fn(() => ({
-        'content-type': 'application/json',
-        'x-response-time': '50ms',
+      send: mockFunction(),
+      json: mockFunction(),
+      getHeaders: mockFunction(() => ({
+        "content-type": "application/json",
+        "x-response-time": "50ms",
       })),
     };
 
-    mockNext = vi.fn();
+    mockNext = mockFunction();
   });
 
-  describe('Request Logging', () => {
-    it('should log incoming HTTP requests with correlation ID', () => {
+  describe("Request Logging", () => {
+    it("should log incoming HTTP requests with correlation ID", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       expect(mockReq.requestId).toBeDefined();
       expect(mockNext).toHaveBeenCalled();
-      expect(mockRes.on).toHaveBeenCalledWith('finish', expect.any(Function));
-      expect(mockRes.on).toHaveBeenCalledWith('error', expect.any(Function));
+      expect(mockRes.on).toHaveBeenCalledWith("finish", expect.any(Function));
+      expect(mockRes.on).toHaveBeenCalledWith("error", expect.any(Function));
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should sanitize sensitive data in request headers', () => {
+    it("should sanitize sensitive data in request headers", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       // The sanitization happens internally, we just verify the middleware runs
@@ -77,12 +78,12 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should sanitize sensitive data in query parameters', () => {
+    it("should sanitize sensitive data in query parameters", () => {
       mockReq.query = {
-        username: 'testuser',
-        password: 'secret123',
-        apikey: 'key123',
-        normalParam: 'value',
+        username: "testuser",
+        password: "secret123",
+        apikey: "key123",
+        normalParam: "value",
       };
 
       requestLogger(mockReq, mockRes, mockNext);
@@ -91,12 +92,12 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should sanitize sensitive data in request body', () => {
+    it("should sanitize sensitive data in request body", () => {
       mockReq.body = {
-        username: 'testuser',
-        password: 'secret123',
-        token: 'bearer-token',
-        normalData: 'value',
+        username: "testuser",
+        password: "secret123",
+        token: "bearer-token",
+        normalData: "value",
       };
 
       requestLogger(mockReq, mockRes, mockNext);
@@ -105,8 +106,8 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should handle large request bodies', () => {
-      mockReq.body = 'x'.repeat(2000); // Large body
+    it("should handle large request bodies", () => {
+      mockReq.body = "x".repeat(2000); // Large body
 
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -115,8 +116,8 @@ describe('HTTP Request/Response Logging', () => {
     });
   });
 
-  describe('Response Logging', () => {
-    it('should log successful responses as info', () => {
+  describe("Response Logging", () => {
+    it("should log successful responses as info", () => {
       mockRes.statusCode = 200;
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -126,7 +127,7 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should log client error responses as warnings', () => {
+    it("should log client error responses as warnings", () => {
       mockRes.statusCode = 404;
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -136,7 +137,7 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should log server error responses as errors', () => {
+    it("should log server error responses as errors", () => {
       mockRes.statusCode = 500;
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -146,8 +147,8 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.error).toHaveBeenCalled();
     });
 
-    it('should capture response body through res.send', () => {
-      const responseData = { message: 'Success', data: 'test' };
+    it("should capture response body through res.send", () => {
+      const responseData = { message: "Success", data: "test" };
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate sending response
@@ -160,8 +161,8 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should capture response body through res.json', () => {
-      const responseData = { message: 'Success', data: 'test' };
+    it("should capture response body through res.json", () => {
+      const responseData = { message: "Success", data: "test" };
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate JSON response
@@ -174,8 +175,8 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should handle large response bodies', () => {
-      const _largeResponse = { data: 'x'.repeat(1000) };
+    it("should handle large response bodies", () => {
+      const _largeResponse = { data: "x".repeat(1000) };
       mockRes.statusCode = 200;
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -186,36 +187,36 @@ describe('HTTP Request/Response Logging', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should log response errors', () => {
+  describe("Error Handling", () => {
+    it("should log response errors", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
-      const error = new Error('Response error');
+      const error = new Error("Response error");
       errorCallback(error);
 
       expect(console.error).toHaveBeenCalled();
     });
 
-    it('should include error details in log', () => {
+    it("should include error details in log", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
-      const error = new Error('Test error');
-      error.stack = 'Error stack trace';
+      const error = new Error("Test error");
+      error.stack = "Error stack trace";
       errorCallback(error);
 
       expect(console.error).toHaveBeenCalled();
     });
   });
 
-  describe('Correlation ID Tracking', () => {
-    it('should generate unique correlation IDs for each request', () => {
+  describe("Correlation ID Tracking", () => {
+    it("should generate unique correlation IDs for each request", () => {
       requestLogger(mockReq, mockRes, mockNext);
       const firstRequestId = mockReq.requestId;
 
       // Reset mocks for second request
       mockReq = { ...mockReq };
-      mockRes = { ...mockRes, on: vi.fn() };
-      mockNext = vi.fn();
+      mockRes = { ...mockRes, on: mockFunction() };
+      mockNext = mockFunction();
 
       requestLogger(mockReq, mockRes, mockNext);
       const secondRequestId = mockReq.requestId;
@@ -225,7 +226,7 @@ describe('HTTP Request/Response Logging', () => {
       expect(firstRequestId).not.toBe(secondRequestId);
     });
 
-    it('should maintain correlation ID throughout request lifecycle', () => {
+    it("should maintain correlation ID throughout request lifecycle", () => {
       requestLogger(mockReq, mockRes, mockNext);
       const requestId = mockReq.requestId;
 
@@ -237,8 +238,8 @@ describe('HTTP Request/Response Logging', () => {
     });
   });
 
-  describe('Performance Tracking', () => {
-    it('should track request duration', () => {
+  describe("Performance Tracking", () => {
+    it("should track request duration", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate some processing time
@@ -249,7 +250,7 @@ describe('HTTP Request/Response Logging', () => {
       expect(mockNext).toHaveBeenCalled();
     });
 
-    it('should include timing information in logs', () => {
+    it("should include timing information in logs", () => {
       requestLogger(mockReq, mockRes, mockNext);
 
       // Simulate response finish
@@ -259,10 +260,10 @@ describe('HTTP Request/Response Logging', () => {
     });
   });
 
-  describe('Different HTTP Methods', () => {
-    it('should handle POST requests', () => {
-      mockReq.method = 'POST';
-      mockReq.body = { data: 'test' };
+  describe("Different HTTP Methods", () => {
+    it("should handle POST requests", () => {
+      mockReq.method = "POST";
+      mockReq.body = { data: "test" };
 
       requestLogger(mockReq, mockRes, mockNext);
       finishCallback();
@@ -270,9 +271,9 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should handle PUT requests', () => {
-      mockReq.method = 'PUT';
-      mockReq.body = { id: 1, data: 'updated' };
+    it("should handle PUT requests", () => {
+      mockReq.method = "PUT";
+      mockReq.body = { id: 1, data: "updated" };
 
       requestLogger(mockReq, mockRes, mockNext);
       finishCallback();
@@ -280,8 +281,8 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should handle DELETE requests', () => {
-      mockReq.method = 'DELETE';
+    it("should handle DELETE requests", () => {
+      mockReq.method = "DELETE";
 
       requestLogger(mockReq, mockRes, mockNext);
       finishCallback();
@@ -290,9 +291,9 @@ describe('HTTP Request/Response Logging', () => {
     });
   });
 
-  describe('IP Address Detection', () => {
-    it('should use req.ip when available', () => {
-      mockReq.ip = '192.168.1.100';
+  describe("IP Address Detection", () => {
+    it("should use req.ip when available", () => {
+      mockReq.ip = "192.168.1.100";
 
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -300,9 +301,9 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should fallback to connection.remoteAddress', () => {
+    it("should fallback to connection.remoteAddress", () => {
       mockReq.ip = undefined;
-      mockReq.connection = { remoteAddress: '10.0.0.50' };
+      mockReq.connection = { remoteAddress: "10.0.0.50" };
 
       requestLogger(mockReq, mockRes, mockNext);
 
@@ -310,10 +311,10 @@ describe('HTTP Request/Response Logging', () => {
       expect(console.log).toHaveBeenCalled();
     });
 
-    it('should fallback to socket.remoteAddress', () => {
+    it("should fallback to socket.remoteAddress", () => {
       mockReq.ip = undefined;
       mockReq.connection = {};
-      mockReq.socket = { remoteAddress: '172.16.0.10' };
+      mockReq.socket = { remoteAddress: "172.16.0.10" };
 
       requestLogger(mockReq, mockRes, mockNext);
 

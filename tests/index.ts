@@ -3,28 +3,32 @@
  * Provides clean, non-circular imports for all test utilities
  */
 
+import { createIsolatedContext } from "./test-isolation";
+
+import { withIsolation } from "./test-isolation";
+
+import { getIsolationStats } from "./test-isolation";
+
+import { emergencyIsolationReset } from "./test-isolation";
+
 // Core test infrastructure
 export { mockManager, MockManager } from "./MockManager";
 export { resourceController, ResourceController } from "./ResourceController";
 
 // Mock utilities (cleaned up to avoid circular imports)
+// Note: mock-utils-clean will be created if needed, for now using MockManager
 export {
   createMock,
+  mockFunction,
   mockModule,
-  createPartialMock,
-  mockClass,
-  mockNodeModules,
-  mockAsync,
-  mockRejected,
-  spyOn,
-  mockTimers,
-  mockEnv,
-  restoreEnv,
-  commonMocks,
-} from "./mock-utils-clean";
+  setupMocks,
+  cleanupMocks,
+  resetAllMocks,
+} from "./MockManager";
 
 // Test isolation
 export {
+  IsolationManager,
   TestIsolationManager,
   EnvironmentIsolation,
   ModuleIsolation,
@@ -32,6 +36,11 @@ export {
   TimerIsolation,
   setupTestIsolation,
   cleanupTestIsolation,
+  emergencyIsolationReset,
+  getIsolationStats,
+  withIsolation,
+  createIsolatedContext,
+  isolationManager,
 } from "./test-isolation";
 
 // Cleanup management
@@ -117,6 +126,10 @@ export function getTestUtils() {
     isolation: {
       setup: setupTestIsolation,
       cleanup: cleanupTestIsolation,
+      emergency: emergencyIsolationReset,
+      stats: getIsolationStats,
+      withIsolation,
+      createContext: createIsolatedContext,
       environment: EnvironmentIsolation,
       modules: ModuleIsolation,
       dom: DOMIsolation,

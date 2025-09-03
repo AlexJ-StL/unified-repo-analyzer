@@ -3,54 +3,70 @@
  * Configuration service tests
  */
 
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { vi } from 'vitest';
-import { ConfigurationService } from '../config.service';
+import fs from "node:fs/promises";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { ConfigurationService } from "../config.service";
+import {
+  mockManager,
+  createMock,
+  mockFunction,
+} from "../../../../../tests/MockManager";
 
-// Mock fs module
-vi.mock('fs/promises');
-vi.mock('uuid', () => ({
-  v4: () => 'mock-uuid-123',
-}));
-vi.mock('../../utils/logger', () => ({
-  logger: {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}));
-vi.mock('os', () => ({
-  homedir: () => '/mock/home',
-}));
+// Setup mocks using MockManager
+const mockFs = createMock<typeof fs>({
+  readFile: mockFunction(),
+  writeFile: mockFunction(),
+  mkdir: mockFunction(),
+  access: mockFunction(),
+});
 
-const mockFs = fs as any;
-const mockHomeDir = '/mock/home';
+const mockUuid = createMock({
+  v4: mockFunction(() => "mock-uuid-123"),
+});
+
+const mockLogger = createMock({
+  info: mockFunction(),
+  warn: mockFunction(),
+  error: mockFunction(),
+});
+
+const mockOs = createMock({
+  homedir: mockFunction(() => "/mock/home"),
+});
+
+// Register mocks with MockManager
+mockManager.mockModule("fs/promises", () => mockFs);
+mockManager.mockModule("uuid", () => mockUuid);
+mockManager.mockModule("../../utils/logger", () => ({ logger: mockLogger }));
+mockManager.mockModule("os", () => mockOs);
+
+const mockHomeDir = "/mock/home";
 
 const DEFAULT_USER_PREFERENCES = {
   general: {
     autoSave: true,
     autoIndex: true,
     enableNotifications: true,
-    theme: 'system' as const,
-    language: 'en',
+    theme: "system" as const,
+    language: "en",
   },
   analysis: {
-    defaultMode: 'standard' as const,
+    defaultMode: "standard" as const,
     maxFiles: 500,
     maxLinesPerFile: 1000,
     includeLLMAnalysis: true,
     includeTree: true,
-    ignorePatterns: ['node_modules/', '.git/'],
+    ignorePatterns: ["node_modules/", ".git/"],
     maxFileSize: 1024 * 1024,
-    cacheDirectory: '~/.cache',
+    cacheDirectory: "~/.cache",
     cacheTTL: 24,
   },
   llmProvider: {
-    defaultProvider: 'claude',
+    defaultProvider: "claude",
     providers: {
       claude: {
-        name: 'Claude',
+        name: "Claude",
         maxTokens: 8000,
         temperature: 0.7,
         enabled: true,
@@ -58,8 +74,8 @@ const DEFAULT_USER_PREFERENCES = {
     },
   },
   export: {
-    defaultFormat: 'json' as const,
-    outputDirectory: './results',
+    defaultFormat: "json" as const,
+    outputDirectory: "./results",
     includeMetadata: true,
     compressLargeFiles: true,
     customTemplates: {},
@@ -67,56 +83,72 @@ const DEFAULT_USER_PREFERENCES = {
   ui: {
     compactMode: false,
     showAdvancedOptions: false,
-    defaultView: 'grid' as const,
+    defaultView: "grid" as const,
     itemsPerPage: 20,
     enableAnimations: true,
   },
 };
 
-describe('ConfigurationService', () => {
+describe("ConfigurationService", () => {
   let configService: ConfigurationService;
-  const mockConfigDir = path.join(mockHomeDir, '.repo-analyzer');
+  const mockConfigDir = path.join(mockHomeDir, ".repo-analyzer");
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Setup mocks before each test
+    mockManager.setupMocks();
+
+    // Reset mock implementations
+    mockFs.mkdir.mockResolvedValue(undefined);
+    mockFs.writeFile.mockResolvedValue(undefined);
+    mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+    mockFs.access.mockResolvedValue(undefined);
+
     configService = new ConfigurationService();
   });
 
-  describe('initialize', () => {
-    it('should create configuration directory and default files', async () => {
+  afterEach(() => {
+    // Cleanup mocks after each test
+    mockManager.cleanupMocks();
+  });
+
+  describe("initialize", () => {
+    it("should create configuration directory and default files", async () => {
       mockFs.mkdir.mockResolvedValue(undefined);
       mockFs.writeFile.mockResolvedValue(undefined);
-      mockFs.access.mockRejectedValue(new Error('File not found'));
+      mockFs.access.mockRejectedValue(new Error("File not found"));
 
       await configService.initialize();
 
       expect(mockFs.mkdir).toHaveBeenCalledWith(mockConfigDir, {
         recursive: true,
       });
-      expect(mockFs.mkdir).toHaveBeenCalledWith(path.join(mockConfigDir, 'backups'), {
-        recursive: true,
-      });
+      expect(mockFs.mkdir).toHaveBeenCalledWith(
+        path.join(mockConfigDir, "backups"),
+        {
+          recursive: true,
+        }
+      );
       expect(mockFs.writeFile).toHaveBeenCalledWith(
-        path.join(mockConfigDir, 'user-preferences.json'),
+        path.join(mockConfigDir, "user-preferences.json"),
         JSON.stringify(DEFAULT_USER_PREFERENCES, null, 2)
       );
     });
 
-    it('should not overwrite existing files', async () => {
+    it("should not overwrite existing files", async () => {
       mockFs.mkdir.mockResolvedValue(undefined);
       mockFs.access.mockResolvedValue(undefined); // Files exist
 
       await configService.initialize();
 
       expect(mockFs.writeFile).not.toHaveBeenCalledWith(
-        expect.stringContaining('user-preferences.json'),
+        expect.stringContaining("user-preferences.json"),
         expect.any(String)
       );
     });
   });
 
-  describe('getUserPreferences', () => {
-    it('should return user preferences from file', async () => {
+  describe("getUserPreferences", () => {
+    it("should return user preferences from file", async () => {
       const mockPreferences = { ...DEFAULT_USER_PREFERENCES };
       mockFs.readFile.mockResolvedValue(JSON.stringify(mockPreferences));
 
@@ -124,48 +156,54 @@ describe('ConfigurationService', () => {
 
       expect(result).toEqual(mockPreferences);
       expect(mockFs.readFile).toHaveBeenCalledWith(
-        path.join(mockConfigDir, 'user-preferences.json'),
-        'utf-8'
+        path.join(mockConfigDir, "user-preferences.json"),
+        "utf-8"
       );
     });
 
-    it('should return defaults if file read fails', async () => {
-      mockFs.readFile.mockRejectedValue(new Error('File not found'));
+    it("should return defaults if file read fails", async () => {
+      mockFs.readFile.mockRejectedValue(new Error("File not found"));
 
       const result = await configService.getUserPreferences();
 
       expect(result).toEqual(DEFAULT_USER_PREFERENCES);
     });
 
-    it('should merge with defaults for missing fields', async () => {
+    it("should merge with defaults for missing fields", async () => {
       const partialPreferences = {
-        general: { theme: 'dark' as const },
+        general: { theme: "dark" as const },
       };
       mockFs.readFile.mockResolvedValue(JSON.stringify(partialPreferences));
 
       const result = await configService.getUserPreferences();
 
-      expect(result.general.theme).toBe('dark');
-      expect(result.general.autoSave).toBe(DEFAULT_USER_PREFERENCES.general.autoSave);
+      expect(result.general.theme).toBe("dark");
+      expect(result.general.autoSave).toBe(
+        DEFAULT_USER_PREFERENCES.general.autoSave
+      );
       expect(result.analysis).toEqual(DEFAULT_USER_PREFERENCES.analysis);
     });
   });
 
-  describe('saveUserPreferences', () => {
-    it('should save valid preferences', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+  describe("saveUserPreferences", () => {
+    it("should save valid preferences", async () => {
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
       mockFs.writeFile.mockResolvedValue(undefined);
 
       await configService.saveUserPreferences(DEFAULT_USER_PREFERENCES);
 
       expect(mockFs.writeFile).toHaveBeenCalledWith(
-        path.join(mockConfigDir, 'user-preferences.json'),
+        path.join(mockConfigDir, "user-preferences.json"),
         JSON.stringify(DEFAULT_USER_PREFERENCES, null, 2)
       );
     });
 
-    it('should create backup before saving', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+    it("should create backup before saving", async () => {
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
       mockFs.writeFile.mockResolvedValue(undefined);
 
       await configService.saveUserPreferences(DEFAULT_USER_PREFERENCES);
@@ -174,46 +212,52 @@ describe('ConfigurationService', () => {
       expect(mockFs.writeFile).toHaveBeenCalledTimes(2);
     });
 
-    it('should throw error for invalid preferences', async () => {
+    it("should throw error for invalid preferences", async () => {
       const invalidPreferences = {
         ...DEFAULT_USER_PREFERENCES,
         general: {
           ...DEFAULT_USER_PREFERENCES.general,
-          theme: 'invalid' as any,
+          theme: "invalid" as any,
         },
       };
 
-      await expect(configService.saveUserPreferences(invalidPreferences)).rejects.toThrow();
+      await expect(
+        configService.saveUserPreferences(invalidPreferences)
+      ).rejects.toThrow();
     });
   });
 
-  describe('updatePreferences', () => {
-    it('should update specific preference section', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+  describe("updatePreferences", () => {
+    it("should update specific preference section", async () => {
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
       mockFs.writeFile.mockResolvedValue(undefined);
 
-      const updates = { theme: 'dark' as const };
-      const result = await configService.updatePreferences('general', updates);
+      const updates = { theme: "dark" as const };
+      const result = await configService.updatePreferences("general", updates);
 
-      expect(result.general.theme).toBe('dark');
+      expect(result.general.theme).toBe("dark");
       expect(mockFs.writeFile).toHaveBeenCalled();
     });
   });
 
-  describe('validateUserPreferences', () => {
-    it('should validate correct preferences', () => {
-      const result = configService.validateUserPreferences(DEFAULT_USER_PREFERENCES);
+  describe("validateUserPreferences", () => {
+    it("should validate correct preferences", () => {
+      const result = configService.validateUserPreferences(
+        DEFAULT_USER_PREFERENCES
+      );
 
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
 
-    it('should return errors for invalid preferences', () => {
+    it("should return errors for invalid preferences", () => {
       const invalidPreferences = {
         ...DEFAULT_USER_PREFERENCES,
         general: {
           ...DEFAULT_USER_PREFERENCES.general,
-          theme: 'invalid' as any,
+          theme: "invalid" as any,
         },
       };
 
@@ -224,14 +268,14 @@ describe('ConfigurationService', () => {
     });
   });
 
-  describe('workspace management', () => {
-    it('should save workspace configuration', async () => {
-      mockFs.readFile.mockResolvedValue('[]');
+  describe("workspace management", () => {
+    it("should save workspace configuration", async () => {
+      mockFs.readFile.mockResolvedValue("[]");
       mockFs.writeFile.mockResolvedValue(undefined);
 
       const workspace = {
-        name: 'Test Workspace',
-        path: '/test/path',
+        name: "Test Workspace",
+        path: "/test/path",
         preferences: {},
       };
 
@@ -244,11 +288,11 @@ describe('ConfigurationService', () => {
       expect(mockFs.writeFile).toHaveBeenCalled();
     });
 
-    it('should update workspace configuration', async () => {
+    it("should update workspace configuration", async () => {
       const existingWorkspace = {
-        id: 'test-id',
-        name: 'Test Workspace',
-        path: '/test/path',
+        id: "test-id",
+        name: "Test Workspace",
+        path: "/test/path",
         preferences: {},
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -256,18 +300,21 @@ describe('ConfigurationService', () => {
       mockFs.readFile.mockResolvedValue(JSON.stringify([existingWorkspace]));
       mockFs.writeFile.mockResolvedValue(undefined);
 
-      const updates = { name: 'Updated Workspace' };
-      const result = await configService.updateWorkspaceConfiguration('test-id', updates);
+      const updates = { name: "Updated Workspace" };
+      const result = await configService.updateWorkspaceConfiguration(
+        "test-id",
+        updates
+      );
 
-      expect(result.name).toBe('Updated Workspace');
+      expect(result.name).toBe("Updated Workspace");
       expect(result.updatedAt).not.toEqual(existingWorkspace.updatedAt);
     });
 
-    it('should delete workspace configuration', async () => {
+    it("should delete workspace configuration", async () => {
       const existingWorkspace = {
-        id: 'test-id',
-        name: 'Test Workspace',
-        path: '/test/path',
+        id: "test-id",
+        name: "Test Workspace",
+        path: "/test/path",
         preferences: {},
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -275,54 +322,58 @@ describe('ConfigurationService', () => {
       mockFs.readFile.mockResolvedValue(JSON.stringify([existingWorkspace]));
       mockFs.writeFile.mockResolvedValue(undefined);
 
-      await configService.deleteWorkspaceConfiguration('test-id');
+      await configService.deleteWorkspaceConfiguration("test-id");
 
       expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('workspaces.json'),
+        expect.stringContaining("workspaces.json"),
         JSON.stringify([], null, 2)
       );
     });
   });
 
-  describe('backup and restore', () => {
-    it('should create configuration backup', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+  describe("backup and restore", () => {
+    it("should create configuration backup", async () => {
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
       mockFs.writeFile.mockResolvedValue(undefined);
 
-      const backup = await configService.createBackup('manual');
+      const backup = await configService.createBackup("manual");
 
       expect(backup.id).toBeDefined();
       expect(backup.preferences).toEqual(DEFAULT_USER_PREFERENCES);
-      expect(backup.reason).toBe('manual');
+      expect(backup.reason).toBe("manual");
       expect(mockFs.writeFile).toHaveBeenCalledWith(
         expect.stringContaining(`backup-${backup.id}.json`),
         expect.any(String)
       );
     });
 
-    it('should restore from backup', async () => {
+    it("should restore from backup", async () => {
       const backupData = {
-        id: 'backup-id',
+        id: "backup-id",
         timestamp: new Date(),
-        version: '1.0.0',
+        version: "1.0.0",
         preferences: DEFAULT_USER_PREFERENCES,
-        reason: 'manual' as const,
+        reason: "manual" as const,
       };
       mockFs.readFile
         .mockResolvedValueOnce(JSON.stringify(backupData)) // Read backup
         .mockResolvedValueOnce(JSON.stringify(DEFAULT_USER_PREFERENCES)); // Create new backup
       mockFs.writeFile.mockResolvedValue(undefined);
 
-      const result = await configService.restoreFromBackup('backup-id');
+      const result = await configService.restoreFromBackup("backup-id");
 
       expect(result).toEqual(DEFAULT_USER_PREFERENCES);
       expect(mockFs.writeFile).toHaveBeenCalled();
     });
   });
 
-  describe('import and export', () => {
-    it('should export configuration', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+  describe("import and export", () => {
+    it("should export configuration", async () => {
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
 
       const result = await configService.exportConfiguration();
 
@@ -331,20 +382,22 @@ describe('ConfigurationService', () => {
       expect(exported.exportedAt).toBeDefined();
     });
 
-    it('should import configuration', async () => {
+    it("should import configuration", async () => {
       const configData = JSON.stringify({
         userPreferences: DEFAULT_USER_PREFERENCES,
         workspaces: [],
         projects: [],
         profiles: [],
       });
-      mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
+      mockFs.readFile.mockResolvedValue(
+        JSON.stringify(DEFAULT_USER_PREFERENCES)
+      );
       mockFs.writeFile.mockResolvedValue(undefined);
 
       await configService.importConfiguration(configData);
 
       expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('user-preferences.json'),
+        expect.stringContaining("user-preferences.json"),
         JSON.stringify(DEFAULT_USER_PREFERENCES, null, 2)
       );
     });
