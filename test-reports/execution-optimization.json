@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-09-03T08:56:12.804Z",
+  "executionPlan": {
+    "strategy": "sequential",
+    "totalBatches": 0,
+    "totalTests": 0,
+    "estimatedDuration": 0,
+    "maxConcurrency": 1
+  },
+  "changeDetection": {
+    "strategy": "affected",
+    "changedFiles": 8,
+    "affectedTests": 3
+  },
+  "batches": [],
+  "optimizations": {
+    "intelligentBatching": "Tests grouped by duration and priority",
+    "changeDetection": "Only affected tests run when possible",
+    "fastFeedback": "High-priority tests run first",
+    "selectiveExecution": "Minimal test sets for small changes"
+  },
+  "recommendations": [
+    "Use `bun scripts/fast-feedback.ts` for quick development feedback",
+    "Use `bun scripts/selective-tests.ts` when working on specific features"
+  ]
+}
