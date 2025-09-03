@@ -85,7 +85,7 @@ export class MockManager {
   public mockFunction<T extends (...args: unknown[]) => unknown>(
     fn?: T
   ): MockedFunction<T> {
-    if (typeof vi?.fn === "function") {
+    if (typeof vi !== "undefined" && vi && typeof vi.fn === "function") {
       const mockFn = vi.fn() as MockedFunction<T>;
       if (fn) {
         mockFn.mockImplementation(fn);
@@ -136,22 +136,11 @@ export class MockManager {
   ): void {
     this.moduleRegistry.set(modulePath, factory);
 
-    // Try to use vi.mock if available
-    if (typeof vi?.mock === "function") {
-      try {
-        vi.mock(modulePath, factory);
-      } catch (error) {
-        console.warn(
-          `vi.mock failed for ${modulePath}, using fallback:`,
-          error
-        );
-        // Store for manual resolution
-        this.mockRegistry.set(modulePath, factory());
-      }
-    } else {
-      // Store for manual resolution when vi.mock is not available
-      this.mockRegistry.set(modulePath, factory());
-    }
+    // Always store for manual resolution - vi.mock is too unreliable
+    this.mockRegistry.set(modulePath, factory());
+
+    // Don't try to use vi.mock during setup - it causes issues
+    // The mocks will be available through getMock() instead
   }
 
   /**

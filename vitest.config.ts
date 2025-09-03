@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   // No plugins to avoid Vite/Vitest version conflicts
+  cacheDir: "node_modules/.vitest",
 
   test: {
     globals: true,
@@ -16,13 +17,43 @@ export default defineConfig({
     unstubEnvs: true,
     unstubGlobals: true,
 
-    // Use environment based on file patterns - this handles all packages
-    environmentMatchGlobs: [
-      ["**/packages/frontend/**/*.test.{ts,tsx}", "jsdom"],
-      ["**/packages/backend/**/*.test.{ts,tsx}", "node"],
-      ["**/packages/cli/**/*.test.{ts,tsx}", "node"],
-      ["**/packages/shared/**/*.test.{ts,tsx}", "node"],
-      ["**/tests/**/*.test.{ts,tsx}", "node"],
+    // Use projects for environment-specific configurations
+    projects: [
+      {
+        name: "frontend",
+        test: {
+          environment: "jsdom",
+          include: ["**/packages/frontend/**/*.test.{ts,tsx}"],
+        },
+      },
+      {
+        name: "backend",
+        test: {
+          environment: "node",
+          include: ["**/packages/backend/**/*.test.{ts,tsx}"],
+        },
+      },
+      {
+        name: "cli",
+        test: {
+          environment: "node",
+          include: ["**/packages/cli/**/*.test.{ts,tsx}"],
+        },
+      },
+      {
+        name: "shared",
+        test: {
+          environment: "node",
+          include: ["**/packages/shared/**/*.test.{ts,tsx}"],
+        },
+      },
+      {
+        name: "tests",
+        test: {
+          environment: "node",
+          include: ["**/tests/**/*.test.{ts,tsx}"],
+        },
+      },
     ],
 
     // Enable CSS processing for frontend tests
@@ -59,7 +90,9 @@ export default defineConfig({
 
     // Reduced retry for faster feedback
     retry: process.env.CI ? 1 : 0,
-    reporters: process.env.CI ? ["verbose", "junit"] : ["default"],
+    reporters: process.env.CI
+      ? [["default", { summary: false }], "junit"]
+      : [["default", { summary: true }]],
     outputFile: process.env.CI ? "./test-results.xml" : undefined,
 
     // CRITICAL: Ultra-conservative concurrency limits to prevent system overload
@@ -92,10 +125,8 @@ export default defineConfig({
     logHeapUsage: process.env.DEBUG_MEMORY === "true",
     dangerouslyIgnoreUnhandledErrors: false,
 
-    // Performance optimizations
-    cache: {
-      dir: "node_modules/.vitest",
-    },
+    // Performance optimizations - use Vite's cacheDir instead
+    // cache: { dir: "node_modules/.vitest" }, // DEPRECATED
 
     // Exclude performance test directories and temp files
     exclude: [
