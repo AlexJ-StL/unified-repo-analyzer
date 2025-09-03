@@ -1,1 +1,1 @@
-{"name":"test-react-app","version":"1.0.0","dependencies":{"react":"^18.0.0","react-dom":"^18.0.0","@types/react":"^18.0.0"}}
+{"name":"concurrent-repo-2","dependencies":{"express":"^4.18.0","lodash":"^4.17.21"}}
