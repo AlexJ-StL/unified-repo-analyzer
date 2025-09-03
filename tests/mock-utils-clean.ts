@@ -1,6 +1,7 @@
 /**
- * Mock utilities for enhanced test support
+ * Clean Mock utilities without circular dependencies
  * Provides type-safe mocking helpers and common mock patterns
+ * This version avoids importing cleanup-manager to prevent circular dependencies
  */
 
 import { vi } from "vitest";
@@ -25,10 +26,11 @@ export function mockModule<T extends Record<string, any>>(
   modulePath: string,
   mockImplementation: Partial<T>
 ): void {
-  if (typeof vi.mock === "function") {
-    vi.mock(modulePath, () => mockImplementation);
-  } else {
-  }
+  // This function is a placeholder for compatibility
+  // The actual mocking should be done through MockManager
+  console.warn(
+    "mockModule called - use MockManager.mockModule() instead for better reliability"
+  );
 }
 
 /**
@@ -131,7 +133,7 @@ export function spyOn<T extends Record<string, any>>(
 }
 
 /**
- * Mock timers with common patterns and automatic cleanup
+ * Mock timers with common patterns - clean version without cleanup manager dependency
  */
 export const mockTimers = {
   setup: () => {
@@ -159,17 +161,6 @@ export const mockTimers = {
     if (typeof vi.runAllTimers === "function") {
       vi.runAllTimers();
     }
-  },
-
-  /**
-   * Setup timers with automatic cleanup registration
-   * Note: Cleanup registration removed to avoid circular dependencies
-   */
-  setupWithCleanup: () => {
-    if (typeof vi.useFakeTimers === "function") {
-      vi.useFakeTimers();
-    }
-    // Manual cleanup required - call mockTimers.cleanup() in test teardown
   },
 };
 
