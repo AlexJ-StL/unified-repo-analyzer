@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+dist/
+build/
+coverage/
+
+# Test files
+**/*.test.*
+**/*.spec.*
+**/tests/**
+**/__tests__/**
+**/test/**
+**/spec/**
+
+# Configuration files
+**/*.config.*
+**/tsconfig.json
+**/package.json
+**/biome.json
+
+# Documentation
+**/docs/**
+**/README*
+**/CHANGELOG*
+**/LICENSE*
+
+# Temporary files
+**/temp-*/**
+**/.temp/**
+**/tmp/**
+
+# Mock files
+**/*.mock.*
+**/mock*/**
+**/__mocks__/**
+
+# Scripts
+**/scripts/**
+
+# Examples
+**/examples/**
+**/*.example.*
+
+# Environment files
+**/.env*
+
+# IDE files
+**/.vscode/**
+**/.idea/**
+
+# Cache directories
+**/.cache/**
+**/cache/**

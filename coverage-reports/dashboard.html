@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coverage Dashboard - POOR</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #2c3e50; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 30px; text-align: center; }
+        .title { font-size: 3em; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: #7f8c8d; font-size: 1.2em; }
+        .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
+        .status-excellent { background: #d4edda; color: #155724; }
+        .status-good { background: #fff3cd; color: #856404; }
+        .status-fair { background: #f8d7da; color: #721c24; }
+        .status-poor { background: #f5c6cb; color: #721c24; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0; }
+        .metric-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; position: relative; overflow: hidden; }
+        .metric-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent-color); }
+        .metric-value { font-size: 3.5em; font-weight: bold; margin: 15px 0; color: var(--accent-color); }
+        .metric-label { font-size: 1.3em; color: #7f8c8d; margin-bottom: 20px; }
+        .metric-details { color: #95a5a6; font-size: 1.1em; }
+        .progress-bar { height: 12px; background: #ecf0f1; border-radius: 6px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+        .packages-section { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 30px 0; }
+        .packages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .package-card { background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid var(--package-color); }
+        .package-name { font-size: 1.4em; font-weight: bold; margin-bottom: 15px; }
+        .package-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .package-metric { text-align: center; padding: 10px; background: white; border-radius: 8px; }
+        .commands-section { background: #2c3e50; color: white; padding: 30px; border-radius: 16px; margin: 30px 0; }
+        .command { background: #34495e; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .footer { text-align: center; color: #7f8c8d; margin: 30px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📊 Coverage Dashboard</h1>
+            <p class="subtitle">Generated: 9/3/2025, 5:05:48 AM | Provider: c8-vitest</p>
+            <div class="status-badge status-poor">🔴 POOR</div>
+        </div>
+
+        <div class="metrics-grid">
+            
+        <div class="metric-card" style="--accent-color: #3498db">
+          <div class="metric-label">Lines</div>
+          <div class="metric-value">0.0%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%; background: #3498db;"></div>
+          </div>
+          <div class="metric-details">0 / 0</div>
+        </div>
+      
+        <div class="metric-card" style="--accent-color: #e74c3c">
+          <div class="metric-label">Functions</div>
+          <div class="metric-value">0.0%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%; background: #e74c3c;"></div>
+          </div>
+          <div class="metric-details">0 / 0</div>
+        </div>
+      
+        <div class="metric-card" style="--accent-color: #2ecc71">
+          <div class="metric-label">Statements</div>
+          <div class="metric-value">0.0%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%; background: #2ecc71;"></div>
+          </div>
+          <div class="metric-details">0 / 0</div>
+        </div>
+      
+        <div class="metric-card" style="--accent-color: #f39c12">
+          <div class="metric-label">Branches</div>
+          <div class="metric-value">0.0%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%; background: #f39c12;"></div>
+          </div>
+          <div class="metric-details">0 / 0</div>
+        </div>
+      
+        </div>
+
+        <div class="packages-section">
+            <h2>📦 Package Coverage</h2>
+            <div class="packages-grid">
+                
+            </div>
+        </div>
+
+        <div class="commands-section">
+            <h3>🚀 Quick Commands</h3>
+            <div class="command">bun run test:coverage</div>
+            <div class="command">bun run test:coverage:analysis</div>
+            <div class="command">bun run scripts/coverage-collect.ts</div>
+            <div class="command">open coverage-reports/dashboard.html</div>
+        </div>
+
+        <div class="footer">
+            <p>Coverage collection completed successfully</p>
+            
+        </div>
+    </div>
+
+    <script>
+        // Animate progress bars
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

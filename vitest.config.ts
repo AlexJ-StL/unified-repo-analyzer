@@ -55,18 +55,51 @@ export default defineConfig({
     css: true,
 
     coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+      provider: "c8", // Use c8 provider for Bun compatibility
+      reporter: ["text", "json", "html", "lcov", "json-summary"],
+      reportsDirectory: "coverage",
       exclude: [
         "node_modules/",
         "dist/",
+        "build/",
         "coverage/",
         "**/*.d.ts",
         "**/*.config.*",
-        "**/tests/**",
-        "**/__tests__/**",
         "**/*.test.*",
         "**/*.spec.*",
+        "**/tests/**",
+        "**/__tests__/**",
+        "**/test/**",
+        "**/spec/**",
+        "**/.{idea,git,cache,output,temp}/**",
+        "**/temp-*/**",
+        "**/mock*/**",
+        "**/*.mock.*",
+        "**/scripts/**",
+        "**/docs/**",
+        "**/examples/**",
+        "**/*.example.*",
+        "**/vite.config.*",
+        "**/vitest.config.*",
+        "**/rollup.config.*",
+        "**/webpack.config.*",
+        "**/jest.config.*",
+        "**/babel.config.*",
+        "**/tailwind.config.*",
+        "**/postcss.config.*",
+        "**/biome.json",
+        "**/tsconfig.json",
+        "**/package.json",
+        "**/.env*",
+        "**/README*",
+        "**/CHANGELOG*",
+        "**/LICENSE*",
+      ],
+      include: [
+        "packages/*/src/**/*.{ts,tsx,js,jsx}",
+        "!packages/*/src/**/*.{test,spec}.{ts,tsx,js,jsx}",
+        "!packages/*/src/**/__tests__/**",
+        "!packages/*/src/**/__mocks__/**",
       ],
       thresholds: {
         global: {
@@ -75,6 +108,22 @@ export default defineConfig({
           lines: 70,
           statements: 70,
         },
+        // Per-file thresholds
+        perFile: true,
+      },
+      all: true,
+      clean: true,
+      skipFull: false,
+      // Enable source maps for accurate coverage
+      allowExternal: false,
+      // Report uncovered lines
+      reportOnFailure: true,
+      // Watermarks for coverage colors
+      watermarks: {
+        statements: [70, 90],
+        functions: [70, 90],
+        branches: [70, 90],
+        lines: [70, 90],
       },
     },
 

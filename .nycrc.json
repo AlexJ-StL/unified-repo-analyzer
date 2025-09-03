@@ -1,0 +1,36 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "check-coverage": true,
+  "reporter": [
+    "text",
+    "html",
+    "json",
+    "lcov"
+  ],
+  "report-dir": "coverage",
+  "exclude": [
+    "**/*.d.ts",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.config.*",
+    "**/scripts/**",
+    "**/docs/**"
+  ],
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.js",
+    "packages/*/src/**/*.jsx"
+  ],
+  "branches": 70,
+  "lines": 70,
+  "functions": 70,
+  "statements": 70
+}
