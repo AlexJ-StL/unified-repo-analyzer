@@ -660,7 +660,7 @@ async function runSelectiveTests() {
     
     if (changedFiles.length === 0) {
       console.log('📝 No changes detected, running minimal test set');
-      execSync('vitest run --reporter=basic --run --maxConcurrency=1', {
+      execSync('bun test --maxConcurrency=1', {
         stdio: 'inherit',
         timeout: 30000,
       });
@@ -704,14 +704,14 @@ async function runSelectiveTests() {
     
     if (uniqueTestFiles.length === 0) {
       console.log('🔍 No specific tests found, running fast subset');
-      execSync('vitest run --reporter=basic --run --maxConcurrency=1', {
+      execSync('bun test --maxConcurrency=1', {
         stdio: 'inherit',
         timeout: 30000,
       });
     } else {
       console.log(\`🧪 Running \${uniqueTestFiles.length} affected tests\`);
       const testPaths = uniqueTestFiles.join(' ');
-      execSync(\`vitest run \${testPaths} --reporter=basic --run\`, {
+      execSync(\`bun test \${testPaths}\`, {
         stdio: 'inherit',
         timeout: 60000,
       });

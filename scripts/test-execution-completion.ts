@@ -227,9 +227,13 @@ class TestExecutionCompletionValidator {
 
       const hasPriorityBatching = scriptContent.includes("priority");
       const hasSequentialExecution = scriptContent.includes("sequential");
-      const hasFastFail = scriptContent.includes("Fast fail");
+      const hasFastFail =
+        scriptContent.includes("Fast fail") ||
+        scriptContent.includes("priority > 80");
       const hasTimeTracking = scriptContent.includes("startTime");
-      const usesBunTest = scriptContent.includes("bun test");
+      const usesBunTest =
+        scriptContent.includes("bun test") &&
+        !scriptContent.includes("vitest run");
 
       if (
         hasPriorityBatching &&
@@ -419,7 +423,10 @@ class TestExecutionCompletionValidator {
           }
 
           // Check for bun test usage (cross-platform)
-          if (!content.includes("bun test") && content.includes("vitest")) {
+          if (
+            content.includes("vitest run") ||
+            (content.includes("vitest") && !content.includes("bun test"))
+          ) {
             allCompatible = false;
             issues.push(`${scriptPath}: still uses vitest instead of bun test`);
           }
