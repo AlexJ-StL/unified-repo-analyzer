@@ -20,35 +20,30 @@ export default defineConfig({
     // Use projects for environment-specific configurations
     projects: [
       {
-        name: "frontend",
         test: {
           environment: "jsdom",
           include: ["**/packages/frontend/**/*.test.{ts,tsx}"],
         },
       },
       {
-        name: "backend",
         test: {
           environment: "node",
           include: ["**/packages/backend/**/*.test.{ts,tsx}"],
         },
       },
       {
-        name: "cli",
         test: {
           environment: "node",
           include: ["**/packages/cli/**/*.test.{ts,tsx}"],
         },
       },
       {
-        name: "shared",
         test: {
           environment: "node",
           include: ["**/packages/shared/**/*.test.{ts,tsx}"],
         },
       },
       {
-        name: "tests",
         test: {
           environment: "node",
           include: ["**/tests/**/*.test.{ts,tsx}"],

@@ -8,6 +8,7 @@
 
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 import { mockManager } from "./MockManager";
+import { resourceController } from "./ResourceController";
 
 // Export vi for tests that need it
 export { vi } from "vitest";
@@ -39,6 +40,11 @@ beforeAll(async () => {
 
   // Initialize mock manager
   mockManager.setupMocks();
+
+  // Start resource monitoring in test environment
+  if (process.env.NODE_ENV === "test") {
+    resourceController.startMonitoring(10000); // Check every 10 seconds
+  }
 
   // Setup DOM environment if jsdom is available
   if (typeof window !== "undefined") {
@@ -92,6 +98,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Stop resource monitoring
+  resourceController.stopMonitoring();
+
   // Final cleanup
   mockManager.cleanupMocks();
 });
