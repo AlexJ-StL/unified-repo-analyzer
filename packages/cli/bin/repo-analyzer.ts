@@ -12,5 +12,5 @@
 // Process is already declared globally
 
 void (async () => {
-  await import('../dist/index.js');
+  await import("../dist/index.js");
 })();
