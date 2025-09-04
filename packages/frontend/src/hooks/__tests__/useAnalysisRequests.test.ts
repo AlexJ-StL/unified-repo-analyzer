@@ -1,12 +1,12 @@
-import { act, renderHook } from "@testing-library/react";
-import { beforeEach, afterEach, describe, expect, test } from "vitest";
+import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import {
+  cleanupMocks,
   mockFunction,
   mockModule,
   setupMocks,
-  cleanupMocks,
-} from "../../../../../tests/MockManager";
-import { useAnalysisRequests } from "../useAnalysisRequests";
+} from '../../../../../tests/MockManager';
+import { useAnalysisRequests } from '../useAnalysisRequests';
 
 // Create mocked API service functions
 const mockGetAnalysisRequests = mockFunction();
@@ -14,7 +14,7 @@ const mockGetAnalysisRequestStats = mockFunction();
 const mockGetAnalysisRequest = mockFunction();
 
 // Mock the apiService
-mockModule("../../services/api", () => ({
+mockModule('../../services/api', () => ({
   apiService: {
     getAnalysisRequests: mockGetAnalysisRequests,
     getAnalysisRequestStats: mockGetAnalysisRequestStats,
@@ -22,26 +22,26 @@ mockModule("../../services/api", () => ({
   },
 }));
 
-describe("useAnalysisRequests", () => {
+describe('useAnalysisRequests', () => {
   const mockRequests = [
     {
-      id: "1",
-      path: "/test/path1",
+      id: '1',
+      path: '/test/path1',
       options: {},
-      status: "completed",
+      status: 'completed',
       progress: 100,
-      startTime: "2023-01-01T00:00:00Z",
-      endTime: "2023-01-01T00:01:00Z",
+      startTime: '2023-01-01T00:00:00Z',
+      endTime: '2023-01-01T00:01:00Z',
       processingTime: 60000,
     },
     {
-      id: "2",
-      path: "/test/path2",
+      id: '2',
+      path: '/test/path2',
       options: {},
-      status: "processing",
+      status: 'processing',
       progress: 50,
-      startTime: "2023-01-01T00:00:00Z",
-      currentFile: "file2.js",
+      startTime: '2023-01-01T00:00:00Z',
+      currentFile: 'file2.js',
     },
   ];
 
@@ -66,7 +66,7 @@ describe("useAnalysisRequests", () => {
     cleanupMocks();
   });
 
-  test("should fetch requests and stats on mount", async () => {
+  test('should fetch requests and stats on mount', async () => {
     mockGetAnalysisRequests.mockResolvedValue({
       data: mockRequests,
     });
@@ -90,9 +90,9 @@ describe("useAnalysisRequests", () => {
     expect(mockGetAnalysisRequestStats).toHaveBeenCalledWith();
   });
 
-  test("should handle fetch errors", async () => {
-    mockGetAnalysisRequests.mockRejectedValue(new Error("Failed to fetch"));
-    mockGetAnalysisRequestStats.mockRejectedValue(new Error("Failed to fetch"));
+  test('should handle fetch errors', async () => {
+    mockGetAnalysisRequests.mockRejectedValue(new Error('Failed to fetch'));
+    mockGetAnalysisRequestStats.mockRejectedValue(new Error('Failed to fetch'));
 
     const { result } = renderHook(() => useAnalysisRequests());
 
@@ -101,12 +101,12 @@ describe("useAnalysisRequests", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(result.current.error).toBe("Failed to fetch");
+    expect(result.current.error).toBe('Failed to fetch');
     expect(result.current.requests).toEqual([]);
     expect(result.current.stats).toBeNull();
   });
 
-  test("should refresh requests", async () => {
+  test('should refresh requests', async () => {
     mockGetAnalysisRequests
       .mockResolvedValueOnce({
         data: [],
@@ -136,7 +136,7 @@ describe("useAnalysisRequests", () => {
     expect(mockGetAnalysisRequests).toHaveBeenCalledTimes(2);
   });
 
-  test("should fetch a specific request", async () => {
+  test('should fetch a specific request', async () => {
     const mockRequest = mockRequests[0];
     mockGetAnalysisRequest.mockResolvedValue({
       data: mockRequest,
@@ -146,10 +146,10 @@ describe("useAnalysisRequests", () => {
 
     let request: any;
     await act(async () => {
-      request = await result.current.getRequest("1");
+      request = await result.current.getRequest('1');
     });
 
     expect(request).toEqual(mockRequest);
-    expect(mockGetAnalysisRequest).toHaveBeenCalledWith("1");
+    expect(mockGetAnalysisRequest).toHaveBeenCalledWith('1');
   });
 });

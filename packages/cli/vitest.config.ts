@@ -1,14 +1,14 @@
-import { defineConfig } from "vitest/config";
-import path from "path";
+import path from 'node:path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node",
-    setupFiles: ["./src/__tests__/setup.ts"],
+    environment: 'node',
+    setupFiles: ['./src/__tests__/setup.ts'],
     // Ultra-conservative resource limits to prevent system overload
     maxConcurrency: 1,
-    pool: "forks",
+    pool: 'forks',
     poolOptions: {
       forks: {
         singleFork: true,
@@ -24,10 +24,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "../shared/src"),
-      "@backend": path.resolve(__dirname, "../backend/src"),
-      "@frontend": path.resolve(__dirname, "../frontend/src"),
-      "@cli": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, '../shared/src'),
+      '@backend': path.resolve(__dirname, '../backend/src'),
+      '@frontend': path.resolve(__dirname, '../frontend/src'),
+      '@cli': path.resolve(__dirname, './src'),
     },
   },
 });

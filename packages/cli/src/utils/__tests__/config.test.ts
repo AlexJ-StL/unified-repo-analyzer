@@ -2,20 +2,16 @@
  * CLI configuration tests
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
-import {
-  mockManager,
-  createMock,
-  mockFunction,
-} from "../../../../../tests/MockManager";
+import { beforeEach, describe, expect, it } from 'vitest';
+import { createMock, mockFunction, mockManager } from '../../../../../tests/MockManager';
 
-describe("CLI Configuration Tests", () => {
+describe('CLI Configuration Tests', () => {
   beforeEach(() => {
     mockManager.setupMocks();
   });
 
-  describe("Mock Configuration Setup", () => {
-    it("should create configuration mocks", () => {
+  describe('Mock Configuration Setup', () => {
+    it('should create configuration mocks', () => {
       // Mock Conf using MockManager
       const MockConf = mockFunction();
       const mockConfInstance = createMock({
@@ -26,7 +22,7 @@ describe("CLI Configuration Tests", () => {
         clear: mockFunction(),
         size: 0,
         store: {},
-        path: "/mock/path",
+        path: '/mock/path',
       });
 
       MockConf.mockImplementation(() => mockConfInstance);
@@ -40,44 +36,44 @@ describe("CLI Configuration Tests", () => {
       expect(conf.clear).toBeDefined();
       expect(conf.size).toBe(0);
       expect(conf.store).toEqual({});
-      expect(conf.path).toBe("/mock/path");
+      expect(conf.path).toBe('/mock/path');
     });
 
-    it("should mock configuration methods", () => {
+    it('should mock configuration methods', () => {
       const mockGet = mockFunction();
       const mockSet = mockFunction();
 
       const mockConfig = createMock({
-        get: mockGet.mockReturnValue("test-value"),
+        get: mockGet.mockReturnValue('test-value'),
         set: mockSet,
       });
 
       // Test mock behavior
-      const value = mockConfig.get("test-key");
-      expect(value).toBe("test-value");
-      expect(mockGet).toHaveBeenCalledWith("test-key");
+      const value = mockConfig.get('test-key');
+      expect(value).toBe('test-value');
+      expect(mockGet).toHaveBeenCalledWith('test-key');
 
-      mockConfig.set("test-key", "new-value");
-      expect(mockSet).toHaveBeenCalledWith("test-key", "new-value");
+      mockConfig.set('test-key', 'new-value');
+      expect(mockSet).toHaveBeenCalledWith('test-key', 'new-value');
     });
   });
 
-  describe("User Preferences Mock", () => {
-    it("should mock user preferences structure", () => {
+  describe('User Preferences Mock', () => {
+    it('should mock user preferences structure', () => {
       const mockPreferences = {
         general: {
-          theme: "dark",
+          theme: 'dark',
           autoSave: true,
         },
         analysis: {
-          defaultMode: "standard",
+          defaultMode: 'standard',
           maxFiles: 1000,
         },
         llmProvider: {
-          defaultProvider: "claude",
+          defaultProvider: 'claude',
         },
         export: {
-          defaultFormat: "json",
+          defaultFormat: 'json',
         },
       };
 
@@ -87,24 +83,24 @@ describe("CLI Configuration Tests", () => {
       });
 
       // Test preferences retrieval
-      const preferences = mockConfig.get("userPreferences");
+      const preferences = mockConfig.get('userPreferences');
       expect(preferences).toEqual(mockPreferences);
-      expect(preferences.general.theme).toBe("dark");
-      expect(preferences.analysis.defaultMode).toBe("standard");
-      expect(preferences.llmProvider.defaultProvider).toBe("claude");
-      expect(preferences.export.defaultFormat).toBe("json");
+      expect(preferences.general.theme).toBe('dark');
+      expect(preferences.analysis.defaultMode).toBe('standard');
+      expect(preferences.llmProvider.defaultProvider).toBe('claude');
+      expect(preferences.export.defaultFormat).toBe('json');
     });
   });
 
-  describe("Analysis Options Mock", () => {
-    it("should mock analysis options", () => {
+  describe('Analysis Options Mock', () => {
+    it('should mock analysis options', () => {
       const mockAnalysisOptions = {
-        mode: "comprehensive",
+        mode: 'comprehensive',
         maxFiles: 2000,
         maxLinesPerFile: 5000,
         includeLLMAnalysis: true,
-        llmProvider: "gemini",
-        outputFormats: ["json", "markdown"],
+        llmProvider: 'gemini',
+        outputFormats: ['json', 'markdown'],
         includeTree: true,
       };
 
@@ -115,33 +111,33 @@ describe("CLI Configuration Tests", () => {
       });
 
       // Test options retrieval
-      const userPrefs = mockConfig.get("userPreferences");
-      const defaultOpts = mockConfig.get("defaultOptions");
+      const userPrefs = mockConfig.get('userPreferences');
+      const defaultOpts = mockConfig.get('defaultOptions');
 
       expect(userPrefs).toEqual(mockAnalysisOptions);
       expect(defaultOpts).toEqual({});
     });
   });
 
-  describe("Mock Manager Integration", () => {
-    it("should properly use MockManager", () => {
+  describe('Mock Manager Integration', () => {
+    it('should properly use MockManager', () => {
       // Test that MockManager is working
       expect(mockManager).toBeDefined();
-      expect(typeof mockManager.setupMocks).toBe("function");
-      expect(typeof mockManager.cleanupMocks).toBe("function");
+      expect(typeof mockManager.setupMocks).toBe('function');
+      expect(typeof mockManager.cleanupMocks).toBe('function');
 
       // Test mock creation
       const testMock = mockFunction();
       expect(testMock).toBeDefined();
-      expect(typeof testMock).toBe("function");
+      expect(typeof testMock).toBe('function');
 
       // Test object mocking
       const testObject = createMock({
         testMethod: mockFunction(),
-        testProperty: "test-value",
+        testProperty: 'test-value',
       });
       expect(testObject.testMethod).toBeDefined();
-      expect(testObject.testProperty).toBe("test-value");
+      expect(testObject.testProperty).toBe('test-value');
     });
   });
 });

@@ -1,13 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  type ChangeEvent,
-} from "react";
-import {
-  pathValidationService,
-  type PathValidationResult,
-} from "../../services/pathValidation";
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { type PathValidationResult, pathValidationService } from '../../services/pathValidation';
 
 export interface PathInputProps {
   label: string;
@@ -31,20 +23,17 @@ export function PathInput({
   required = false,
 }: PathInputProps) {
   const [validationState, setValidationState] = useState<
-    "idle" | "validating" | "valid" | "invalid"
-  >("idle");
-  const [validationResult, setValidationResult] =
-    useState<PathValidationResult | null>(null);
+    'idle' | 'validating' | 'valid' | 'invalid'
+  >('idle');
+  const [validationResult, setValidationResult] = useState<PathValidationResult | null>(null);
   const [showHints, setShowHints] = useState(false);
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Debounced validation function
   const validatePath = useCallback(
     async (pathToValidate: string) => {
       if (!pathToValidate.trim()) {
-        setValidationState("idle");
+        setValidationState('idle');
         setValidationResult(null);
         onValidationChange?.(false, {
           isValid: false,
@@ -59,7 +48,7 @@ export function PathInput({
         return;
       }
 
-      setValidationState("validating");
+      setValidationState('validating');
 
       try {
         const result = await pathValidationService.validatePath(
@@ -67,22 +56,21 @@ export function PathInput({
           { timeoutMs },
           (progress) => {
             // Handle progress updates
-            console.log("Validation progress:", progress);
+            console.log('Validation progress:', progress);
           }
         );
 
         setValidationResult(result);
-        setValidationState(result.isValid ? "valid" : "invalid");
+        setValidationState(result.isValid ? 'valid' : 'invalid');
         onValidationChange?.(result.isValid, result);
       } catch (error) {
         const errorResult: PathValidationResult = {
           isValid: false,
           errors: [
             {
-              code: "VALIDATION_ERROR",
-              message:
-                error instanceof Error ? error.message : "Validation failed",
-              suggestions: ["Try a different path", "Check the path format"],
+              code: 'VALIDATION_ERROR',
+              message: error instanceof Error ? error.message : 'Validation failed',
+              suggestions: ['Try a different path', 'Check the path format'],
             },
           ],
           warnings: [],
@@ -94,7 +82,7 @@ export function PathInput({
         };
 
         setValidationResult(errorResult);
-        setValidationState("invalid");
+        setValidationState('invalid');
         onValidationChange?.(false, errorResult);
       }
     },
@@ -136,14 +124,14 @@ export function PathInput({
   // Get CSS classes based on validation state
   const getInputClasses = () => {
     const baseClasses =
-      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
+      'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
 
     switch (validationState) {
-      case "validating":
+      case 'validating':
         return `${baseClasses} border-yellow-300 bg-yellow-50`;
-      case "valid":
+      case 'valid':
         return `${baseClasses} border-green-300 bg-green-50`;
-      case "invalid":
+      case 'invalid':
         return `${baseClasses} border-red-300 bg-red-50`;
       default:
         return `${baseClasses} border-gray-300`;
@@ -161,10 +149,7 @@ export function PathInput({
 
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={`path-${label}`}
-        className="block text-sm font-medium text-gray-700"
-      >
+      <label htmlFor={`path-${label}`} className="block text-sm font-medium text-gray-700">
         {label}
         {required && (
           <span aria-label="required" className="text-red-500 ml-1">
@@ -200,7 +185,7 @@ export function PathInput({
               type="button"
               onClick={handleManualValidation}
               className="text-sm text-blue-600 hover:text-blue-800 focus:outline-none"
-              disabled={validationState === "validating"}
+              disabled={validationState === 'validating'}
             >
               Validate Path
             </button>
@@ -208,7 +193,6 @@ export function PathInput({
 
           <button
             type="button"
-            role="button"
             aria-label="browse"
             className="text-sm text-gray-600 hover:text-gray-800 focus:outline-none"
           >
@@ -218,40 +202,33 @@ export function PathInput({
       </div>
 
       {/* Validation Status */}
-      {validationState === "validating" && (
-        <div className="text-sm text-yellow-600">
-          Starting path validation...
-        </div>
+      {validationState === 'validating' && (
+        <div className="text-sm text-yellow-600">Starting path validation...</div>
       )}
 
-      {validationState === "valid" && validationResult && (
+      {validationState === 'valid' && validationResult && (
         <div className="text-sm text-green-600">
           Path is valid
-          {validationResult.normalizedPath &&
-            validationResult.normalizedPath !== value && (
-              <div className="text-xs text-gray-500">
-                normalized: {validationResult.normalizedPath}
-              </div>
-            )}
+          {validationResult.normalizedPath && validationResult.normalizedPath !== value && (
+            <div className="text-xs text-gray-500">
+              normalized: {validationResult.normalizedPath}
+            </div>
+          )}
         </div>
       )}
 
-      {validationState === "invalid" && validationResult && (
+      {validationState === 'invalid' && validationResult && (
         <div className="text-sm text-red-600">
           <div className="font-medium">Path validation failed</div>
           {validationResult.errors.map((error, index) => (
             <div key={index} className="mt-1">
               <div className="font-medium">{error.code}</div>
               <div>{error.message}</div>
-              {error.suggestions &&
-                error.suggestions.map((suggestion, suggestionIndex) => (
-                  <div
-                    key={suggestionIndex}
-                    className="text-xs text-gray-600 ml-2"
-                  >
-                    • {suggestion}
-                  </div>
-                ))}
+              {error.suggestions?.map((suggestion, suggestionIndex) => (
+                <div key={suggestionIndex} className="text-xs text-gray-600 ml-2">
+                  • {suggestion}
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -260,9 +237,7 @@ export function PathInput({
       {/* Format Hints */}
       {showFormatHints && showHints && (
         <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-sm">
-          <div className="font-medium text-blue-800 mb-2">
-            {formatHints.platform} Path Format
-          </div>
+          <div className="font-medium text-blue-800 mb-2">{formatHints.platform} Path Format</div>
 
           <div className="mb-2">
             <div className="font-medium text-blue-700">Examples:</div>

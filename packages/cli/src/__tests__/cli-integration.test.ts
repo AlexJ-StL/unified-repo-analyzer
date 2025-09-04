@@ -1,11 +1,7 @@
-import { beforeEach, describe, expect, test, afterAll } from "vitest";
-import {
-  mockManager,
-  createMock,
-  mockFunction,
-} from "../../../../tests/MockManager";
+import { afterAll, beforeEach, describe, expect, test } from 'vitest';
+import { createMock, mockFunction, mockManager } from '../../../../tests/MockManager';
 
-describe("CLI Integration Tests", () => {
+describe('CLI Integration Tests', () => {
   beforeEach(() => {
     mockManager.setupMocks();
   });
@@ -14,35 +10,35 @@ describe("CLI Integration Tests", () => {
     mockManager.cleanupMocks();
   });
 
-  describe("Mock Manager Integration", () => {
-    test("should properly setup and cleanup mocks", () => {
+  describe('Mock Manager Integration', () => {
+    test('should properly setup and cleanup mocks', () => {
       // Test that MockManager is working
       expect(mockManager).toBeDefined();
-      expect(typeof mockManager.setupMocks).toBe("function");
-      expect(typeof mockManager.cleanupMocks).toBe("function");
+      expect(typeof mockManager.setupMocks).toBe('function');
+      expect(typeof mockManager.cleanupMocks).toBe('function');
 
       // Test that mocks are created
       const testMock = mockFunction();
       expect(testMock).toBeDefined();
-      expect(typeof testMock).toBe("function");
+      expect(typeof testMock).toBe('function');
 
       // Test that createMock works
       const testObject = createMock({
         testMethod: mockFunction(),
-        testProperty: "test-value",
+        testProperty: 'test-value',
       });
       expect(testObject.testMethod).toBeDefined();
-      expect(testObject.testProperty).toBe("test-value");
+      expect(testObject.testProperty).toBe('test-value');
     });
   });
 
-  describe("API Client Mock Setup", () => {
-    test("should create API client mock", () => {
+  describe('API Client Mock Setup', () => {
+    test('should create API client mock', () => {
       const MockApiClient = mockFunction();
       const mockAnalyzeRepository = mockFunction().mockResolvedValue({
-        id: "test-id",
-        name: "test-repo",
-        language: "TypeScript",
+        id: 'test-id',
+        name: 'test-repo',
+        language: 'TypeScript',
       });
 
       const mockApiClientInstance = createMock({
@@ -54,12 +50,12 @@ describe("CLI Integration Tests", () => {
       // Test mock setup
       const apiClient = MockApiClient();
       expect(apiClient.analyzeRepository).toBeDefined();
-      expect(typeof apiClient.analyzeRepository).toBe("function");
+      expect(typeof apiClient.analyzeRepository).toBe('function');
     });
   });
 
-  describe("Progress Tracker Mock Setup", () => {
-    test("should create progress tracker mock", () => {
+  describe('Progress Tracker Mock Setup', () => {
+    test('should create progress tracker mock', () => {
       const MockProgressTracker = mockFunction();
       const mockStart = mockFunction();
       const mockSucceed = mockFunction();
@@ -84,14 +80,14 @@ describe("CLI Integration Tests", () => {
     });
   });
 
-  describe("File System Mock Setup", () => {
-    test("should create file system mocks", () => {
+  describe('File System Mock Setup', () => {
+    test('should create file system mocks', () => {
       const mockFs = createMock({
         existsSync: mockFunction().mockReturnValue(true),
         writeFileSync: mockFunction(),
         readdirSync: mockFunction().mockReturnValue([
-          { name: "repo1", isDirectory: () => true },
-          { name: "repo2", isDirectory: () => true },
+          { name: 'repo1', isDirectory: () => true },
+          { name: 'repo2', isDirectory: () => true },
         ]),
       });
 
@@ -101,13 +97,13 @@ describe("CLI Integration Tests", () => {
       expect(mockFs.readdirSync).toBeDefined();
 
       // Test mock behavior
-      const exists = mockFs.existsSync("/test/path");
+      const exists = mockFs.existsSync('/test/path');
       expect(exists).toBe(true);
 
-      const dirContents = mockFs.readdirSync("/test/dir");
+      const dirContents = mockFs.readdirSync('/test/dir');
       expect(dirContents).toEqual([
-        { name: "repo1", isDirectory: expect.any(Function) },
-        { name: "repo2", isDirectory: expect.any(Function) },
+        { name: 'repo1', isDirectory: expect.any(Function) },
+        { name: 'repo2', isDirectory: expect.any(Function) },
       ]);
     });
   });

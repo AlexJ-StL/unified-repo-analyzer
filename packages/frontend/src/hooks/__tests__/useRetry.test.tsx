@@ -1,21 +1,21 @@
-import { describe, expect, it, vi } from "vitest";
-import { useRetry } from "../useRetry";
+import { describe, expect, it } from 'vitest';
+import { useRetry } from '../useRetry';
 
 // Simple unit tests for the retry logic
-describe("useRetry", () => {
-  it("should be defined", () => {
+describe('useRetry', () => {
+  it('should be defined', () => {
     expect(useRetry).toBeDefined();
-    expect(typeof useRetry).toBe("function");
+    expect(typeof useRetry).toBe('function');
   });
 
-  it("should return an object with expected properties", () => {
+  it('should return an object with expected properties', () => {
     // This is a basic test to ensure the hook structure is correct
     // In a real application, you would test this with proper React testing utilities
     // and proper mocking setup
     expect(true).toBe(true); // Placeholder test - hook exists and is callable
   });
 
-  it("should handle retry options", () => {
+  it('should handle retry options', () => {
     const options = {
       maxAttempts: 3,
       delay: 1000,
@@ -28,7 +28,7 @@ describe("useRetry", () => {
     expect(options.backoffMultiplier).toBe(2);
   });
 
-  it("should handle retry state structure", () => {
+  it('should handle retry state structure', () => {
     const retryState = {
       isRetrying: false,
       attempt: 0,
@@ -40,9 +40,8 @@ describe("useRetry", () => {
     expect(retryState.lastError).toBe(null);
   });
 
-  it("should handle sleep function", async () => {
-    const sleep = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
+  it('should handle sleep function', async () => {
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const start = Date.now();
     await sleep(10);
@@ -51,10 +50,10 @@ describe("useRetry", () => {
     expect(end - start).toBeGreaterThanOrEqual(10);
   });
 
-  it("should handle error scenarios", () => {
-    const error = new Error("Test error");
+  it('should handle error scenarios', () => {
+    const error = new Error('Test error');
 
     expect(error).toBeInstanceOf(Error);
-    expect(error.message).toBe("Test error");
+    expect(error.message).toBe('Test error');
   });
 });

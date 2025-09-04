@@ -1,11 +1,11 @@
-import { defineConfig } from "vitest/config";
-import { resolve } from "node:path";
+import { resolve } from 'node:path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
 
     // Enhanced mocking support
     mockReset: true,
@@ -25,11 +25,11 @@ export default defineConfig({
     // Reduced retry for faster feedback
     retry: process.env.CI ? 1 : 0,
     reporters: process.env.CI
-      ? [["default", { summary: false }], "junit"]
-      : [["default", { summary: true }]],
+      ? [['default', { summary: false }], 'junit']
+      : [['default', { summary: true }]],
 
     // CRITICAL: Ultra-conservative concurrency limits
-    pool: "forks",
+    pool: 'forks',
     poolOptions: {
       forks: {
         singleFork: true,
@@ -46,31 +46,31 @@ export default defineConfig({
     sequence: {
       shuffle: false,
       concurrent: false,
-      setupFiles: "list",
+      setupFiles: 'list',
     },
 
     // Fail fast to prevent runaway processes
     bail: 1,
-    logHeapUsage: process.env.DEBUG_MEMORY === "true",
+    logHeapUsage: process.env.DEBUG_MEMORY === 'true',
     dangerouslyIgnoreUnhandledErrors: false,
 
     // Exclude performance test directories and temp files
     exclude: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.{idea,git,cache,output,temp}/**",
-      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
-      "**/temp-test-repos/**",
-      "**/large-performance-test/**",
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
+      '**/temp-test-repos/**',
+      '**/large-performance-test/**',
     ],
   },
 
   resolve: {
     alias: {
-      "@": resolve(__dirname, "../../packages/shared/src"),
-      "@backend": resolve(__dirname, "../../packages/backend/src"),
-      "@frontend": resolve(__dirname, "./src"),
-      "@cli": resolve(__dirname, "../../packages/cli/src"),
+      '@': resolve(__dirname, '../../packages/shared/src'),
+      '@backend': resolve(__dirname, '../../packages/backend/src'),
+      '@frontend': resolve(__dirname, './src'),
+      '@cli': resolve(__dirname, '../../packages/cli/src'),
     },
   },
 });
