@@ -10,11 +10,11 @@ import { existsSync } from 'node:fs';
 
 async function runSelectiveTests() {
   console.log('🎯 Running selective tests based on changes...');
-  
+
   try {
     // Get changed files
     let changedFiles: string[] = [];
-    
+
     try {
       const gitOutput = execSync('git diff --name-only HEAD~1', {
         encoding: 'utf-8',
@@ -25,7 +25,7 @@ async function runSelectiveTests() {
       console.log('⚠️ Could not detect git changes, running all tests');
       changedFiles = [];
     }
-    
+
     if (changedFiles.length === 0) {
       console.log('📝 No changes detected, running minimal test set');
       execSync('bun test --maxConcurrency=1', {
@@ -34,24 +34,24 @@ async function runSelectiveTests() {
       });
       return;
     }
-    
+
     console.log(`📁 Found ${changedFiles.length} changed files`);
-    
+
     // Find related test files
     const testFiles: string[] = [];
-    
+
     for (const file of changedFiles) {
       // Direct test files
       if (file.match(/\.(test|spec)\.(ts|tsx|js|jsx)$/)) {
         testFiles.push(file);
       }
-      
+
       // Find corresponding test files
       const testFile = file.replace(/\.(ts|tsx|js|jsx)$/, '.test.$1');
       if (existsSync(testFile)) {
         testFiles.push(testFile);
       }
-      
+
       // Package-level tests
       const packageMatch = file.match(/packages\/([^/]+)/);
       if (packageMatch) {
@@ -68,9 +68,9 @@ async function runSelectiveTests() {
         }
       }
     }
-    
+
     const uniqueTestFiles = [...new Set(testFiles)];
-    
+
     if (uniqueTestFiles.length === 0) {
       console.log('🔍 No specific tests found, running fast subset');
       execSync('bun test --maxConcurrency=1', {
@@ -85,11 +85,9 @@ async function runSelectiveTests() {
         timeout: 60000,
       });
     }
-    
+
     console.log('✅ Selective tests completed');
-    
-  } catch (error) {
-    console.error('❌ Selective test execution failed:', error);
+  } catch (_error) {
     process.exit(1);
   }
 }

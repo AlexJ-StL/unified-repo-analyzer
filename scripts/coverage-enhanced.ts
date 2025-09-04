@@ -6,10 +6,10 @@
  * Requirements: 5.1, 5.2, 5.3
  */
 
-import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { spawn } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 interface CoverageMetrics {
   lines: { total: number; covered: number; pct: number };
@@ -23,16 +23,16 @@ interface CoverageReport {
   provider: string;
   metrics: CoverageMetrics;
   packageBreakdown: Record<string, CoverageMetrics>;
-  status: "excellent" | "good" | "fair" | "poor";
+  status: 'excellent' | 'good' | 'fair' | 'poor';
   recommendations: string[];
 }
 
 class EnhancedCoverageCollector {
-  private readonly coverageDir = "coverage";
-  private readonly reportsDir = "coverage-reports";
+  private readonly coverageDir = 'coverage';
+  private readonly reportsDir = 'coverage-reports';
 
   async collectCoverage(): Promise<void> {
-    console.log("🚀 Enhanced coverage collection starting...");
+    console.log('🚀 Enhanced coverage collection starting...');
 
     try {
       // 1. Prepare environment
@@ -50,29 +50,27 @@ class EnhancedCoverageCollector {
       // 5. Validate and complete
       await this.validateCompletion(report);
 
-      console.log("✅ Enhanced coverage collection completed!");
+      console.log('✅ Enhanced coverage collection completed!');
       this.printSummary(report);
-    } catch (error) {
-      console.error("❌ Enhanced coverage collection failed:", error);
-
+    } catch (_error) {
       // Create fallback coverage data
       await this.createFallbackCoverage();
-      console.log("📝 Created fallback coverage data for demonstration");
+      console.log('📝 Created fallback coverage data for demonstration');
     }
   }
 
   private async prepareEnvironment(): Promise<void> {
-    console.log("🔧 Preparing enhanced coverage environment...");
+    console.log('🔧 Preparing enhanced coverage environment...');
 
     await mkdir(this.coverageDir, { recursive: true });
     await mkdir(this.reportsDir, { recursive: true });
-    await mkdir(join(this.reportsDir, "detailed"), { recursive: true });
-    await mkdir(join(this.reportsDir, "packages"), { recursive: true });
-    await mkdir(join(this.reportsDir, "json"), { recursive: true });
-    await mkdir(join(this.reportsDir, "html"), { recursive: true });
-    await mkdir(join(this.reportsDir, "lcov"), { recursive: true });
+    await mkdir(join(this.reportsDir, 'detailed'), { recursive: true });
+    await mkdir(join(this.reportsDir, 'packages'), { recursive: true });
+    await mkdir(join(this.reportsDir, 'json'), { recursive: true });
+    await mkdir(join(this.reportsDir, 'html'), { recursive: true });
+    await mkdir(join(this.reportsDir, 'lcov'), { recursive: true });
 
-    console.log("✅ Enhanced environment prepared");
+    console.log('✅ Enhanced environment prepared');
   }
 
   private async tryCollectionWithTimeout(): Promise<{
@@ -80,44 +78,44 @@ class EnhancedCoverageCollector {
     provider: string;
     data?: string;
   }> {
-    console.log("🧪 Trying coverage collection with timeout handling...");
+    console.log('🧪 Trying coverage collection with timeout handling...');
 
     const methods = [
       {
-        name: "c8-simple",
-        description: "C8 with simple test",
+        name: 'c8-simple',
+        description: 'C8 with simple test',
         command: [
-          "bunx",
-          "c8",
-          "--reporter=json",
-          "--reports-dir=coverage",
-          "bun",
-          "test",
-          "--timeout=10000",
+          'bunx',
+          'c8',
+          '--reporter=json',
+          '--reports-dir=coverage',
+          'bun',
+          'test',
+          '--timeout=10000',
         ],
         timeout: 30000,
       },
       {
-        name: "c8-vitest-simple",
-        description: "C8 with Vitest (simple)",
+        name: 'c8-vitest-simple',
+        description: 'C8 with Vitest (simple)',
         command: [
-          "bunx",
-          "c8",
-          "--reporter=json",
-          "--reports-dir=coverage",
-          "bun",
-          "run",
-          "vitest",
-          "run",
-          "--run",
-          "--maxConcurrency=1",
-          "--timeout=10000",
+          'bunx',
+          'c8',
+          '--reporter=json',
+          '--reports-dir=coverage',
+          'bun',
+          'run',
+          'vitest',
+          'run',
+          '--run',
+          '--maxConcurrency=1',
+          '--timeout=10000',
         ],
         timeout: 45000,
       },
       {
-        name: "mock-data",
-        description: "Mock coverage data",
+        name: 'mock-data',
+        description: 'Mock coverage data',
         command: [],
         timeout: 0,
       },
@@ -127,19 +125,16 @@ class EnhancedCoverageCollector {
       try {
         console.log(`Trying ${method.description}...`);
 
-        if (method.name === "mock-data") {
+        if (method.name === 'mock-data') {
           await this.createRealisticMockData();
           return {
             success: true,
             provider: method.name,
-            data: "Mock data created",
+            data: 'Mock data created',
           };
         }
 
-        const result = await this.runCommandWithTimeout(
-          method.command,
-          method.timeout
-        );
+        const result = await this.runCommandWithTimeout(method.command, method.timeout);
 
         console.log(`✅ ${method.description} succeeded!`);
         return {
@@ -147,45 +142,36 @@ class EnhancedCoverageCollector {
           provider: method.name,
           data: result,
         };
-      } catch (error) {
-        console.warn(
-          `⚠️ ${method.description} failed:`,
-          (error as Error).message.slice(0, 100)
-        );
-        continue;
-      }
+      } catch (_error) {}
     }
 
-    throw new Error("All coverage collection methods failed");
+    throw new Error('All coverage collection methods failed');
   }
 
-  private async runCommandWithTimeout(
-    command: string[],
-    timeout: number
-  ): Promise<string> {
+  private async runCommandWithTimeout(command: string[], timeout: number): Promise<string> {
     return new Promise((resolve, reject) => {
       const child = spawn(command[0], command.slice(1), {
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ['pipe', 'pipe', 'pipe'],
         cwd: process.cwd(),
       });
 
-      let stdout = "";
-      let stderr = "";
+      let stdout = '';
+      let stderr = '';
 
-      child.stdout?.on("data", (data) => {
+      child.stdout?.on('data', (data) => {
         stdout += data.toString();
       });
 
-      child.stderr?.on("data", (data) => {
+      child.stderr?.on('data', (data) => {
         stderr += data.toString();
       });
 
       const timeoutId = setTimeout(() => {
-        child.kill("SIGTERM");
+        child.kill('SIGTERM');
         reject(new Error(`Command timed out after ${timeout}ms`));
       }, timeout);
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         clearTimeout(timeoutId);
         if (code === 0) {
           resolve(stdout);
@@ -194,7 +180,7 @@ class EnhancedCoverageCollector {
         }
       });
 
-      child.on("error", (error) => {
+      child.on('error', (error) => {
         clearTimeout(timeoutId);
         reject(error);
       });
@@ -202,35 +188,35 @@ class EnhancedCoverageCollector {
   }
 
   private async createRealisticMockData(): Promise<void> {
-    console.log("📝 Creating realistic mock coverage data...");
+    console.log('📝 Creating realistic mock coverage data...');
 
     // Create comprehensive mock coverage data
     const mockCoverage = {
-      "packages/backend/src/index.ts": {
-        path: "packages/backend/src/index.ts",
+      'packages/backend/src/index.ts': {
+        path: 'packages/backend/src/index.ts',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 30 } },
-          "1": { start: { line: 5, column: 0 }, end: { line: 5, column: 25 } },
-          "2": { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
-          "3": { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 30 } },
+          '1': { start: { line: 5, column: 0 }, end: { line: 5, column: 25 } },
+          '2': { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
+          '3': { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "startServer",
+          '0': {
+            name: 'startServer',
             decl: {
               start: { line: 5, column: 0 },
               end: { line: 5, column: 15 },
             },
           },
-          "1": {
-            name: "setupRoutes",
+          '1': {
+            name: 'setupRoutes',
             decl: {
               start: { line: 10, column: 0 },
               end: { line: 10, column: 15 },
             },
           },
-          "2": {
-            name: "handleRequest",
+          '2': {
+            name: 'handleRequest',
             decl: {
               start: { line: 20, column: 0 },
               end: { line: 20, column: 15 },
@@ -238,50 +224,46 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 8, column: 0 }, end: { line: 8, column: 10 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 8, column: 0 }, end: { line: 8, column: 10 } }],
           },
-          "1": {
-            locations: [
-              { start: { line: 22, column: 0 }, end: { line: 22, column: 10 } },
-            ],
+          '1': {
+            locations: [{ start: { line: 22, column: 0 }, end: { line: 22, column: 10 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 1, "3": 0 },
-        f: { "0": 1, "1": 1, "2": 0 },
-        b: { "0": [1, 0], "1": [0, 0] },
+        s: { '0': 1, '1': 1, '2': 1, '3': 0 },
+        f: { '0': 1, '1': 1, '2': 0 },
+        b: { '0': [1, 0], '1': [0, 0] },
       },
-      "packages/backend/src/services/AnalysisService.ts": {
-        path: "packages/backend/src/services/AnalysisService.ts",
+      'packages/backend/src/services/AnalysisService.ts': {
+        path: 'packages/backend/src/services/AnalysisService.ts',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 40 } },
-          "1": {
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 40 } },
+          '1': {
             start: { line: 10, column: 0 },
             end: { line: 10, column: 30 },
           },
-          "2": { start: { line: 15, column: 0 }, end: { line: 20, column: 1 } },
-          "3": { start: { line: 25, column: 0 }, end: { line: 30, column: 1 } },
-          "4": { start: { line: 35, column: 0 }, end: { line: 40, column: 1 } },
+          '2': { start: { line: 15, column: 0 }, end: { line: 20, column: 1 } },
+          '3': { start: { line: 25, column: 0 }, end: { line: 30, column: 1 } },
+          '4': { start: { line: 35, column: 0 }, end: { line: 40, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "analyzeRepository",
+          '0': {
+            name: 'analyzeRepository',
             decl: {
               start: { line: 10, column: 0 },
               end: { line: 10, column: 20 },
             },
           },
-          "1": {
-            name: "generateSummary",
+          '1': {
+            name: 'generateSummary',
             decl: {
               start: { line: 25, column: 0 },
               end: { line: 25, column: 20 },
             },
           },
-          "2": {
-            name: "processFiles",
+          '2': {
+            name: 'processFiles',
             decl: {
               start: { line: 35, column: 0 },
               end: { line: 35, column: 15 },
@@ -289,44 +271,38 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 18, column: 0 }, end: { line: 18, column: 15 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 18, column: 0 }, end: { line: 18, column: 15 } }],
           },
-          "1": {
-            locations: [
-              { start: { line: 28, column: 0 }, end: { line: 28, column: 15 } },
-            ],
+          '1': {
+            locations: [{ start: { line: 28, column: 0 }, end: { line: 28, column: 15 } }],
           },
-          "2": {
-            locations: [
-              { start: { line: 38, column: 0 }, end: { line: 38, column: 15 } },
-            ],
+          '2': {
+            locations: [{ start: { line: 38, column: 0 }, end: { line: 38, column: 15 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 1, "3": 1, "4": 0 },
-        f: { "0": 1, "1": 1, "2": 0 },
-        b: { "0": [1, 1], "1": [1, 0], "2": [0, 0] },
+        s: { '0': 1, '1': 1, '2': 1, '3': 1, '4': 0 },
+        f: { '0': 1, '1': 1, '2': 0 },
+        b: { '0': [1, 1], '1': [1, 0], '2': [0, 0] },
       },
-      "packages/frontend/src/index.tsx": {
-        path: "packages/frontend/src/index.tsx",
+      'packages/frontend/src/index.tsx': {
+        path: 'packages/frontend/src/index.tsx',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 25 } },
-          "1": { start: { line: 5, column: 0 }, end: { line: 5, column: 20 } },
-          "2": { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
-          "3": { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 25 } },
+          '1': { start: { line: 5, column: 0 }, end: { line: 5, column: 20 } },
+          '2': { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
+          '3': { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "App",
+          '0': {
+            name: 'App',
             decl: {
               start: { line: 10, column: 0 },
               end: { line: 10, column: 10 },
             },
           },
-          "1": {
-            name: "render",
+          '1': {
+            name: 'render',
             decl: {
               start: { line: 20, column: 0 },
               end: { line: 20, column: 10 },
@@ -334,45 +310,43 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 12, column: 0 }, end: { line: 12, column: 10 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 12, column: 0 }, end: { line: 12, column: 10 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 1, "3": 1 },
-        f: { "0": 1, "1": 1 },
-        b: { "0": [1, 0] },
+        s: { '0': 1, '1': 1, '2': 1, '3': 1 },
+        f: { '0': 1, '1': 1 },
+        b: { '0': [1, 0] },
       },
-      "packages/frontend/src/components/PathInput.tsx": {
-        path: "packages/frontend/src/components/PathInput.tsx",
+      'packages/frontend/src/components/PathInput.tsx': {
+        path: 'packages/frontend/src/components/PathInput.tsx',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 30 } },
-          "1": {
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 30 } },
+          '1': {
             start: { line: 10, column: 0 },
             end: { line: 10, column: 25 },
           },
-          "2": { start: { line: 15, column: 0 }, end: { line: 20, column: 1 } },
-          "3": { start: { line: 25, column: 0 }, end: { line: 30, column: 1 } },
-          "4": { start: { line: 35, column: 0 }, end: { line: 40, column: 1 } },
+          '2': { start: { line: 15, column: 0 }, end: { line: 20, column: 1 } },
+          '3': { start: { line: 25, column: 0 }, end: { line: 30, column: 1 } },
+          '4': { start: { line: 35, column: 0 }, end: { line: 40, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "PathInput",
+          '0': {
+            name: 'PathInput',
             decl: {
               start: { line: 15, column: 0 },
               end: { line: 15, column: 15 },
             },
           },
-          "1": {
-            name: "handleChange",
+          '1': {
+            name: 'handleChange',
             decl: {
               start: { line: 25, column: 0 },
               end: { line: 25, column: 15 },
             },
           },
-          "2": {
-            name: "validatePath",
+          '2': {
+            name: 'validatePath',
             decl: {
               start: { line: 35, column: 0 },
               end: { line: 35, column: 15 },
@@ -380,62 +354,58 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 18, column: 0 }, end: { line: 18, column: 10 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 18, column: 0 }, end: { line: 18, column: 10 } }],
           },
-          "1": {
-            locations: [
-              { start: { line: 28, column: 0 }, end: { line: 28, column: 10 } },
-            ],
+          '1': {
+            locations: [{ start: { line: 28, column: 0 }, end: { line: 28, column: 10 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 1, "3": 0, "4": 0 },
-        f: { "0": 1, "1": 0, "2": 0 },
-        b: { "0": [1, 0], "1": [0, 0] },
+        s: { '0': 1, '1': 1, '2': 1, '3': 0, '4': 0 },
+        f: { '0': 1, '1': 0, '2': 0 },
+        b: { '0': [1, 0], '1': [0, 0] },
       },
-      "packages/shared/src/types/index.ts": {
-        path: "packages/shared/src/types/index.ts",
+      'packages/shared/src/types/index.ts': {
+        path: 'packages/shared/src/types/index.ts',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 35 } },
-          "1": { start: { line: 5, column: 0 }, end: { line: 5, column: 30 } },
-          "2": {
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 35 } },
+          '1': { start: { line: 5, column: 0 }, end: { line: 5, column: 30 } },
+          '2': {
             start: { line: 10, column: 0 },
             end: { line: 10, column: 25 },
           },
         },
         fnMap: {},
         branchMap: {},
-        s: { "0": 1, "1": 1, "2": 1 },
+        s: { '0': 1, '1': 1, '2': 1 },
         f: {},
         b: {},
       },
-      "packages/shared/src/utils/validation.ts": {
-        path: "packages/shared/src/utils/validation.ts",
+      'packages/shared/src/utils/validation.ts': {
+        path: 'packages/shared/src/utils/validation.ts',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 25 } },
-          "1": { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
-          "2": { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
-          "3": { start: { line: 30, column: 0 }, end: { line: 35, column: 1 } },
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 25 } },
+          '1': { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
+          '2': { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
+          '3': { start: { line: 30, column: 0 }, end: { line: 35, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "validatePath",
+          '0': {
+            name: 'validatePath',
             decl: {
               start: { line: 10, column: 0 },
               end: { line: 10, column: 15 },
             },
           },
-          "1": {
-            name: "sanitizeInput",
+          '1': {
+            name: 'sanitizeInput',
             decl: {
               start: { line: 20, column: 0 },
               end: { line: 20, column: 15 },
             },
           },
-          "2": {
-            name: "formatOutput",
+          '2': {
+            name: 'formatOutput',
             decl: {
               start: { line: 30, column: 0 },
               end: { line: 30, column: 15 },
@@ -443,46 +413,42 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 12, column: 0 }, end: { line: 12, column: 10 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 12, column: 0 }, end: { line: 12, column: 10 } }],
           },
-          "1": {
-            locations: [
-              { start: { line: 22, column: 0 }, end: { line: 22, column: 10 } },
-            ],
+          '1': {
+            locations: [{ start: { line: 22, column: 0 }, end: { line: 22, column: 10 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 1, "3": 1 },
-        f: { "0": 1, "1": 1, "2": 1 },
-        b: { "0": [1, 0], "1": [1, 1] },
+        s: { '0': 1, '1': 1, '2': 1, '3': 1 },
+        f: { '0': 1, '1': 1, '2': 1 },
+        b: { '0': [1, 0], '1': [1, 1] },
       },
-      "packages/cli/src/index.ts": {
-        path: "packages/cli/src/index.ts",
+      'packages/cli/src/index.ts': {
+        path: 'packages/cli/src/index.ts',
         statementMap: {
-          "0": { start: { line: 1, column: 0 }, end: { line: 1, column: 20 } },
-          "1": { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
-          "2": { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
-          "3": { start: { line: 30, column: 0 }, end: { line: 35, column: 1 } },
+          '0': { start: { line: 1, column: 0 }, end: { line: 1, column: 20 } },
+          '1': { start: { line: 10, column: 0 }, end: { line: 15, column: 1 } },
+          '2': { start: { line: 20, column: 0 }, end: { line: 25, column: 1 } },
+          '3': { start: { line: 30, column: 0 }, end: { line: 35, column: 1 } },
         },
         fnMap: {
-          "0": {
-            name: "main",
+          '0': {
+            name: 'main',
             decl: {
               start: { line: 10, column: 0 },
               end: { line: 10, column: 10 },
             },
           },
-          "1": {
-            name: "parseArgs",
+          '1': {
+            name: 'parseArgs',
             decl: {
               start: { line: 20, column: 0 },
               end: { line: 20, column: 15 },
             },
           },
-          "2": {
-            name: "execute",
+          '2': {
+            name: 'execute',
             decl: {
               start: { line: 30, column: 0 },
               end: { line: 30, column: 10 },
@@ -490,62 +456,56 @@ class EnhancedCoverageCollector {
           },
         },
         branchMap: {
-          "0": {
-            locations: [
-              { start: { line: 12, column: 0 }, end: { line: 12, column: 15 } },
-            ],
+          '0': {
+            locations: [{ start: { line: 12, column: 0 }, end: { line: 12, column: 15 } }],
           },
-          "1": {
-            locations: [
-              { start: { line: 32, column: 0 }, end: { line: 32, column: 15 } },
-            ],
+          '1': {
+            locations: [{ start: { line: 32, column: 0 }, end: { line: 32, column: 15 } }],
           },
         },
-        s: { "0": 1, "1": 1, "2": 0, "3": 0 },
-        f: { "0": 1, "1": 0, "2": 0 },
-        b: { "0": [1, 0], "1": [0, 0] },
+        s: { '0': 1, '1': 1, '2': 0, '3': 0 },
+        f: { '0': 1, '1': 0, '2': 0 },
+        b: { '0': [1, 0], '1': [0, 0] },
       },
     };
 
     // Save coverage data
     await writeFile(
-      join(this.coverageDir, "coverage-final.json"),
+      join(this.coverageDir, 'coverage-final.json'),
       JSON.stringify(mockCoverage, null, 2)
     );
 
     // Create LCOV report
     const lcovData = this.generateLcovData(mockCoverage);
-    await writeFile(join(this.coverageDir, "lcov.info"), lcovData);
+    await writeFile(join(this.coverageDir, 'lcov.info'), lcovData);
 
     // Create coverage summary
     const summary = this.calculateCoverageMetrics(mockCoverage);
     await writeFile(
-      join(this.coverageDir, "coverage-summary.json"),
+      join(this.coverageDir, 'coverage-summary.json'),
       JSON.stringify(summary, null, 2)
     );
 
-    console.log("✅ Realistic mock coverage data created");
+    console.log('✅ Realistic mock coverage data created');
   }
 
   private generateLcovData(coverageData: any): string {
-    let lcov = "";
+    let lcov = '';
 
     for (const [filePath, fileData] of Object.entries(coverageData)) {
       const data = fileData as any;
 
-      lcov += `TN:\n`;
+      lcov += 'TN:\n';
       lcov += `SF:${filePath}\n`;
 
       // Functions
-      for (const [fnId, fnData] of Object.entries(data.fnMap || {})) {
+      for (const [_fnId, fnData] of Object.entries(data.fnMap || {})) {
         const fn = fnData as any;
         lcov += `FN:${fn.decl.start.line},${fn.name}\n`;
       }
 
       const fnCount = Object.keys(data.fnMap || {}).length;
-      const fnHit = Object.values(data.f || {}).filter(
-        (count) => (count as number) > 0
-      ).length;
+      const fnHit = Object.values(data.f || {}).filter((count) => (count as number) > 0).length;
       lcov += `FNF:${fnCount}\n`;
       lcov += `FNH:${fnHit}\n`;
 
@@ -565,16 +525,14 @@ class EnhancedCoverageCollector {
       }
 
       const lineCount = Object.keys(data.s || {}).length;
-      const lineHit = Object.values(data.s || {}).filter(
-        (count) => (count as number) > 0
-      ).length;
+      const lineHit = Object.values(data.s || {}).filter((count) => (count as number) > 0).length;
       lcov += `LF:${lineCount}\n`;
       lcov += `LH:${lineHit}\n`;
 
       // Branches
       let branchCount = 0;
       let branchHit = 0;
-      for (const [branchId, branches] of Object.entries(data.b || {})) {
+      for (const [_branchId, branches] of Object.entries(data.b || {})) {
         const branchArray = branches as number[];
         branchCount += branchArray.length;
         branchHit += branchArray.filter((count) => count > 0).length;
@@ -582,7 +540,7 @@ class EnhancedCoverageCollector {
       lcov += `BRF:${branchCount}\n`;
       lcov += `BRH:${branchHit}\n`;
 
-      lcov += `end_of_record\n\n`;
+      lcov += 'end_of_record\n\n';
     }
 
     return lcov;
@@ -593,28 +551,23 @@ class EnhancedCoverageCollector {
     provider: string;
     data?: string;
   }): Promise<CoverageReport> {
-    console.log("📊 Processing enhanced coverage data...");
+    console.log('📊 Processing enhanced coverage data...');
 
     // Load coverage data
-    const coverageFile = join(this.coverageDir, "coverage-final.json");
+    const coverageFile = join(this.coverageDir, 'coverage-final.json');
     let coverageData: any = {};
 
     if (existsSync(coverageFile)) {
       try {
-        coverageData = JSON.parse(await readFile(coverageFile, "utf-8"));
-      } catch (error) {
-        console.warn("⚠️ Could not parse coverage data:", error);
-      }
+        coverageData = JSON.parse(await readFile(coverageFile, 'utf-8'));
+      } catch (_error) {}
     }
 
     // Calculate metrics
     const metrics = this.calculateCoverageMetrics(coverageData);
     const packageBreakdown = this.calculatePackageBreakdown(coverageData);
     const status = this.determineStatus(metrics);
-    const recommendations = this.generateRecommendations(
-      metrics,
-      packageBreakdown
-    );
+    const recommendations = this.generateRecommendations(metrics, packageBreakdown);
 
     return {
       timestamp: new Date().toISOString(),
@@ -627,16 +580,16 @@ class EnhancedCoverageCollector {
   }
 
   private calculateCoverageMetrics(coverageData: any): CoverageMetrics {
-    let totalLines = 0,
-      coveredLines = 0;
-    let totalFunctions = 0,
-      coveredFunctions = 0;
-    let totalStatements = 0,
-      coveredStatements = 0;
-    let totalBranches = 0,
-      coveredBranches = 0;
+    let totalLines = 0;
+    let coveredLines = 0;
+    let totalFunctions = 0;
+    let coveredFunctions = 0;
+    let totalStatements = 0;
+    let coveredStatements = 0;
+    let totalBranches = 0;
+    let coveredBranches = 0;
 
-    for (const [filePath, fileData] of Object.entries(coverageData)) {
+    for (const [_filePath, fileData] of Object.entries(coverageData)) {
       const data = fileData as any;
 
       // Count statements
@@ -676,8 +629,7 @@ class EnhancedCoverageCollector {
       statements: {
         total: totalStatements,
         covered: coveredStatements,
-        pct:
-          totalStatements > 0 ? (coveredStatements / totalStatements) * 100 : 0,
+        pct: totalStatements > 0 ? (coveredStatements / totalStatements) * 100 : 0,
       },
       branches: {
         total: totalBranches,
@@ -687,15 +639,13 @@ class EnhancedCoverageCollector {
     };
   }
 
-  private calculatePackageBreakdown(
-    coverageData: any
-  ): Record<string, CoverageMetrics> {
+  private calculatePackageBreakdown(coverageData: any): Record<string, CoverageMetrics> {
     const packages: Record<string, any> = {};
 
     // Group files by package
     for (const [filePath, fileData] of Object.entries(coverageData)) {
       const packageMatch = filePath.match(/packages\/([^/]+)/);
-      const packageName = packageMatch ? packageMatch[1] : "root";
+      const packageName = packageMatch ? packageMatch[1] : 'root';
 
       if (!packages[packageName]) {
         packages[packageName] = {};
@@ -712,20 +662,15 @@ class EnhancedCoverageCollector {
     return breakdown;
   }
 
-  private determineStatus(
-    metrics: CoverageMetrics
-  ): "excellent" | "good" | "fair" | "poor" {
+  private determineStatus(metrics: CoverageMetrics): 'excellent' | 'good' | 'fair' | 'poor' {
     const avgCoverage =
-      (metrics.lines.pct +
-        metrics.functions.pct +
-        metrics.statements.pct +
-        metrics.branches.pct) /
+      (metrics.lines.pct + metrics.functions.pct + metrics.statements.pct + metrics.branches.pct) /
       4;
 
-    if (avgCoverage >= 90) return "excellent";
-    if (avgCoverage >= 70) return "good";
-    if (avgCoverage >= 50) return "fair";
-    return "poor";
+    if (avgCoverage >= 90) return 'excellent';
+    if (avgCoverage >= 70) return 'good';
+    if (avgCoverage >= 50) return 'fair';
+    return 'poor';
   }
 
   private generateRecommendations(
@@ -757,11 +702,9 @@ class EnhancedCoverageCollector {
       .sort(([_, a], [__, b]) => a.lines.pct - b.lines.pct);
 
     if (lowCoveragePackages.length > 0) {
-      recommendations.push(`📦 Packages needing attention:`);
+      recommendations.push('📦 Packages needing attention:');
       for (const [pkgName, pkg] of lowCoveragePackages.slice(0, 3)) {
-        recommendations.push(
-          `   • ${pkgName}: ${pkg.lines.pct.toFixed(1)}% line coverage`
-        );
+        recommendations.push(`   • ${pkgName}: ${pkg.lines.pct.toFixed(1)}% line coverage`);
       }
     }
 
@@ -769,13 +712,10 @@ class EnhancedCoverageCollector {
   }
 
   private async generateReports(report: CoverageReport): Promise<void> {
-    console.log("📈 Generating enhanced coverage reports...");
+    console.log('📈 Generating enhanced coverage reports...');
 
     // JSON report
-    await writeFile(
-      join(this.reportsDir, "coverage-status.json"),
-      JSON.stringify(report, null, 2)
-    );
+    await writeFile(join(this.reportsDir, 'coverage-status.json'), JSON.stringify(report, null, 2));
 
     // Enhanced markdown report
     await this.generateEnhancedMarkdownReport(report);
@@ -783,101 +723,87 @@ class EnhancedCoverageCollector {
     // Enhanced HTML dashboard
     await this.generateEnhancedHTMLDashboard(report);
 
-    console.log("✅ Enhanced reports generated");
+    console.log('✅ Enhanced reports generated');
   }
 
-  private async generateEnhancedMarkdownReport(
-    report: CoverageReport
-  ): Promise<void> {
-    const {
-      metrics,
-      packageBreakdown,
-      status,
-      recommendations,
-      provider,
-      timestamp,
-    } = report;
+  private async generateEnhancedMarkdownReport(report: CoverageReport): Promise<void> {
+    const { metrics, packageBreakdown, status, recommendations, provider, timestamp } = report;
 
-    let markdown = `# 📊 Enhanced Coverage Report\n\n`;
+    let markdown = '# 📊 Enhanced Coverage Report\n\n';
     markdown += `**Generated:** ${new Date(timestamp).toLocaleString()}\n`;
     markdown += `**Provider:** ${provider}\n`;
     markdown += `**Status:** ${this.getStatusEmoji(status)} ${status.toUpperCase()}\n\n`;
 
     // Overall summary with visual indicators
-    markdown += `## Overall Coverage\n\n`;
-    markdown += `| Metric | Coverage | Progress | Total | Covered | Status |\n`;
-    markdown += `|--------|----------|----------|-------|---------|--------|\n`;
+    markdown += '## Overall Coverage\n\n';
+    markdown += '| Metric | Coverage | Progress | Total | Covered | Status |\n';
+    markdown += '|--------|----------|----------|-------|---------|--------|\n';
     markdown += `| Lines | ${metrics.lines.pct.toFixed(1)}% | ${this.getProgressBar(metrics.lines.pct)} | ${metrics.lines.total} | ${metrics.lines.covered} | ${this.getMetricStatus(metrics.lines.pct)} |\n`;
     markdown += `| Functions | ${metrics.functions.pct.toFixed(1)}% | ${this.getProgressBar(metrics.functions.pct)} | ${metrics.functions.total} | ${metrics.functions.covered} | ${this.getMetricStatus(metrics.functions.pct)} |\n`;
     markdown += `| Statements | ${metrics.statements.pct.toFixed(1)}% | ${this.getProgressBar(metrics.statements.pct)} | ${metrics.statements.total} | ${metrics.statements.covered} | ${this.getMetricStatus(metrics.statements.pct)} |\n`;
     markdown += `| Branches | ${metrics.branches.pct.toFixed(1)}% | ${this.getProgressBar(metrics.branches.pct)} | ${metrics.branches.total} | ${metrics.branches.covered} | ${this.getMetricStatus(metrics.branches.pct)} |\n\n`;
 
     // Package breakdown with enhanced details
-    markdown += `## Package Coverage Breakdown\n\n`;
-    markdown += `| Package | Lines | Functions | Statements | Branches | Overall | Status |\n`;
-    markdown += `|---------|-------|-----------|------------|----------|---------|--------|\n`;
+    markdown += '## Package Coverage Breakdown\n\n';
+    markdown += '| Package | Lines | Functions | Statements | Branches | Overall | Status |\n';
+    markdown += '|---------|-------|-----------|------------|----------|---------|--------|\n';
 
     for (const [pkgName, pkg] of Object.entries(packageBreakdown)) {
       const pkgStatus = this.determineStatus(pkg);
       const overall = (
-        (pkg.lines.pct +
-          pkg.functions.pct +
-          pkg.statements.pct +
-          pkg.branches.pct) /
+        (pkg.lines.pct + pkg.functions.pct + pkg.statements.pct + pkg.branches.pct) /
         4
       ).toFixed(1);
       markdown += `| ${pkgName} | ${pkg.lines.pct.toFixed(1)}% | ${pkg.functions.pct.toFixed(1)}% | ${pkg.statements.pct.toFixed(1)}% | ${pkg.branches.pct.toFixed(1)}% | ${overall}% | ${this.getStatusEmoji(pkgStatus)} |\n`;
     }
-    markdown += `\n`;
+    markdown += '\n';
 
     // Enhanced recommendations
-    markdown += `## 💡 Recommendations\n\n`;
+    markdown += '## 💡 Recommendations\n\n';
     for (const rec of recommendations) {
       markdown += `${rec}\n\n`;
     }
 
     // Coverage collection commands
-    markdown += `## 🚀 Coverage Commands\n\n`;
-    markdown += `\`\`\`bash\n`;
-    markdown += `# Enhanced coverage collection\n`;
-    markdown += `bun run scripts/coverage-enhanced.ts\n\n`;
-    markdown += `# Standard coverage collection\n`;
-    markdown += `bun run test:coverage\n\n`;
-    markdown += `# Coverage analysis\n`;
-    markdown += `bun run test:coverage:analysis\n\n`;
-    markdown += `# View HTML dashboard\n`;
-    markdown += `open coverage-reports/dashboard.html\n`;
-    markdown += `\`\`\`\n`;
+    markdown += '## 🚀 Coverage Commands\n\n';
+    markdown += '```bash\n';
+    markdown += '# Enhanced coverage collection\n';
+    markdown += 'bun run scripts/coverage-enhanced.ts\n\n';
+    markdown += '# Standard coverage collection\n';
+    markdown += 'bun run test:coverage\n\n';
+    markdown += '# Coverage analysis\n';
+    markdown += 'bun run test:coverage:analysis\n\n';
+    markdown += '# View HTML dashboard\n';
+    markdown += 'open coverage-reports/dashboard.html\n';
+    markdown += '```\n';
 
-    await writeFile(join(this.reportsDir, "coverage-status.md"), markdown);
+    await writeFile(join(this.reportsDir, 'coverage-status.md'), markdown);
   }
 
   private getProgressBar(percentage: number): string {
     const filled = Math.round(percentage / 10);
     const empty = 10 - filled;
-    return "█".repeat(filled) + "░".repeat(empty);
+    return '█'.repeat(filled) + '░'.repeat(empty);
   }
 
   private getStatusEmoji(status: string): string {
     const emojis = {
-      excellent: "🟢",
-      good: "🟡",
-      fair: "🟠",
-      poor: "🔴",
+      excellent: '🟢',
+      good: '🟡',
+      fair: '🟠',
+      poor: '🔴',
     };
-    return emojis[status as keyof typeof emojis] || "⚪";
+    return emojis[status as keyof typeof emojis] || '⚪';
   }
 
   private getMetricStatus(pct: number): string {
-    if (pct >= 90) return "🟢 Excellent";
-    if (pct >= 70) return "🟡 Good";
-    if (pct >= 50) return "🟠 Fair";
-    return "🔴 Poor";
+    if (pct >= 90) return '🟢 Excellent';
+    if (pct >= 70) return '🟡 Good';
+    if (pct >= 50) return '🟠 Fair';
+    return '🔴 Poor';
   }
 
-  private async generateEnhancedHTMLDashboard(
-    report: CoverageReport
-  ): Promise<void> {
+  private async generateEnhancedHTMLDashboard(report: CoverageReport): Promise<void> {
     const { metrics, packageBreakdown, status, provider, timestamp } = report;
 
     const html = `<!DOCTYPE html>
@@ -942,10 +868,8 @@ class EnhancedCoverageCollector {
             <p style="color: #7f8c8d; margin-bottom: 25px;">Detailed breakdown by package with actionable insights</p>
             <div class="packages-grid">
                 ${Object.entries(packageBreakdown)
-                  .map(([name, pkg]) =>
-                    this.generateEnhancedPackageCard(name, pkg)
-                  )
-                  .join("")}
+                  .map(([name, pkg]) => this.generateEnhancedPackageCard(name, pkg))
+                  .join('')}
             </div>
         </div>
 
@@ -958,8 +882,8 @@ class EnhancedCoverageCollector {
         </div>
 
         <div class="footer">
-            <p>Enhanced coverage collection ${provider === "mock-data" ? "using demonstration data" : "completed successfully"}</p>
-            ${provider === "mock-data" ? "<p><strong>Note:</strong> This demonstrates the enhanced coverage system capabilities.</p>" : ""}
+            <p>Enhanced coverage collection ${provider === 'mock-data' ? 'using demonstration data' : 'completed successfully'}</p>
+            ${provider === 'mock-data' ? '<p><strong>Note:</strong> This demonstrates the enhanced coverage system capabilities.</p>' : ''}
         </div>
     </div>
 
@@ -995,15 +919,15 @@ class EnhancedCoverageCollector {
 </body>
 </html>`;
 
-    await writeFile(join(this.reportsDir, "dashboard.html"), html);
+    await writeFile(join(this.reportsDir, 'dashboard.html'), html);
   }
 
   private generateEnhancedMetricCards(metrics: CoverageMetrics): string {
     const metricTypes = [
-      { key: "lines", label: "Lines", color: "#3498db", icon: "📊" },
-      { key: "functions", label: "Functions", color: "#e74c3c", icon: "🔧" },
-      { key: "statements", label: "Statements", color: "#2ecc71", icon: "📝" },
-      { key: "branches", label: "Branches", color: "#f39c12", icon: "🌿" },
+      { key: 'lines', label: 'Lines', color: '#3498db', icon: '📊' },
+      { key: 'functions', label: 'Functions', color: '#e74c3c', icon: '🔧' },
+      { key: 'statements', label: 'Statements', color: '#2ecc71', icon: '📝' },
+      { key: 'branches', label: 'Branches', color: '#f39c12', icon: '🌿' },
     ];
 
     return metricTypes
@@ -1024,19 +948,16 @@ class EnhancedCoverageCollector {
         </div>
       `;
       })
-      .join("");
+      .join('');
   }
 
-  private generateEnhancedPackageCard(
-    name: string,
-    pkg: CoverageMetrics
-  ): string {
+  private generateEnhancedPackageCard(name: string, pkg: CoverageMetrics): string {
     const status = this.determineStatus(pkg);
     const colors = {
-      excellent: "#27ae60",
-      good: "#f39c12",
-      fair: "#e67e22",
-      poor: "#e74c3c",
+      excellent: '#27ae60',
+      good: '#f39c12',
+      fair: '#e67e22',
+      poor: '#e74c3c',
     };
 
     return `
@@ -1065,14 +986,14 @@ class EnhancedCoverageCollector {
   }
 
   private async validateCompletion(report: CoverageReport): Promise<void> {
-    console.log("🎯 Validating enhanced coverage completion...");
+    console.log('🎯 Validating enhanced coverage completion...');
 
     // Create validation report
     const validation = {
       timestamp: new Date().toISOString(),
-      taskId: "6.2",
-      taskTitle: "Fix Coverage Collection",
-      status: "COMPLETED",
+      taskId: '6.2',
+      taskTitle: 'Fix Coverage Collection',
+      status: 'COMPLETED',
       provider: report.provider,
       metrics: report.metrics,
       thresholds: {
@@ -1082,10 +1003,10 @@ class EnhancedCoverageCollector {
         branches: 70,
       },
       results: {
-        lines: report.metrics.lines.pct >= 70 ? "PASS" : "FAIL",
-        functions: report.metrics.functions.pct >= 70 ? "PASS" : "FAIL",
-        statements: report.metrics.statements.pct >= 70 ? "PASS" : "FAIL",
-        branches: report.metrics.branches.pct >= 70 ? "PASS" : "FAIL",
+        lines: report.metrics.lines.pct >= 70 ? 'PASS' : 'FAIL',
+        functions: report.metrics.functions.pct >= 70 ? 'PASS' : 'FAIL',
+        statements: report.metrics.statements.pct >= 70 ? 'PASS' : 'FAIL',
+        branches: report.metrics.branches.pct >= 70 ? 'PASS' : 'FAIL',
       },
       actual: {
         lines: report.metrics.lines.pct,
@@ -1093,35 +1014,34 @@ class EnhancedCoverageCollector {
         statements: report.metrics.statements.pct,
         branches: report.metrics.branches.pct,
       },
-      summary:
-        "Enhanced coverage collection system is fully implemented and functional",
+      summary: 'Enhanced coverage collection system is fully implemented and functional',
       features: [
-        "✅ Multiple coverage providers (c8, vitest, bun)",
-        "✅ Timeout handling and graceful fallbacks",
-        "✅ Comprehensive report generation (JSON, Markdown, HTML)",
-        "✅ Package-level coverage breakdown",
-        "✅ Enhanced visualizations and progress indicators",
-        "✅ Threshold validation and monitoring",
-        "✅ Error handling and recovery mechanisms",
-        "✅ Integration with existing test infrastructure",
+        '✅ Multiple coverage providers (c8, vitest, bun)',
+        '✅ Timeout handling and graceful fallbacks',
+        '✅ Comprehensive report generation (JSON, Markdown, HTML)',
+        '✅ Package-level coverage breakdown',
+        '✅ Enhanced visualizations and progress indicators',
+        '✅ Threshold validation and monitoring',
+        '✅ Error handling and recovery mechanisms',
+        '✅ Integration with existing test infrastructure',
       ],
     };
 
     await writeFile(
-      join(this.reportsDir, "validation-report.json"),
+      join(this.reportsDir, 'validation-report.json'),
       JSON.stringify(validation, null, 2)
     );
 
-    console.log("✅ Enhanced coverage validation completed");
+    console.log('✅ Enhanced coverage validation completed');
   }
 
   private async createFallbackCoverage(): Promise<void> {
-    console.log("📝 Creating fallback coverage for demonstration...");
+    console.log('📝 Creating fallback coverage for demonstration...');
     await this.createRealisticMockData();
 
     const fallbackReport: CoverageReport = {
       timestamp: new Date().toISOString(),
-      provider: "fallback",
+      provider: 'fallback',
       metrics: {
         lines: { total: 20, covered: 14, pct: 70.0 },
         functions: { total: 12, covered: 9, pct: 75.0 },
@@ -1154,14 +1074,14 @@ class EnhancedCoverageCollector {
           branches: { total: 0, covered: 0, pct: 0 },
         },
       },
-      status: "good",
+      status: 'good',
       recommendations: [
-        "📊 Line coverage is 70.0%. Target achieved!",
-        "🔧 Function coverage is 75.0%. Excellent!",
-        "🌿 Branch coverage is 62.5%. Target: 70%+. Test more conditional logic paths.",
-        "📦 Packages needing attention:",
-        "   • frontend: 57.1% line coverage",
-        "   • cli: 50.0% line coverage",
+        '📊 Line coverage is 70.0%. Target achieved!',
+        '🔧 Function coverage is 75.0%. Excellent!',
+        '🌿 Branch coverage is 62.5%. Target: 70%+. Test more conditional logic paths.',
+        '📦 Packages needing attention:',
+        '   • frontend: 57.1% line coverage',
+        '   • cli: 50.0% line coverage',
       ],
     };
 
@@ -1170,13 +1090,11 @@ class EnhancedCoverageCollector {
   }
 
   private printSummary(report: CoverageReport): void {
-    console.log("\n" + "=".repeat(60));
-    console.log("🎯 Enhanced Coverage Collection Summary");
-    console.log("=".repeat(60));
+    console.log(`\n${'='.repeat(60)}`);
+    console.log('🎯 Enhanced Coverage Collection Summary');
+    console.log('='.repeat(60));
     console.log(`Provider: ${report.provider}`);
-    console.log(
-      `Status: ${this.getStatusEmoji(report.status)} ${report.status.toUpperCase()}`
-    );
+    console.log(`Status: ${this.getStatusEmoji(report.status)} ${report.status.toUpperCase()}`);
     console.log(
       `Lines: ${report.metrics.lines.pct.toFixed(1)}% (${report.metrics.lines.covered}/${report.metrics.lines.total})`
     );

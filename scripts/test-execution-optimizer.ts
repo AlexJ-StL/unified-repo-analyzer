@@ -6,11 +6,11 @@
  * Requirements: 6.1, 6.2, 5.4
  */
 
-import { execSync } from "node:child_process";
-import { existsSync, statSync } from "node:fs";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { join, relative, dirname } from "node:path";
-import { glob } from "glob";
+import { execSync } from 'node:child_process';
+import { existsSync, statSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, join, relative } from 'node:path';
+import { glob } from 'glob';
 
 interface TestFile {
   path: string;
@@ -34,59 +34,47 @@ interface TestBatch {
 interface TestExecutionPlan {
   batches: TestBatch[];
   totalEstimatedDuration: number;
-  strategy: "parallel" | "sequential" | "hybrid";
+  strategy: 'parallel' | 'sequential' | 'hybrid';
   maxConcurrency: number;
 }
 
 interface ChangeDetectionResult {
   changedFiles: string[];
   affectedTests: string[];
-  testSelectionStrategy: "all" | "affected" | "minimal";
+  testSelectionStrategy: 'all' | 'affected' | 'minimal';
 }
 
 class TestExecutionOptimizer {
   private readonly projectRoot = process.cwd();
-  private readonly cacheDir = ".test-cache";
-  private readonly metricsFile = join(this.cacheDir, "test-metrics.json");
-  private readonly dependencyMapFile = join(
-    this.cacheDir,
-    "dependency-map.json"
-  );
+  private readonly cacheDir = '.test-cache';
+  private readonly metricsFile = join(this.cacheDir, 'test-metrics.json');
+  private readonly dependencyMapFile = join(this.cacheDir, 'dependency-map.json');
 
   async optimizeTestExecution(): Promise<void> {
-    console.log("🚀 Optimizing test execution strategy...");
+    console.log('🚀 Optimizing test execution strategy...');
+    // 1. Initialize cache and metrics
+    await this.initializeCache();
 
-    try {
-      // 1. Initialize cache and metrics
-      await this.initializeCache();
+    // 2. Discover and analyze test files
+    const testFiles = await this.discoverTestFiles();
 
-      // 2. Discover and analyze test files
-      const testFiles = await this.discoverTestFiles();
+    // 3. Detect changes and select tests
+    const changeDetection = await this.detectChangesAndSelectTests();
 
-      // 3. Detect changes and select tests
-      const changeDetection = await this.detectChangesAndSelectTests();
+    // 4. Create intelligent test batches
+    const executionPlan = await this.createExecutionPlan(testFiles, changeDetection);
 
-      // 4. Create intelligent test batches
-      const executionPlan = await this.createExecutionPlan(
-        testFiles,
-        changeDetection
-      );
+    // 5. Implement fast feedback loops
+    await this.implementFastFeedbackLoops(executionPlan);
 
-      // 5. Implement fast feedback loops
-      await this.implementFastFeedbackLoops(executionPlan);
+    // 6. Generate optimization report
+    await this.generateOptimizationReport(executionPlan, changeDetection);
 
-      // 6. Generate optimization report
-      await this.generateOptimizationReport(executionPlan, changeDetection);
-
-      console.log("✅ Test execution strategy optimized successfully!");
-    } catch (error) {
-      console.error("❌ Failed to optimize test execution:", error);
-      throw error;
-    }
+    console.log('✅ Test execution strategy optimized successfully!');
   }
 
   private async initializeCache(): Promise<void> {
-    console.log("📁 Initializing test execution cache...");
+    console.log('📁 Initializing test execution cache...');
 
     await mkdir(this.cacheDir, { recursive: true });
 
@@ -98,10 +86,7 @@ class TestExecutionOptimizer {
         lastRun: {},
         averageDurations: {},
       };
-      await writeFile(
-        this.metricsFile,
-        JSON.stringify(initialMetrics, null, 2)
-      );
+      await writeFile(this.metricsFile, JSON.stringify(initialMetrics, null, 2));
     }
 
     // Initialize dependency map if it doesn't exist
@@ -111,23 +96,20 @@ class TestExecutionOptimizer {
         testDependencies: {},
         lastUpdated: new Date().toISOString(),
       };
-      await writeFile(
-        this.dependencyMapFile,
-        JSON.stringify(initialDependencyMap, null, 2)
-      );
+      await writeFile(this.dependencyMapFile, JSON.stringify(initialDependencyMap, null, 2));
     }
 
-    console.log("✅ Cache initialized");
+    console.log('✅ Cache initialized');
   }
 
   private async discoverTestFiles(): Promise<TestFile[]> {
-    console.log("🔍 Discovering and analyzing test files...");
+    console.log('🔍 Discovering and analyzing test files...');
 
     const testPatterns = [
-      "packages/*/src/**/*.test.{ts,tsx,js,jsx}",
-      "packages/*/src/**/*.spec.{ts,tsx,js,jsx}",
-      "tests/**/*.test.{ts,tsx,js,jsx}",
-      "tests/**/*.spec.{ts,tsx,js,jsx}",
+      'packages/*/src/**/*.test.{ts,tsx,js,jsx}',
+      'packages/*/src/**/*.spec.{ts,tsx,js,jsx}',
+      'tests/**/*.test.{ts,tsx,js,jsx}',
+      'tests/**/*.spec.{ts,tsx,js,jsx}',
     ];
 
     const testFiles: TestFile[] = [];
@@ -161,7 +143,7 @@ class TestExecutionOptimizer {
 
   private async analyzeDependencies(testFile: string): Promise<string[]> {
     try {
-      const content = await readFile(testFile, "utf-8");
+      const content = await readFile(testFile, 'utf-8');
       const dependencies: string[] = [];
 
       // Extract import statements
@@ -172,7 +154,7 @@ class TestExecutionOptimizer {
         const importPath = match[1];
 
         // Skip node_modules imports
-        if (!importPath.startsWith(".") && !importPath.startsWith("/")) {
+        if (!importPath.startsWith('.') && !importPath.startsWith('/')) {
           continue;
         }
 
@@ -189,16 +171,13 @@ class TestExecutionOptimizer {
     }
   }
 
-  private resolveImportPath(
-    testFile: string,
-    importPath: string
-  ): string | null {
+  private resolveImportPath(testFile: string, importPath: string): string | null {
     try {
       const testDir = dirname(testFile);
       const resolvedPath = join(testDir, importPath);
 
       // Try different extensions
-      const extensions = [".ts", ".tsx", ".js", ".jsx", ".json"];
+      const extensions = ['.ts', '.tsx', '.js', '.jsx', '.json'];
 
       for (const ext of extensions) {
         const fullPath = resolvedPath + ext;
@@ -235,11 +214,11 @@ class TestExecutionOptimizer {
     let estimation = 500 + sizeKB * 100;
 
     // Adjust based on file type
-    if (testFile.includes("integration") || testFile.includes("e2e")) {
+    if (testFile.includes('integration') || testFile.includes('e2e')) {
       estimation *= 3; // Integration tests are typically slower
     }
 
-    if (testFile.includes("performance")) {
+    if (testFile.includes('performance')) {
       estimation *= 5; // Performance tests are much slower
     }
 
@@ -250,20 +229,18 @@ class TestExecutionOptimizer {
     let priority = 50; // Base priority
 
     // Higher priority for recently modified files
-    const daysSinceModified =
-      (Date.now() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceModified = (Date.now() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
     if (daysSinceModified < 1) priority += 30;
     else if (daysSinceModified < 7) priority += 20;
     else if (daysSinceModified < 30) priority += 10;
 
     // Higher priority for core packages
-    if (testFile.includes("packages/shared")) priority += 20;
-    if (testFile.includes("packages/backend")) priority += 15;
-    if (testFile.includes("packages/frontend")) priority += 10;
+    if (testFile.includes('packages/shared')) priority += 20;
+    if (testFile.includes('packages/backend')) priority += 15;
+    if (testFile.includes('packages/frontend')) priority += 10;
 
     // Lower priority for integration/e2e tests (run them later)
-    if (testFile.includes("integration") || testFile.includes("e2e"))
-      priority -= 20;
+    if (testFile.includes('integration') || testFile.includes('e2e')) priority -= 20;
 
     // Higher priority for smaller, faster tests
     const sizeKB = stats.size / 1024;
@@ -275,11 +252,11 @@ class TestExecutionOptimizer {
 
   private extractPackageName(testFile: string): string {
     const match = testFile.match(/packages\/([^/]+)/);
-    return match ? match[1] : "root";
+    return match ? match[1] : 'root';
   }
 
   private async detectChangesAndSelectTests(): Promise<ChangeDetectionResult> {
-    console.log("🔍 Detecting changes and selecting tests...");
+    console.log('🔍 Detecting changes and selecting tests...');
 
     try {
       // Get changed files from git
@@ -289,19 +266,17 @@ class TestExecutionOptimizer {
       const affectedTests = await this.findAffectedTests(changedFiles);
 
       // Determine selection strategy
-      let strategy: "all" | "affected" | "minimal" = "all";
+      let strategy: 'all' | 'affected' | 'minimal' = 'all';
 
       if (changedFiles.length === 0) {
-        strategy = "minimal"; // No changes, run minimal test set
+        strategy = 'minimal'; // No changes, run minimal test set
       } else if (changedFiles.length < 10 && affectedTests.length < 20) {
-        strategy = "affected"; // Small changes, run affected tests
+        strategy = 'affected'; // Small changes, run affected tests
       } else {
-        strategy = "all"; // Large changes, run all tests
+        strategy = 'all'; // Large changes, run all tests
       }
 
-      console.log(
-        `✅ Change detection complete: ${strategy} strategy selected`
-      );
+      console.log(`✅ Change detection complete: ${strategy} strategy selected`);
       console.log(`   Changed files: ${changedFiles.length}`);
       console.log(`   Affected tests: ${affectedTests.length}`);
 
@@ -310,12 +285,11 @@ class TestExecutionOptimizer {
         affectedTests,
         testSelectionStrategy: strategy,
       };
-    } catch (error) {
-      console.warn("⚠️ Change detection failed, defaulting to all tests");
+    } catch (_error) {
       return {
         changedFiles: [],
         affectedTests: [],
-        testSelectionStrategy: "all",
+        testSelectionStrategy: 'all',
       };
     }
   }
@@ -323,13 +297,13 @@ class TestExecutionOptimizer {
   private async getChangedFiles(): Promise<string[]> {
     try {
       // Get files changed since last commit
-      const output = execSync("git diff --name-only HEAD~1", {
+      const output = execSync('git diff --name-only HEAD~1', {
         cwd: this.projectRoot,
-        encoding: "utf-8",
+        encoding: 'utf-8',
         timeout: 10000,
       });
 
-      return output.trim().split("\n").filter(Boolean);
+      return output.trim().split('\n').filter(Boolean);
     } catch {
       // If git fails, check for recently modified files
       return this.getRecentlyModifiedFiles();
@@ -340,10 +314,7 @@ class TestExecutionOptimizer {
     const recentFiles: string[] = [];
     const cutoffTime = Date.now() - 24 * 60 * 60 * 1000; // 24 hours ago
 
-    const patterns = [
-      "packages/*/src/**/*.{ts,tsx,js,jsx}",
-      "tests/**/*.{ts,tsx,js,jsx}",
-    ];
+    const patterns = ['packages/*/src/**/*.{ts,tsx,js,jsx}', 'tests/**/*.{ts,tsx,js,jsx}'];
 
     for (const pattern of patterns) {
       const files = await glob(pattern, { cwd: this.projectRoot });
@@ -370,9 +341,7 @@ class TestExecutionOptimizer {
       }
 
       // Tests that import the changed file
-      for (const [testFile, dependencies] of Object.entries(
-        dependencyMap.testDependencies
-      )) {
+      for (const [testFile, dependencies] of Object.entries(dependencyMap.testDependencies)) {
         const deps = dependencies as string[];
         if (deps.includes(changedFile)) {
           affectedTests.add(testFile);
@@ -381,13 +350,10 @@ class TestExecutionOptimizer {
 
       // Tests in the same package
       const packageName = this.extractPackageName(changedFile);
-      if (packageName !== "root") {
-        const packageTests = await glob(
-          `packages/${packageName}/**/*.test.{ts,tsx,js,jsx}`,
-          {
-            cwd: this.projectRoot,
-          }
-        );
+      if (packageName !== 'root') {
+        const packageTests = await glob(`packages/${packageName}/**/*.test.{ts,tsx,js,jsx}`, {
+          cwd: this.projectRoot,
+        });
         packageTests.forEach((test) => affectedTests.add(test));
       }
     }
@@ -403,16 +369,16 @@ class TestExecutionOptimizer {
     testFiles: TestFile[],
     changeDetection: ChangeDetectionResult
   ): Promise<TestExecutionPlan> {
-    console.log("📋 Creating intelligent test execution plan...");
+    console.log('📋 Creating intelligent test execution plan...');
 
     // Filter tests based on change detection
     let selectedTests = testFiles;
 
-    if (changeDetection.testSelectionStrategy === "affected") {
+    if (changeDetection.testSelectionStrategy === 'affected') {
       selectedTests = testFiles.filter((test) =>
         changeDetection.affectedTests.includes(test.relativePath)
       );
-    } else if (changeDetection.testSelectionStrategy === "minimal") {
+    } else if (changeDetection.testSelectionStrategy === 'minimal') {
       // Run only fast, high-priority tests
       selectedTests = testFiles
         .filter((test) => test.estimatedDuration < 5000 && test.priority > 70)
@@ -433,28 +399,20 @@ class TestExecutionOptimizer {
     const batches = this.createIntelligentBatches(selectedTests);
 
     // Determine execution strategy
-    const strategy = this.determineExecutionStrategy(
-      batches,
-      selectedTests.length
-    );
+    const strategy = this.determineExecutionStrategy(batches, selectedTests.length);
 
     const plan: TestExecutionPlan = {
       batches,
-      totalEstimatedDuration: batches.reduce(
-        (sum, batch) => sum + batch.estimatedDuration,
-        0
-      ),
+      totalEstimatedDuration: batches.reduce((sum, batch) => sum + batch.estimatedDuration, 0),
       strategy,
-      maxConcurrency: strategy === "parallel" ? Math.min(4, batches.length) : 1,
+      maxConcurrency: strategy === 'parallel' ? Math.min(4, batches.length) : 1,
     };
 
-    console.log(`✅ Execution plan created:`);
+    console.log('✅ Execution plan created:');
     console.log(`   Strategy: ${plan.strategy}`);
     console.log(`   Batches: ${plan.batches.length}`);
     console.log(`   Tests: ${selectedTests.length}`);
-    console.log(
-      `   Estimated duration: ${(plan.totalEstimatedDuration / 1000).toFixed(1)}s`
-    );
+    console.log(`   Estimated duration: ${(plan.totalEstimatedDuration / 1000).toFixed(1)}s`);
 
     return plan;
   }
@@ -471,8 +429,7 @@ class TestExecutionOptimizer {
       // Start new batch if current would exceed limits
       if (
         currentBatch.length >= maxBatchSize ||
-        (currentBatch.length > 0 &&
-          currentDuration + testFile.estimatedDuration > maxBatchDuration)
+        (currentBatch.length > 0 && currentDuration + testFile.estimatedDuration > maxBatchDuration)
       ) {
         batches.push(this.createBatch(currentBatch, batches.length));
         currentBatch = [];
@@ -492,13 +449,9 @@ class TestExecutionOptimizer {
   }
 
   private createBatch(testFiles: TestFile[], batchIndex: number): TestBatch {
-    const estimatedDuration = testFiles.reduce(
-      (sum, test) => sum + test.estimatedDuration,
-      0
-    );
+    const estimatedDuration = testFiles.reduce((sum, test) => sum + test.estimatedDuration, 0);
     const averagePriority =
-      testFiles.reduce((sum, test) => sum + test.priority, 0) /
-      testFiles.length;
+      testFiles.reduce((sum, test) => sum + test.priority, 0) / testFiles.length;
 
     // Collect all dependencies
     const allDependencies = new Set<string>();
@@ -518,25 +471,23 @@ class TestExecutionOptimizer {
   private determineExecutionStrategy(
     batches: TestBatch[],
     totalTests: number
-  ): "parallel" | "sequential" | "hybrid" {
+  ): 'parallel' | 'sequential' | 'hybrid' {
     // Use sequential for small test sets to avoid overhead
     if (totalTests < 5) {
-      return "sequential";
+      return 'sequential';
     }
 
     // Use parallel for large test sets with multiple batches
     if (batches.length > 2 && totalTests > 20) {
-      return "parallel";
+      return 'parallel';
     }
 
     // Use hybrid for medium test sets
-    return "hybrid";
+    return 'hybrid';
   }
 
-  private async implementFastFeedbackLoops(
-    plan: TestExecutionPlan
-  ): Promise<void> {
-    console.log("⚡ Implementing fast feedback loops...");
+  private async implementFastFeedbackLoops(plan: TestExecutionPlan): Promise<void> {
+    console.log('⚡ Implementing fast feedback loops...');
 
     // Create fast feedback script
     const fastFeedbackScript = `#!/usr/bin/env bun
@@ -627,7 +578,7 @@ if (import.meta.main) {
 }
 `;
 
-    await writeFile("scripts/fast-feedback.ts", fastFeedbackScript);
+    await writeFile('scripts/fast-feedback.ts', fastFeedbackScript);
 
     // Create selective test runner
     const selectiveTestScript = `#!/usr/bin/env bun
@@ -731,26 +682,23 @@ if (import.meta.main) {
 }
 `;
 
-    await writeFile("scripts/selective-tests.ts", selectiveTestScript);
+    await writeFile('scripts/selective-tests.ts', selectiveTestScript);
 
-    console.log("✅ Fast feedback loops implemented");
+    console.log('✅ Fast feedback loops implemented');
   }
 
   private async generateOptimizationReport(
     plan: TestExecutionPlan,
     changeDetection: ChangeDetectionResult
   ): Promise<void> {
-    console.log("📊 Generating optimization report...");
+    console.log('📊 Generating optimization report...');
 
     const report = {
       timestamp: new Date().toISOString(),
       executionPlan: {
         strategy: plan.strategy,
         totalBatches: plan.batches.length,
-        totalTests: plan.batches.reduce(
-          (sum, batch) => sum + batch.files.length,
-          0
-        ),
+        totalTests: plan.batches.reduce((sum, batch) => sum + batch.files.length, 0),
         estimatedDuration: plan.totalEstimatedDuration,
         maxConcurrency: plan.maxConcurrency,
       },
@@ -767,75 +715,67 @@ if (import.meta.main) {
         packages: [...new Set(batch.files.map((f) => f.package))],
       })),
       optimizations: {
-        intelligentBatching: "Tests grouped by duration and priority",
-        changeDetection: "Only affected tests run when possible",
-        fastFeedback: "High-priority tests run first",
-        selectiveExecution: "Minimal test sets for small changes",
+        intelligentBatching: 'Tests grouped by duration and priority',
+        changeDetection: 'Only affected tests run when possible',
+        fastFeedback: 'High-priority tests run first',
+        selectiveExecution: 'Minimal test sets for small changes',
       },
-      recommendations: this.generateOptimizationRecommendations(
-        plan,
-        changeDetection
-      ),
+      recommendations: this.generateOptimizationRecommendations(plan, changeDetection),
     };
 
-    await mkdir("test-reports", { recursive: true });
-    await writeFile(
-      "test-reports/execution-optimization.json",
-      JSON.stringify(report, null, 2)
-    );
+    await mkdir('test-reports', { recursive: true });
+    await writeFile('test-reports/execution-optimization.json', JSON.stringify(report, null, 2));
 
     // Generate markdown report
-    let markdown = "# Test Execution Optimization Report\n\n";
+    let markdown = '# Test Execution Optimization Report\n\n';
     markdown += `Generated: ${new Date().toLocaleString()}\n\n`;
 
-    markdown += "## Execution Plan\n\n";
+    markdown += '## Execution Plan\n\n';
     markdown += `- **Strategy**: ${plan.strategy}\n`;
     markdown += `- **Total Batches**: ${plan.batches.length}\n`;
     markdown += `- **Total Tests**: ${report.executionPlan.totalTests}\n`;
     markdown += `- **Estimated Duration**: ${(plan.totalEstimatedDuration / 1000).toFixed(1)}s\n`;
     markdown += `- **Max Concurrency**: ${plan.maxConcurrency}\n\n`;
 
-    markdown += "## Change Detection\n\n";
+    markdown += '## Change Detection\n\n';
     markdown += `- **Strategy**: ${changeDetection.testSelectionStrategy}\n`;
     markdown += `- **Changed Files**: ${changeDetection.changedFiles.length}\n`;
     markdown += `- **Affected Tests**: ${changeDetection.affectedTests.length}\n\n`;
 
-    markdown += "## Batch Details\n\n";
-    markdown += "| Batch | Tests | Duration | Priority | Packages |\n";
-    markdown += "|-------|-------|----------|----------|----------|\n";
+    markdown += '## Batch Details\n\n';
+    markdown += '| Batch | Tests | Duration | Priority | Packages |\n';
+    markdown += '|-------|-------|----------|----------|----------|\n';
 
     for (const batch of report.batches) {
-      markdown += `| ${batch.id} | ${batch.testCount} | ${(batch.estimatedDuration / 1000).toFixed(1)}s | ${batch.priority} | ${batch.packages.join(", ")} |\n`;
+      markdown += `| ${batch.id} | ${batch.testCount} | ${(batch.estimatedDuration / 1000).toFixed(1)}s | ${batch.priority} | ${batch.packages.join(', ')} |\n`;
     }
 
-    markdown += "\n## Optimizations Applied\n\n";
-    for (const [optimization, description] of Object.entries(
-      report.optimizations
-    )) {
+    markdown += '\n## Optimizations Applied\n\n';
+    for (const [optimization, description] of Object.entries(report.optimizations)) {
       markdown += `- **${optimization}**: ${description}\n`;
     }
 
-    markdown += "\n## Usage\n\n";
-    markdown += "```bash\n";
-    markdown += "# Run optimized test execution\n";
-    markdown += "bun scripts/fast-feedback.ts\n\n";
-    markdown += "# Run selective tests based on changes\n";
-    markdown += "bun scripts/selective-tests.ts\n\n";
-    markdown += "# Run full optimization\n";
-    markdown += "bun scripts/test-execution-optimizer.ts\n";
-    markdown += "```\n\n";
+    markdown += '\n## Usage\n\n';
+    markdown += '```bash\n';
+    markdown += '# Run optimized test execution\n';
+    markdown += 'bun scripts/fast-feedback.ts\n\n';
+    markdown += '# Run selective tests based on changes\n';
+    markdown += 'bun scripts/selective-tests.ts\n\n';
+    markdown += '# Run full optimization\n';
+    markdown += 'bun scripts/test-execution-optimizer.ts\n';
+    markdown += '```\n\n';
 
     if (report.recommendations.length > 0) {
-      markdown += "## Recommendations\n\n";
+      markdown += '## Recommendations\n\n';
       for (const rec of report.recommendations) {
         markdown += `- ${rec}\n`;
       }
     }
 
-    await writeFile("test-reports/execution-optimization.md", markdown);
+    await writeFile('test-reports/execution-optimization.md', markdown);
 
-    console.log("✅ Optimization report generated");
-    console.log("📋 Report saved to: test-reports/execution-optimization.md");
+    console.log('✅ Optimization report generated');
+    console.log('📋 Report saved to: test-reports/execution-optimization.md');
   }
 
   private generateOptimizationRecommendations(
@@ -846,54 +786,47 @@ if (import.meta.main) {
 
     if (plan.totalEstimatedDuration > 120000) {
       // > 2 minutes
-      recommendations.push(
-        "Consider splitting large test suites into smaller, focused test files"
-      );
+      recommendations.push('Consider splitting large test suites into smaller, focused test files');
     }
 
     if (plan.batches.length > 10) {
       recommendations.push(
-        "Large number of batches detected - consider consolidating similar tests"
+        'Large number of batches detected - consider consolidating similar tests'
       );
     }
 
     if (
-      changeDetection.testSelectionStrategy === "all" &&
+      changeDetection.testSelectionStrategy === 'all' &&
       changeDetection.changedFiles.length < 5
     ) {
       recommendations.push(
-        "Small changes detected but running all tests - improve change detection"
+        'Small changes detected but running all tests - improve change detection'
       );
     }
 
     const avgBatchSize =
-      plan.batches.reduce((sum, b) => sum + b.files.length, 0) /
-      plan.batches.length;
+      plan.batches.reduce((sum, b) => sum + b.files.length, 0) / plan.batches.length;
     if (avgBatchSize < 3) {
       recommendations.push(
-        "Small batch sizes detected - consider increasing batch size for better efficiency"
+        'Small batch sizes detected - consider increasing batch size for better efficiency'
       );
     }
 
-    if (plan.strategy === "sequential" && plan.batches.length > 3) {
+    if (plan.strategy === 'sequential' && plan.batches.length > 3) {
       recommendations.push(
-        "Consider parallel execution for better performance with multiple batches"
+        'Consider parallel execution for better performance with multiple batches'
       );
     }
 
-    recommendations.push(
-      "Use `bun scripts/fast-feedback.ts` for quick development feedback"
-    );
-    recommendations.push(
-      "Use `bun scripts/selective-tests.ts` when working on specific features"
-    );
+    recommendations.push('Use `bun scripts/fast-feedback.ts` for quick development feedback');
+    recommendations.push('Use `bun scripts/selective-tests.ts` when working on specific features');
 
     return recommendations;
   }
 
   private async loadMetrics(): Promise<any> {
     try {
-      const content = await readFile(this.metricsFile, "utf-8");
+      const content = await readFile(this.metricsFile, 'utf-8');
       return JSON.parse(content);
     } catch {
       return {
@@ -907,7 +840,7 @@ if (import.meta.main) {
 
   private async loadDependencyMap(): Promise<any> {
     try {
-      const content = await readFile(this.dependencyMapFile, "utf-8");
+      const content = await readFile(this.dependencyMapFile, 'utf-8');
       return JSON.parse(content);
     } catch {
       return {
@@ -919,7 +852,7 @@ if (import.meta.main) {
   }
 
   async quickOptimization(): Promise<void> {
-    console.log("⚡ Running quick test execution optimization...");
+    console.log('⚡ Running quick test execution optimization...');
 
     try {
       await this.initializeCache();
@@ -935,14 +868,12 @@ if (import.meta.main) {
       await this.implementFastFeedbackLoops({
         batches: [],
         totalEstimatedDuration: 0,
-        strategy: "sequential",
+        strategy: 'sequential',
         maxConcurrency: 1,
       });
 
-      console.log("✅ Quick optimization completed");
-    } catch (error) {
-      console.error("❌ Quick optimization failed:", error);
-    }
+      console.log('✅ Quick optimization completed');
+    } catch (_error) {}
   }
 }
 
@@ -953,18 +884,16 @@ if (import.meta.main) {
   const command = process.argv[2];
 
   switch (command) {
-    case "optimize":
+    case 'optimize':
       await optimizer.optimizeTestExecution();
       break;
-    case "quick":
+    case 'quick':
       await optimizer.quickOptimization();
       break;
     default:
-      console.log(
-        "Usage: bun run scripts/test-execution-optimizer.ts [optimize|quick]"
-      );
-      console.log("  optimize - Run full test execution optimization");
-      console.log("  quick    - Run quick optimization");
+      console.log('Usage: bun run scripts/test-execution-optimizer.ts [optimize|quick]');
+      console.log('  optimize - Run full test execution optimization');
+      console.log('  quick    - Run quick optimization');
       process.exit(1);
   }
 }
