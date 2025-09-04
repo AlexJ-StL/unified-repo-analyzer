@@ -1,12 +1,12 @@
-import { defineConfig } from "vitest/config";
-import { resolve } from "node:path";
+import { resolve } from 'node:path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     // Inherit from root config but override for backend-specific needs
     globals: true,
-    environment: "node", // Backend is always Node.js environment
-    setupFiles: ["../../tests/setup-minimal.ts"],
+    environment: 'node', // Backend is always Node.js environment
+    setupFiles: ['../../tests/setup-minimal.ts'],
 
     // Enhanced mocking support
     mockReset: true,
@@ -21,7 +21,7 @@ export default defineConfig({
     teardownTimeout: process.env.CI ? 10000 : 5000,
 
     // CRITICAL: Force single process execution
-    pool: "forks",
+    pool: 'forks',
     poolOptions: {
       forks: {
         singleFork: true,
@@ -38,7 +38,7 @@ export default defineConfig({
     sequence: {
       shuffle: false,
       concurrent: false,
-      setupFiles: "list",
+      setupFiles: 'list',
     },
 
     // Fail fast
@@ -47,33 +47,27 @@ export default defineConfig({
 
     // Backend-specific coverage settings
     coverage: {
-      provider: "v8",
-      reporter: ["text", "json"],
-      include: ["src/**/*.{ts,js}"],
-      exclude: [
-        "**/*.d.ts",
-        "**/*.config.*",
-        "**/__tests__/**",
-        "**/*.test.*",
-        "**/*.spec.*",
-      ],
+      provider: 'v8',
+      reporter: ['text', 'json'],
+      include: ['src/**/*.{ts,js}'],
+      exclude: ['**/*.d.ts', '**/*.config.*', '**/__tests__/**', '**/*.test.*', '**/*.spec.*'],
     },
 
     // Backend-specific excludes
     exclude: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.{idea,git,cache,output,temp}/**",
-      "**/temp-test-repos/**",
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/temp-test-repos/**',
     ],
   },
 
   resolve: {
     alias: {
-      "@": resolve(__dirname, "../../packages/shared/src"),
-      "@backend": resolve(__dirname, "./src"),
-      "@frontend": resolve(__dirname, "../frontend/src"),
-      "@cli": resolve(__dirname, "../cli/src"),
+      '@': resolve(__dirname, '../../packages/shared/src'),
+      '@backend': resolve(__dirname, './src'),
+      '@frontend': resolve(__dirname, '../frontend/src'),
+      '@cli': resolve(__dirname, '../cli/src'),
     },
   },
 });

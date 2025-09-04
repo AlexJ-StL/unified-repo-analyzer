@@ -2,10 +2,10 @@
  * Tests for Analysis Engine
  */
 
-import type { AnalysisOptions } from "@unified-repo-analyzer/shared/src/types/analysis";
-import { beforeEach, describe, expect, test } from "vitest";
-import { MockManager } from "../../../../../tests/MockManager";
-import { AnalysisEngine } from "../AnalysisEngine";
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { MockManager } from '../../../../../tests/MockManager';
+import { AnalysisEngine } from '../AnalysisEngine';
 
 // Initialize MockManager
 const mockManager = MockManager.getInstance();
@@ -13,8 +13,8 @@ const mockManager = MockManager.getInstance();
 // Mock dependencies using MockManager
 const mockAnalyzeCodeStructure = mockManager.mockFunction();
 mockAnalyzeCodeStructure.mockReturnValue({
-  functions: [{ name: "testFunction", lineNumber: 1, parameters: [] }],
-  classes: [{ name: "TestClass", lineNumber: 5, methods: [] }],
+  functions: [{ name: 'testFunction', lineNumber: 1, parameters: [] }],
+  classes: [{ name: 'TestClass', lineNumber: 5, methods: [] }],
   importCount: 3,
 });
 
@@ -26,23 +26,23 @@ mockSampleText.mockImplementation((text: string) => text);
 
 const mockDiscoverRepository = mockManager.mockFunction();
 mockDiscoverRepository.mockResolvedValue({
-  id: "test-id",
-  path: "/test/repo",
-  name: "test-repo",
-  language: "JavaScript",
-  languages: ["JavaScript", "TypeScript"],
-  frameworks: ["React"],
+  id: 'test-id',
+  path: '/test/repo',
+  name: 'test-repo',
+  language: 'JavaScript',
+  languages: ['JavaScript', 'TypeScript'],
+  frameworks: ['React'],
   fileCount: 10,
   directoryCount: 5,
   totalSize: 1000,
   createdAt: new Date(),
   updatedAt: new Date(),
   structure: {
-    directories: [{ path: "/", files: 5, subdirectories: 2 }],
+    directories: [{ path: '/', files: 5, subdirectories: 2 }],
     keyFiles: [
       {
-        path: "index.js",
-        language: "JavaScript",
+        path: 'index.js',
+        language: 'JavaScript',
         size: 100,
         lineCount: 50,
         importance: 0.9,
@@ -50,7 +50,7 @@ mockDiscoverRepository.mockResolvedValue({
         classes: [],
       },
     ],
-    tree: "test-repo\n└── index.js\n",
+    tree: 'test-repo\n└── index.js\n',
   },
   codeAnalysis: {
     functionCount: 0,
@@ -59,24 +59,24 @@ mockDiscoverRepository.mockResolvedValue({
     complexity: {
       cyclomaticComplexity: 0,
       maintainabilityIndex: 0,
-      technicalDebt: "Unknown",
-      codeQuality: "fair",
+      technicalDebt: 'Unknown',
+      codeQuality: 'fair',
     },
     patterns: [],
   },
   dependencies: {
     production: [],
     development: [],
-    frameworks: [{ name: "React", confidence: 0.9 }],
+    frameworks: [{ name: 'React', confidence: 0.9 }],
   },
   insights: {
-    executiveSummary: "",
-    technicalBreakdown: "",
+    executiveSummary: '',
+    technicalBreakdown: '',
     recommendations: [],
     potentialIssues: [],
   },
   metadata: {
-    analysisMode: "standard",
+    analysisMode: 'standard',
     processingTime: 100,
   },
 });
@@ -89,24 +89,24 @@ mockAnalysisOptionsToDiscoveryOptions.mockReturnValue({
 });
 
 const mockReadFileWithErrorHandling = mockManager.mockFunction();
-mockReadFileWithErrorHandling.mockResolvedValue("// Test file content");
+mockReadFileWithErrorHandling.mockResolvedValue('// Test file content');
 
 // Mock modules using MockManager
-mockManager.mockModule("../codeStructureAnalyzer", () => ({
+mockManager.mockModule('../codeStructureAnalyzer', () => ({
   analyzeCodeStructure: mockAnalyzeCodeStructure,
 }));
 
-mockManager.mockModule("../tokenAnalyzer", () => ({
+mockManager.mockModule('../tokenAnalyzer', () => ({
   countTokens: mockCountTokens,
   sampleText: mockSampleText,
 }));
 
-mockManager.mockModule("../../utils/repositoryDiscovery", () => ({
+mockManager.mockModule('../../utils/repositoryDiscovery', () => ({
   discoverRepository: mockDiscoverRepository,
   analysisOptionsToDiscoveryOptions: mockAnalysisOptionsToDiscoveryOptions,
 }));
 
-mockManager.mockModule("../../utils/fileSystem", () => ({
+mockManager.mockModule('../../utils/fileSystem', () => ({
   readFileWithErrorHandling: mockReadFileWithErrorHandling,
   FileSystemError: class FileSystemError extends Error {
     constructor(message: string, _type: string, _path: string) {
@@ -115,7 +115,7 @@ mockManager.mockModule("../../utils/fileSystem", () => ({
   },
 }));
 
-describe("Analysis Engine", () => {
+describe('Analysis Engine', () => {
   let engine: AnalysisEngine;
 
   beforeEach(() => {
@@ -123,57 +123,57 @@ describe("Analysis Engine", () => {
     mockManager.resetAllMocks();
   });
 
-  describe("analyzeRepository", () => {
-    test("should analyze a repository", async () => {
+  describe('analyzeRepository', () => {
+    test('should analyze a repository', async () => {
       const options: AnalysisOptions = {
-        mode: "standard",
+        mode: 'standard',
         maxFiles: 500,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["json"],
+        llmProvider: 'none',
+        outputFormats: ['json'],
         includeTree: true,
       };
 
-      const result = await engine.analyzeRepository("/test/repo", options);
+      const result = await engine.analyzeRepository('/test/repo', options);
 
       expect(result).toBeDefined();
-      expect(result.name).toBe("test-repo");
-      expect(result.language).toBe("JavaScript");
-      expect(result.metadata.analysisMode).toBe("standard");
+      expect(result.name).toBe('test-repo');
+      expect(result.language).toBe('JavaScript');
+      expect(result.metadata.analysisMode).toBe('standard');
       expect(result.codeAnalysis.functionCount).toBe(1);
       expect(result.codeAnalysis.classCount).toBe(1);
       expect(result.codeAnalysis.importCount).toBe(3);
     });
   });
 
-  describe("analyzeMultipleRepositories", () => {
-    test("should analyze multiple repositories", async () => {
+  describe('analyzeMultipleRepositories', () => {
+    test('should analyze multiple repositories', async () => {
       const options: AnalysisOptions = {
-        mode: "quick",
+        mode: 'quick',
         maxFiles: 200,
         maxLinesPerFile: 500,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["json"],
+        llmProvider: 'none',
+        outputFormats: ['json'],
         includeTree: false,
       };
 
       const result = await engine.analyzeMultipleRepositories(
-        ["/test/repo1", "/test/repo2"],
+        ['/test/repo1', '/test/repo2'],
         options
       );
 
       expect(result).toBeDefined();
       expect(result.repositories).toHaveLength(2);
-      expect(result.repositories[0].name).toBe("test-repo");
-      expect(result.repositories[1].name).toBe("test-repo");
+      expect(result.repositories[0].name).toBe('test-repo');
+      expect(result.repositories[1].name).toBe('test-repo');
     });
 
-    test("should handle errors in individual repositories", async () => {
+    test('should handle errors in individual repositories', async () => {
       // Get the mock function and reset it
       const { discoverRepository: mockDiscoverRepository } = (await import(
-        "../../utils/repositoryDiscovery"
+        '../../utils/repositoryDiscovery'
       )) as any;
 
       // Reset the mock and set up different behaviors
@@ -182,10 +182,10 @@ describe("Analysis Engine", () => {
       // Make the second repository analysis fail
       mockDiscoverRepository
         .mockResolvedValueOnce({
-          id: "test-id-1",
-          name: "test-repo-1",
-          language: "JavaScript",
-          languages: ["JavaScript"],
+          id: 'test-id-1',
+          name: 'test-repo-1',
+          language: 'JavaScript',
+          languages: ['JavaScript'],
           frameworks: [],
           fileCount: 5,
           directoryCount: 2,
@@ -195,7 +195,7 @@ describe("Analysis Engine", () => {
           structure: {
             directories: [],
             keyFiles: [],
-            tree: "",
+            tree: '',
           },
           codeAnalysis: {
             functionCount: 0,
@@ -204,8 +204,8 @@ describe("Analysis Engine", () => {
             complexity: {
               cyclomaticComplexity: 0,
               maintainabilityIndex: 0,
-              technicalDebt: "Unknown",
-              codeQuality: "fair",
+              technicalDebt: 'Unknown',
+              codeQuality: 'fair',
             },
             patterns: [],
           },
@@ -215,30 +215,30 @@ describe("Analysis Engine", () => {
             frameworks: [],
           },
           insights: {
-            executiveSummary: "",
-            technicalBreakdown: "",
+            executiveSummary: '',
+            technicalBreakdown: '',
             recommendations: [],
             potentialIssues: [],
           },
           metadata: {
-            analysisMode: "standard",
+            analysisMode: 'standard',
             processingTime: 50,
           },
         })
-        .mockRejectedValueOnce(new Error("Repository not found"));
+        .mockRejectedValueOnce(new Error('Repository not found'));
 
       const options: AnalysisOptions = {
-        mode: "quick",
+        mode: 'quick',
         maxFiles: 200,
         maxLinesPerFile: 500,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["json"],
+        llmProvider: 'none',
+        outputFormats: ['json'],
         includeTree: false,
       };
 
       const result = await engine.analyzeMultipleRepositories(
-        ["/test/repo1", "/test/repo2"],
+        ['/test/repo1', '/test/repo2'],
         options
       );
 
@@ -247,82 +247,80 @@ describe("Analysis Engine", () => {
     });
   });
 
-  describe("generateSynopsis", () => {
-    test("should generate JSON synopsis", async () => {
-      const analysis = await engine.analyzeRepository("/test/repo", {
-        mode: "standard",
+  describe('generateSynopsis', () => {
+    test('should generate JSON synopsis', async () => {
+      const analysis = await engine.analyzeRepository('/test/repo', {
+        mode: 'standard',
         maxFiles: 500,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["json"],
+        llmProvider: 'none',
+        outputFormats: ['json'],
         includeTree: true,
       });
 
-      const synopsis = await engine.generateSynopsis(analysis, "json");
+      const synopsis = await engine.generateSynopsis(analysis, 'json');
 
       expect(synopsis).toBeDefined();
-      expect(typeof synopsis).toBe("string");
+      expect(typeof synopsis).toBe('string');
 
       // Should be valid JSON
       const parsed = JSON.parse(synopsis);
-      expect(parsed.name).toBe("test-repo");
+      expect(parsed.name).toBe('test-repo');
     });
 
-    test("should generate Markdown synopsis", async () => {
-      const analysis = await engine.analyzeRepository("/test/repo", {
-        mode: "standard",
+    test('should generate Markdown synopsis', async () => {
+      const analysis = await engine.analyzeRepository('/test/repo', {
+        mode: 'standard',
         maxFiles: 500,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["markdown"],
+        llmProvider: 'none',
+        outputFormats: ['markdown'],
         includeTree: true,
       });
 
-      const synopsis = await engine.generateSynopsis(analysis, "markdown");
+      const synopsis = await engine.generateSynopsis(analysis, 'markdown');
 
       expect(synopsis).toBeDefined();
-      expect(typeof synopsis).toBe("string");
-      expect(synopsis).toContain("# test-repo Repository Analysis");
-      expect(synopsis).toContain("## Overview");
+      expect(typeof synopsis).toBe('string');
+      expect(synopsis).toContain('# test-repo Repository Analysis');
+      expect(synopsis).toContain('## Overview');
     });
 
-    test("should generate HTML synopsis", async () => {
-      const analysis = await engine.analyzeRepository("/test/repo", {
-        mode: "standard",
+    test('should generate HTML synopsis', async () => {
+      const analysis = await engine.analyzeRepository('/test/repo', {
+        mode: 'standard',
         maxFiles: 500,
         maxLinesPerFile: 1000,
         includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["html"],
+        llmProvider: 'none',
+        outputFormats: ['html'],
         includeTree: true,
       });
 
-      const synopsis = await engine.generateSynopsis(analysis, "html");
+      const synopsis = await engine.generateSynopsis(analysis, 'html');
 
       expect(synopsis).toBeDefined();
-      expect(typeof synopsis).toBe("string");
-      expect(synopsis).toContain("<!DOCTYPE html>");
-      expect(synopsis).toContain(
-        "<title>test-repo Repository Analysis</title>"
+      expect(typeof synopsis).toBe('string');
+      expect(synopsis).toContain('<!DOCTYPE html>');
+      expect(synopsis).toContain('<title>test-repo Repository Analysis</title>');
+    });
+
+    test('should throw error for unsupported format', async () => {
+      const analysis = await engine.analyzeRepository('/test/repo', {
+        mode: 'standard',
+        maxFiles: 500,
+        maxLinesPerFile: 1000,
+        includeLLMAnalysis: false,
+        llmProvider: 'none',
+        outputFormats: ['json'],
+        includeTree: true,
+      });
+
+      await expect(engine.generateSynopsis(analysis, 'pdf' as any)).rejects.toThrow(
+        'Unsupported output format: pdf'
       );
-    });
-
-    test("should throw error for unsupported format", async () => {
-      const analysis = await engine.analyzeRepository("/test/repo", {
-        mode: "standard",
-        maxFiles: 500,
-        maxLinesPerFile: 1000,
-        includeLLMAnalysis: false,
-        llmProvider: "none",
-        outputFormats: ["json"],
-        includeTree: true,
-      });
-
-      await expect(
-        engine.generateSynopsis(analysis, "pdf" as any)
-      ).rejects.toThrow("Unsupported output format: pdf");
     });
   });
 });

@@ -2,15 +2,15 @@
  * Fixed Tests for Advanced Analyzer using MockManager
  */
 
-import type { RepositoryAnalysis } from "@unified-repo-analyzer/shared/src/types/analysis";
-import { beforeEach, describe, expect, it } from "vitest";
-import { MockManager } from "../../../../../tests/MockManager";
-import { AdvancedAnalyzer } from "../advancedAnalyzer";
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { MockManager } from '../../../../../tests/MockManager';
+import { AdvancedAnalyzer } from '../advancedAnalyzer';
 
 // Initialize MockManager
 const mockManager = MockManager.getInstance();
 
-describe("AdvancedAnalyzer (Fixed)", () => {
+describe('AdvancedAnalyzer (Fixed)', () => {
   let analyzer: AdvancedAnalyzer;
   let mockAnalysis: RepositoryAnalysis;
 
@@ -23,7 +23,7 @@ describe("AdvancedAnalyzer (Fixed)", () => {
     mockManager.resetAllMocks();
 
     // Set up default mock implementations
-    mockReadFileWithErrorHandling.mockResolvedValue("// Mock file content");
+    mockReadFileWithErrorHandling.mockResolvedValue('// Mock file content');
     mockStat.mockResolvedValue({
       isFile: () => true,
       isDirectory: () => false,
@@ -35,23 +35,23 @@ describe("AdvancedAnalyzer (Fixed)", () => {
 
     // Create mock analysis data
     mockAnalysis = {
-      id: "test-id",
-      path: "/test/repo",
-      name: "test-repo",
-      language: "JavaScript",
-      languages: ["JavaScript", "TypeScript"],
-      frameworks: ["React"],
+      id: 'test-id',
+      path: '/test/repo',
+      name: 'test-repo',
+      language: 'JavaScript',
+      languages: ['JavaScript', 'TypeScript'],
+      frameworks: ['React'],
       fileCount: 10,
       directoryCount: 5,
       totalSize: 1000,
       createdAt: new Date(),
       updatedAt: new Date(),
       structure: {
-        directories: [{ path: "/", files: 5, subdirectories: 2 }],
+        directories: [{ path: '/', files: 5, subdirectories: 2 }],
         keyFiles: [
           {
-            path: "index.js",
-            language: "JavaScript",
+            path: 'index.js',
+            language: 'JavaScript',
             size: 100,
             lineCount: 50,
             importance: 0.9,
@@ -59,7 +59,7 @@ describe("AdvancedAnalyzer (Fixed)", () => {
             classes: [],
           },
         ],
-        tree: "test-repo\n└── index.js\n",
+        tree: 'test-repo\n└── index.js\n',
       },
       codeAnalysis: {
         functionCount: 5,
@@ -68,199 +68,185 @@ describe("AdvancedAnalyzer (Fixed)", () => {
         complexity: {
           cyclomaticComplexity: 15,
           maintainabilityIndex: 75,
-          technicalDebt: "low",
-          codeQuality: "good",
+          technicalDebt: 'low',
+          codeQuality: 'good',
         },
         patterns: [],
       },
       dependencies: {
         production: [],
         development: [],
-        frameworks: [{ name: "React", confidence: 0.9 }],
+        frameworks: [{ name: 'React', confidence: 0.9 }],
       },
       insights: {
-        executiveSummary: "Test repository for advanced analysis",
-        technicalBreakdown: "Technical details here",
+        executiveSummary: 'Test repository for advanced analysis',
+        technicalBreakdown: 'Technical details here',
         recommendations: [],
         potentialIssues: [],
       },
       metadata: {
-        analysisMode: "comprehensive",
+        analysisMode: 'comprehensive',
         processingTime: 500,
       },
     };
   });
 
-  describe("Mock Infrastructure Validation", () => {
-    it("should have working mock functions", () => {
+  describe('Mock Infrastructure Validation', () => {
+    it('should have working mock functions', () => {
       expect(mockReadFileWithErrorHandling).toBeDefined();
       expect(mockStat).toBeDefined();
     });
 
-    it("should be able to call mock functions", async () => {
-      const content = await mockReadFileWithErrorHandling("/test/file.js");
-      expect(content).toBe("// Mock file content");
+    it('should be able to call mock functions', async () => {
+      const content = await mockReadFileWithErrorHandling('/test/file.js');
+      expect(content).toBe('// Mock file content');
 
-      const stats = await mockStat("/test/file.js");
+      const stats = await mockStat('/test/file.js');
       expect(stats.isFile()).toBe(true);
       expect(stats.size).toBe(1000);
     });
   });
 
-  describe("Analyzer Instantiation", () => {
-    it("should create AdvancedAnalyzer instance", () => {
+  describe('Analyzer Instantiation', () => {
+    it('should create AdvancedAnalyzer instance', () => {
       expect(analyzer).toBeDefined();
       expect(analyzer).toBeInstanceOf(AdvancedAnalyzer);
     });
 
-    it("should have required methods", () => {
-      expect(typeof analyzer.analyzeRepository).toBe("function");
+    it('should have required methods', () => {
+      expect(typeof analyzer.analyzeRepository).toBe('function');
     });
   });
 
-  describe("Basic Functionality Tests", () => {
-    it("should handle repository analysis data", () => {
+  describe('Basic Functionality Tests', () => {
+    it('should handle repository analysis data', () => {
       expect(mockAnalysis).toBeDefined();
-      expect(mockAnalysis.name).toBe("test-repo");
-      expect(mockAnalysis.language).toBe("JavaScript");
+      expect(mockAnalysis.name).toBe('test-repo');
+      expect(mockAnalysis.language).toBe('JavaScript');
       expect(mockAnalysis.codeAnalysis.functionCount).toBe(5);
       expect(mockAnalysis.codeAnalysis.classCount).toBe(2);
     });
 
-    it("should handle complexity analysis", () => {
+    it('should handle complexity analysis', () => {
       const complexity = mockAnalysis.codeAnalysis.complexity;
       expect(complexity.cyclomaticComplexity).toBe(15);
       expect(complexity.maintainabilityIndex).toBe(75);
-      expect(complexity.technicalDebt).toBe("low");
-      expect(complexity.codeQuality).toBe("good");
+      expect(complexity.technicalDebt).toBe('low');
+      expect(complexity.codeQuality).toBe('good');
     });
 
-    it("should handle framework detection", () => {
+    it('should handle framework detection', () => {
       const frameworks = mockAnalysis.dependencies.frameworks;
       expect(frameworks).toHaveLength(1);
-      expect(frameworks[0].name).toBe("React");
+      expect(frameworks[0].name).toBe('React');
       expect(frameworks[0].confidence).toBe(0.9);
     });
   });
 
-  describe("Mock Integration Tests", () => {
-    it("should work with mock file operations", async () => {
-      const content = await mockReadFileWithErrorHandling(
-        "/test/component.jsx"
-      );
-      expect(content).toBe("// Mock file content");
-      expect(mockReadFileWithErrorHandling).toHaveBeenCalledWith(
-        "/test/component.jsx"
-      );
+  describe('Mock Integration Tests', () => {
+    it('should work with mock file operations', async () => {
+      const content = await mockReadFileWithErrorHandling('/test/component.jsx');
+      expect(content).toBe('// Mock file content');
+      expect(mockReadFileWithErrorHandling).toHaveBeenCalledWith('/test/component.jsx');
     });
 
-    it("should work with mock file stats", async () => {
-      const stats = await mockStat("/test/package.json");
+    it('should work with mock file stats', async () => {
+      const stats = await mockStat('/test/package.json');
       expect(stats).toBeDefined();
       expect(stats.isFile()).toBe(true);
       expect(stats.size).toBe(1000);
-      expect(mockStat).toHaveBeenCalledWith("/test/package.json");
+      expect(mockStat).toHaveBeenCalledWith('/test/package.json');
     });
 
-    it("should handle different file types", async () => {
+    it('should handle different file types', async () => {
       // Test JavaScript file
-      mockReadFileWithErrorHandling.mockResolvedValueOnce(
-        "function test() { return true; }"
-      );
-      const jsContent = await mockReadFileWithErrorHandling("/test/script.js");
-      expect(jsContent).toContain("function test()");
+      mockReadFileWithErrorHandling.mockResolvedValueOnce('function test() { return true; }');
+      const jsContent = await mockReadFileWithErrorHandling('/test/script.js');
+      expect(jsContent).toContain('function test()');
 
       // Test TypeScript file
-      mockReadFileWithErrorHandling.mockResolvedValueOnce(
-        "interface Test { name: string; }"
-      );
-      const tsContent = await mockReadFileWithErrorHandling("/test/types.ts");
-      expect(tsContent).toContain("interface Test");
+      mockReadFileWithErrorHandling.mockResolvedValueOnce('interface Test { name: string; }');
+      const tsContent = await mockReadFileWithErrorHandling('/test/types.ts');
+      expect(tsContent).toContain('interface Test');
 
       // Test React component
       mockReadFileWithErrorHandling.mockResolvedValueOnce(
-        "export const Component = () => <div>Test</div>"
+        'export const Component = () => <div>Test</div>'
       );
-      const reactContent = await mockReadFileWithErrorHandling(
-        "/test/Component.tsx"
-      );
-      expect(reactContent).toContain("export const Component");
+      const reactContent = await mockReadFileWithErrorHandling('/test/Component.tsx');
+      expect(reactContent).toContain('export const Component');
     });
 
-    it("should handle error scenarios", async () => {
+    it('should handle error scenarios', async () => {
       // Test file not found
-      mockReadFileWithErrorHandling.mockRejectedValueOnce(
-        new Error("File not found")
+      mockReadFileWithErrorHandling.mockRejectedValueOnce(new Error('File not found'));
+      await expect(mockReadFileWithErrorHandling('/nonexistent/file.js')).rejects.toThrow(
+        'File not found'
       );
-      await expect(
-        mockReadFileWithErrorHandling("/nonexistent/file.js")
-      ).rejects.toThrow("File not found");
 
       // Test stat error
-      mockStat.mockRejectedValueOnce(new Error("Stat failed"));
-      await expect(mockStat("/nonexistent/file.js")).rejects.toThrow(
-        "Stat failed"
-      );
+      mockStat.mockRejectedValueOnce(new Error('Stat failed'));
+      await expect(mockStat('/nonexistent/file.js')).rejects.toThrow('Stat failed');
     });
   });
 
-  describe("Analysis Workflow Tests", () => {
-    it("should handle complexity calculation workflow", () => {
+  describe('Analysis Workflow Tests', () => {
+    it('should handle complexity calculation workflow', () => {
       const analysis = { ...mockAnalysis };
 
       // Simulate complexity analysis
       analysis.codeAnalysis.complexity.cyclomaticComplexity = 20;
       analysis.codeAnalysis.complexity.maintainabilityIndex = 60;
-      analysis.codeAnalysis.complexity.technicalDebt = "medium";
-      analysis.codeAnalysis.complexity.codeQuality = "fair";
+      analysis.codeAnalysis.complexity.technicalDebt = 'medium';
+      analysis.codeAnalysis.complexity.codeQuality = 'fair';
 
       expect(analysis.codeAnalysis.complexity.cyclomaticComplexity).toBe(20);
       expect(analysis.codeAnalysis.complexity.maintainabilityIndex).toBe(60);
-      expect(analysis.codeAnalysis.complexity.technicalDebt).toBe("medium");
-      expect(analysis.codeAnalysis.complexity.codeQuality).toBe("fair");
+      expect(analysis.codeAnalysis.complexity.technicalDebt).toBe('medium');
+      expect(analysis.codeAnalysis.complexity.codeQuality).toBe('fair');
     });
 
-    it("should handle pattern detection workflow", () => {
+    it('should handle pattern detection workflow', () => {
       const analysis = { ...mockAnalysis };
 
       // Simulate pattern detection
       analysis.codeAnalysis.patterns = [
         {
-          name: "MVC Pattern",
+          name: 'MVC Pattern',
           confidence: 0.8,
-          description: "Model-View-Controller pattern detected",
+          description: 'Model-View-Controller pattern detected',
         },
         {
-          name: "Observer Pattern",
+          name: 'Observer Pattern',
           confidence: 0.6,
-          description: "Observer pattern usage found",
+          description: 'Observer pattern usage found',
         },
       ];
 
       expect(analysis.codeAnalysis.patterns).toHaveLength(2);
-      expect(analysis.codeAnalysis.patterns[0].name).toBe("MVC Pattern");
-      expect(analysis.codeAnalysis.patterns[1].name).toBe("Observer Pattern");
+      expect(analysis.codeAnalysis.patterns[0].name).toBe('MVC Pattern');
+      expect(analysis.codeAnalysis.patterns[1].name).toBe('Observer Pattern');
     });
 
-    it("should handle insights generation workflow", () => {
+    it('should handle insights generation workflow', () => {
       const analysis = { ...mockAnalysis };
 
       // Simulate insights generation
       analysis.insights.recommendations = [
-        "Consider refactoring complex functions",
-        "Add more unit tests for better coverage",
-        "Update dependencies to latest versions",
+        'Consider refactoring complex functions',
+        'Add more unit tests for better coverage',
+        'Update dependencies to latest versions',
       ];
 
       analysis.insights.potentialIssues = [
-        "High cyclomatic complexity in main.js",
-        "Missing error handling in API calls",
+        'High cyclomatic complexity in main.js',
+        'Missing error handling in API calls',
       ];
 
       expect(analysis.insights.recommendations).toHaveLength(3);
       expect(analysis.insights.potentialIssues).toHaveLength(2);
-      expect(analysis.insights.recommendations[0]).toContain("refactoring");
-      expect(analysis.insights.potentialIssues[0]).toContain("complexity");
+      expect(analysis.insights.recommendations[0]).toContain('refactoring');
+      expect(analysis.insights.potentialIssues[0]).toContain('complexity');
     });
   });
 });
