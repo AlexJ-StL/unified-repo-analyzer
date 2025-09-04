@@ -565,7 +565,7 @@ async function runFastFeedback() {
         const testPaths = batch.files.map(f => f.relativePath).join(' ');
         
         try {
-          execSync(\`vitest run \${testPaths} --reporter=basic --run\`, {
+          execSync(\`bun test \${testPaths} --maxConcurrency=1\`, {
             stdio: 'inherit',
             timeout: batch.estimatedDuration + 10000, // Add 10s buffer
           });
@@ -593,7 +593,7 @@ async function runFastFeedback() {
         const testPaths = highPriorityBatch.files.map(f => f.relativePath).join(' ');
         
         try {
-          execSync(\`vitest run \${testPaths} --reporter=basic --run\`, {
+          execSync(\`bun test \${testPaths} --maxConcurrency=1\`, {
             stdio: 'inherit',
             timeout: highPriorityBatch.estimatedDuration + 10000,
           });
@@ -689,13 +689,14 @@ async function runSelectiveTests() {
       if (packageMatch) {
         const packageName = packageMatch[1];
         try {
-          const packageTests = execSync(\`find packages/\${packageName} -name "*.test.*" -type f\`, {
-            encoding: 'utf-8',
-            timeout: 5000,
-          }).trim().split('\\n').filter(Boolean);
+          // Use cross-platform glob instead of Unix find command
+          const { glob } = await import('glob');
+          const packageTests = await glob(\`packages/\${packageName}/**/*.test.*\`, {
+            cwd: process.cwd(),
+          });
           testFiles.push(...packageTests);
         } catch {
-          // Find command might not work on all systems
+          // Glob might not be available, skip package tests
         }
       }
     }

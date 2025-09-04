@@ -1,163 +1,18 @@
 {
-  "timestamp": "2025-09-03T19:23:49.940Z",
+  "timestamp": "2025-09-03T20:36:33.222Z",
   "executionPlan": {
-    "strategy": "parallel",
-    "totalBatches": 16,
-    "totalTests": 117,
-    "estimatedDuration": 301240,
-    "maxConcurrency": 4
+    "strategy": "sequential",
+    "totalBatches": 0,
+    "totalTests": 0,
+    "estimatedDuration": 0,
+    "maxConcurrency": 1
   },
   "changeDetection": {
-    "strategy": "all",
-    "changedFiles": 10,
+    "strategy": "affected",
+    "changedFiles": 8,
     "affectedTests": 0
   },
-  "batches": [
-    {
-      "id": "batch-1",
-      "testCount": 10,
-      "estimatedDuration": 7251,
-      "priority": 88,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-2",
-      "testCount": 10,
-      "estimatedDuration": 8263,
-      "priority": 80,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-3",
-      "testCount": 10,
-      "estimatedDuration": 12987,
-      "priority": 80,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-4",
-      "testCount": 10,
-      "estimatedDuration": 13906,
-      "priority": 74,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-5",
-      "testCount": 10,
-      "estimatedDuration": 10651,
-      "priority": 70,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-6",
-      "testCount": 10,
-      "estimatedDuration": 13331,
-      "priority": 70,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-7",
-      "testCount": 10,
-      "estimatedDuration": 17566,
-      "priority": 70,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-8",
-      "testCount": 5,
-      "estimatedDuration": 23206,
-      "priority": 70,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-9",
-      "testCount": 10,
-      "estimatedDuration": 23756,
-      "priority": 61,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-10",
-      "testCount": 10,
-      "estimatedDuration": 17203,
-      "priority": 60,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-11",
-      "testCount": 7,
-      "estimatedDuration": 23799,
-      "priority": 60,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-12",
-      "testCount": 3,
-      "estimatedDuration": 22698,
-      "priority": 60,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-13",
-      "testCount": 4,
-      "estimatedDuration": 27677,
-      "priority": 55,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-14",
-      "testCount": 3,
-      "estimatedDuration": 21523,
-      "priority": 50,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-15",
-      "testCount": 4,
-      "estimatedDuration": 25831,
-      "priority": 43,
-      "packages": [
-        "root"
-      ]
-    },
-    {
-      "id": "batch-16",
-      "testCount": 1,
-      "estimatedDuration": 31592,
-      "priority": 40,
-      "packages": [
-        "root"
-      ]
-    }
-  ],
+  "batches": [],
   "optimizations": {
     "intelligentBatching": "Tests grouped by duration and priority",
     "changeDetection": "Only affected tests run when possible",
@@ -165,8 +20,6 @@
     "selectiveExecution": "Minimal test sets for small changes"
   },
   "recommendations": [
-    "Consider splitting large test suites into smaller, focused test files",
-    "Large number of batches detected - consider consolidating similar tests",
     "Use `bun scripts/fast-feedback.ts` for quick development feedback",
     "Use `bun scripts/selective-tests.ts` when working on specific features"
   ]
