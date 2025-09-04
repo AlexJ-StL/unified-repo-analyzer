@@ -3,11 +3,11 @@
  * Verify the TestExecutor performance monitoring functionality
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { TestExecutor, testExecutor } from "./TestExecutor";
-import { systemResourceMonitor } from "./SystemResourceMonitor";
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { systemResourceMonitor } from './SystemResourceMonitor';
+import { TestExecutor, testExecutor } from './TestExecutor';
 
-describe("TestExecutor Performance Monitoring", () => {
+describe('TestExecutor Performance Monitoring', () => {
   beforeEach(async () => {
     // Clean up any existing monitoring
     systemResourceMonitor.stopMonitoring();
@@ -18,13 +18,13 @@ describe("TestExecutor Performance Monitoring", () => {
     systemResourceMonitor.stopMonitoring();
   });
 
-  it("should create TestExecutor instance", () => {
+  it('should create TestExecutor instance', () => {
     const executor = TestExecutor.getInstance();
     expect(executor).toBeDefined();
     expect(executor).toBe(testExecutor); // Should be singleton
   });
 
-  it("should collect system metrics", async () => {
+  it('should collect system metrics', async () => {
     const metrics = await systemResourceMonitor.getCurrentMetrics();
 
     expect(metrics).toBeDefined();
@@ -33,26 +33,25 @@ describe("TestExecutor Performance Monitoring", () => {
     expect(metrics.processes).toBeDefined();
     expect(metrics.disk).toBeDefined();
 
-    expect(typeof metrics.cpu.usage).toBe("number");
-    expect(typeof metrics.cpu.cores).toBe("number");
+    expect(typeof metrics.cpu.usage).toBe('number');
+    expect(typeof metrics.cpu.cores).toBe('number');
     expect(Array.isArray(metrics.cpu.loadAverage)).toBe(true);
 
-    expect(typeof metrics.memory.total).toBe("number");
-    expect(typeof metrics.memory.used).toBe("number");
-    expect(typeof metrics.memory.usagePercent).toBe("number");
+    expect(typeof metrics.memory.total).toBe('number');
+    expect(typeof metrics.memory.used).toBe('number');
+    expect(typeof metrics.memory.usagePercent).toBe('number');
 
-    expect(typeof metrics.processes.total).toBe("number");
-    expect(typeof metrics.processes.bun).toBe("number");
+    expect(typeof metrics.processes.total).toBe('number');
+    expect(typeof metrics.processes.bun).toBe('number');
   });
 
-  it("should provide concurrency recommendations", async () => {
-    const recommendation =
-      await systemResourceMonitor.getConcurrencyRecommendation();
+  it('should provide concurrency recommendations', async () => {
+    const recommendation = await systemResourceMonitor.getConcurrencyRecommendation();
 
     expect(recommendation).toBeDefined();
-    expect(typeof recommendation.recommended).toBe("number");
-    expect(typeof recommendation.reason).toBe("string");
-    expect(typeof recommendation.confidence).toBe("number");
+    expect(typeof recommendation.recommended).toBe('number');
+    expect(typeof recommendation.reason).toBe('string');
+    expect(typeof recommendation.confidence).toBe('number');
     expect(Array.isArray(recommendation.adjustments)).toBe(true);
 
     expect(recommendation.recommended).toBeGreaterThan(0);
@@ -61,18 +60,16 @@ describe("TestExecutor Performance Monitoring", () => {
     expect(recommendation.confidence).toBeLessThanOrEqual(1);
   });
 
-  it("should detect system stress", async () => {
+  it('should detect system stress', async () => {
     const stressCheck = await systemResourceMonitor.isSystemUnderStress();
 
     expect(stressCheck).toBeDefined();
-    expect(typeof stressCheck.stressed).toBe("boolean");
+    expect(typeof stressCheck.stressed).toBe('boolean');
     expect(Array.isArray(stressCheck.reasons)).toBe(true);
-    expect(["low", "medium", "high", "critical"]).toContain(
-      stressCheck.severity
-    );
+    expect(['low', 'medium', 'high', 'critical']).toContain(stressCheck.severity);
   });
 
-  it("should start and stop resource monitoring", () => {
+  it('should start and stop resource monitoring', () => {
     // Start monitoring
     systemResourceMonitor.startMonitoring(1000);
 
@@ -90,7 +87,7 @@ describe("TestExecutor Performance Monitoring", () => {
     }).not.toThrow();
   });
 
-  it("should generate resource report", async () => {
+  it('should generate resource report', async () => {
     // Start monitoring to collect some data
     systemResourceMonitor.startMonitoring(100);
 
@@ -102,29 +99,27 @@ describe("TestExecutor Performance Monitoring", () => {
 
     const report = systemResourceMonitor.generateResourceReport();
 
-    expect(typeof report).toBe("string");
+    expect(typeof report).toBe('string');
     expect(report.length).toBeGreaterThan(0);
     // Should contain either the report or the no metrics message
-    expect(report).toMatch(
-      /System Resource Report|No resource metrics available/
-    );
+    expect(report).toMatch(/System Resource Report|No resource metrics available/);
 
     systemResourceMonitor.stopMonitoring();
   });
 
-  it("should handle resource controller functionality", async () => {
+  it('should handle resource controller functionality', async () => {
     // Test resource controller without actually running commands
-    const resourceController = await import("./ResourceController");
+    const resourceController = await import('./ResourceController');
     const controller = resourceController.resourceController;
 
     // Test that resource limits are enforced
     const canStart = await controller.canStartProcess();
-    expect(typeof canStart).toBe("boolean");
+    expect(typeof canStart).toBe('boolean');
 
     // Test resource limit updates
     const originalLimits = controller.getLimits();
     expect(originalLimits).toBeDefined();
-    expect(typeof originalLimits.maxConcurrentProcesses).toBe("number");
+    expect(typeof originalLimits.maxConcurrentProcesses).toBe('number');
 
     // Test updating limits
     controller.updateLimits({ maxConcurrentProcesses: 2 });
@@ -135,7 +130,7 @@ describe("TestExecutor Performance Monitoring", () => {
     controller.updateLimits(originalLimits);
   });
 
-  it("should generate execution report", async () => {
+  it('should generate execution report', async () => {
     const mockResult = {
       success: true,
       duration: 5000,
@@ -183,39 +178,35 @@ describe("TestExecutor Performance Monitoring", () => {
         systemLoadAverage: 1.5,
         memoryLeaks: false,
       },
-      errors: ["Sample error"],
-      warnings: ["Sample warning"],
+      errors: ['Sample error'],
+      warnings: ['Sample warning'],
     };
 
     const report = testExecutor.generateExecutionReport(mockResult);
 
-    expect(typeof report).toBe("string");
+    expect(typeof report).toBe('string');
     expect(report.length).toBeGreaterThan(0);
-    expect(report).toContain("Test Execution Report");
-    expect(report).toContain("✅ PASSED");
-    expect(report).toContain("Performance Metrics");
-    expect(report).toContain("Resource Usage");
+    expect(report).toContain('Test Execution Report');
+    expect(report).toContain('✅ PASSED');
+    expect(report).toContain('Performance Metrics');
+    expect(report).toContain('Resource Usage');
   });
 
-  it("should validate TestExecutor methods exist", () => {
+  it('should validate TestExecutor methods exist', () => {
     // Test that all expected methods exist without calling them
-    expect(typeof testExecutor.runSingleTest).toBe("function");
-    expect(typeof testExecutor.runTestSuite).toBe("function");
-    expect(typeof testExecutor.runWithAdaptiveConcurrency).toBe("function");
-    expect(typeof testExecutor.generateExecutionReport).toBe("function");
+    expect(typeof testExecutor.runSingleTest).toBe('function');
+    expect(typeof testExecutor.runTestSuite).toBe('function');
+    expect(typeof testExecutor.runWithAdaptiveConcurrency).toBe('function');
+    expect(typeof testExecutor.generateExecutionReport).toBe('function');
   });
 
-  it("should validate SystemResourceMonitor methods exist", () => {
+  it('should validate SystemResourceMonitor methods exist', () => {
     // Test that all expected methods exist
-    expect(typeof systemResourceMonitor.startMonitoring).toBe("function");
-    expect(typeof systemResourceMonitor.stopMonitoring).toBe("function");
-    expect(typeof systemResourceMonitor.getCurrentMetrics).toBe("function");
-    expect(typeof systemResourceMonitor.getConcurrencyRecommendation).toBe(
-      "function"
-    );
-    expect(typeof systemResourceMonitor.isSystemUnderStress).toBe("function");
-    expect(typeof systemResourceMonitor.generateResourceReport).toBe(
-      "function"
-    );
+    expect(typeof systemResourceMonitor.startMonitoring).toBe('function');
+    expect(typeof systemResourceMonitor.stopMonitoring).toBe('function');
+    expect(typeof systemResourceMonitor.getCurrentMetrics).toBe('function');
+    expect(typeof systemResourceMonitor.getConcurrencyRecommendation).toBe('function');
+    expect(typeof systemResourceMonitor.isSystemUnderStress).toBe('function');
+    expect(typeof systemResourceMonitor.generateResourceReport).toBe('function');
   });
 });

@@ -3,18 +3,15 @@
  * Provides controlled test execution with comprehensive performance monitoring
  */
 
-import { exec, spawn } from "node:child_process";
-import { promisify } from "node:util";
-import { performance } from "node:perf_hooks";
+import { exec } from 'node:child_process';
+import { performance } from 'node:perf_hooks';
+import { promisify } from 'node:util';
 import {
-  resourceController,
-  type ResourceStats,
-} from "./ResourceController.js";
-import {
-  TestPerformanceMonitor,
   MemoryUsageChecker,
+  TestPerformanceMonitor,
   TestTimeoutManager,
-} from "./performance-monitor.js";
+} from './performance-monitor.js';
+import { type ResourceStats, resourceController } from './ResourceController.js';
 
 const execAsync = promisify(exec);
 
@@ -116,7 +113,7 @@ export class TestExecutor {
   ): Promise<TestExecutionResult> {
     if (this.isExecuting) {
       throw new Error(
-        "TestExecutor is already running a test. Wait for completion or use a new instance."
+        'TestExecutor is already running a test. Wait for completion or use a new instance.'
       );
     }
 
@@ -134,11 +131,7 @@ export class TestExecutor {
       });
 
       // Execute test with monitoring
-      const result = await this.executeWithMonitoring(
-        command,
-        executionId,
-        options
-      );
+      const result = await this.executeWithMonitoring(command, executionId, options);
 
       // Post-execution cleanup
       await this.postTestCleanup(executionId);
@@ -161,7 +154,7 @@ export class TestExecutor {
   ): Promise<TestExecutionResult> {
     if (this.isExecuting) {
       throw new Error(
-        "TestExecutor is already running tests. Wait for completion or use a new instance."
+        'TestExecutor is already running tests. Wait for completion or use a new instance.'
       );
     }
 
@@ -179,11 +172,7 @@ export class TestExecutor {
       });
 
       // Execute tests with monitoring
-      const result = await this.executeWithMonitoring(
-        command,
-        executionId,
-        options
-      );
+      const result = await this.executeWithMonitoring(command, executionId, options);
 
       // Post-execution cleanup
       await this.postTestCleanup(executionId);
@@ -236,7 +225,7 @@ export class TestExecutor {
     // Check if we can start tests
     const canStart = await resourceController.canStartProcess();
     if (!canStart) {
-      throw new Error("Cannot start tests: Resource limits exceeded");
+      throw new Error('Cannot start tests: Resource limits exceeded');
     }
 
     // Start resource monitoring
@@ -253,7 +242,7 @@ export class TestExecutor {
     // Force garbage collection if available
     await MemoryUsageChecker.forceGarbageCollection();
 
-    console.log(`📊 Initial resource stats:`, {
+    console.log('📊 Initial resource stats:', {
       processes: initialStats.bunProcesses,
       cpu: `${initialStats.totalCpuPercent}%`,
       memory: `${initialStats.totalMemoryMB.toFixed(0)}MB`,
@@ -275,15 +264,11 @@ export class TestExecutor {
     // Verify no processes are left running
     const finalStats = await resourceController.getResourceStats();
     if (finalStats.bunProcesses > 1) {
-      console.warn(
-        `⚠️ Warning: ${finalStats.bunProcesses} Bun processes still running`
-      );
       // Give processes time to clean up naturally
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const recheckStats = await resourceController.getResourceStats();
       if (recheckStats.bunProcesses > 1) {
-        console.warn(`🚨 Triggering emergency cleanup for remaining processes`);
         await resourceController.emergencyCleanup();
       }
     }
@@ -297,12 +282,7 @@ export class TestExecutor {
   /**
    * Handle execution errors with cleanup
    */
-  private async handleExecutionError(
-    error: unknown,
-    executionId: string
-  ): Promise<void> {
-    console.error(`❌ Test execution error in ${executionId}:`, error);
-
+  private async handleExecutionError(_error: unknown, _executionId: string): Promise<void> {
     // Emergency cleanup
     await resourceController.emergencyCleanup();
 
@@ -336,18 +316,12 @@ export class TestExecutor {
       if (this.currentExecution) {
         const stats = await resourceController.getResourceStats();
         this.currentExecution.resourceStats.push(stats);
-        this.currentExecution.memorySnapshots.push(
-          this.getCurrentMemoryUsage()
-        );
+        this.currentExecution.memorySnapshots.push(this.getCurrentMemoryUsage());
 
         // Check for resource issues
         if (stats.totalCpuPercent > 90) {
-          console.warn(`⚠️ High CPU usage detected: ${stats.totalCpuPercent}%`);
         }
         if (stats.bunProcesses > 3) {
-          console.warn(
-            `⚠️ High process count: ${stats.bunProcesses} Bun processes`
-          );
         }
       }
     }, 1000);
@@ -405,7 +379,7 @@ export class TestExecutor {
    * Build test command based on options
    */
   private buildTestCommand(options: TestExecutionOptions): string {
-    const parts = ["bun", "test"];
+    const parts = ['bun', 'test'];
 
     // Add test path or pattern
     if (options.testPath) {
@@ -416,26 +390,26 @@ export class TestExecutor {
 
     // Add options
     if (options.coverage) {
-      parts.push("--coverage");
+      parts.push('--coverage');
     }
 
     if (options.reporter) {
-      parts.push("--reporter", options.reporter);
+      parts.push('--reporter', options.reporter);
     }
 
     if (options.bail) {
-      parts.push("--bail");
+      parts.push('--bail');
     }
 
     // Force run (don't watch)
-    parts.push("--run");
+    parts.push('--run');
 
     // Add concurrency if specified
     if (options.concurrency !== undefined) {
-      parts.push("--max-concurrency", options.concurrency.toString());
+      parts.push('--max-concurrency', options.concurrency.toString());
     }
 
-    return parts.join(" ");
+    return parts.join(' ');
   }
 
   /**
@@ -454,8 +428,8 @@ export class TestExecutor {
       return { stdout, stderr, exitCode: 0 };
     } catch (error: any) {
       return {
-        stdout: error.stdout || "",
-        stderr: error.stderr || "",
+        stdout: error.stdout || '',
+        stderr: error.stderr || '',
         exitCode: error.code || 1,
       };
     }
@@ -482,53 +456,41 @@ export class TestExecutor {
     // Extract errors from stderr
     if (stderr) {
       const errorLines = stderr
-        .split("\n")
-        .filter(
-          (line) =>
-            line.includes("Error") ||
-            line.includes("FAIL") ||
-            line.includes("✗")
-        );
+        .split('\n')
+        .filter((line) => line.includes('Error') || line.includes('FAIL') || line.includes('✗'));
       errors.push(...errorLines);
     }
 
     // Extract warnings
     const warningLines = stdout
-      .split("\n")
-      .filter(
-        (line) =>
-          line.includes("warn") ||
-          line.includes("Warning") ||
-          line.includes("⚠")
-      );
+      .split('\n')
+      .filter((line) => line.includes('warn') || line.includes('Warning') || line.includes('⚠'));
     warnings.push(...warningLines);
 
     // Parse test counts (basic parsing - can be enhanced)
-    let total = 0,
-      passed = 0,
-      failed = 0,
-      skipped = 0;
+    let total = 0;
+    let passed = 0;
+    let failed = 0;
+    let skipped = 0;
 
     // Look for Vitest output patterns
-    const testSummaryMatch = stdout.match(
-      /Test Files\s+(\d+)\s+passed.*?Tests\s+(\d+)\s+passed/s
-    );
+    const testSummaryMatch = stdout.match(/Test Files\s+(\d+)\s+passed.*?Tests\s+(\d+)\s+passed/s);
     if (testSummaryMatch) {
-      passed = parseInt(testSummaryMatch[2]) || 0;
+      passed = Number.parseInt(testSummaryMatch[2], 10) || 0;
       total = passed;
     }
 
     // Look for failure patterns
     const failureMatch = stdout.match(/(\d+)\s+failed/);
     if (failureMatch) {
-      failed = parseInt(failureMatch[1]) || 0;
+      failed = Number.parseInt(failureMatch[1], 10) || 0;
       total += failed;
     }
 
     // Look for skip patterns
     const skipMatch = stdout.match(/(\d+)\s+skipped/);
     if (skipMatch) {
-      skipped = parseInt(skipMatch[1]) || 0;
+      skipped = Number.parseInt(skipMatch[1], 10) || 0;
       total += skipped;
     }
 
@@ -550,18 +512,14 @@ export class TestExecutor {
     executionDuration: number,
     totalDuration: number
   ): TestPerformanceMetrics {
-    const teardownDuration = Math.max(
-      0,
-      totalDuration - setupDuration - executionDuration
-    );
+    const teardownDuration = Math.max(0, totalDuration - setupDuration - executionDuration);
 
     // Get memory metrics
     const memorySnapshots = this.currentExecution?.memorySnapshots || [];
     const memoryPeak = Math.max(...memorySnapshots, 0);
     const memoryAverage =
       memorySnapshots.length > 0
-        ? memorySnapshots.reduce((sum, val) => sum + val, 0) /
-          memorySnapshots.length
+        ? memorySnapshots.reduce((sum, val) => sum + val, 0) / memorySnapshots.length
         : 0;
 
     // Get slow tests from performance monitor
@@ -575,8 +533,7 @@ export class TestExecutor {
 
     const averageTestDuration =
       allMetrics.length > 0
-        ? allMetrics.reduce((sum, metric) => sum + metric.duration, 0) /
-          allMetrics.length
+        ? allMetrics.reduce((sum, metric) => sum + metric.duration, 0) / allMetrics.length
         : 0;
 
     return {
@@ -650,12 +607,9 @@ export class TestExecutor {
       systemLoad: Math.max(peak.systemLoad, current.systemLoad),
     }));
 
-    const maxProcessCount = Math.max(
-      ...resourceStats.map((s) => s.bunProcesses)
-    );
+    const maxProcessCount = Math.max(...resourceStats.map((s) => s.bunProcesses));
     const avgSystemLoad =
-      resourceStats.reduce((sum, s) => sum + s.systemLoad, 0) /
-      resourceStats.length;
+      resourceStats.reduce((sum, s) => sum + s.systemLoad, 0) / resourceStats.length;
 
     // Detect potential memory leaks
     const memorySnapshots = this.currentExecution?.memorySnapshots || [];
@@ -678,7 +632,7 @@ export class TestExecutor {
    * Get current memory usage in MB
    */
   private getCurrentMemoryUsage(): number {
-    if (typeof process !== "undefined" && process.memoryUsage) {
+    if (typeof process !== 'undefined' && process.memoryUsage) {
       return process.memoryUsage().heapUsed / 1024 / 1024;
     }
     return 0;
@@ -688,15 +642,15 @@ export class TestExecutor {
    * Generate comprehensive execution report
    */
   public generateExecutionReport(result: TestExecutionResult): string {
-    let report = "\n=== Test Execution Report ===\n";
+    let report = '\n=== Test Execution Report ===\n';
 
     // Basic results
-    report += `Status: ${result.success ? "✅ PASSED" : "❌ FAILED"}\n`;
+    report += `Status: ${result.success ? '✅ PASSED' : '❌ FAILED'}\n`;
     report += `Duration: ${(result.duration / 1000).toFixed(2)}s\n`;
     report += `Tests: ${result.testCount} (${result.passedCount} passed, ${result.failedCount} failed, ${result.skippedCount} skipped)\n`;
 
     // Performance metrics
-    report += "\n--- Performance Metrics ---\n";
+    report += '\n--- Performance Metrics ---\n';
     report += `Setup: ${(result.performance.setupDuration / 1000).toFixed(2)}s\n`;
     report += `Execution: ${(result.performance.executionDuration / 1000).toFixed(2)}s\n`;
     report += `Teardown: ${(result.performance.teardownDuration / 1000).toFixed(2)}s\n`;
@@ -707,16 +661,16 @@ export class TestExecutor {
     }
 
     // Resource usage
-    report += "\n--- Resource Usage ---\n";
+    report += '\n--- Resource Usage ---\n';
     report += `Peak Processes: ${result.resourceUsage.maxProcessCount}\n`;
     report += `Peak CPU: ${result.resourceUsage.peakStats.totalCpuPercent.toFixed(1)}%\n`;
     report += `Peak Memory: ${result.resourceUsage.peakStats.totalMemoryMB.toFixed(0)}MB\n`;
     report += `System Load Average: ${result.resourceUsage.systemLoadAverage.toFixed(2)}\n`;
-    report += `Memory Leaks Detected: ${result.resourceUsage.memoryLeaks ? "⚠️ YES" : "✅ NO"}\n`;
+    report += `Memory Leaks Detected: ${result.resourceUsage.memoryLeaks ? '⚠️ YES' : '✅ NO'}\n`;
 
     // Errors and warnings
     if (result.errors.length > 0) {
-      report += "\n--- Errors ---\n";
+      report += '\n--- Errors ---\n';
       result.errors.slice(0, 5).forEach((error) => {
         report += `❌ ${error}\n`;
       });
@@ -726,7 +680,7 @@ export class TestExecutor {
     }
 
     if (result.warnings.length > 0) {
-      report += "\n--- Warnings ---\n";
+      report += '\n--- Warnings ---\n';
       result.warnings.slice(0, 3).forEach((warning) => {
         report += `⚠️ ${warning}\n`;
       });
@@ -743,15 +697,11 @@ export class TestExecutor {
 export const testExecutor = TestExecutor.getInstance();
 
 // Export convenience functions
-export const runSingleTest = (
-  testPath: string,
-  options?: TestExecutionOptions
-) => testExecutor.runSingleTest(testPath, options);
+export const runSingleTest = (testPath: string, options?: TestExecutionOptions) =>
+  testExecutor.runSingleTest(testPath, options);
 
-export const runTestSuite = (
-  pattern?: string,
-  options?: TestExecutionOptions
-) => testExecutor.runTestSuite(pattern, options);
+export const runTestSuite = (pattern?: string, options?: TestExecutionOptions) =>
+  testExecutor.runTestSuite(pattern, options);
 
 export const runWithAdaptiveConcurrency = (options?: TestExecutionOptions) =>
   testExecutor.runWithAdaptiveConcurrency(options);

@@ -2,23 +2,23 @@
  * Test the MockManager system directly
  */
 
-import { describe, expect, it, beforeEach } from "vitest";
-import { MockManager } from "./MockManager";
+import { beforeEach, describe, expect, it } from 'vitest';
+import { MockManager } from './MockManager';
 
-describe("MockManager System", () => {
+describe('MockManager System', () => {
   let mockManager: MockManager;
 
   beforeEach(() => {
     mockManager = MockManager.getInstance();
   });
 
-  it("should create mock functions", () => {
+  it('should create mock functions', () => {
     const mockFn = mockManager.mockFunction();
     expect(mockFn).toBeDefined();
-    expect(typeof mockFn).toBe("function");
+    expect(typeof mockFn).toBe('function');
   });
 
-  it("should create mock objects", () => {
+  it('should create mock objects', () => {
     interface TestInterface extends Record<string, unknown> {
       method1: () => string;
       method2: (arg: number) => number;
@@ -26,22 +26,22 @@ describe("MockManager System", () => {
     }
 
     const mock = mockManager.createMock<TestInterface>({
-      method1: () => "test",
+      method1: () => 'test',
       method2: (arg: number) => arg * 2,
-      property: "test-value",
+      property: 'test-value',
     });
 
     expect(mock).toBeDefined();
-    expect(mock.property).toBe("test-value");
-    expect(typeof mock.method1).toBe("function");
-    expect(typeof mock.method2).toBe("function");
+    expect(mock.property).toBe('test-value');
+    expect(typeof mock.method1).toBe('function');
+    expect(typeof mock.method2).toBe('function');
   });
 
-  it("should handle module mocking", () => {
-    const modulePath = "test-module";
+  it('should handle module mocking', () => {
+    const modulePath = 'test-module';
     const mockFactory = () => ({
       testFunction: mockManager.mockFunction(),
-      testValue: "mocked",
+      testValue: 'mocked',
     });
 
     // Should not throw
@@ -54,7 +54,7 @@ describe("MockManager System", () => {
     expect(mockedModule).toBeDefined();
   });
 
-  it("should setup and cleanup mocks", () => {
+  it('should setup and cleanup mocks', () => {
     // Should not throw
     expect(() => {
       mockManager.setupMocks();
@@ -69,7 +69,7 @@ describe("MockManager System", () => {
     }).not.toThrow();
   });
 
-  it("should handle configuration updates", () => {
+  it('should handle configuration updates', () => {
     const newConfig = {
       autoMock: true,
       clearMocksAfterEach: false,

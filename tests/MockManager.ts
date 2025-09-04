@@ -3,20 +3,16 @@
  * Fixes broken vi.mock functionality and provides type-safe mocking
  */
 
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
 // Type definitions for our mock system
-export type MockedFunction<T extends (...args: unknown[]) => unknown> =
-  ReturnType<typeof vi.fn> & T;
+export type MockedFunction<T extends (...args: unknown[]) => unknown> = ReturnType<typeof vi.fn> &
+  T;
 export type MockedObject<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown
-    ? MockedFunction<T[K]>
-    : T[K];
+  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? MockedFunction<T[K]> : T[K];
 };
 
-export interface MockFactory<T = Record<string, unknown>> {
-  (): T;
-}
+export type MockFactory<T = Record<string, unknown>> = () => T;
 
 export interface MockConfig {
   autoMock: boolean;
@@ -68,7 +64,7 @@ export class MockManager {
     if (implementation) {
       Object.keys(implementation).forEach((key) => {
         const value = implementation[key as keyof T];
-        if (typeof value === "function") {
+        if (typeof value === 'function') {
           mock[key as keyof T] = this.mockFunction(value as never) as never;
         } else {
           mock[key as keyof T] = value as never;
@@ -82,10 +78,8 @@ export class MockManager {
   /**
    * Create a type-safe mock function
    */
-  public mockFunction<T extends (...args: unknown[]) => unknown>(
-    fn?: T
-  ): MockedFunction<T> {
-    if (typeof vi !== "undefined" && vi && typeof vi.fn === "function") {
+  public mockFunction<T extends (...args: unknown[]) => unknown>(fn?: T): MockedFunction<T> {
+    if (typeof vi !== 'undefined' && vi && typeof vi.fn === 'function') {
       const mockFn = vi.fn() as MockedFunction<T>;
       if (fn) {
         mockFn.mockImplementation(fn);
@@ -107,30 +101,22 @@ export class MockManager {
       instances: [],
     };
 
-    (fallbackMock as unknown as Record<string, unknown>).mockImplementation = (
-      impl: T
-    ) => {
+    (fallbackMock as unknown as Record<string, unknown>).mockImplementation = (impl: T) => {
       Object.assign(fallbackMock, impl);
       return fallbackMock;
     };
 
-    (fallbackMock as unknown as Record<string, unknown>).mockResolvedValue = (
-      value: unknown
-    ) => {
+    (fallbackMock as unknown as Record<string, unknown>).mockResolvedValue = (value: unknown) => {
       Object.assign(fallbackMock, () => Promise.resolve(value));
       return fallbackMock;
     };
 
-    (fallbackMock as unknown as Record<string, unknown>).mockRejectedValue = (
-      error: unknown
-    ) => {
+    (fallbackMock as unknown as Record<string, unknown>).mockRejectedValue = (error: unknown) => {
       Object.assign(fallbackMock, () => Promise.reject(error));
       return fallbackMock;
     };
 
-    (fallbackMock as unknown as Record<string, unknown>).mockReturnValue = (
-      value: unknown
-    ) => {
+    (fallbackMock as unknown as Record<string, unknown>).mockReturnValue = (value: unknown) => {
       Object.assign(fallbackMock, () => value);
       return fallbackMock;
     };
@@ -196,14 +182,11 @@ export class MockManager {
    * Clean up all mocks
    */
   public cleanupMocks(): void {
-    if (typeof vi?.clearAllMocks === "function") {
+    if (typeof vi?.clearAllMocks === 'function') {
       vi.clearAllMocks();
     }
 
-    if (
-      this.config.restoreMocksAfterEach &&
-      typeof vi?.restoreAllMocks === "function"
-    ) {
+    if (this.config.restoreMocksAfterEach && typeof vi?.restoreAllMocks === 'function') {
       vi.restoreAllMocks();
     }
 
@@ -217,12 +200,12 @@ export class MockManager {
    * Reset all mocks to initial state
    */
   public resetAllMocks(): void {
-    if (typeof vi?.resetAllMocks === "function") {
+    if (typeof vi?.resetAllMocks === 'function') {
       vi.resetAllMocks();
     }
 
     // Reset module cache if available
-    if (typeof vi?.resetModules === "function") {
+    if (typeof vi?.resetModules === 'function') {
       vi.resetModules();
     }
   }
@@ -234,7 +217,7 @@ export class MockManager {
     mock: MockedFunction<T>,
     implementation: T
   ): void {
-    if (mock && typeof mock.mockImplementation === "function") {
+    if (mock && typeof mock.mockImplementation === 'function') {
       mock.mockImplementation(implementation);
     } else {
       // Fallback - directly assign the implementation
@@ -247,7 +230,7 @@ export class MockManager {
    */
   private setupCommonMocks(): void {
     // Logger mock
-    this.mockModule("../../services/logger.service", () => ({
+    this.mockModule('../../services/logger.service', () => ({
       debug: this.mockFunction(),
       info: this.mockFunction(),
       warn: this.mockFunction(),
@@ -257,7 +240,7 @@ export class MockManager {
     }));
 
     // File system mocks
-    this.mockModule("node:fs/promises", () => ({
+    this.mockModule('node:fs/promises', () => ({
       readFile: this.mockFunction(),
       writeFile: this.mockFunction(),
       mkdir: this.mockFunction(),
@@ -268,22 +251,14 @@ export class MockManager {
     }));
 
     // Path mocks
-    this.mockModule("node:path", () => ({
-      join: this.mockFunction((...args: unknown[]) =>
-        (args as string[]).join("/")
-      ),
-      resolve: this.mockFunction((...args: unknown[]) =>
-        (args as string[]).join("/")
-      ),
-      dirname: this.mockFunction((p: unknown) =>
-        (p as string).split("/").slice(0, -1).join("/")
-      ),
-      basename: this.mockFunction(
-        (p: unknown) => (p as string).split("/").pop() || ""
-      ),
+    this.mockModule('node:path', () => ({
+      join: this.mockFunction((...args: unknown[]) => (args as string[]).join('/')),
+      resolve: this.mockFunction((...args: unknown[]) => (args as string[]).join('/')),
+      dirname: this.mockFunction((p: unknown) => (p as string).split('/').slice(0, -1).join('/')),
+      basename: this.mockFunction((p: unknown) => (p as string).split('/').pop() || ''),
       extname: this.mockFunction((p: unknown) => {
-        const parts = (p as string).split(".");
-        return parts.length > 1 ? `.${parts.pop()}` : "";
+        const parts = (p as string).split('.');
+        return parts.length > 1 ? `.${parts.pop()}` : '';
       }),
     }));
   }
@@ -293,7 +268,7 @@ export class MockManager {
    */
   private enableAutoMocking(): void {
     // Implementation for auto-mocking patterns
-    console.log("Auto-mocking enabled");
+    console.log('Auto-mocking enabled');
   }
 
   /**
@@ -315,13 +290,11 @@ export class MockManager {
 export const mockManager = MockManager.getInstance();
 
 // Export convenience functions
-export const createMock = <T extends Record<string, unknown>>(
-  impl?: Partial<T>
-) => mockManager.createMock<T>(impl);
+export const createMock = <T extends Record<string, unknown>>(impl?: Partial<T>) =>
+  mockManager.createMock<T>(impl);
 
-export const mockFunction = <T extends (...args: unknown[]) => unknown>(
-  fn?: T
-) => mockManager.mockFunction<T>(fn);
+export const mockFunction = <T extends (...args: unknown[]) => unknown>(fn?: T) =>
+  mockManager.mockFunction<T>(fn);
 
 export const mockModule = <T extends Record<string, unknown>>(
   path: string,

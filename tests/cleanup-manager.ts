@@ -3,10 +3,10 @@
  * Handles cleanup of all test artifacts, mocks, and state
  */
 
-import { promises as fs } from "node:fs";
-import * as path from "node:path";
-import { performance } from "node:perf_hooks";
-import { vi } from "vitest";
+import { promises as fs } from 'node:fs';
+import * as path from 'node:path';
+import { performance } from 'node:perf_hooks';
+import { vi } from 'vitest';
 
 interface CleanupTask {
   name: string;
@@ -94,7 +94,7 @@ export const cleanupManager = new TestCleanupManager();
 
 // Register default cleanup tasks
 cleanupManager.registerCleanupTask({
-  name: "mock-cleanup",
+  name: 'mock-cleanup',
   priority: 1,
   cleanup: () => {
     vi.clearAllMocks();
@@ -108,7 +108,7 @@ cleanupManager.registerCleanupTask({
 });
 
 cleanupManager.registerCleanupTask({
-  name: "module-cache-cleanup",
+  name: 'module-cache-cleanup',
   priority: 2,
   cleanup: () => {
     vi.resetModules();
@@ -116,7 +116,7 @@ cleanupManager.registerCleanupTask({
 });
 
 cleanupManager.registerCleanupTask({
-  name: "filesystem-cleanup",
+  name: 'filesystem-cleanup',
   priority: 3,
   cleanup: async () => {
     await cleanupTestDirectories();
@@ -124,7 +124,7 @@ cleanupManager.registerCleanupTask({
 });
 
 cleanupManager.registerCleanupTask({
-  name: "dom-cleanup",
+  name: 'dom-cleanup',
   priority: 4,
   cleanup: async () => {
     await cleanupDOM();
@@ -132,7 +132,7 @@ cleanupManager.registerCleanupTask({
 });
 
 cleanupManager.registerCleanupTask({
-  name: "process-cleanup",
+  name: 'process-cleanup',
   priority: 5,
   cleanup: () => {
     cleanupProcessState();
@@ -140,7 +140,7 @@ cleanupManager.registerCleanupTask({
 });
 
 cleanupManager.registerCleanupTask({
-  name: "memory-cleanup",
+  name: 'memory-cleanup',
   priority: 6,
   cleanup: () => {
     cleanupMemory();
@@ -152,23 +152,18 @@ cleanupManager.registerCleanupTask({
  */
 async function cleanupTestDirectories(): Promise<void> {
   const testDirs = [
-    "test-logging-integration",
-    "test-repo-analysis",
-    "test-cache",
-    "test-output",
-    "test-temp",
-    "test-data",
-    "test-logs",
-    "test-artifacts",
-    ".test-tmp",
+    'test-logging-integration',
+    'test-repo-analysis',
+    'test-cache',
+    'test-output',
+    'test-temp',
+    'test-data',
+    'test-logs',
+    'test-artifacts',
+    '.test-tmp',
   ];
 
-  const testFiles = [
-    "test.log",
-    "test-audit.json",
-    "test-results.xml",
-    "coverage-temp.json",
-  ];
+  const testFiles = ['test.log', 'test-audit.json', 'test-results.xml', 'coverage-temp.json'];
 
   // Cleanup directories
   for (const dir of testDirs) {
@@ -193,11 +188,7 @@ async function cleanupTestDirectories(): Promise<void> {
   // Cleanup any files matching test patterns
   try {
     const files = await fs.readdir(process.cwd());
-    const testPatterns = [
-      /^test-.*\.(log|tmp|cache)$/,
-      /^\.test-/,
-      /\.test\.temp$/,
-    ];
+    const testPatterns = [/^test-.*\.(log|tmp|cache)$/, /^\.test-/, /\.test\.temp$/];
 
     for (const file of files) {
       if (testPatterns.some((pattern) => pattern.test(file))) {
@@ -223,42 +214,42 @@ async function cleanupTestDirectories(): Promise<void> {
  * Cleanup DOM state
  */
 async function cleanupDOM(): Promise<void> {
-  if (typeof window === "undefined" || typeof document === "undefined") {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
     return;
   }
 
   try {
     // Clear document body
     if (document.body) {
-      document.body.innerHTML = "";
+      document.body.innerHTML = '';
     }
 
     // Clear document head of test-added elements
-    const testElements = document.head.querySelectorAll("[data-test]");
+    const testElements = document.head.querySelectorAll('[data-test]');
     testElements.forEach((el) => el.remove());
 
     // Clear any event listeners added during tests
-    const events = ["click", "change", "input", "submit", "load", "resize"];
+    const events = ['click', 'change', 'input', 'submit', 'load', 'resize'];
     events.forEach((event) => {
       document.removeEventListener(event, () => {});
       window.removeEventListener(event, () => {});
     });
 
     // Reset document title
-    document.title = "Test";
+    document.title = 'Test';
 
     // Clear localStorage and sessionStorage
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       localStorage.clear();
     }
-    if (typeof sessionStorage !== "undefined") {
+    if (typeof sessionStorage !== 'undefined') {
       sessionStorage.clear();
     }
 
     // Clear any test cookies
     if (document.cookie) {
-      document.cookie.split(";").forEach((cookie) => {
-        const eqPos = cookie.indexOf("=");
+      document.cookie.split(';').forEach((cookie) => {
+        const eqPos = cookie.indexOf('=');
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       });
@@ -266,7 +257,7 @@ async function cleanupDOM(): Promise<void> {
 
     // Use testing-library cleanup if available
     try {
-      const { cleanup } = await import("@testing-library/react");
+      const { cleanup } = await import('@testing-library/react');
       cleanup();
     } catch {
       // Not available, skip
@@ -279,27 +270,24 @@ async function cleanupDOM(): Promise<void> {
  */
 function cleanupProcessState(): void {
   // Reset NODE_ENV if it was changed
-  if (process.env.NODE_ENV !== "test") {
-    process.env.NODE_ENV = "test";
+  if (process.env.NODE_ENV !== 'test') {
+    process.env.NODE_ENV = 'test';
   }
 
   // Clear any test-specific environment variables
   const testEnvVars = Object.keys(process.env).filter(
-    (key) =>
-      key.startsWith("TEST_") ||
-      key.startsWith("VITEST_") ||
-      key.includes("_TEST_")
+    (key) => key.startsWith('TEST_') || key.startsWith('VITEST_') || key.includes('_TEST_')
   );
 
   testEnvVars.forEach((key) => {
-    if (!key.startsWith("VITEST_")) {
+    if (!key.startsWith('VITEST_')) {
       // Don't remove vitest's own vars
       delete process.env[key];
     }
   });
 
   // Clear any test-added process listeners
-  const testEvents = ["uncaughtException", "unhandledRejection", "warning"];
+  const testEvents = ['uncaughtException', 'unhandledRejection', 'warning'];
   testEvents.forEach((event) => {
     process.removeAllListeners(event);
   });
@@ -323,8 +311,7 @@ function cleanupMemory(): void {
 
   // Clear any global test variables
   const globalKeys = Object.keys(global).filter(
-    (key) =>
-      key.startsWith("test") || key.startsWith("mock") || key.includes("Test")
+    (key) => key.startsWith('test') || key.startsWith('mock') || key.includes('Test')
   );
 
   globalKeys.forEach((key) => {

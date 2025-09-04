@@ -3,8 +3,8 @@
  * Limits concurrent Bun processes and provides process monitoring
  */
 
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
 const execAsync = promisify(exec);
 
@@ -82,9 +82,7 @@ export class ResourceController {
     this.processMonitorInterval = setInterval(async () => {
       try {
         await this.checkResourceUsage();
-      } catch (error) {
-        console.warn("Resource monitoring error:", error);
-      }
+      } catch (_error) {}
     }, intervalMs);
   }
 
@@ -105,14 +103,10 @@ export class ResourceController {
     try {
       const processes = await this.getProcessList();
       const bunProcesses = processes.filter(
-        (p) =>
-          p.name.toLowerCase().includes("bun") ||
-          p.command.toLowerCase().includes("bun")
+        (p) => p.name.toLowerCase().includes('bun') || p.command.toLowerCase().includes('bun')
       );
       const vitestProcesses = processes.filter(
-        (p) =>
-          p.name.toLowerCase().includes("vitest") ||
-          p.command.toLowerCase().includes("vitest")
+        (p) => p.name.toLowerCase().includes('vitest') || p.command.toLowerCase().includes('vitest')
       );
 
       const totalCpu = processes.reduce((sum, p) => sum + p.cpu, 0);
@@ -126,8 +120,7 @@ export class ResourceController {
         totalMemoryMB: totalMemory,
         systemLoad: await this.getSystemLoad(),
       };
-    } catch (error) {
-      console.warn("Failed to get resource stats:", error);
+    } catch (_error) {
       return {
         totalProcesses: 0,
         bunProcesses: 0,
@@ -172,7 +165,6 @@ export class ResourceController {
     // Set up automatic cleanup after timeout
     setTimeout(() => {
       if (this.activeProcesses.has(pid)) {
-        console.warn(`Process ${pid} exceeded timeout, cleaning up`);
         this.killProcess(pid);
       }
     }, this.limits.processTimeout);
@@ -190,15 +182,14 @@ export class ResourceController {
    */
   public async killProcess(pid: number): Promise<boolean> {
     try {
-      if (process.platform === "win32") {
+      if (process.platform === 'win32') {
         await execAsync(`taskkill /F /PID ${pid}`);
       } else {
-        process.kill(pid, "SIGKILL");
+        process.kill(pid, 'SIGKILL');
       }
       this.unregisterProcess(pid);
       return true;
-    } catch (error) {
-      console.warn(`Failed to kill process ${pid}:`, error);
+    } catch (_error) {
       return false;
     }
   }
@@ -212,22 +203,21 @@ export class ResourceController {
     }
 
     this.emergencyCleanupActive = true;
-    console.log("🚨 Emergency cleanup initiated");
+    console.log('🚨 Emergency cleanup initiated');
 
     try {
       // Set a timeout for the entire cleanup operation
       const cleanupPromise = this.performCleanup();
       const timeoutPromise = new Promise<void>((resolve) => {
         setTimeout(() => {
-          console.log("⏰ Cleanup timeout reached");
+          console.log('⏰ Cleanup timeout reached');
           resolve();
         }, 5000); // 5 second timeout
       });
 
       await Promise.race([cleanupPromise, timeoutPromise]);
-      console.log("✅ Emergency cleanup completed");
-    } catch (error) {
-      console.error("❌ Emergency cleanup failed:", error);
+      console.log('✅ Emergency cleanup completed');
+    } catch (_error) {
     } finally {
       this.emergencyCleanupActive = false;
     }
@@ -241,9 +231,7 @@ export class ResourceController {
     const killPromises = Array.from(this.activeProcesses).map((pid) =>
       Promise.race([
         this.killProcess(pid),
-        new Promise<boolean>((resolve) =>
-          setTimeout(() => resolve(false), 1000)
-        ),
+        new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 1000)),
       ])
     );
     await Promise.all(killPromises);
@@ -269,12 +257,12 @@ export class ResourceController {
    */
   private async killAllBunProcesses(): Promise<void> {
     try {
-      if (process.platform === "win32") {
-        await execAsync("taskkill /F /IM bun.exe");
+      if (process.platform === 'win32') {
+        await execAsync('taskkill /F /IM bun.exe');
       } else {
-        await execAsync("pkill -f bun");
+        await execAsync('pkill -f bun');
       }
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors - processes might not exist
     }
   }
@@ -284,14 +272,12 @@ export class ResourceController {
    */
   private async killAllVitestProcesses(): Promise<void> {
     try {
-      if (process.platform === "win32") {
-        await execAsync(
-          'taskkill /F /IM node.exe /FI "WINDOWTITLE eq *vitest*"'
-        );
+      if (process.platform === 'win32') {
+        await execAsync('taskkill /F /IM node.exe /FI "WINDOWTITLE eq *vitest*"');
       } else {
-        await execAsync("pkill -f vitest");
+        await execAsync('pkill -f vitest');
       }
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors - processes might not exist
     }
   }
@@ -304,7 +290,6 @@ export class ResourceController {
 
     // Check if we need emergency cleanup
     if (stats.totalCpuPercent > 95 || stats.bunProcesses > 5) {
-      console.warn("🚨 High resource usage detected, triggering cleanup");
       await this.emergencyCleanup();
     }
 
@@ -321,17 +306,15 @@ export class ResourceController {
    */
   private async getProcessList(): Promise<ProcessInfo[]> {
     try {
-      if (process.platform === "win32") {
+      if (process.platform === 'win32') {
         const { stdout } = await execAsync(
-          "wmic process get ProcessId,Name,PageFileUsage,WorkingSetSize,CommandLine /format:csv"
+          'wmic process get ProcessId,Name,PageFileUsage,WorkingSetSize,CommandLine /format:csv'
         );
         return this.parseWindowsProcessList(stdout);
-      } else {
-        const { stdout } = await execAsync("ps aux");
-        return this.parseUnixProcessList(stdout);
       }
-    } catch (error) {
-      console.warn("Failed to get process list:", error);
+      const { stdout } = await execAsync('ps aux');
+      return this.parseUnixProcessList(stdout);
+    } catch (_error) {
       return [];
     }
   }
@@ -340,26 +323,26 @@ export class ResourceController {
    * Parse Windows process list
    */
   private parseWindowsProcessList(output: string): ProcessInfo[] {
-    const lines = output.split("\n").filter((line) => line.trim()); // Remove empty lines
+    const lines = output.split('\n').filter((line) => line.trim()); // Remove empty lines
     const processes: ProcessInfo[] = [];
 
     for (const line of lines) {
-      if (line.includes("Node,") || !line.includes(",")) continue; // Skip header
+      if (line.includes('Node,') || !line.includes(',')) continue; // Skip header
 
-      const parts = line.split(",");
+      const parts = line.split(',');
       if (parts.length >= 5 && parts[4] && parts[4].trim()) {
-        const pid = parseInt(parts[4].trim()) || 0;
-        const workingSet = parseInt(parts[3]) || 0;
+        const pid = Number.parseInt(parts[4].trim(), 10) || 0;
+        const workingSet = Number.parseInt(parts[3], 10) || 0;
         const memory = workingSet > 0 ? workingSet / 1024 / 1024 : 0; // Convert bytes to MB
 
         if (pid > 0 && memory < 10000) {
           // Sanity check - ignore processes with > 10GB memory
           processes.push({
             pid,
-            name: (parts[1] || "").trim(),
+            name: (parts[1] || '').trim(),
             cpu: 0, // Windows wmic doesn't provide CPU easily
             memory,
-            command: (parts[0] || "").trim(),
+            command: (parts[0] || '').trim(),
           });
         }
       }
@@ -372,18 +355,18 @@ export class ResourceController {
    * Parse Unix process list
    */
   private parseUnixProcessList(output: string): ProcessInfo[] {
-    const lines = output.split("\n").slice(1); // Skip header
+    const lines = output.split('\n').slice(1); // Skip header
     const processes: ProcessInfo[] = [];
 
     for (const line of lines) {
       const parts = line.trim().split(/\s+/);
       if (parts.length >= 11) {
         processes.push({
-          pid: parseInt(parts[1]) || 0,
-          name: parts[10] || "",
-          cpu: parseFloat(parts[2]) || 0,
-          memory: parseFloat(parts[3]) || 0,
-          command: parts.slice(10).join(" "),
+          pid: Number.parseInt(parts[1], 10) || 0,
+          name: parts[10] || '',
+          cpu: Number.parseFloat(parts[2]) || 0,
+          memory: Number.parseFloat(parts[3]) || 0,
+          command: parts.slice(10).join(' '),
         });
       }
     }
@@ -396,19 +379,16 @@ export class ResourceController {
    */
   private async getSystemLoad(): Promise<number> {
     try {
-      if (process.platform === "win32") {
+      if (process.platform === 'win32') {
         // Windows doesn't have load average, use CPU percentage
-        const { stdout } = await execAsync(
-          "wmic cpu get loadpercentage /value"
-        );
+        const { stdout } = await execAsync('wmic cpu get loadpercentage /value');
         const match = stdout.match(/LoadPercentage=(\d+)/);
-        return match ? parseInt(match[1]) : 0;
-      } else {
-        const { stdout } = await execAsync("uptime");
-        const match = stdout.match(/load average: ([\d.]+)/);
-        return match ? parseFloat(match[1]) : 0;
+        return match ? Number.parseInt(match[1], 10) : 0;
       }
-    } catch (error) {
+      const { stdout } = await execAsync('uptime');
+      const match = stdout.match(/load average: ([\d.]+)/);
+      return match ? Number.parseFloat(match[1]) : 0;
+    } catch (_error) {
       return 0;
     }
   }

@@ -4,7 +4,7 @@
  * This version avoids importing cleanup-manager to prevent circular dependencies
  */
 
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
 /**
  * Enhanced mock function with better type inference
@@ -23,22 +23,14 @@ export function createMock<T extends (...args: any[]) => any>(
  * Mock an entire module with type safety
  */
 export function mockModule<T extends Record<string, any>>(
-  modulePath: string,
-  mockImplementation: Partial<T>
-): void {
-  // This function is a placeholder for compatibility
-  // The actual mocking should be done through MockManager
-  console.warn(
-    "mockModule called - use MockManager.mockModule() instead for better reliability"
-  );
-}
+  _modulePath: string,
+  _mockImplementation: Partial<T>
+): void {}
 
 /**
  * Create a partial mock of an object with type safety
  */
-export function createPartialMock<T extends Record<string, any>>(
-  partial: Partial<T>
-): T {
+export function createPartialMock<T extends Record<string, any>>(partial: Partial<T>): T {
   return partial as T;
 }
 
@@ -73,21 +65,21 @@ export const mockNodeModules = {
   }),
 
   path: () => ({
-    join: vi.fn((...args) => args.join("/")),
-    resolve: vi.fn((...args) => args.join("/")),
-    dirname: vi.fn((p) => p.split("/").slice(0, -1).join("/")),
-    basename: vi.fn((p) => p.split("/").pop()),
+    join: vi.fn((...args) => args.join('/')),
+    resolve: vi.fn((...args) => args.join('/')),
+    dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
+    basename: vi.fn((p) => p.split('/').pop()),
     extname: vi.fn((p) => {
-      const parts = p.split(".");
-      return parts.length > 1 ? `.${parts.pop()}` : "";
+      const parts = p.split('.');
+      return parts.length > 1 ? `.${parts.pop()}` : '';
     }),
   }),
 
   crypto: () => ({
-    randomUUID: vi.fn(() => "mock-uuid-123"),
+    randomUUID: vi.fn(() => 'mock-uuid-123'),
     createHash: vi.fn(() => ({
       update: vi.fn().mockReturnThis(),
-      digest: vi.fn(() => "mock-hash"),
+      digest: vi.fn(() => 'mock-hash'),
     })),
   }),
 };
@@ -95,9 +87,7 @@ export const mockNodeModules = {
 /**
  * Mock async functions with proper promise handling
  */
-export function mockAsync<T>(
-  implementation?: () => Promise<T> | T
-): ReturnType<typeof vi.fn> {
+export function mockAsync<T>(implementation?: () => Promise<T> | T): ReturnType<typeof vi.fn> {
   const mockFn = vi.fn();
 
   if (implementation) {
@@ -117,7 +107,7 @@ export function mockAsync<T>(
  */
 export function mockRejected(error: Error | string): ReturnType<typeof vi.fn> {
   const mockFn = vi.fn();
-  const errorObj = typeof error === "string" ? new Error(error) : error;
+  const errorObj = typeof error === 'string' ? new Error(error) : error;
   mockFn.mockRejectedValue(errorObj);
   return mockFn;
 }
@@ -137,28 +127,28 @@ export function spyOn<T extends Record<string, any>>(
  */
 export const mockTimers = {
   setup: () => {
-    if (typeof vi.useFakeTimers === "function") {
+    if (typeof vi.useFakeTimers === 'function') {
       vi.useFakeTimers();
     }
   },
 
   cleanup: () => {
-    if (typeof vi.clearAllTimers === "function") {
+    if (typeof vi.clearAllTimers === 'function') {
       vi.clearAllTimers();
     }
-    if (typeof vi.useRealTimers === "function") {
+    if (typeof vi.useRealTimers === 'function') {
       vi.useRealTimers();
     }
   },
 
   advanceTime: (ms: number) => {
-    if (typeof vi.advanceTimersByTime === "function") {
+    if (typeof vi.advanceTimersByTime === 'function') {
       vi.advanceTimersByTime(ms);
     }
   },
 
   runAllTimers: () => {
-    if (typeof vi.runAllTimers === "function") {
+    if (typeof vi.runAllTimers === 'function') {
       vi.runAllTimers();
     }
   },
