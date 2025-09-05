@@ -4,15 +4,14 @@
   "description": "Command-line interface for the Unified Repository Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
   "private": true,
   "bin": {
-    "repo-analyzer": "./bin/repo-analyzer.js"
+    "repo-analyzer": "./dist/bin/repo-analyzer.js"
   },
   "scripts": {
     "dev": "bun --watch src/index.ts || npm run dev:node",
     "dev:node": "ts-node src/index.ts",
-    "build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc)",
+    "build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc) && node scripts/insert-shebang.cjs",
     "build:tsc": "bunx tsc --project tsconfig.json",
     "start": "bun dist/index.js || node dist/index.js",
     "test": "bun test || npm test --silent || echo \"No npm tests configured\"",

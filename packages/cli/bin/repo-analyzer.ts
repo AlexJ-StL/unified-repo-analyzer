@@ -9,8 +9,11 @@
  * This file intentionally has no exports. It is executed as a program.
  */
 
+console.log('Running repo-analyzer CLI');
+console.log('cwd:', process.cwd());
+console.log('bin path:', __filename);
 // Process is already declared globally
 
 void (async () => {
-  await import("../dist/index.js");
+  require("../index.js");
 })();

@@ -73,15 +73,22 @@ Open your browser and navigate to http://localhost:3000
 #### CLI
 
 ```bash
-# Analyze a repository
-bunx repo-analyzer analyze /path/to/repository
+# Build the CLI first
+bun run build:cli
 
-# Batch analyze multiple repositories
-bunx repo-analyzer batch /path/to/repositories
+# Run CLI from project root
+bun run cli analyze /path/to/repository
+bun run cli batch /path/to/repositories
+bun run cli search "query"
 
-# Search indexed repositories
-bunx repo-analyzer search "query"
+# Or run directly
+bun packages/cli/dist/bin/repo-analyzer.js analyze /path/to/repository
+
+# Get help
+bun run cli --help
 ```
+
+**Note**: The CLI has been fixed to use CommonJS instead of ES modules for better compatibility with Bun and Node.js.
 
 ## Documentation
 
@@ -91,6 +98,7 @@ bunx repo-analyzer search "query"
 - Deployment Overview: README-DEPLOYMENT.md
 - Production Checklist: docs/PRODUCTION_CHECKLIST.md
 - Security Policy (canonical): docs/SECURITY.md
+- CLI Fix Summary: docs/CLI_FIX_SUMMARY.md
 
 ## Development Workflow
 
@@ -110,6 +118,7 @@ bun run dev:frontend        # Start frontend only
 
 # Building
 bun run build               # Build all packages
+bun run build:cli           # Build CLI only
 bun run build:prod          # Production build
 
 # Testing
