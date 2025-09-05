@@ -1,3 +1,3 @@
-import { Command } from 'commander';
-declare const program: Command;
-export { program };
+declare module "../dist/index.js" {
+  export * from "./index";
+}

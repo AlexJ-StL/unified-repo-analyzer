@@ -1,89 +1,89 @@
 {
-  "timestamp": "2025-09-04T18:02:02.543Z",
+  "timestamp": "2025-09-04T22:29:24.475Z",
   "success": true,
-  "duration": 23999.227300000002,
+  "duration": 22234.865899999997,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
       "success": true,
       "exitCode": 0,
-      "duration": 5243.5172,
-      "stdout": "Bundled 26 modules in 90ms\n\n  index.js      243.47 KB  (entry point)\n  index.js.map  0.48 MB    (source map)\n\nBundled 18 modules in 57ms\n\n  browser.js      147.51 KB  (entry point)\n  browser.js.map  0.30 MB    (source map)\n\n",
+      "duration": 4778.0785,
+      "stdout": "Bundled 26 modules in 63ms\n\n  index.js      243.47 KB  (entry point)\n  index.js.map  0.48 MB    (source map)\n\nBundled 18 modules in 53ms\n\n  browser.js      147.51 KB  (entry point)\n  browser.js.map  0.30 MB    (source map)\n\n",
       "stderr": "$ rimraf dist && (bunx tsc && bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap || bun run build:tsc)\n"
     },
     "@unified-repo-analyzer/backend": {
       "success": true,
       "exitCode": 0,
-      "duration": 7329.1071999999995,
+      "duration": 7102.0855,
       "stderr": "$ rimraf dist && bunx tsc --project tsconfig.json\n"
     },
     "@unified-repo-analyzer/cli": {
       "success": true,
       "exitCode": 0,
-      "duration": 1482.9063999999998,
-      "stdout": "Bundled 305 modules in 924ms\n\n  index.js      1.50 MB  (entry point)\n  index.js.map  2.90 MB  (source map)\n\n",
-      "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc)\n"
+      "duration": 1052.6913999999997,
+      "stdout": "Bundled 305 modules in 229ms\n\n  index.js      1.50 MB  (entry point)\n  index.js.map  2.90 MB  (source map)\n\nInserted shebang and copied to C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\\dist\\bin\\repo-analyzer.js\n",
+      "stderr": "$ rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || bun run build:tsc) && node scripts/insert-shebang.cjs\n"
     },
     "@unified-repo-analyzer/frontend": {
       "success": true,
       "exitCode": 0,
-      "duration": 9943.696500000002,
-      "stdout": "\u001b[36mvite v7.1.3 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1310 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-DK59sF39.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-CtjZ0C9Y.js          \u001b[39m\u001b[1m\u001b[2m  3.83 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.45 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DQRJcab0.js     \u001b[39m\u001b[1m\u001b[2m  4.05 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.81 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-CBDCr8BY.js   \u001b[39m\u001b[1m\u001b[2m  4.35 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.94 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-BYmJXfVr.js       \u001b[39m\u001b[1m\u001b[2m  5.06 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.27 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-Qsp9VAs-.js                \u001b[39m\u001b[1m\u001b[2m  8.39 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.86 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-DS2KVdty.js   \u001b[39m\u001b[1m\u001b[2m 22.79 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.43 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-NIGUFBhG.js              \u001b[39m\u001b[1m\u001b[2m 35.41 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 14.19 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-Dw98KX8y.js  \u001b[39m\u001b[1m\u001b[2m 37.25 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.48 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-SLAAU7Yt.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.73 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-Cn8eYtwq.js              \u001b[39m\u001b[1m\u001b[2m177.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.70 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-D2Mi0_px.js        \u001b[39m\u001b[1m\u001b[2m342.74 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 92.24 kB\u001b[22m\n\u001b[32m✓ built in 6.94s\u001b[39m\n",
+      "duration": 9302.010499999999,
+      "stdout": "\u001b[36mvite v7.1.3 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1310 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-DK59sF39.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-CtjZ0C9Y.js          \u001b[39m\u001b[1m\u001b[2m  3.83 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.45 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DQRJcab0.js     \u001b[39m\u001b[1m\u001b[2m  4.05 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.81 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-CBDCr8BY.js   \u001b[39m\u001b[1m\u001b[2m  4.35 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.94 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-BYmJXfVr.js       \u001b[39m\u001b[1m\u001b[2m  5.06 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  1.27 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-Qsp9VAs-.js                \u001b[39m\u001b[1m\u001b[2m  8.39 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.86 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-DS2KVdty.js   \u001b[39m\u001b[1m\u001b[2m 22.79 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.43 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-NIGUFBhG.js              \u001b[39m\u001b[1m\u001b[2m 35.41 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 14.19 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-Dw98KX8y.js  \u001b[39m\u001b[1m\u001b[2m 37.25 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.48 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-SLAAU7Yt.js         \u001b[39m\u001b[1m\u001b[2m 37.60 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.73 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-Cn8eYtwq.js              \u001b[39m\u001b[1m\u001b[2m177.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.70 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-D2Mi0_px.js        \u001b[39m\u001b[1m\u001b[2m342.74 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 92.24 kB\u001b[22m\n\u001b[32m✓ built in 7.86s\u001b[39m\n",
       "stderr": "$ bun run vite build || bun run vite -- build\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-09-04T18:01:38.302Z",
+      "timestamp": "2025-09-04T22:29:02.036Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-09-04T18:01:38.542Z",
+      "timestamp": "2025-09-04T22:29:02.237Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-04T18:01:43.785Z",
+      "timestamp": "2025-09-04T22:29:07.015Z",
       "level": "success",
-      "message": "Command completed successfully in 5244ms",
+      "message": "Command completed successfully in 4778ms",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-04T18:01:43.786Z",
+      "timestamp": "2025-09-04T22:29:07.016Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-04T18:01:51.115Z",
+      "timestamp": "2025-09-04T22:29:14.118Z",
       "level": "success",
-      "message": "Command completed successfully in 7329ms",
+      "message": "Command completed successfully in 7102ms",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-04T18:01:51.115Z",
+      "timestamp": "2025-09-04T22:29:14.118Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-04T18:01:52.598Z",
+      "timestamp": "2025-09-04T22:29:15.171Z",
       "level": "success",
-      "message": "Command completed successfully in 1483ms",
+      "message": "Command completed successfully in 1053ms",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-04T18:01:52.599Z",
+      "timestamp": "2025-09-04T22:29:15.172Z",
       "level": "info",
       "message": "Executing: bun run build",
       "package": "@unified-repo-analyzer/frontend"
     },
     {
-      "timestamp": "2025-09-04T18:02:02.542Z",
+      "timestamp": "2025-09-04T22:29:24.474Z",
       "level": "success",
-      "message": "Command completed successfully in 9944ms",
+      "message": "Command completed successfully in 9302ms",
       "package": "@unified-repo-analyzer/frontend"
     }
   ],
