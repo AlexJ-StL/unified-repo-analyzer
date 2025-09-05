@@ -1,0 +1,280 @@
+# Updated .gitignore File
+
+Here's the recommended updated .gitignore file with improvements:
+
+```gitignore
+# Root-level ignores for monorepo
+# --------------------------------
+
+# Dependency directories
+# ----------------------
+**/node_modules/
+.npm/
+.pnpm-debug.log*
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp
+.pnp.js
+**/.bun/
+bun.lock
+.npmrc
+.yarnrc
+.node-version
+.nvmrc
+
+# Build outputs
+# -------------
+**/dist/
+**/build/
+**/out/
+**/lib/
+**/es/
+**/cjs/
+**/umd/
+*.tsbuildinfo
+**/tsconfig.tsbuildinfo
+
+# Test and coverage artifacts
+# ---------------------------
+**/coverage/
+**/.nyc_output/
+*.lcov
+**/test-results/
+**/.test-results/
+.jest/
+**/.playwright/
+**/playwright-report/
+**/cypress/videos/
+**/cypress/screenshots/
+.eslintcache
+
+# Environment files
+# -----------------
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Logs
+# ----
+**/logs/
+.npm/_logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+bun-debug.log*
+
+# IDE and editor files
+# --------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+.vscode-test/
+.vscode-test-result/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+# ------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+# ---------------
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+*~
+.history/
+
+# Security files
+# --------------
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.p8
+*.jks
+
+# Database files
+# --------------
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Cache files
+# -----------
+**/.cache/
+**/.parcel-cache/
+**/.rpt2_cache/
+**/.rts2_cache_cjs/
+**/.rts2_cache_es/
+**/.rts2_cache_umd/
+**/.stylelintcache
+.stylelintcache
+**/.vite/
+.vite/
+**/.next/
+**/.nuxt/
+**/.svelte-kit/
+**/.svelte/
+**/.webpack/
+**/.babel/
+**/.rollup.cache/
+**/.react-build-cache/
+**/node_modules/.cache/
+.esbuild/
+.swc/
+.cache/
+.parcel-cache/
+.sass-cache/
+.cache-loader/
+
+# Package files
+# -------------
+*.tgz
+*.tar.gz
+*.zip
+
+# Platform/tooling files
+# ----------------------
+.vercel
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.turbo
+.github/cache/
+.github/workflows/cache/
+
+# Frontend framework outputs
+# --------------------------
+.next/
+out/
+.nuxt/
+.output/
+.svelte-kit/
+build/
+.astro/
+dist/
+.remix/
+public/build/
+**/dist-ssr/
+**/.vuepress/
+docs/_book/
+docs/.vuepress/dist/
+docs/.cache/
+.vuepress/dist/
+
+# Compression outputs
+# -------------------
+.br/
+.zopfli/
+*.br
+*.zopfli
+
+# Project-specific (monorepo packages)
+# ------------------------------------
+# Backend package (logs, exports, backups generated at runtime)
+packages/backend/logs/
+packages/backend/exports/
+packages/backend/backups/
+packages/backend/pids/
+packages/backend/src/scripts/*.local.*
+
+# Frontend (framework tools)
+packages/frontend/.vite/
+packages/frontend/.svelte-kit/
+packages/frontend/node_modules/.cache/
+packages/frontend/.react-build-cache/
+
+# CLI package local dev outputs
+packages/cli/coverage/
+packages/cli/.cache/
+
+# Shared package transpiled maps (already covered by dist/, but keep specifics)
+packages/shared/coverage/
+packages/shared/**/.tsbuildinfo
+
+# Repository-level docs and temp content
+docs/development/
+docs/private/
+notes/
+todo.md
+scratch/
+temp/
+
+# API keys and secrets
+secrets/
+*.token
+config/local.*
+config/production.*
+config/staging.*
+
+# AI Coding Assistant Folders & Docs
+# Kiro Files
+.kiro/
+# Gemini CLI and Code Assistant
+# .gemini
+docs/GEMINI_PROJECT_STABILIZATION_PLAN.md
+
+# Docker / K8s
+# Keep .dockerignore and actual Dockerfiles tracked; ignore overlays and dev files
+.Dockerfile.dev
+docker-compose.override.yml
+# Kubernetes local manifests outputs (keep k8s/ source tracked)
+**/.kube/
+**/*.kubeconfig
+
+# Playwright explicit duplicates (ensure once at repo root)
+# Already included above, but pin common root dirs if used
+tests/e2e/test-results/
+tests/e2e/playwright-report/
+
+# Ignore local tool lock/state files occasionally generated
+**/.DS_Store
+```
+
+## Key Improvements Made
+
+1. **Added missing standard exclusions**:
+   - `.npmrc`, `.yarnrc`, `.node-version`, `.nvmrc`
+   - `.eslintcache`
+   - `.history/` (for some IDEs)
+   - `.github/cache/`, `.github/workflows/cache/`
+   - `.sass-cache/`, `.cache-loader/`
+   - `docs/_book/`, `docs/.vuepress/dist/`, `docs/.cache/`, `.vuepress/dist/`
+   - `desktop.ini`
+
+2. **Fixed redundancies**:
+   - Removed duplicate `.tmp` and `.temp` entries (kept only the wildcard versions)
+
+3. **Improved organization**:
+   - Better section headers and grouping
+   - More specific .vscode exceptions (allowing settings.json, tasks.json, etc.)
+
+4. **Enhanced coverage**:
+   - Added more comprehensive cache directory exclusions
+   - Added more specific documentation/build exclusions

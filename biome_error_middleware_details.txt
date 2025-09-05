@@ -1,1 +1,0 @@
-Error: couldn't parse `detailed`: value "detailed" is not valid for the --reporter argument

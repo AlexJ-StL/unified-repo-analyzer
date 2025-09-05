@@ -1,6 +1,8 @@
 # Root-level ignores for monorepo
 # --------------------------------
-# Package managers / dependencies
+
+# Dependency directories
+# ----------------------
 **/node_modules/
 .npm/
 .pnpm-debug.log*
@@ -12,8 +14,13 @@
 .pnp.js
 **/.bun/
 bun.lock
+.npmrc
+.yarnrc
+.node-version
+.nvmrc
 
-# Build artifacts (deduplicated)
+# Build outputs
+# -------------
 **/dist/
 **/build/
 **/out/
@@ -24,7 +31,8 @@ bun.lock
 *.tsbuildinfo
 **/tsconfig.tsbuildinfo
 
-# Coverage and test artifacts
+# Test and coverage artifacts
+# ---------------------------
 **/coverage/
 **/.nyc_output/
 *.lcov
@@ -35,14 +43,17 @@ bun.lock
 **/playwright-report/
 **/cypress/videos/
 **/cypress/screenshots/
+.eslintcache
 
 # Environment files
+# -----------------
 .env
 .env.*
 **/.env
 **/.env.*
 
 # Logs
+# ----
 **/logs/
 .npm/_logs/
 *.log
@@ -53,8 +64,13 @@ pnpm-debug.log*
 lerna-debug.log*
 bun-debug.log*
 
-# IDE / Editor
+# IDE and editor files
+# --------------------
 .vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .idea/
 .vscode-test/
 .vscode-test-result/
@@ -63,10 +79,9 @@ bun-debug.log*
 *.njsproj
 *.sln
 *.sw?
-*.tmp
-*.temp
 
-# OS files
+# OS generated files
+# ------------------
 .DS_Store
 .DS_Store?
 ._*
@@ -74,8 +89,10 @@ bun-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Temporary / patches
+# Temporary files
+# ---------------
 *.tmp
 *.temp
 *.bak
@@ -83,8 +100,10 @@ Thumbs.db
 *.orig
 *.rej
 *~
+.history/
 
-# Security keys
+# Security files
+# --------------
 *.pem
 *.key
 *.crt
@@ -93,13 +112,15 @@ Thumbs.db
 *.p8
 *.jks
 
-# Databases
+# Database files
+# --------------
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 
-# Caches (build and tooling)
+# Cache files
+# -----------
 **/.cache/
 **/.parcel-cache/
 **/.rpt2_cache/
@@ -123,30 +144,28 @@ Thumbs.db
 .swc/
 .cache/
 .parcel-cache/
+.sass-cache/
+.cache-loader/
 
-# Package archives
+# Package files
+# -------------
 *.tgz
 *.tar.gz
 *.zip
 
-# Additional files revealed by git clean
-.env.test
-backend.log
-package/dist/
-packages/backend/.env
-packages/backend/.env.production
-packages/backend/temp/
-upstash-context7-mcp-*.tgz
-
-# Platform / tooling
+# Platform/tooling files
+# ----------------------
 .vercel
 .serverless/
 .fusebox/
 .dynamodb/
 .tern-port
 .turbo
+.github/cache/
+.github/workflows/cache/
 
-# Frontend frameworks (project-local outputs)
+# Frontend framework outputs
+# --------------------------
 .next/
 out/
 .nuxt/
@@ -159,8 +178,13 @@ dist/
 public/build/
 **/dist-ssr/
 **/.vuepress/
+docs/_book/
+docs/.vuepress/dist/
+docs/.cache/
+.vuepress/dist/
 
 # Compression outputs
+# -------------------
 .br/
 .zopfli/
 *.br
