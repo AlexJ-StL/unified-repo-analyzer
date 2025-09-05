@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const src = path.resolve(__dirname, '..', 'packages', 'cli', 'bin', 'repo-analyzer.ts');
 const destDir = path.resolve(__dirname, '..', 'packages', 'cli', 'dist', 'bin');
@@ -12,7 +12,7 @@ if (!fs.existsSync(destDir)) {
 let code = fs.readFileSync(src, 'utf8');
 // Ensure shebang
 if (!code.startsWith('#!/usr/bin/env node')) {
-  code = '#!/usr/bin/env node\n' + code;
+  code = `#!/usr/bin/env node\n${code}`;
 }
 
 // Convert TS to JS by removing type annotations? For simplicity, just copy as is; bun will handle TS at runtime? We'll just copy.

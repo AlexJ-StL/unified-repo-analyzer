@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const src = path.resolve(__dirname, '..', '..', '..', 'packages', 'cli', 'bin', 'repo-analyzer.ts');
 const destDir = path.resolve(__dirname, '..', 'dist', 'bin');
@@ -11,7 +11,7 @@ if (!fs.existsSync(destDir)) {
 
 let code = fs.readFileSync(src, 'utf8');
 if (!code.startsWith('#!/usr/bin/env node')) {
-  code = '#!/usr/bin/env node\n' + code;
+  code = `#!/usr/bin/env node\n${code}`;
 }
 fs.writeFileSync(dest, code, { mode: 0o755 });
 console.log(`Inserted shebang and copied to ${dest}`);
