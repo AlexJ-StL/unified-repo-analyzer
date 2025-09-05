@@ -1,0 +1,976 @@
+{
+  "id": "c74d83d1-99d2-4042-87f1-a6f6708c0193",
+  "path": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer",
+  "name": "unified-repo-analyzer",
+  "language": "TypeScript",
+  "languages": [
+    "TypeScript",
+    "JavaScript",
+    "Markdown",
+    "YAML",
+    "JSON",
+    "Python",
+    "HTML"
+  ],
+  "frameworks": [
+    "React",
+    "Angular",
+    "NestJS",
+    "Express",
+    "Flask",
+    "FastAPI"
+  ],
+  "fileCount": 502,
+  "directoryCount": 92,
+  "totalSize": 1838527,
+  "createdAt": "2025-09-05T21:02:56.124Z",
+  "updatedAt": "2025-09-05T21:02:56.124Z",
+  "structure": {
+    "directories": [
+      {
+        "path": "/",
+        "files": 15,
+        "subdirectories": 12
+      },
+      {
+        "path": ".cache",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": ".git",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": ".kiro",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": ".test-cache",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": ".vscode",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "coverage",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "coverage-reports",
+        "files": 8,
+        "subdirectories": 0
+      },
+      {
+        "path": "docs",
+        "files": 25,
+        "subdirectories": 3
+      },
+      {
+        "path": "docs\\api",
+        "files": 3,
+        "subdirectories": 0
+      },
+      {
+        "path": "docs\\developer",
+        "files": 1,
+        "subdirectories": 0
+      },
+      {
+        "path": "docs\\user-guide",
+        "files": 1,
+        "subdirectories": 0
+      },
+      {
+        "path": "k8s",
+        "files": 8,
+        "subdirectories": 0
+      },
+      {
+        "path": "logs",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "node_modules",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages",
+        "files": 0,
+        "subdirectories": 4
+      },
+      {
+        "path": "packages\\backend",
+        "files": 3,
+        "subdirectories": 8
+      },
+      {
+        "path": "packages\\backend\\backups",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\dist",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\exports",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\logs",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\node_modules",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src",
+        "files": 2,
+        "subdirectories": 9
+      },
+      {
+        "path": "packages\\backend\\src\\api",
+        "files": 1,
+        "subdirectories": 5
+      },
+      {
+        "path": "packages\\backend\\src\\api\\controllers",
+        "files": 10,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\api\\controllers\\__tests__",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\api\\middleware",
+        "files": 4,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\api\\routes",
+        "files": 18,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\api\\routes\\__tests__",
+        "files": 6,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\api\\websocket",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\api\\__tests__",
+        "files": 10,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\config",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\core",
+        "files": 12,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\core\\__tests__",
+        "files": 22,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\providers",
+        "files": 13,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\providers\\__tests__",
+        "files": 13,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\scripts",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\services",
+        "files": 25,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\services\\__tests__",
+        "files": 22,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\types",
+        "files": 1,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\utils",
+        "files": 17,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\src\\utils\\__tests__",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\src\\__tests__",
+        "files": 9,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos",
+        "files": 0,
+        "subdirectories": 40
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-0",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-1",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-10",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-11",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-12",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-13",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-14",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-15",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-16",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-17",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-18",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-19",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-2",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-3",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-4",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-5",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-6",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-7",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-8",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-9",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-js",
+        "files": 3,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-partial-js",
+        "files": 3,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-python",
+        "files": 4,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-react",
+        "files": 3,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-react\\src",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-0",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-1",
+        "files": 4,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-2",
+        "files": 4,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-2\\src",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-3",
+        "files": 6,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-4",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-5",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-6",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-7",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-8",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-9",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\export-html-test",
+        "files": 4,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\export-md-test",
+        "files": 3,
+        "subdirectories": 1
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\export-md-test\\src",
+        "files": 2,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\index-test",
+        "files": 3,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\large-performance-test",
+        "files": 2,
+        "subdirectories": 2
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\large-performance-test\\src",
+        "files": 100,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\large-performance-test\\tests",
+        "files": 42,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\large-repo",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\memory-test",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\cli",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\frontend",
+        "files": 0,
+        "subdirectories": 0
+      },
+      {
+        "path": "packages\\shared",
+        "files": 0,
+        "subdirectories": 0
+      }
+    ],
+    "keyFiles": [
+      {
+        "path": "biome.json",
+        "language": "JavaScript",
+        "size": 3438,
+        "lineCount": 140,
+        "importance": 0.555,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 284
+      },
+      {
+        "path": "package.json",
+        "language": "JavaScript",
+        "size": 9371,
+        "lineCount": 155,
+        "importance": 0.555,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 1300
+      },
+      {
+        "path": "packages\\backend\\package.json",
+        "language": "JavaScript",
+        "size": 2366,
+        "lineCount": 72,
+        "importance": 0.555,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 364
+      },
+      {
+        "path": "packages\\backend\\src\\index.ts",
+        "language": "TypeScript",
+        "size": 3917,
+        "lineCount": 148,
+        "importance": 0.55,
+        "functions": [
+          {
+            "name": "get",
+            "lineNumber": 83,
+            "parameters": []
+          },
+          {
+            "name": "close",
+            "lineNumber": 122,
+            "parameters": []
+          },
+          {
+            "name": "setTimeout",
+            "lineNumber": 127,
+            "parameters": []
+          },
+          {
+            "name": "on",
+            "lineNumber": 134,
+            "parameters": []
+          },
+          {
+            "name": "listen",
+            "lineNumber": 138,
+            "parameters": []
+          },
+          {
+            "name": "io",
+            "lineNumber": 36,
+            "parameters": []
+          },
+          {
+            "name": "gracefulShutdown",
+            "lineNumber": 116,
+            "parameters": []
+          },
+          {
+            "name": "server",
+            "lineNumber": 138,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 456
+      },
+      {
+        "path": "packages\\backend\\tsconfig.json",
+        "language": "TypeScript",
+        "size": 582,
+        "lineCount": 26,
+        "importance": 0.515,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 57
+      },
+      {
+        "path": "docker-compose.yml",
+        "language": "YAML",
+        "size": 1459,
+        "lineCount": 65,
+        "importance": 0.505,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 152
+      },
+      {
+        "path": "packages\\backend\\src\\api\\websocket\\index.ts",
+        "language": "TypeScript",
+        "size": 2438,
+        "lineCount": 82,
+        "importance": 0.49000000000000005,
+        "functions": [
+          {
+            "name": "on",
+            "lineNumber": 13,
+            "parameters": []
+          },
+          {
+            "name": "initializeWebSocketHandlers",
+            "lineNumber": 12,
+            "parameters": []
+          },
+          {
+            "name": "clientId",
+            "lineNumber": 17,
+            "parameters": []
+          },
+          {
+            "name": "sendAnalysisProgress",
+            "lineNumber": 46,
+            "parameters": []
+          },
+          {
+            "name": "sendAnalysisComplete",
+            "lineNumber": 57,
+            "parameters": []
+          },
+          {
+            "name": "sendBatchProgress",
+            "lineNumber": 68,
+            "parameters": []
+          },
+          {
+            "name": "sendBatchComplete",
+            "lineNumber": 79,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 280
+      },
+      {
+        "path": "CHANGELOG.md",
+        "language": "Markdown",
+        "size": 1288,
+        "lineCount": 53,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [
+          {
+            "name": "for",
+            "lineNumber": 17,
+            "methods": []
+          }
+        ],
+        "tokenCount": 168
+      },
+      {
+        "path": "CODE_OF_CONDUCT.md",
+        "language": "Markdown",
+        "size": 5197,
+        "lineCount": 79,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 712
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "language": "Markdown",
+        "size": 1525,
+        "lineCount": 48,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 223
+      },
+      {
+        "path": "packages\\backend\\src\\core\\index.ts",
+        "language": "TypeScript",
+        "size": 140,
+        "lineCount": 8,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 15
+      },
+      {
+        "path": "packages\\backend\\src\\providers\\index.ts",
+        "language": "TypeScript",
+        "size": 203,
+        "lineCount": 10,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 23
+      },
+      {
+        "path": "packages\\backend\\src\\utils\\index.ts",
+        "language": "TypeScript",
+        "size": 168,
+        "lineCount": 9,
+        "importance": 0.48,
+        "functions": [],
+        "classes": [],
+        "tokenCount": 18
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-js\\index.js",
+        "language": "JavaScript",
+        "size": 240,
+        "lineCount": 13,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "get",
+            "lineNumber": 6,
+            "parameters": []
+          },
+          {
+            "name": "listen",
+            "lineNumber": 10,
+            "parameters": []
+          },
+          {
+            "name": "app",
+            "lineNumber": 4,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 33
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-partial-js\\index.js",
+        "language": "JavaScript",
+        "size": 240,
+        "lineCount": 13,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "get",
+            "lineNumber": 6,
+            "parameters": []
+          },
+          {
+            "name": "listen",
+            "lineNumber": 10,
+            "parameters": []
+          },
+          {
+            "name": "app",
+            "lineNumber": 4,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 33
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\batch-python\\app.py",
+        "language": "Python",
+        "size": 494,
+        "lineCount": 22,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "hello",
+            "lineNumber": 8,
+            "parameters": []
+          },
+          {
+            "name": "get_data",
+            "lineNumber": 12,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 68
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-1\\index.js",
+        "language": "JavaScript",
+        "size": 240,
+        "lineCount": 13,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "get",
+            "lineNumber": 6,
+            "parameters": []
+          },
+          {
+            "name": "listen",
+            "lineNumber": 10,
+            "parameters": []
+          },
+          {
+            "name": "app",
+            "lineNumber": 4,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 33
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\concurrent-3\\app.py",
+        "language": "Python",
+        "size": 494,
+        "lineCount": 22,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "hello",
+            "lineNumber": 8,
+            "parameters": []
+          },
+          {
+            "name": "get_data",
+            "lineNumber": 12,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 68
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\export-html-test\\app.py",
+        "language": "Python",
+        "size": 494,
+        "lineCount": 22,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "hello",
+            "lineNumber": 8,
+            "parameters": []
+          },
+          {
+            "name": "get_data",
+            "lineNumber": 12,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 68
+      },
+      {
+        "path": "packages\\backend\\temp-test-repos\\index-test\\index.js",
+        "language": "JavaScript",
+        "size": 240,
+        "lineCount": 13,
+        "importance": 0.48,
+        "functions": [
+          {
+            "name": "get",
+            "lineNumber": 6,
+            "parameters": []
+          },
+          {
+            "name": "listen",
+            "lineNumber": 10,
+            "parameters": []
+          },
+          {
+            "name": "app",
+            "lineNumber": 4,
+            "parameters": []
+          }
+        ],
+        "classes": [],
+        "tokenCount": 33
+      }
+    ],
+    "tree": "unified-repo-analyzer\n├── .c8rc.json\n├── .coverageignore\n├── .gitignore\n├── .nycrc.json\n├── .test-cache/\n│   ├── dependency-map.json\n│   └── test-metrics.json\n├── biome.json\n├── build-report.json\n├── bunfig.toml\n├── CHANGELOG.md\n├── CODE_OF_CONDUCT.md\n├── CONTRIBUTING.md\n├── coverage-reports/\n│   ├── completion-test-summary.json\n│   ├── coverage-status.json\n│   ├── coverage-status.md\n│   ├── dashboard.html\n│   ├── task-6.2-completion-report.json\n│   ├── task-6.2-completion-report.md\n│   ├── validation-report.json\n│   └── validation-report.md\n├── docker-compose.yml\n├── docs/\n│   ├── api/\n│   │   ├── LOGGING_API.md\n│   │   ├── openapi.yaml\n│   │   └── PATH_VALIDATION_API.md\n│   ├── BUILD_RECOVERY_PROCEDURES.md\n│   ├── BUILD_VALIDATION_SYSTEM.md\n│   ├── BUN_PROCESS_MANAGEMENT.md\n│   ├── CHANGELOG.md\n│   ├── CLI_FIX_SUMMARY.md\n│   ├── CODE_OF_CONDUCT.md\n│   ├── CONTRIBUTING.md\n│   ├── DEPLOYMENT.md\n│   ├── DEPLOYMENT_GUIDE.md\n│   ├── DEPLOYMENT_MIGRATION_GUIDE.md\n│   ├── developer/\n│   │   └── README.md\n│   ├── DEVELOPMENT.md\n│   ├── ERROR_HANDLING.md\n│   ├── INITIAL_COMMIT_MESSAGE.txt\n│   ├── LICENSE\n│   ├── LOGGING_CONFIGURATION.md\n│   ├── MIGRATION-SUMMARY.md\n│   ├── PRODUCTION_CHECKLIST.md\n│   ├── RELEASE_NOTES.md\n│   ├── SECURITY.md\n│   ├── TESTING_FIXES.md\n│   ├── TROUBLESHOOTING.md\n│   ├── TYPE_RESOLUTION.md\n│   ├── user-guide/\n│   │   └── README.md\n│   ├── USER_GUIDE.md\n│   ├── WINDOWS_PATH_LOGGING_SETUP.md\n│   └── WINDOWS_SETUP.md\n├── gitignore-review-plan.md\n├── k8s/\n│   ├── backend-deployment.yaml\n│   ├── configmap.yaml\n│   ├── frontend-deployment.yaml\n│   ├── ingress.yaml\n│   ├── namespace.yaml\n│   ├── persistent-volumes.yaml\n│   ├── secret.yaml\n│   └── services.yaml\n├── LICENSE\n├── package.json\n├── packages/\n│   └── backend/\n│       ├── Dockerfile\n│       ├── package.json\n│       ├── src/\n│       │   ├── api/\n│       │   │   ├── controllers/\n│       │   │   │   ├── analyze.controller.d.ts\n│       │   │   │   ├── analyze.controller.ts\n│       │   │   │   ├── export.controller.d.ts\n│       │   │   │   ├── export.controller.ts\n│       │   │   │   ├── filesystem.controller.ts\n│       │   │   │   ├── index.d.ts\n│       │   │   │   ├── index.ts\n│       │   │   │   ├── path.controller.ts\n│       │   │   │   ├── repositories.controller.d.ts\n│       │   │   │   ├── repositories.controller.ts\n│       │   │   │   └── __tests__/\n│       │   │   │       ├── export.controller.test.d.ts\n│       │   │   │       └── export.controller.test.ts\n│       │   │   ├── middleware/\n│       │   │   │   ├── error.middleware.d.ts\n│       │   │   │   ├── error.middleware.ts\n│       │   │   │   ├── performance.middleware.d.ts\n│       │   │   │   └── performance.middleware.ts\n│       │   │   ├── README.md\n│       │   │   ├── routes/\n│       │   │   │   ├── analysis-requests.ts\n│       │   │   │   ├── analyze.d.ts\n│       │   │   │   ├── analyze.ts\n│       │   │   │   ├── backup.routes.d.ts\n│       │   │   │   ├── backup.routes.ts\n│       │   │   │   ├── config.routes.d.ts\n│       │   │   │   ├── config.routes.ts\n│       │   │   │   ├── export.d.ts\n│       │   │   │   ├── export.ts\n│       │   │   │   ├── filesystem.ts\n│       │   │   │   ├── index.d.ts\n│       │   │   │   ├── index.ts\n│       │   │   │   ├── metrics.d.ts\n│       │   │   │   ├── metrics.ts\n│       │   │   │   ├── path.ts\n│       │   │   │   ├── providers.ts\n│       │   │   │   ├── repositories.d.ts\n│       │   │   │   ├── repositories.ts\n│       │   │   │   └── __tests__/\n│       │   │   │       ├── analysis-requests.test.ts\n│       │   │   │       ├── openrouter-integration.test.ts\n│       │   │   │       ├── providers-integration.test.ts\n│       │   │   │       ├── providers.models.test.ts\n│       │   │   │       ├── providers.test.ts\n│       │   │   │       └── verify-task1-completion.ts\n│       │   │   ├── websocket/\n│       │   │   │   ├── index.d.ts\n│       │   │   │   └── index.ts\n│       │   │   └── __tests__/\n│       │   │       ├── analyze-workflow.integration.test.ts\n│       │   │       ├── api-fixed.test.ts\n│       │   │       ├── api.simple.test.ts\n│       │   │       ├── api.test.d.ts\n│       │   │       ├── api.test.ts\n│       │   │       ├── batch-analyze.test.d.ts\n│       │   │       ├── batch-analyze.test.ts\n│       │   │       ├── path-integration.test.ts\n│       │   │       ├── websocket.test.d.ts\n│       │   │       └── websocket.test.ts\n│       │   ├── config/\n│       │   │   ├── environment.d.ts\n│       │   │   └── environment.ts\n│       │   ├── core/\n│       │   │   ├── advancedAnalyzer.d.ts\n│       │   │   ├── advancedAnalyzer.ts\n│       │   │   ├── AnalysisEngine.d.ts\n│       │   │   ├── AnalysisEngine.ts\n│       │   │   ├── codeStructureAnalyzer.d.ts\n│       │   │   ├── codeStructureAnalyzer.ts\n│       │   │   ├── index.d.ts\n│       │   │   ├── index.ts\n│       │   │   ├── IndexSystem.d.ts\n│       │   │   ├── IndexSystem.ts\n│       │   │   ├── tokenAnalyzer.d.ts\n│       │   │   ├── tokenAnalyzer.ts\n│       │   │   └── __tests__/\n│       │   │       ├── advancedAnalyzer.fixed.test.ts\n│       │   │       ├── advancedAnalyzer.test.d.ts\n│       │   │       ├── advancedAnalyzer.test.ts\n│       │   │       ├── analysisEngine.advanced.fixed.test.ts\n│       │   │       ├── analysisEngine.advanced.test.d.ts\n│       │   │       ├── analysisEngine.advanced.test.ts\n│       │   │       ├── AnalysisEngine.batch.fixed.test.ts\n│       │   │       ├── AnalysisEngine.batch.test.d.ts\n│       │   │       ├── AnalysisEngine.batch.test.ts\n│       │   │       ├── AnalysisEngine.fixed.test.ts\n│       │   │       ├── AnalysisEngine.test.d.ts\n│       │   │       ├── AnalysisEngine.test.ts\n│       │   │       ├── codeStructureAnalyzer.test.d.ts\n│       │   │       ├── codeStructureAnalyzer.test.ts\n│       │   │       ├── IndexSystem.comprehensive.test.ts\n│       │   │       ├── IndexSystem.relationship.test.d.ts\n│       │   │       ├── IndexSystem.relationship.test.ts\n│       │   │       ├── IndexSystem.test.d.ts\n│       │   │       ├── IndexSystem.test.ts\n│       │   │       ├── temp-index-1756344976823.json\n│       │   │       ├── tokenAnalyzer.test.d.ts\n│       │   │       └── tokenAnalyzer.test.ts\n│       │   ├── index.d.ts\n│       │   ├── index.ts\n│       │   ├── providers/\n│       │   │   ├── ClaudeProvider.d.ts\n│       │   │   ├── ClaudeProvider.ts\n│       │   │   ├── GeminiProvider.d.ts\n│       │   │   ├── GeminiProvider.ts\n│       │   │   ├── index.d.ts\n│       │   │   ├── index.ts\n│       │   │   ├── LLMProvider.d.ts\n│       │   │   ├── LLMProvider.ts\n│       │   │   ├── MockProvider.d.ts\n│       │   │   ├── MockProvider.ts\n│       │   │   ├── OpenRouterProvider.ts\n│       │   │   ├── ProviderRegistry.d.ts\n│       │   │   ├── ProviderRegistry.ts\n│       │   │   └── __tests__/\n│       │   │       ├── ClaudeProvider.test.d.ts\n│       │   │       ├── ClaudeProvider.test.ts\n│       │   │       ├── GeminiProvider.test.d.ts\n│       │   │       ├── GeminiProvider.test.ts\n│       │   │       ├── LLMProvider.test.d.ts\n│       │   │       ├── LLMProvider.test.ts\n│       │   │       ├── MockProvider.test.d.ts\n│       │   │       ├── MockProvider.test.ts\n│       │   │       ├── OpenRouterProvider.test.ts\n│       │   │       ├── ProviderRegistry.enhanced.test.ts\n│       │   │       ├── ProviderRegistry.models.test.ts\n│       │   │       ├── ProviderRegistry.test.d.ts\n│       │   │       └── ProviderRegistry.test.ts\n│       │   ├── scripts/\n│       │   │   ├── performance-benchmark.d.ts\n│       │   │   └── performance-benchmark.ts\n│       │   ├── services/\n│       │   │   ├── analysis-request-tracker.service.ts\n│       │   │   ├── backup.service.d.ts\n│       │   │   ├── backup.service.ts\n│       │   │   ├── cache.service.d.ts\n│       │   │   ├── cache.service.ts\n│       │   │   ├── config.service.d.ts\n│       │   │   ├── config.service.ts\n│       │   │   ├── deduplication.service.d.ts\n│       │   │   ├── deduplication.service.ts\n│       │   │   ├── error-message.service.ts\n│       │   │   ├── export.service.d.ts\n│       │   │   ├── export.service.ts\n│       │   │   ├── health.service.d.ts\n│       │   │   ├── health.service.ts\n│       │   │   ├── log-management.service.d.ts\n│       │   │   ├── log-management.service.ts\n│       │   │   ├── logger.service.d.ts\n│       │   │   ├── logger.service.ts\n│       │   │   ├── metrics.service.d.ts\n│       │   │   ├── metrics.service.ts\n│       │   │   ├── path-handler.service.d.ts\n│       │   │   ├── path-handler.service.ts\n│       │   │   ├── performance-monitor.service.ts\n│       │   │   ├── relationship.service.d.ts\n│       │   │   ├── relationship.service.ts\n│       │   │   └── __tests__/\n│       │   │       ├── config.service.basic.test.d.ts\n│       │   │       ├── config.service.basic.test.ts\n│       │   │       ├── config.service.simple.test.d.ts\n│       │   │       ├── config.service.simple.test.ts\n│       │   │       ├── config.service.test.d.ts\n│       │   │       ├── config.service.test.ts\n│       │   │       ├── error-message.service.fixed.test.ts\n│       │   │       ├── error-message.service.test.ts\n│       │   │       ├── export.service.test.d.ts\n│       │   │       ├── export.service.test.ts\n│       │   │       ├── log-management.service.test.ts\n│       │   │       ├── logger-http-simple.service.test.ts\n│       │   │       ├── logger-http.service.test.ts\n│       │   │       ├── logger-outputs.service.test.ts\n│       │   │       ├── logger.service.test.ts\n│       │   │       ├── path-handler-cache.test.ts\n│       │   │       ├── path-handler-performance.test.ts\n│       │   │       ├── path-handler.service.test.d.ts\n│       │   │       ├── path-handler.service.test.ts\n│       │   │       ├── performance-monitor.test.ts\n│       │   │       ├── relationship.service.test.d.ts\n│       │   │       └── relationship.service.test.ts\n│       │   ├── types/\n│       │   │   └── global.d.ts\n│       │   ├── utils/\n│       │   │   ├── error-handler.ts\n│       │   │   ├── fileImportance.d.ts\n│       │   │   ├── fileImportance.ts\n│       │   │   ├── fileSystem.d.ts\n│       │   │   ├── fileSystem.ts\n│       │   │   ├── index.d.ts\n│       │   │   ├── index.ts\n│       │   │   ├── languageDetection.d.ts\n│       │   │   ├── languageDetection.ts\n│       │   │   ├── logger.d.ts\n│       │   │   ├── logger.ts\n│       │   │   ├── logging-enhancer.ts\n│       │   │   ├── queue.d.ts\n│       │   │   ├── queue.ts\n│       │   │   ├── recovery-system.ts\n│       │   │   ├── repositoryDiscovery.d.ts\n│       │   │   ├── repositoryDiscovery.ts\n│       │   │   └── __tests__/\n│       │   │       ├── queue.test.d.ts\n│       │   │       └── queue.test.ts\n│       │   └── __tests__/\n│       │       ├── end-to-end-workflows.test.ts\n│       │       ├── file-type-filtering.test.ts\n│       │       ├── logging-integration.test.ts\n│       │       ├── logging-system-integration.test.ts\n│       │       ├── performance-load.test.ts\n│       │       ├── performance.test.d.ts\n│       │       ├── performance.test.ts\n│       │       ├── platform-integration.test.ts\n│       │       └── test-setup.ts\n│       ├── temp-test-repos/\n│       │   ├── batch-0/\n│       │   │   ├── component-0.jsx\n│       │   │   └── package.json\n│       │   ├── batch-1/\n│       │   │   ├── component-1.jsx\n│       │   │   └── package.json\n│       │   ├── batch-10/\n│       │   │   ├── component-10.jsx\n│       │   │   └── package.json\n│       │   ├── batch-11/\n│       │   │   ├── component-11.jsx\n│       │   │   └── package.json\n│       │   ├── batch-12/\n│       │   │   ├── component-12.jsx\n│       │   │   └── package.json\n│       │   ├── batch-13/\n│       │   │   ├── component-13.jsx\n│       │   │   └── package.json\n│       │   ├── batch-14/\n│       │   │   ├── component-14.jsx\n│       │   │   └── package.json\n│       │   ├── batch-15/\n│       │   │   ├── component-15.jsx\n│       │   │   └── package.json\n│       │   ├── batch-16/\n│       │   │   ├── component-16.jsx\n│       │   │   └── package.json\n│       │   ├── batch-17/\n│       │   │   ├── component-17.jsx\n│       │   │   └── package.json\n│       │   ├── batch-18/\n│       │   │   ├── component-18.jsx\n│       │   │   └── package.json\n│       │   ├── batch-19/\n│       │   │   ├── component-19.jsx\n│       │   │   └── package.json\n│       │   ├── batch-2/\n│       │   │   ├── component-2.jsx\n│       │   │   └── package.json\n│       │   ├── batch-3/\n│       │   │   ├── component-3.jsx\n│       │   │   └── package.json\n│       │   ├── batch-4/\n│       │   │   ├── component-4.jsx\n│       │   │   └── package.json\n│       │   ├── batch-5/\n│       │   │   ├── component-5.jsx\n│       │   │   └── package.json\n│       │   ├── batch-6/\n│       │   │   ├── component-6.jsx\n│       │   │   └── package.json\n│       │   ├── batch-7/\n│       │   │   ├── component-7.jsx\n│       │   │   └── package.json\n│       │   ├── batch-8/\n│       │   │   ├── component-8.jsx\n│       │   │   └── package.json\n│       │   ├── batch-9/\n│       │   │   ├── component-9.jsx\n│       │   │   └── package.json\n│       │   ├── batch-js/\n│       │   │   ├── index.js\n│       │   │   ├── package.json\n│       │   │   └── README.md\n│       │   ├── batch-partial-js/\n│       │   │   ├── index.js\n│       │   │   ├── package.json\n│       │   │   └── README.md\n│       │   ├── batch-python/\n│       │   │   ├── app.py\n│       │   │   ├── README.md\n│       │   │   ├── requirements.txt\n│       │   │   └── utils.py\n│       │   ├── batch-react/\n│       │   │   ├── package.json\n│       │   │   ├── README.md\n│       │   │   ├── src/\n│       │   │   │   ├── App.tsx\n│       │   │   │   └── index.tsx\n│       │   │   └── tsconfig.json\n│       │   ├── concurrent-0/\n│       │   │   ├── app-0.js\n│       │   │   └── package.json\n│       │   ├── concurrent-1/\n│       │   │   ├── app-1.js\n│       │   │   ├── index.js\n│       │   │   ├── package.json\n│       │   │   └── README.md\n│       │   ├── concurrent-2/\n│       │   │   ├── app-2.js\n│       │   │   ├── package.json\n│       │   │   ├── README.md\n│       │   │   ├── src/\n│       │   │   │   ├── App.tsx\n│       │   │   │   └── index.tsx\n│       │   │   └── tsconfig.json\n│       │   ├── concurrent-3/\n│       │   │   ├── app-3.js\n│       │   │   ├── app.py\n│       │   │   ├── package.json\n│       │   │   ├── README.md\n│       │   │   ├── requirements.txt\n│       │   │   └── utils.py\n│       │   ├── concurrent-4/\n│       │   │   ├── app-4.js\n│       │   │   └── package.json\n│       │   ├── concurrent-5/\n│       │   │   ├── app-5.js\n│       │   │   └── package.json\n│       │   ├── concurrent-6/\n│       │   │   ├── app-6.js\n│       │   │   └── package.json\n│       │   ├── concurrent-7/\n│       │   │   ├── app-7.js\n│       │   │   └── package.json\n│       │   ├── concurrent-8/\n│       │   │   ├── app-8.js\n│       │   │   └── package.json\n│       │   ├── concurrent-9/\n│       │   │   ├── app-9.js\n│       │   │   └── package.json\n│       │   ├── export-html-test/\n│       │   │   ├── app.py\n│       │   │   ├── README.md\n│       │   │   ├── requirements.txt\n│       │   │   └── utils.py\n│       │   ├── export-md-test/\n│       │   │   ├── package.json\n│       │   │   ├── README.md\n│       │   │   ├── src/\n│       │   │   │   ├── App.tsx\n│       │   │   │   └── index.tsx\n│       │   │   └── tsconfig.json\n│       │   ├── index-test/\n│       │   │   ├── index.js\n│       │   │   ├── package.json\n│       │   │   └── README.md\n│       │   └── large-performance-test/\n│       │       ├── package.json\n│       │       ├── README.md\n│       │       ├── src/\n│       │       │   ├── component0.js\n│       │       │   ├── component1.js\n│       │       │   ├── component10.js\n│       │       │   ├── component11.js\n│       │       │   ├── component12.js\n│       │       │   ├── component13.js\n│       │       │   ├── component14.js\n│       │       │   ├── component15.js\n│       │       │   ├── component16.js\n│       │       │   ├── component17.js\n│       │       │   ├── component18.js\n│       │       │   ├── component19.js\n│       │       │   ├── component2.js\n│       │       │   ├── component20.js\n│       │       │   ├── component21.js\n│       │       │   ├── component22.js\n│       │       │   ├── component23.js\n│       │       │   ├── component24.js\n│       │       │   ├── component25.js\n│       │       │   ├── component26.js\n│       │       │   ├── component27.js\n│       │       │   ├── component28.js\n│       │       │   ├── component29.js\n│       │       │   ├── component3.js\n│       │       │   ├── component30.js\n│       │       │   ├── component31.js\n│       │       │   ├── component32.js\n│       │       │   ├── component33.js\n│       │       │   ├── component34.js\n│       │       │   ├── component35.js\n│       │       │   ├── component36.js\n│       │       │   ├── component37.js\n│       │       │   ├── component38.js\n│       │       │   ├── component39.js\n│       │       │   ├── component4.js\n│       │       │   ├── component40.js\n│       │       │   ├── component41.js\n│       │       │   ├── component42.js\n│       │       │   ├── component43.js\n│       │       │   ├── component44.js\n│       │       │   ├── component45.js\n│       │       │   ├── component46.js\n│       │       │   ├── component47.js\n│       │       │   ├── component48.js\n│       │       │   ├── component49.js\n│       │       │   ├── component5.js\n│       │       │   ├── component50.js\n│       │       │   ├── component51.js\n│       │       │   ├── component52.js\n│       │       │   ├── component53.js\n│       │       │   ├── component54.js\n│       │       │   ├── component55.js\n│       │       │   ├── component56.js\n│       │       │   ├── component57.js\n│       │       │   ├── component58.js\n│       │       │   ├── component59.js\n│       │       │   ├── component6.js\n│       │       │   ├── component60.js\n│       │       │   ├── component61.js\n│       │       │   ├── component62.js\n│       │       │   ├── component63.js\n│       │       │   ├── component64.js\n│       │       │   ├── component65.js\n│       │       │   ├── component66.js\n│       │       │   ├── component67.js\n│       │       │   ├── component68.js\n│       │       │   ├── component69.js\n│       │       │   ├── component7.js\n│       │       │   ├── component70.js\n│       │       │   ├── component71.js\n│       │       │   ├── component72.js\n│       │       │   ├── component73.js\n│       │       │   ├── component74.js\n│       │       │   ├── component75.js\n│       │       │   ├── component76.js\n│       │       │   ├── component77.js\n│       │       │   ├── component78.js\n│       │       │   ├── component79.js\n│       │       │   ├── component8.js\n│       │       │   ├── component80.js\n│       │       │   ├── component81.js\n│       │       │   ├── component82.js\n│       │       │   ├── component83.js\n│       │       │   ├── component84.js\n│       │       │   ├── component85.js\n│       │       │   ├── component86.js\n│       │       │   ├── component87.js\n│       │       │   ├── component88.js\n│       │       │   ├── component89.js\n│       │       │   ├── component9.js\n│       │       │   ├── component90.js\n│       │       │   ├── component91.js\n│       │       │   ├── component92.js\n│       │       │   ├── component93.js\n│       │       │   ├── component94.js\n│       │       │   ├── component95.js\n│       │       │   ├── component96.js\n│       │       │   ├── component97.js\n│       │       │   ├── component98.js\n│       │       │   └── component99.js\n│       │       └── tests/\n│       │           ├── component0.test.js\n│       │           ├── component1.test.js\n│       │           ├── component10.test.js\n│       │           ├── component11.test.js\n│       │           ├── component12.test.js\n│       │           ├── component13.test.js\n│       │           ├── component14.test.js\n│       │           ├── component15.test.js\n│       │           ├── component16.test.js\n│       │           ├── component17.test.js\n│       │           ├── component18.test.js\n│       │           ├── component19.test.js\n│       │           ├── component2.test.js\n│       │           ├── component20.test.js\n│       │           ├── component21.test.js\n│       │           ├── component22.test.js\n│       │           ├── component23.test.js\n│       │           ├── component24.test.js\n│       │           ├── component25.test.js\n│       │           ├── component26.test.js\n│       │           ├── component27.test.js\n│       │           ├── component28.test.js\n│       │           ├── component29.test.js\n│       │           ├── component3.test.js\n│       │           ├── component30.test.js\n│       │           ├── component31.test.js\n│       │           ├── component32.test.js\n│       │           ├── component33.test.js\n│       │           ├── component34.test.js\n│       │           ├── component35.test.js\n│       │           ├── component36.test.js\n│       │           ├── component37.test.js\n│       │           ├── component38.test.js\n│       │           ├── component39.test.js\n│       │           ├── component4.test.js\n│       │           ├── component40.test.js\n│       │           ├── component41.test.js\n│       │           ├── component42.test.js\n│       │           ├── component43.test.js\n│       │           ├── component44.test.js\n│       │           ├── component45.test.js\n│       │           └── component46.test.js\n│       └── tsconfig.json\n└── PACKAGE_STANDARDIZATION_SUMMARY.md\n"
+  },
+  "codeAnalysis": {
+    "functionCount": 33,
+    "classCount": 1,
+    "importCount": 22,
+    "complexity": {
+      "cyclomaticComplexity": 4,
+      "maintainabilityIndex": 49,
+      "technicalDebt": "0 high, 4 medium, 0 low priority items",
+      "codeQuality": "fair"
+    },
+    "patterns": [
+      {
+        "name": "Microservices",
+        "confidence": 0.6,
+        "description": "Microservices architecture with multiple independent services"
+      },
+      {
+        "name": "REST API",
+        "confidence": 0.9,
+        "description": "RESTful API architecture using HTTP methods and resources"
+      },
+      {
+        "name": "Single Page Application (SPA)",
+        "confidence": 0.9,
+        "description": "Single page application with client-side routing and state management"
+      }
+    ]
+  },
+  "dependencies": {
+    "production": [],
+    "development": [],
+    "frameworks": [
+      {
+        "name": "React",
+        "confidence": 1
+      },
+      {
+        "name": "Angular",
+        "confidence": 1
+      },
+      {
+        "name": "NestJS",
+        "confidence": 1
+      },
+      {
+        "name": "Express",
+        "confidence": 0.6666666666666666
+      },
+      {
+        "name": "Flask",
+        "confidence": 0.5
+      },
+      {
+        "name": "FastAPI",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "insights": {
+    "executiveSummary": "",
+    "technicalBreakdown": "",
+    "recommendations": [
+      "Use helmet.js for security headers",
+      "Implement rate limiting",
+      "Use HTTPS in production",
+      "Sanitize user inputs to prevent XSS",
+      "Use Content Security Policy (CSP)",
+      "Consider implementing layered architecture for better organization",
+      "Consider component-based architecture for better reusability",
+      "Implement proper component hierarchy and state management",
+      "Consider using React hooks for state management",
+      "Implement proper error handling middleware",
+      "Maintain clear separation of concerns",
+      "Follow SOLID principles in design",
+      "Implement proper dependency injection"
+    ],
+    "potentialIssues": []
+  },
+  "metadata": {
+    "analysisMode": "standard",
+    "processingTime": 1439,
+    "llmProvider": "claude",
+    "tokenUsage": {
+      "prompt": 4388,
+      "completion": 0,
+      "total": 4388
+    }
+  },
+  "exports": {
+    "json": {
+      "content": "{\n  \"id\": \"c74d83d1-99d2-4042-87f1-a6f6708c0193\",\n  \"path\": \"C:\\\\Users\\\\AlexJ\\\\Documents\\\\Coding\\\\Repos\\\\my-repos\\\\myRepoAnalyzer\\\\unified-repo-analyzer\",\n  \"name\": \"unified-repo-analyzer\",\n  \"language\": \"TypeScript\",\n  \"languages\": [\n    \"TypeScript\",\n    \"JavaScript\",\n    \"Markdown\",\n    \"YAML\",\n    \"JSON\",\n    \"Python\",\n    \"HTML\"\n  ],\n  \"frameworks\": [\n    \"React\",\n    \"Angular\",\n    \"NestJS\",\n    \"Express\",\n    \"Flask\",\n    \"FastAPI\"\n  ],\n  \"fileCount\": 502,\n  \"directoryCount\": 92,\n  \"totalSize\": 1838527,\n  \"createdAt\": \"2025-09-05T21:02:56.124Z\",\n  \"updatedAt\": \"2025-09-05T21:02:56.124Z\",\n  \"structure\": {\n    \"directories\": [\n      {\n        \"path\": \"/\",\n        \"files\": 15,\n        \"subdirectories\": 12\n      },\n      {\n        \"path\": \".cache\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \".git\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \".kiro\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \".test-cache\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \".vscode\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"coverage\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"coverage-reports\",\n        \"files\": 8,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"docs\",\n        \"files\": 25,\n        \"subdirectories\": 3\n      },\n      {\n        \"path\": \"docs\\\\api\",\n        \"files\": 3,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"docs\\\\developer\",\n        \"files\": 1,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"docs\\\\user-guide\",\n        \"files\": 1,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"k8s\",\n        \"files\": 8,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"logs\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"node_modules\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\",\n        \"files\": 0,\n        \"subdirectories\": 4\n      },\n      {\n        \"path\": \"packages\\\\backend\",\n        \"files\": 3,\n        \"subdirectories\": 8\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\backups\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\dist\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\exports\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\logs\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\node_modules\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\",\n        \"files\": 2,\n        \"subdirectories\": 9\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\",\n        \"files\": 1,\n        \"subdirectories\": 5\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\controllers\",\n        \"files\": 10,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\controllers\\\\__tests__\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\middleware\",\n        \"files\": 4,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\routes\",\n        \"files\": 18,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\routes\\\\__tests__\",\n        \"files\": 6,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\websocket\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\__tests__\",\n        \"files\": 10,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\config\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\core\",\n        \"files\": 12,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\core\\\\__tests__\",\n        \"files\": 22,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\providers\",\n        \"files\": 13,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\providers\\\\__tests__\",\n        \"files\": 13,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\scripts\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\services\",\n        \"files\": 25,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\services\\\\__tests__\",\n        \"files\": 22,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\types\",\n        \"files\": 1,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\utils\",\n        \"files\": 17,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\utils\\\\__tests__\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\__tests__\",\n        \"files\": 9,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\",\n        \"files\": 0,\n        \"subdirectories\": 40\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-0\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-1\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-10\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-11\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-12\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-13\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-14\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-15\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-16\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-17\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-18\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-19\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-2\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-3\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-4\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-5\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-6\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-7\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-8\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-9\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-js\",\n        \"files\": 3,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-partial-js\",\n        \"files\": 3,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-python\",\n        \"files\": 4,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-react\",\n        \"files\": 3,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-react\\\\src\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-0\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-1\",\n        \"files\": 4,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-2\",\n        \"files\": 4,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-2\\\\src\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-3\",\n        \"files\": 6,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-4\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-5\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-6\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-7\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-8\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-9\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\export-html-test\",\n        \"files\": 4,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\export-md-test\",\n        \"files\": 3,\n        \"subdirectories\": 1\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\export-md-test\\\\src\",\n        \"files\": 2,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\index-test\",\n        \"files\": 3,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\large-performance-test\",\n        \"files\": 2,\n        \"subdirectories\": 2\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\large-performance-test\\\\src\",\n        \"files\": 100,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\large-performance-test\\\\tests\",\n        \"files\": 42,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\large-repo\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\memory-test\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\cli\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\frontend\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      },\n      {\n        \"path\": \"packages\\\\shared\",\n        \"files\": 0,\n        \"subdirectories\": 0\n      }\n    ],\n    \"keyFiles\": [\n      {\n        \"path\": \"biome.json\",\n        \"language\": \"JavaScript\",\n        \"size\": 3438,\n        \"lineCount\": 140,\n        \"importance\": 0.555,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 284\n      },\n      {\n        \"path\": \"package.json\",\n        \"language\": \"JavaScript\",\n        \"size\": 9371,\n        \"lineCount\": 155,\n        \"importance\": 0.555,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 1300\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\package.json\",\n        \"language\": \"JavaScript\",\n        \"size\": 2366,\n        \"lineCount\": 72,\n        \"importance\": 0.555,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 364\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\index.ts\",\n        \"language\": \"TypeScript\",\n        \"size\": 3917,\n        \"lineCount\": 148,\n        \"importance\": 0.55,\n        \"functions\": [\n          {\n            \"name\": \"get\",\n            \"lineNumber\": 83,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"close\",\n            \"lineNumber\": 122,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"setTimeout\",\n            \"lineNumber\": 127,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"on\",\n            \"lineNumber\": 134,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"listen\",\n            \"lineNumber\": 138,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"io\",\n            \"lineNumber\": 36,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"gracefulShutdown\",\n            \"lineNumber\": 116,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"server\",\n            \"lineNumber\": 138,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 456\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\tsconfig.json\",\n        \"language\": \"TypeScript\",\n        \"size\": 582,\n        \"lineCount\": 26,\n        \"importance\": 0.515,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 57\n      },\n      {\n        \"path\": \"docker-compose.yml\",\n        \"language\": \"YAML\",\n        \"size\": 1459,\n        \"lineCount\": 65,\n        \"importance\": 0.505,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 152\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\api\\\\websocket\\\\index.ts\",\n        \"language\": \"TypeScript\",\n        \"size\": 2438,\n        \"lineCount\": 82,\n        \"importance\": 0.49000000000000005,\n        \"functions\": [\n          {\n            \"name\": \"on\",\n            \"lineNumber\": 13,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"initializeWebSocketHandlers\",\n            \"lineNumber\": 12,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"clientId\",\n            \"lineNumber\": 17,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"sendAnalysisProgress\",\n            \"lineNumber\": 46,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"sendAnalysisComplete\",\n            \"lineNumber\": 57,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"sendBatchProgress\",\n            \"lineNumber\": 68,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"sendBatchComplete\",\n            \"lineNumber\": 79,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 280\n      },\n      {\n        \"path\": \"CHANGELOG.md\",\n        \"language\": \"Markdown\",\n        \"size\": 1288,\n        \"lineCount\": 53,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [\n          {\n            \"name\": \"for\",\n            \"lineNumber\": 17,\n            \"methods\": []\n          }\n        ],\n        \"tokenCount\": 168\n      },\n      {\n        \"path\": \"CODE_OF_CONDUCT.md\",\n        \"language\": \"Markdown\",\n        \"size\": 5197,\n        \"lineCount\": 79,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 712\n      },\n      {\n        \"path\": \"CONTRIBUTING.md\",\n        \"language\": \"Markdown\",\n        \"size\": 1525,\n        \"lineCount\": 48,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 223\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\core\\\\index.ts\",\n        \"language\": \"TypeScript\",\n        \"size\": 140,\n        \"lineCount\": 8,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 15\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\providers\\\\index.ts\",\n        \"language\": \"TypeScript\",\n        \"size\": 203,\n        \"lineCount\": 10,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 23\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\src\\\\utils\\\\index.ts\",\n        \"language\": \"TypeScript\",\n        \"size\": 168,\n        \"lineCount\": 9,\n        \"importance\": 0.48,\n        \"functions\": [],\n        \"classes\": [],\n        \"tokenCount\": 18\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-js\\\\index.js\",\n        \"language\": \"JavaScript\",\n        \"size\": 240,\n        \"lineCount\": 13,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"get\",\n            \"lineNumber\": 6,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"listen\",\n            \"lineNumber\": 10,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"app\",\n            \"lineNumber\": 4,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 33\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-partial-js\\\\index.js\",\n        \"language\": \"JavaScript\",\n        \"size\": 240,\n        \"lineCount\": 13,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"get\",\n            \"lineNumber\": 6,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"listen\",\n            \"lineNumber\": 10,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"app\",\n            \"lineNumber\": 4,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 33\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\batch-python\\\\app.py\",\n        \"language\": \"Python\",\n        \"size\": 494,\n        \"lineCount\": 22,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"hello\",\n            \"lineNumber\": 8,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"get_data\",\n            \"lineNumber\": 12,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 68\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-1\\\\index.js\",\n        \"language\": \"JavaScript\",\n        \"size\": 240,\n        \"lineCount\": 13,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"get\",\n            \"lineNumber\": 6,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"listen\",\n            \"lineNumber\": 10,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"app\",\n            \"lineNumber\": 4,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 33\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\concurrent-3\\\\app.py\",\n        \"language\": \"Python\",\n        \"size\": 494,\n        \"lineCount\": 22,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"hello\",\n            \"lineNumber\": 8,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"get_data\",\n            \"lineNumber\": 12,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 68\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\export-html-test\\\\app.py\",\n        \"language\": \"Python\",\n        \"size\": 494,\n        \"lineCount\": 22,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"hello\",\n            \"lineNumber\": 8,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"get_data\",\n            \"lineNumber\": 12,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 68\n      },\n      {\n        \"path\": \"packages\\\\backend\\\\temp-test-repos\\\\index-test\\\\index.js\",\n        \"language\": \"JavaScript\",\n        \"size\": 240,\n        \"lineCount\": 13,\n        \"importance\": 0.48,\n        \"functions\": [\n          {\n            \"name\": \"get\",\n            \"lineNumber\": 6,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"listen\",\n            \"lineNumber\": 10,\n            \"parameters\": []\n          },\n          {\n            \"name\": \"app\",\n            \"lineNumber\": 4,\n            \"parameters\": []\n          }\n        ],\n        \"classes\": [],\n        \"tokenCount\": 33\n      }\n    ],\n    \"tree\": \"unified-repo-analyzer\\n├── .c8rc.json\\n├── .coverageignore\\n├── .gitignore\\n├── .nycrc.json\\n├── .test-cache/\\n│   ├── dependency-map.json\\n│   └── test-metrics.json\\n├── biome.json\\n├── build-report.json\\n├── bunfig.toml\\n├── CHANGELOG.md\\n├── CODE_OF_CONDUCT.md\\n├── CONTRIBUTING.md\\n├── coverage-reports/\\n│   ├── completion-test-summary.json\\n│   ├── coverage-status.json\\n│   ├── coverage-status.md\\n│   ├── dashboard.html\\n│   ├── task-6.2-completion-report.json\\n│   ├── task-6.2-completion-report.md\\n│   ├── validation-report.json\\n│   └── validation-report.md\\n├── docker-compose.yml\\n├── docs/\\n│   ├── api/\\n│   │   ├── LOGGING_API.md\\n│   │   ├── openapi.yaml\\n│   │   └── PATH_VALIDATION_API.md\\n│   ├── BUILD_RECOVERY_PROCEDURES.md\\n│   ├── BUILD_VALIDATION_SYSTEM.md\\n│   ├── BUN_PROCESS_MANAGEMENT.md\\n│   ├── CHANGELOG.md\\n│   ├── CLI_FIX_SUMMARY.md\\n│   ├── CODE_OF_CONDUCT.md\\n│   ├── CONTRIBUTING.md\\n│   ├── DEPLOYMENT.md\\n│   ├── DEPLOYMENT_GUIDE.md\\n│   ├── DEPLOYMENT_MIGRATION_GUIDE.md\\n│   ├── developer/\\n│   │   └── README.md\\n│   ├── DEVELOPMENT.md\\n│   ├── ERROR_HANDLING.md\\n│   ├── INITIAL_COMMIT_MESSAGE.txt\\n│   ├── LICENSE\\n│   ├── LOGGING_CONFIGURATION.md\\n│   ├── MIGRATION-SUMMARY.md\\n│   ├── PRODUCTION_CHECKLIST.md\\n│   ├── RELEASE_NOTES.md\\n│   ├── SECURITY.md\\n│   ├── TESTING_FIXES.md\\n│   ├── TROUBLESHOOTING.md\\n│   ├── TYPE_RESOLUTION.md\\n│   ├── user-guide/\\n│   │   └── README.md\\n│   ├── USER_GUIDE.md\\n│   ├── WINDOWS_PATH_LOGGING_SETUP.md\\n│   └── WINDOWS_SETUP.md\\n├── gitignore-review-plan.md\\n├── k8s/\\n│   ├── backend-deployment.yaml\\n│   ├── configmap.yaml\\n│   ├── frontend-deployment.yaml\\n│   ├── ingress.yaml\\n│   ├── namespace.yaml\\n│   ├── persistent-volumes.yaml\\n│   ├── secret.yaml\\n│   └── services.yaml\\n├── LICENSE\\n├── package.json\\n├── packages/\\n│   └── backend/\\n│       ├── Dockerfile\\n│       ├── package.json\\n│       ├── src/\\n│       │   ├── api/\\n│       │   │   ├── controllers/\\n│       │   │   │   ├── analyze.controller.d.ts\\n│       │   │   │   ├── analyze.controller.ts\\n│       │   │   │   ├── export.controller.d.ts\\n│       │   │   │   ├── export.controller.ts\\n│       │   │   │   ├── filesystem.controller.ts\\n│       │   │   │   ├── index.d.ts\\n│       │   │   │   ├── index.ts\\n│       │   │   │   ├── path.controller.ts\\n│       │   │   │   ├── repositories.controller.d.ts\\n│       │   │   │   ├── repositories.controller.ts\\n│       │   │   │   └── __tests__/\\n│       │   │   │       ├── export.controller.test.d.ts\\n│       │   │   │       └── export.controller.test.ts\\n│       │   │   ├── middleware/\\n│       │   │   │   ├── error.middleware.d.ts\\n│       │   │   │   ├── error.middleware.ts\\n│       │   │   │   ├── performance.middleware.d.ts\\n│       │   │   │   └── performance.middleware.ts\\n│       │   │   ├── README.md\\n│       │   │   ├── routes/\\n│       │   │   │   ├── analysis-requests.ts\\n│       │   │   │   ├── analyze.d.ts\\n│       │   │   │   ├── analyze.ts\\n│       │   │   │   ├── backup.routes.d.ts\\n│       │   │   │   ├── backup.routes.ts\\n│       │   │   │   ├── config.routes.d.ts\\n│       │   │   │   ├── config.routes.ts\\n│       │   │   │   ├── export.d.ts\\n│       │   │   │   ├── export.ts\\n│       │   │   │   ├── filesystem.ts\\n│       │   │   │   ├── index.d.ts\\n│       │   │   │   ├── index.ts\\n│       │   │   │   ├── metrics.d.ts\\n│       │   │   │   ├── metrics.ts\\n│       │   │   │   ├── path.ts\\n│       │   │   │   ├── providers.ts\\n│       │   │   │   ├── repositories.d.ts\\n│       │   │   │   ├── repositories.ts\\n│       │   │   │   └── __tests__/\\n│       │   │   │       ├── analysis-requests.test.ts\\n│       │   │   │       ├── openrouter-integration.test.ts\\n│       │   │   │       ├── providers-integration.test.ts\\n│       │   │   │       ├── providers.models.test.ts\\n│       │   │   │       ├── providers.test.ts\\n│       │   │   │       └── verify-task1-completion.ts\\n│       │   │   ├── websocket/\\n│       │   │   │   ├── index.d.ts\\n│       │   │   │   └── index.ts\\n│       │   │   └── __tests__/\\n│       │   │       ├── analyze-workflow.integration.test.ts\\n│       │   │       ├── api-fixed.test.ts\\n│       │   │       ├── api.simple.test.ts\\n│       │   │       ├── api.test.d.ts\\n│       │   │       ├── api.test.ts\\n│       │   │       ├── batch-analyze.test.d.ts\\n│       │   │       ├── batch-analyze.test.ts\\n│       │   │       ├── path-integration.test.ts\\n│       │   │       ├── websocket.test.d.ts\\n│       │   │       └── websocket.test.ts\\n│       │   ├── config/\\n│       │   │   ├── environment.d.ts\\n│       │   │   └── environment.ts\\n│       │   ├── core/\\n│       │   │   ├── advancedAnalyzer.d.ts\\n│       │   │   ├── advancedAnalyzer.ts\\n│       │   │   ├── AnalysisEngine.d.ts\\n│       │   │   ├── AnalysisEngine.ts\\n│       │   │   ├── codeStructureAnalyzer.d.ts\\n│       │   │   ├── codeStructureAnalyzer.ts\\n│       │   │   ├── index.d.ts\\n│       │   │   ├── index.ts\\n│       │   │   ├── IndexSystem.d.ts\\n│       │   │   ├── IndexSystem.ts\\n│       │   │   ├── tokenAnalyzer.d.ts\\n│       │   │   ├── tokenAnalyzer.ts\\n│       │   │   └── __tests__/\\n│       │   │       ├── advancedAnalyzer.fixed.test.ts\\n│       │   │       ├── advancedAnalyzer.test.d.ts\\n│       │   │       ├── advancedAnalyzer.test.ts\\n│       │   │       ├── analysisEngine.advanced.fixed.test.ts\\n│       │   │       ├── analysisEngine.advanced.test.d.ts\\n│       │   │       ├── analysisEngine.advanced.test.ts\\n│       │   │       ├── AnalysisEngine.batch.fixed.test.ts\\n│       │   │       ├── AnalysisEngine.batch.test.d.ts\\n│       │   │       ├── AnalysisEngine.batch.test.ts\\n│       │   │       ├── AnalysisEngine.fixed.test.ts\\n│       │   │       ├── AnalysisEngine.test.d.ts\\n│       │   │       ├── AnalysisEngine.test.ts\\n│       │   │       ├── codeStructureAnalyzer.test.d.ts\\n│       │   │       ├── codeStructureAnalyzer.test.ts\\n│       │   │       ├── IndexSystem.comprehensive.test.ts\\n│       │   │       ├── IndexSystem.relationship.test.d.ts\\n│       │   │       ├── IndexSystem.relationship.test.ts\\n│       │   │       ├── IndexSystem.test.d.ts\\n│       │   │       ├── IndexSystem.test.ts\\n│       │   │       ├── temp-index-1756344976823.json\\n│       │   │       ├── tokenAnalyzer.test.d.ts\\n│       │   │       └── tokenAnalyzer.test.ts\\n│       │   ├── index.d.ts\\n│       │   ├── index.ts\\n│       │   ├── providers/\\n│       │   │   ├── ClaudeProvider.d.ts\\n│       │   │   ├── ClaudeProvider.ts\\n│       │   │   ├── GeminiProvider.d.ts\\n│       │   │   ├── GeminiProvider.ts\\n│       │   │   ├── index.d.ts\\n│       │   │   ├── index.ts\\n│       │   │   ├── LLMProvider.d.ts\\n│       │   │   ├── LLMProvider.ts\\n│       │   │   ├── MockProvider.d.ts\\n│       │   │   ├── MockProvider.ts\\n│       │   │   ├── OpenRouterProvider.ts\\n│       │   │   ├── ProviderRegistry.d.ts\\n│       │   │   ├── ProviderRegistry.ts\\n│       │   │   └── __tests__/\\n│       │   │       ├── ClaudeProvider.test.d.ts\\n│       │   │       ├── ClaudeProvider.test.ts\\n│       │   │       ├── GeminiProvider.test.d.ts\\n│       │   │       ├── GeminiProvider.test.ts\\n│       │   │       ├── LLMProvider.test.d.ts\\n│       │   │       ├── LLMProvider.test.ts\\n│       │   │       ├── MockProvider.test.d.ts\\n│       │   │       ├── MockProvider.test.ts\\n│       │   │       ├── OpenRouterProvider.test.ts\\n│       │   │       ├── ProviderRegistry.enhanced.test.ts\\n│       │   │       ├── ProviderRegistry.models.test.ts\\n│       │   │       ├── ProviderRegistry.test.d.ts\\n│       │   │       └── ProviderRegistry.test.ts\\n│       │   ├── scripts/\\n│       │   │   ├── performance-benchmark.d.ts\\n│       │   │   └── performance-benchmark.ts\\n│       │   ├── services/\\n│       │   │   ├── analysis-request-tracker.service.ts\\n│       │   │   ├── backup.service.d.ts\\n│       │   │   ├── backup.service.ts\\n│       │   │   ├── cache.service.d.ts\\n│       │   │   ├── cache.service.ts\\n│       │   │   ├── config.service.d.ts\\n│       │   │   ├── config.service.ts\\n│       │   │   ├── deduplication.service.d.ts\\n│       │   │   ├── deduplication.service.ts\\n│       │   │   ├── error-message.service.ts\\n│       │   │   ├── export.service.d.ts\\n│       │   │   ├── export.service.ts\\n│       │   │   ├── health.service.d.ts\\n│       │   │   ├── health.service.ts\\n│       │   │   ├── log-management.service.d.ts\\n│       │   │   ├── log-management.service.ts\\n│       │   │   ├── logger.service.d.ts\\n│       │   │   ├── logger.service.ts\\n│       │   │   ├── metrics.service.d.ts\\n│       │   │   ├── metrics.service.ts\\n│       │   │   ├── path-handler.service.d.ts\\n│       │   │   ├── path-handler.service.ts\\n│       │   │   ├── performance-monitor.service.ts\\n│       │   │   ├── relationship.service.d.ts\\n│       │   │   ├── relationship.service.ts\\n│       │   │   └── __tests__/\\n│       │   │       ├── config.service.basic.test.d.ts\\n│       │   │       ├── config.service.basic.test.ts\\n│       │   │       ├── config.service.simple.test.d.ts\\n│       │   │       ├── config.service.simple.test.ts\\n│       │   │       ├── config.service.test.d.ts\\n│       │   │       ├── config.service.test.ts\\n│       │   │       ├── error-message.service.fixed.test.ts\\n│       │   │       ├── error-message.service.test.ts\\n│       │   │       ├── export.service.test.d.ts\\n│       │   │       ├── export.service.test.ts\\n│       │   │       ├── log-management.service.test.ts\\n│       │   │       ├── logger-http-simple.service.test.ts\\n│       │   │       ├── logger-http.service.test.ts\\n│       │   │       ├── logger-outputs.service.test.ts\\n│       │   │       ├── logger.service.test.ts\\n│       │   │       ├── path-handler-cache.test.ts\\n│       │   │       ├── path-handler-performance.test.ts\\n│       │   │       ├── path-handler.service.test.d.ts\\n│       │   │       ├── path-handler.service.test.ts\\n│       │   │       ├── performance-monitor.test.ts\\n│       │   │       ├── relationship.service.test.d.ts\\n│       │   │       └── relationship.service.test.ts\\n│       │   ├── types/\\n│       │   │   └── global.d.ts\\n│       │   ├── utils/\\n│       │   │   ├── error-handler.ts\\n│       │   │   ├── fileImportance.d.ts\\n│       │   │   ├── fileImportance.ts\\n│       │   │   ├── fileSystem.d.ts\\n│       │   │   ├── fileSystem.ts\\n│       │   │   ├── index.d.ts\\n│       │   │   ├── index.ts\\n│       │   │   ├── languageDetection.d.ts\\n│       │   │   ├── languageDetection.ts\\n│       │   │   ├── logger.d.ts\\n│       │   │   ├── logger.ts\\n│       │   │   ├── logging-enhancer.ts\\n│       │   │   ├── queue.d.ts\\n│       │   │   ├── queue.ts\\n│       │   │   ├── recovery-system.ts\\n│       │   │   ├── repositoryDiscovery.d.ts\\n│       │   │   ├── repositoryDiscovery.ts\\n│       │   │   └── __tests__/\\n│       │   │       ├── queue.test.d.ts\\n│       │   │       └── queue.test.ts\\n│       │   └── __tests__/\\n│       │       ├── end-to-end-workflows.test.ts\\n│       │       ├── file-type-filtering.test.ts\\n│       │       ├── logging-integration.test.ts\\n│       │       ├── logging-system-integration.test.ts\\n│       │       ├── performance-load.test.ts\\n│       │       ├── performance.test.d.ts\\n│       │       ├── performance.test.ts\\n│       │       ├── platform-integration.test.ts\\n│       │       └── test-setup.ts\\n│       ├── temp-test-repos/\\n│       │   ├── batch-0/\\n│       │   │   ├── component-0.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-1/\\n│       │   │   ├── component-1.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-10/\\n│       │   │   ├── component-10.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-11/\\n│       │   │   ├── component-11.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-12/\\n│       │   │   ├── component-12.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-13/\\n│       │   │   ├── component-13.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-14/\\n│       │   │   ├── component-14.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-15/\\n│       │   │   ├── component-15.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-16/\\n│       │   │   ├── component-16.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-17/\\n│       │   │   ├── component-17.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-18/\\n│       │   │   ├── component-18.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-19/\\n│       │   │   ├── component-19.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-2/\\n│       │   │   ├── component-2.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-3/\\n│       │   │   ├── component-3.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-4/\\n│       │   │   ├── component-4.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-5/\\n│       │   │   ├── component-5.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-6/\\n│       │   │   ├── component-6.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-7/\\n│       │   │   ├── component-7.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-8/\\n│       │   │   ├── component-8.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-9/\\n│       │   │   ├── component-9.jsx\\n│       │   │   └── package.json\\n│       │   ├── batch-js/\\n│       │   │   ├── index.js\\n│       │   │   ├── package.json\\n│       │   │   └── README.md\\n│       │   ├── batch-partial-js/\\n│       │   │   ├── index.js\\n│       │   │   ├── package.json\\n│       │   │   └── README.md\\n│       │   ├── batch-python/\\n│       │   │   ├── app.py\\n│       │   │   ├── README.md\\n│       │   │   ├── requirements.txt\\n│       │   │   └── utils.py\\n│       │   ├── batch-react/\\n│       │   │   ├── package.json\\n│       │   │   ├── README.md\\n│       │   │   ├── src/\\n│       │   │   │   ├── App.tsx\\n│       │   │   │   └── index.tsx\\n│       │   │   └── tsconfig.json\\n│       │   ├── concurrent-0/\\n│       │   │   ├── app-0.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-1/\\n│       │   │   ├── app-1.js\\n│       │   │   ├── index.js\\n│       │   │   ├── package.json\\n│       │   │   └── README.md\\n│       │   ├── concurrent-2/\\n│       │   │   ├── app-2.js\\n│       │   │   ├── package.json\\n│       │   │   ├── README.md\\n│       │   │   ├── src/\\n│       │   │   │   ├── App.tsx\\n│       │   │   │   └── index.tsx\\n│       │   │   └── tsconfig.json\\n│       │   ├── concurrent-3/\\n│       │   │   ├── app-3.js\\n│       │   │   ├── app.py\\n│       │   │   ├── package.json\\n│       │   │   ├── README.md\\n│       │   │   ├── requirements.txt\\n│       │   │   └── utils.py\\n│       │   ├── concurrent-4/\\n│       │   │   ├── app-4.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-5/\\n│       │   │   ├── app-5.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-6/\\n│       │   │   ├── app-6.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-7/\\n│       │   │   ├── app-7.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-8/\\n│       │   │   ├── app-8.js\\n│       │   │   └── package.json\\n│       │   ├── concurrent-9/\\n│       │   │   ├── app-9.js\\n│       │   │   └── package.json\\n│       │   ├── export-html-test/\\n│       │   │   ├── app.py\\n│       │   │   ├── README.md\\n│       │   │   ├── requirements.txt\\n│       │   │   └── utils.py\\n│       │   ├── export-md-test/\\n│       │   │   ├── package.json\\n│       │   │   ├── README.md\\n│       │   │   ├── src/\\n│       │   │   │   ├── App.tsx\\n│       │   │   │   └── index.tsx\\n│       │   │   └── tsconfig.json\\n│       │   ├── index-test/\\n│       │   │   ├── index.js\\n│       │   │   ├── package.json\\n│       │   │   └── README.md\\n│       │   └── large-performance-test/\\n│       │       ├── package.json\\n│       │       ├── README.md\\n│       │       ├── src/\\n│       │       │   ├── component0.js\\n│       │       │   ├── component1.js\\n│       │       │   ├── component10.js\\n│       │       │   ├── component11.js\\n│       │       │   ├── component12.js\\n│       │       │   ├── component13.js\\n│       │       │   ├── component14.js\\n│       │       │   ├── component15.js\\n│       │       │   ├── component16.js\\n│       │       │   ├── component17.js\\n│       │       │   ├── component18.js\\n│       │       │   ├── component19.js\\n│       │       │   ├── component2.js\\n│       │       │   ├── component20.js\\n│       │       │   ├── component21.js\\n│       │       │   ├── component22.js\\n│       │       │   ├── component23.js\\n│       │       │   ├── component24.js\\n│       │       │   ├── component25.js\\n│       │       │   ├── component26.js\\n│       │       │   ├── component27.js\\n│       │       │   ├── component28.js\\n│       │       │   ├── component29.js\\n│       │       │   ├── component3.js\\n│       │       │   ├── component30.js\\n│       │       │   ├── component31.js\\n│       │       │   ├── component32.js\\n│       │       │   ├── component33.js\\n│       │       │   ├── component34.js\\n│       │       │   ├── component35.js\\n│       │       │   ├── component36.js\\n│       │       │   ├── component37.js\\n│       │       │   ├── component38.js\\n│       │       │   ├── component39.js\\n│       │       │   ├── component4.js\\n│       │       │   ├── component40.js\\n│       │       │   ├── component41.js\\n│       │       │   ├── component42.js\\n│       │       │   ├── component43.js\\n│       │       │   ├── component44.js\\n│       │       │   ├── component45.js\\n│       │       │   ├── component46.js\\n│       │       │   ├── component47.js\\n│       │       │   ├── component48.js\\n│       │       │   ├── component49.js\\n│       │       │   ├── component5.js\\n│       │       │   ├── component50.js\\n│       │       │   ├── component51.js\\n│       │       │   ├── component52.js\\n│       │       │   ├── component53.js\\n│       │       │   ├── component54.js\\n│       │       │   ├── component55.js\\n│       │       │   ├── component56.js\\n│       │       │   ├── component57.js\\n│       │       │   ├── component58.js\\n│       │       │   ├── component59.js\\n│       │       │   ├── component6.js\\n│       │       │   ├── component60.js\\n│       │       │   ├── component61.js\\n│       │       │   ├── component62.js\\n│       │       │   ├── component63.js\\n│       │       │   ├── component64.js\\n│       │       │   ├── component65.js\\n│       │       │   ├── component66.js\\n│       │       │   ├── component67.js\\n│       │       │   ├── component68.js\\n│       │       │   ├── component69.js\\n│       │       │   ├── component7.js\\n│       │       │   ├── component70.js\\n│       │       │   ├── component71.js\\n│       │       │   ├── component72.js\\n│       │       │   ├── component73.js\\n│       │       │   ├── component74.js\\n│       │       │   ├── component75.js\\n│       │       │   ├── component76.js\\n│       │       │   ├── component77.js\\n│       │       │   ├── component78.js\\n│       │       │   ├── component79.js\\n│       │       │   ├── component8.js\\n│       │       │   ├── component80.js\\n│       │       │   ├── component81.js\\n│       │       │   ├── component82.js\\n│       │       │   ├── component83.js\\n│       │       │   ├── component84.js\\n│       │       │   ├── component85.js\\n│       │       │   ├── component86.js\\n│       │       │   ├── component87.js\\n│       │       │   ├── component88.js\\n│       │       │   ├── component89.js\\n│       │       │   ├── component9.js\\n│       │       │   ├── component90.js\\n│       │       │   ├── component91.js\\n│       │       │   ├── component92.js\\n│       │       │   ├── component93.js\\n│       │       │   ├── component94.js\\n│       │       │   ├── component95.js\\n│       │       │   ├── component96.js\\n│       │       │   ├── component97.js\\n│       │       │   ├── component98.js\\n│       │       │   └── component99.js\\n│       │       └── tests/\\n│       │           ├── component0.test.js\\n│       │           ├── component1.test.js\\n│       │           ├── component10.test.js\\n│       │           ├── component11.test.js\\n│       │           ├── component12.test.js\\n│       │           ├── component13.test.js\\n│       │           ├── component14.test.js\\n│       │           ├── component15.test.js\\n│       │           ├── component16.test.js\\n│       │           ├── component17.test.js\\n│       │           ├── component18.test.js\\n│       │           ├── component19.test.js\\n│       │           ├── component2.test.js\\n│       │           ├── component20.test.js\\n│       │           ├── component21.test.js\\n│       │           ├── component22.test.js\\n│       │           ├── component23.test.js\\n│       │           ├── component24.test.js\\n│       │           ├── component25.test.js\\n│       │           ├── component26.test.js\\n│       │           ├── component27.test.js\\n│       │           ├── component28.test.js\\n│       │           ├── component29.test.js\\n│       │           ├── component3.test.js\\n│       │           ├── component30.test.js\\n│       │           ├── component31.test.js\\n│       │           ├── component32.test.js\\n│       │           ├── component33.test.js\\n│       │           ├── component34.test.js\\n│       │           ├── component35.test.js\\n│       │           ├── component36.test.js\\n│       │           ├── component37.test.js\\n│       │           ├── component38.test.js\\n│       │           ├── component39.test.js\\n│       │           ├── component4.test.js\\n│       │           ├── component40.test.js\\n│       │           ├── component41.test.js\\n│       │           ├── component42.test.js\\n│       │           ├── component43.test.js\\n│       │           ├── component44.test.js\\n│       │           ├── component45.test.js\\n│       │           └── component46.test.js\\n│       └── tsconfig.json\\n└── PACKAGE_STANDARDIZATION_SUMMARY.md\\n\"\n  },\n  \"codeAnalysis\": {\n    \"functionCount\": 33,\n    \"classCount\": 1,\n    \"importCount\": 22,\n    \"complexity\": {\n      \"cyclomaticComplexity\": 4,\n      \"maintainabilityIndex\": 49,\n      \"technicalDebt\": \"0 high, 4 medium, 0 low priority items\",\n      \"codeQuality\": \"fair\"\n    },\n    \"patterns\": [\n      {\n        \"name\": \"Microservices\",\n        \"confidence\": 0.6,\n        \"description\": \"Microservices architecture with multiple independent services\"\n      },\n      {\n        \"name\": \"REST API\",\n        \"confidence\": 0.9,\n        \"description\": \"RESTful API architecture using HTTP methods and resources\"\n      },\n      {\n        \"name\": \"Single Page Application (SPA)\",\n        \"confidence\": 0.9,\n        \"description\": \"Single page application with client-side routing and state management\"\n      }\n    ]\n  },\n  \"dependencies\": {\n    \"production\": [],\n    \"development\": [],\n    \"frameworks\": [\n      {\n        \"name\": \"React\",\n        \"confidence\": 1\n      },\n      {\n        \"name\": \"Angular\",\n        \"confidence\": 1\n      },\n      {\n        \"name\": \"NestJS\",\n        \"confidence\": 1\n      },\n      {\n        \"name\": \"Express\",\n        \"confidence\": 0.6666666666666666\n      },\n      {\n        \"name\": \"Flask\",\n        \"confidence\": 0.5\n      },\n      {\n        \"name\": \"FastAPI\",\n        \"confidence\": 0.5\n      }\n    ]\n  },\n  \"insights\": {\n    \"executiveSummary\": \"\",\n    \"technicalBreakdown\": \"\",\n    \"recommendations\": [\n      \"Use helmet.js for security headers\",\n      \"Implement rate limiting\",\n      \"Use HTTPS in production\",\n      \"Sanitize user inputs to prevent XSS\",\n      \"Use Content Security Policy (CSP)\",\n      \"Consider implementing layered architecture for better organization\",\n      \"Consider component-based architecture for better reusability\",\n      \"Implement proper component hierarchy and state management\",\n      \"Consider using React hooks for state management\",\n      \"Implement proper error handling middleware\",\n      \"Maintain clear separation of concerns\",\n      \"Follow SOLID principles in design\",\n      \"Implement proper dependency injection\"\n    ],\n    \"potentialIssues\": []\n  },\n  \"metadata\": {\n    \"analysisMode\": \"standard\",\n    \"processingTime\": 1439,\n    \"llmProvider\": \"claude\",\n    \"tokenUsage\": {\n      \"prompt\": 4388,\n      \"completion\": 0,\n      \"total\": 4388\n    }\n  }\n}",
+      "size": 51648
+    },
+    "markdown": null,
+    "html": null
+  }
+}

@@ -161,6 +161,7 @@ desktop.ini
 .dynamodb/
 .tern-port
 .turbo
+.github
 .github/cache/
 .github/workflows/cache/
 
