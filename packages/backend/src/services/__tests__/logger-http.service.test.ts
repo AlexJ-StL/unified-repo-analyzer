@@ -26,14 +26,14 @@ describe('HTTP Request/Response Logging', () => {
         password: 'secret456',
         data: 'normal-data',
       },
-      get: mockFunction((header: string) => {
+      get: mockFunction((header: unknown) => {
         const headers: Record<string, string> = {
           'User-Agent': 'test-agent',
           'Content-Length': '100',
           'Content-Type': 'application/json',
         };
-        return headers[header];
-      }),
+        return headers[header as string];
+      }) as unknown as (header: string) => string | undefined,
       ip: '127.0.0.1',
       connection: { remoteAddress: '192.168.1.1' },
       socket: { remoteAddress: '10.0.0.1' },
@@ -41,13 +41,13 @@ describe('HTTP Request/Response Logging', () => {
 
     mockRes = {
       statusCode: 200,
-      on: mockFunction((event: string, callback: Function) => {
+      on: mockFunction((event: unknown, callback: unknown) => {
         if (event === 'finish') {
           finishCallback = callback;
         } else if (event === 'error') {
           errorCallback = callback;
         }
-      }),
+      }) as unknown as (event: string, callback: Function) => void,
       send: mockFunction(),
       json: mockFunction(),
       getHeaders: mockFunction(() => ({
