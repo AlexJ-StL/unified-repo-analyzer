@@ -14,7 +14,7 @@ class WebSocketService {
       return;
     }
 
-    this.socket = io('http://localhost:3001', {
+    this.socket = io('http://localhost:3000', {
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectDelay,
       autoConnect: true,
