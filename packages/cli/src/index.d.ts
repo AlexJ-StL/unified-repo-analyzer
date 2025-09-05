@@ -1,3 +1,3 @@
-declare module "../dist/index.js" {
-  export * from "./index";
+declare module '../dist/index.js' {
+  export * from './index';
 }

@@ -15,6 +15,6 @@ console.log('bin path:', __filename);
 // Process is already declared globally
 
 void (async () => {
-  const program = require("../index.js").program;
+  const program = require('../index.js').program;
   program.parse();
 })();
