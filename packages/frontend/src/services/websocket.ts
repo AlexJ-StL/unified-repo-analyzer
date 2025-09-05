@@ -14,7 +14,15 @@ class WebSocketService {
       return;
     }
 
-    this.socket = io('http://localhost:3000', {
+    // Use relative path for WebSocket connection to work with proxy
+    // In development, Vite will proxy this to the backend server
+    // In production, this will connect directly to the backend server
+    const isDev = process.env.NODE_ENV === 'development';
+    const backendUrl = isDev
+      ? ''  // Empty string for relative path in development with proxy
+      : 'http://localhost:3000';  // Direct connection in production
+    
+    this.socket = io(backendUrl, {
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectDelay,
       autoConnect: true,
