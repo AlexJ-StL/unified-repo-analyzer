@@ -6,9 +6,13 @@ import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock } from 'vitest-mock-extended';
 
+// Import types for proper typing
+import type { AnalysisEngine } from '../../core/AnalysisEngine';
+import type { IndexSystem } from '../../core/IndexSystem';
+
 // Import before mocking
-const { AnalysisEngine } = await import('../../core/AnalysisEngine');
-const { IndexSystem } = await import('../../core/IndexSystem');
+const { AnalysisEngine: AnalysisEngineClass } = await import('../../core/AnalysisEngine');
+const { IndexSystem: IndexSystemClass } = await import('../../core/IndexSystem');
 
 import { app } from '../../index';
 
@@ -478,7 +482,7 @@ describe('API Integration Tests', () => {
             frameworks: ['React'],
             tags: ['frontend'],
             summary: 'Test repo 2',
-            lastAnalyzed: '2025-09-02T13:15:22.944Z',
+            lastAnalyzed: new Date('2025-09-02T13:15:22.944Z'),
             size: 2000,
             complexity: 6,
           },

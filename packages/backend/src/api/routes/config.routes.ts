@@ -5,6 +5,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import { configurationService } from '../../services/config.service';
+import { updateProviderConfigurations } from '../../services/provider-initialization.service';
 import { logger } from '../../utils/logger';
 
 const router = Router();
@@ -38,6 +39,10 @@ router.put(
     try {
       await configurationService.saveUserPreferences(req.body);
       const preferences = await configurationService.getUserPreferences();
+
+      // Update provider configurations in the registry
+      await updateProviderConfigurations();
+
       res.json(preferences);
     } catch (error) {
       logger.error('Failed to update user preferences:', error);
@@ -59,6 +64,12 @@ router.patch(
     const { section } = req.params!;
     try {
       const preferences = await configurationService.updatePreferences(section as any, req.body);
+
+      // Update provider configurations in the registry if LLM provider settings changed
+      if (section === 'llmProvider') {
+        await updateProviderConfigurations();
+      }
+
       res.json(preferences);
     } catch (error) {
       logger.error(`Failed to update ${section} preferences:`, error);
@@ -276,6 +287,10 @@ router.post(
 router.post('/profiles/:id/apply', param('id').isUUID(), async (req, res) => {
   try {
     const preferences = await configurationService.applyConfigurationProfile(req.params?.id);
+
+    // Update provider configurations in the registry
+    await updateProviderConfigurations();
+
     res.json(preferences);
   } catch (error) {
     logger.error('Failed to apply configuration profile:', error);
@@ -326,6 +341,10 @@ router.post('/validate', body('preferences').isObject(), async (req, res) => {
 router.post('/reset', async (_req, res) => {
   try {
     const preferences = await configurationService.resetToDefaults();
+
+    // Update provider configurations in the registry
+    await updateProviderConfigurations();
+
     res.json(preferences);
   } catch (error) {
     logger.error('Failed to reset configuration:', error);
@@ -387,6 +406,10 @@ router.post('/import', body('configData').isString().notEmpty(), async (req, res
   try {
     await configurationService.importConfiguration(req.body.configData);
     const preferences = await configurationService.getUserPreferences();
+
+    // Update provider configurations in the registry
+    await updateProviderConfigurations();
+
     res.json(preferences);
   } catch (error) {
     logger.error('Failed to import configuration:', error);

@@ -67,7 +67,7 @@ describe('Batch Analysis API', () => {
           // Return mock batch result
           return {
             id: 'test-batch',
-            repositories: paths.map((path) => ({
+            repositories: paths.map((path: string) => ({
               id: `repo-${path.replace(/\//g, '-')}`,
               path,
               name: path.split('/').pop(),
@@ -201,7 +201,7 @@ describe('Batch Analysis API', () => {
       // Return mock batch result
       return {
         id: 'test-batch',
-        repositories: paths.map((path) => ({
+        repositories: paths.map((path: string) => ({
           id: `repo-${path.replace(/\//g, '-')}`,
           path,
           name: path.split('/').pop(),

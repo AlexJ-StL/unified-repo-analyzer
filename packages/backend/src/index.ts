@@ -12,6 +12,7 @@ import { configurationService } from './services/config.service';
 import { healthService } from './services/health.service';
 import logger, { requestLogger } from './services/logger.service';
 import { metricsService } from './services/metrics.service';
+import { initializeProvidersWithConfig } from './services/provider-initialization.service';
 
 // Import error middleware
 // Import API routes
@@ -111,6 +112,11 @@ initializeWebSocketHandlers(io);
 
 // Initialize configuration service
 configurationService.initialize().catch(console.error);
+
+// Initialize providers with configurations
+initializeProvidersWithConfig().catch((error) => {
+  logger.error('Failed to initialize providers with configurations:', error);
+});
 
 // Graceful shutdown handling
 const gracefulShutdown = (signal: string) => {

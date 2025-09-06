@@ -131,7 +131,7 @@ describe('Performance and Load Testing', () => {
         // Execute batches sequentially, but within each batch concurrently
         for (const batch of batches) {
           const results = await Promise.all(batch);
-          expect(results.every((r) => r.isValid)).toBe(true);
+          expect(results.every((r: any) => r.isValid)).toBe(true);
         }
 
         const end = performance.now();

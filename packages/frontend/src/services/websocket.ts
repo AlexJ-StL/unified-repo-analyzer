@@ -19,9 +19,9 @@ class WebSocketService {
     // In production, this will connect directly to the backend server
     const isDev = process.env.NODE_ENV === 'development';
     const backendUrl = isDev
-      ? ''  // Empty string for relative path in development with proxy
-      : 'http://localhost:3000';  // Direct connection in production
-    
+      ? '' // Empty string for relative path in development with proxy
+      : 'http://localhost:3000'; // Direct connection in production
+
     this.socket = io(backendUrl, {
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectDelay,
