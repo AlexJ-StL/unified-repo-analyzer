@@ -1,3 +1,4 @@
+// @ts-nocheck - Disable TypeScript checking for this setup file
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { JSDOM } from 'jsdom';
@@ -5,6 +6,11 @@ import { afterEach, vi } from 'vitest';
 
 // Export vi for global access
 export { vi };
+
+// Make vi globally available for Bun tests
+if (typeof globalThis.vi === 'undefined') {
+  globalThis.vi = vi;
+}
 
 // Setup jsdom environment if not already available
 if (typeof document === 'undefined') {
@@ -15,14 +21,14 @@ if (typeof document === 'undefined') {
   });
 
   // Make jsdom globals available
-  global.window = dom.window as any;
-  global.document = dom.window.document;
-  global.navigator = dom.window.navigator;
-  global.HTMLElement = dom.window.HTMLElement;
-  global.HTMLInputElement = dom.window.HTMLInputElement;
-  global.HTMLButtonElement = dom.window.HTMLButtonElement;
-  global.Element = dom.window.Element;
-  global.Node = dom.window.Node;
+  globalThis.window = dom.window as any;
+  globalThis.document = dom.window.document;
+  globalThis.navigator = dom.window.navigator;
+  globalThis.HTMLElement = dom.window.HTMLElement;
+  globalThis.HTMLInputElement = dom.window.HTMLInputElement;
+  globalThis.HTMLButtonElement = dom.window.HTMLButtonElement;
+  globalThis.Element = dom.window.Element;
+  globalThis.Node = dom.window.Node;
 }
 
 // Cleanup after each test case
@@ -31,44 +37,43 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => {},
-  }),
-});
+if (typeof globalThis.window !== 'undefined') {
+  Object.defineProperty(globalThis.window, 'matchMedia', {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => {},
+    }),
+  });
+}
 
 // Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
+globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
+globalThis.IntersectionObserver = class IntersectionObserver {
   root: Element | null = null;
   rootMargin = '0px';
-  thresholds: number[];
+  thresholds: number[] = [0];
 
-  constructor(
-    public callback: IntersectionObserverCallback,
-    public options?: IntersectionObserverInit
-  ) {
-    this.root = options?.root ? (options.root as Element) : null; // Cast Element | Document | null to Element | null
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+    this.root = options?.root ? (options.root as Element) : null;
     this.rootMargin = options?.rootMargin || '0px';
     this.thresholds = Array.isArray(options?.threshold)
       ? options.threshold
       : options?.threshold !== undefined
         ? [options.threshold]
-        : [0]; // Default to [0] if not specified
+        : [0];
   }
 
   observe() {}
@@ -80,7 +85,7 @@ global.IntersectionObserver = class IntersectionObserver {
 };
 
 // Mock PerformanceObserver
-global.PerformanceObserver = class PerformanceObserver {
+globalThis.PerformanceObserver = class PerformanceObserver {
   constructor(public callback: PerformanceObserverCallback) {}
 
   observe() {}
@@ -88,16 +93,21 @@ global.PerformanceObserver = class PerformanceObserver {
   takeRecords(): PerformanceEntryList {
     return [];
   }
+  
+  // Add static property to fix TypeScript error
+  static supportedEntryTypes: readonly string[] = [];
 };
 
 // Mock performance.getEntriesByType
-Object.defineProperty(window, 'performance', {
-  writable: true,
-  value: {
-    ...window.performance,
-    getEntriesByType: () => [],
-    mark: () => {},
-    measure: () => {},
-    now: () => Date.now(),
-  },
-});
+if (typeof globalThis.window !== 'undefined' && globalThis.window.performance) {
+  Object.defineProperty(globalThis.window, 'performance', {
+    writable: true,
+    value: {
+      ...globalThis.window.performance,
+      getEntriesByType: () => [],
+      mark: () => {},
+      measure: () => {},
+      now: () => Date.now(),
+    },
+  });
+}

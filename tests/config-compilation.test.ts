@@ -129,7 +129,7 @@ describe('Configuration Compilation Tests', () => {
       const configContent = readFileSync(configPath, 'utf-8');
 
       // Should import defineConfig from vitest/config
-      expect(configContent).toContain('import { defineConfig } from \'vitest/config\'');
+      expect(configContent).toContain("import { defineConfig } from 'vitest/config'");
 
       // Should export default with defineConfig
       expect(configContent).toContain('export default defineConfig');

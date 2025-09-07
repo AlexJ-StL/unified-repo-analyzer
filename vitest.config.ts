@@ -17,45 +17,11 @@ export default defineConfig({
     unstubEnvs: true,
     unstubGlobals: true,
 
-    // Use projects for environment-specific configurations
-    projects: [
-      {
-        test: {
-          environment: 'jsdom',
-          include: ['**/packages/frontend/**/*.test.{ts,tsx}'],
-        },
-      },
-      {
-        test: {
-          environment: 'node',
-          include: ['**/packages/backend/**/*.test.{ts,tsx}'],
-        },
-      },
-      {
-        test: {
-          environment: 'node',
-          include: ['**/packages/cli/**/*.test.{ts,tsx}'],
-        },
-      },
-      {
-        test: {
-          environment: 'node',
-          include: ['**/packages/shared/**/*.test.{ts,tsx}'],
-        },
-      },
-      {
-        test: {
-          environment: 'node',
-          include: ['**/tests/**/*.test.{ts,tsx}'],
-        },
-      },
-    ],
-
     // Enable CSS processing for frontend tests
     css: true,
 
     coverage: {
-      provider: 'c8', // Use c8 provider for Bun compatibility
+      provider: 'v8', // Use v8 provider for better compatibility
       reporter: ['text', 'json', 'html', 'lcov', 'json-summary'],
       reportsDirectory: 'coverage',
       exclude: [

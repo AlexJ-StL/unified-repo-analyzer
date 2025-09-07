@@ -58,7 +58,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         if (!options.mode || !options.llmProvider) {
           // Get the first available provider as fallback, or mock as ultimate fallback
           const firstAvailableProvider = providers.find((p) => p.available)?.id || 'mock';
-          
+
           const defaultOptions = {
             mode: preferences.analysis?.defaultMode || 'standard',
             llmProvider: preferences.llmProvider?.defaultProvider || firstAvailableProvider,
@@ -109,7 +109,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
     };
 
     initializeConfiguration();
-  }, [preferences, options, setOptions, onConfigChange, handleError, showWarning]);
+  }, [preferences, options, setOptions, onConfigChange, handleError, showWarning, providers.find]);
 
   const handleModeChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     await handleAsyncError(async () => {

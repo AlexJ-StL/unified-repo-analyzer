@@ -183,7 +183,7 @@ export class APICompletenessValidator {
       try {
         // Check if method name suggests it should be async
         const isAsyncMethod = methodName.startsWith('async') || methodName.includes('Async');
-        
+
         if (isAsyncMethod) {
           // For methods that should be async, we can't easily test without proper parameters
           // Just verify it exists and is callable
