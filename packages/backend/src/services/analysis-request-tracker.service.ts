@@ -9,7 +9,7 @@ import { metricsService } from './metrics.service';
 export interface AnalysisRequest {
   id: string;
   path: string;
-  options: any;
+  options: Record<string, unknown>;
   status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
   progress: number;
   currentFile?: string;
@@ -20,10 +20,10 @@ export interface AnalysisRequest {
     message: string;
     code: string;
     recoverable: boolean;
-    context?: Record<string, any>;
+    context?: Record<string, unknown>;
   };
   clientId?: string;
-  result?: any;
+  result?: unknown;
 }
 
 class AnalysisRequestTracker {
@@ -33,7 +33,11 @@ class AnalysisRequestTracker {
   /**
    * Create a new analysis request
    */
-  createRequest(path: string, options: any, clientId?: string): AnalysisRequest {
+  createRequest(
+    path: string,
+    options: Record<string, unknown>,
+    clientId?: string
+  ): AnalysisRequest {
     const requestId = uuidv4();
     const request: AnalysisRequest = {
       id: requestId,
@@ -117,7 +121,7 @@ class AnalysisRequestTracker {
   /**
    * Mark request as completed
    */
-  completeRequest(requestId: string, result?: any): void {
+  completeRequest(requestId: string, result?: unknown): void {
     const request = this.requests.get(requestId);
     if (request) {
       request.status = 'completed';
@@ -131,7 +135,7 @@ class AnalysisRequestTracker {
         'Analysis request completed',
         {
           processingTime: request.processingTime,
-          fileCount: result?.fileCount,
+          fileCount: (result as { fileCount?: number })?.fileCount,
         },
         undefined,
         requestId
@@ -145,22 +149,22 @@ class AnalysisRequestTracker {
   /**
    * Mark request as failed
    */
-  failRequest(requestId: string, error: any): void {
+  failRequest(requestId: string, error: unknown): void {
     const request = this.requests.get(requestId);
     if (request) {
       request.status = 'failed';
       request.endTime = new Date();
       request.processingTime = request.endTime.getTime() - request.startTime.getTime();
       request.error = {
-        message: error.message || 'Unknown error',
-        code: error.code || 'UNKNOWN_ERROR',
-        recoverable: error.recoverable !== undefined ? error.recoverable : true,
-        context: error.context,
+        message: (error as { message?: string })?.message || 'Unknown error',
+        code: (error as { code?: string })?.code || 'UNKNOWN_ERROR',
+        recoverable: (error as { recoverable?: boolean })?.recoverable ?? true,
+        context: (error as { context?: Record<string, unknown> })?.context,
       };
 
       logger.error(
         'Analysis request failed',
-        error,
+        error instanceof Error ? error : new Error(String(error)),
         {
           errorMessage: request.error.message,
           errorCode: request.error.code,

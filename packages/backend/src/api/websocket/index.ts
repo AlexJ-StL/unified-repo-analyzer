@@ -43,7 +43,7 @@ export const initializeWebSocketHandlers = (io: Server): void => {
  * @param analysisId - Analysis ID
  * @param progress - Progress data
  */
-export const sendAnalysisProgress = (io: Server, analysisId: string, progress: any): void => {
+export const sendAnalysisProgress = (io: Server, analysisId: string, progress: unknown): void => {
   io.to(`analysis:${analysisId}`).emit('analysis-progress', progress);
 };
 
@@ -54,7 +54,7 @@ export const sendAnalysisProgress = (io: Server, analysisId: string, progress: a
  * @param analysisId - Analysis ID
  * @param result - Analysis result
  */
-export const sendAnalysisComplete = (io: Server, analysisId: string, result: any): void => {
+export const sendAnalysisComplete = (io: Server, analysisId: string, result: unknown): void => {
   io.to(`analysis:${analysisId}`).emit('analysis-complete', result);
 };
 
@@ -65,7 +65,7 @@ export const sendAnalysisComplete = (io: Server, analysisId: string, result: any
  * @param batchId - Batch ID
  * @param progress - Progress data
  */
-export const sendBatchProgress = (io: Server, batchId: string, progress: any): void => {
+export const sendBatchProgress = (io: Server, batchId: string, progress: unknown): void => {
   io.to(`batch:${batchId}`).emit('batch-analysis-progress', progress);
 };
 
@@ -76,6 +76,6 @@ export const sendBatchProgress = (io: Server, batchId: string, progress: any): v
  * @param batchId - Batch ID
  * @param result - Batch result
  */
-export const sendBatchComplete = (io: Server, batchId: string, result: any): void => {
+export const sendBatchComplete = (io: Server, batchId: string, result: unknown): void => {
   io.to(`batch:${batchId}`).emit('batch-analysis-complete', result);
 };

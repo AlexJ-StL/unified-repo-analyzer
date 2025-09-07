@@ -796,7 +796,7 @@ export class ProviderRegistry {
     apiKey: string
   ): Promise<{
     valid: boolean;
-    model?: any;
+    model?: unknown;
     error?: string;
   }> {
     const provider = this.createProvider(name);

@@ -15,7 +15,14 @@ const router = Router();
 router.get('/', (req, res) => {
   try {
     const { status, clientId, limit } = req.query;
-    const filter: any = {};
+    const filter: Record<string, unknown> = {};
+    
+    if (status) {
+      filter.status = status;
+    }
+    if (clientId) {
+      filter.clientId = clientId;
+    }
 
     if (status && typeof status === 'string') {
       filter.status = status;

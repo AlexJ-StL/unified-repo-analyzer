@@ -468,7 +468,9 @@ export class ConfigurationService {
       };
     } catch (error: unknown) {
       const errors =
-        (error as any).errors?.map((err: any) => ({
+        (
+          error as { errors?: Array<{ path: string[]; message: string; code: string }> }
+        ).errors?.map((err) => ({
           field: err.path.join('.'),
           message: err.message,
           code: err.code,

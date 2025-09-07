@@ -25,7 +25,7 @@ router.post(
     body('options.outputFormats').optional().isArray(),
     body('options.includeTree').optional().isBoolean(),
   ],
-  analyzeController.analyzeRepository as any
+  analyzeController.analyzeRepository
 );
 
 /**
@@ -46,7 +46,7 @@ router.post(
     body('options.outputFormats').optional().isArray(),
     body('options.includeTree').optional().isBoolean(),
   ],
-  analyzeController.analyzeMultipleRepositories as any
+  analyzeController.analyzeMultipleRepositories
 );
 
 export default router;

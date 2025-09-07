@@ -7,8 +7,8 @@ import { Request, Response, NextFunction } from 'express';
  */
 export declare class ApiError extends Error {
   status: number;
-  errors?: any[];
-  constructor(status: number, message: string, errors?: any[]);
+  errors?: unknown[];
+  constructor(status: number, message: string, errors?: unknown[]);
 }
 /**
  * Not found error handler

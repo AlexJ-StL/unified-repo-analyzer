@@ -33,7 +33,7 @@ export declare class ConfigurationService {
   /**
    * Update specific preference section
    */
-  updatePreferences(section: keyof UserPreferences, updates: any): Promise<UserPreferences>;
+  updatePreferences(section: keyof UserPreferences, updates: unknown): Promise<UserPreferences>;
   /**
    * Get analysis mode presets
    */

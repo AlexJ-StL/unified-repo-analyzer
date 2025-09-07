@@ -194,7 +194,7 @@ Please provide:
    * @param apiKey - OpenRouter API key
    * @returns Promise resolving to array of available models
    */
-  async fetchModels(apiKey: string): Promise<any[]> {
+  async fetchModels(apiKey: string): Promise<unknown[]> {
     try {
       const response = await axios.get(this.MODELS_URL, {
         headers: {
@@ -209,8 +209,16 @@ Please provide:
 
       // Filter and sort models for better usability
       return models
-        .filter((model: any) => model.id && model.name)
-        .sort((a: any, b: any) => {
+        .filter((model: unknown) => {
+          if (typeof model !== 'object' || model === null) return false;
+          const m = model as { id?: unknown; name?: unknown };
+          return m.id && m.name;
+        })
+        .sort((a: unknown, b: unknown) => {
+          if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return 0;
+          const modelA = a as { id?: string; name?: string };
+          const modelB = b as { id?: string; name?: string };
+          
           // Sort by name, but prioritize popular models
           const popularModels = [
             'anthropic/claude-3-haiku',
@@ -222,8 +230,8 @@ Please provide:
             'google/gemini-pro',
           ];
 
-          const aIndex = popularModels.findIndex((popular) => a.id.includes(popular));
-          const bIndex = popularModels.findIndex((popular) => b.id.includes(popular));
+          const aIndex = modelA.id ? popularModels.findIndex((popular) => modelA.id?.includes(popular)) : -1;
+          const bIndex = modelB.id ? popularModels.findIndex((popular) => modelB.id?.includes(popular)) : -1;
 
           if (aIndex !== -1 && bIndex !== -1) {
             return aIndex - bIndex;
@@ -231,7 +239,7 @@ Please provide:
           if (aIndex !== -1) return -1;
           if (bIndex !== -1) return 1;
 
-          return a.name.localeCompare(b.name);
+          return (modelA.name || '').localeCompare(modelB.name || '');
         });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -257,12 +265,16 @@ Please provide:
     apiKey: string
   ): Promise<{
     valid: boolean;
-    model?: any;
+    model?: unknown;
     error?: string;
   }> {
     try {
       const models = await this.fetchModels(apiKey);
-      const model = models.find((m: any) => m.id === modelId);
+      const model = models.find((m: unknown) => {
+        if (typeof m !== 'object' || m === null) return false;
+        const modelObj = m as { id?: string };
+        return modelObj.id === modelId;
+      });
 
       if (!model) {
         return {

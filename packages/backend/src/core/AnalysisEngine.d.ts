@@ -48,7 +48,7 @@ export declare class AnalysisEngine {
     repoPaths: string[],
     options: AnalysisOptions,
     concurrency?: number,
-    progressCallback?: (progress: any) => void
+    progressCallback?: (progress: unknown) => void
   ): Promise<BatchAnalysisResult>;
   /**
    * Generates combined insights for multiple repositories
@@ -107,5 +107,5 @@ export declare class AnalysisEngine {
    * @param repoIds - Repository IDs to suggest combinations for
    * @returns Promise resolving to combination suggestions
    */
-  suggestCombinations(repoIds: string[]): Promise<any[]>;
+  suggestCombinations(repoIds: string[]): Promise<unknown[]>;
 }

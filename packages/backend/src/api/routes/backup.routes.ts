@@ -1,4 +1,4 @@
-import { type Request, type Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { param, validationResult } from 'express-validator';
 import { backupService } from '../../services/backup.service';
 import logger from '../../services/logger.service';
@@ -6,7 +6,7 @@ import logger from '../../services/logger.service';
 const router = Router();
 
 // Validation middleware
-const handleValidationErrors = (req: Request, res: Response, next: any) => {
+const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

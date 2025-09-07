@@ -12,7 +12,7 @@ interface BenchmarkResult {
     after: NodeJS.MemoryUsage;
     delta: number;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 declare class PerformanceBenchmark {
   private results;

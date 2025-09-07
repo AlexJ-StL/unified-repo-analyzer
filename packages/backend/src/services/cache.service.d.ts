@@ -15,14 +15,14 @@ export interface CacheEntry<T> {
   ttl: number;
   key: string;
 }
-export declare class CacheService<T = any> {
+export declare class CacheService<T = unknown> {
   private cache;
   private defaultTTL;
   constructor(options?: CacheOptions);
   /**
    * Generate a cache key from various inputs
    */
-  generateKey(...inputs: any[]): string;
+  generateKey(...inputs: unknown[]): string;
   /**
    * Set a value in the cache
    */
@@ -51,8 +51,8 @@ export declare class CacheService<T = any> {
     max: number;
     ttl: number;
     calculatedSize: number;
-    hits: any;
-    misses: any;
+    hits: number;
+    misses: number;
     hitRate: number;
   };
   /**
@@ -88,7 +88,7 @@ export declare class CacheService<T = any> {
 /**
  * Enhanced cache service with repository-specific methods
  */
-export declare class EnhancedCacheService extends CacheService<any> {
+export declare class EnhancedCacheService extends CacheService<unknown> {
   /**
    * Cache analysis result with repository-specific key
    */
@@ -136,7 +136,7 @@ export declare class EnhancedCacheService extends CacheService<any> {
   private generateBatchKey;
 }
 export declare const analysisCache: EnhancedCacheService;
-export declare const repositoryCache: CacheService<any>;
-export declare const searchCache: CacheService<any>;
-export declare const exportCache: CacheService<any>;
+export declare const repositoryCache: CacheService<unknown>;
+export declare const searchCache: CacheService<unknown>;
+export declare const exportCache: CacheService<unknown>;
 export declare const cacheService: EnhancedCacheService;

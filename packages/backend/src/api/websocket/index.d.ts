@@ -15,7 +15,11 @@ export declare const initializeWebSocketHandlers: (io: Server) => void;
  * @param analysisId - Analysis ID
  * @param progress - Progress data
  */
-export declare const sendAnalysisProgress: (io: Server, analysisId: string, progress: any) => void;
+export declare const sendAnalysisProgress: (
+  io: Server,
+  analysisId: string,
+  progress: unknown
+) => void;
 /**
  * Send analysis completion notification
  *
@@ -23,7 +27,11 @@ export declare const sendAnalysisProgress: (io: Server, analysisId: string, prog
  * @param analysisId - Analysis ID
  * @param result - Analysis result
  */
-export declare const sendAnalysisComplete: (io: Server, analysisId: string, result: any) => void;
+export declare const sendAnalysisComplete: (
+  io: Server,
+  analysisId: string,
+  result: unknown
+) => void;
 /**
  * Send batch analysis progress update
  *
@@ -31,7 +39,7 @@ export declare const sendAnalysisComplete: (io: Server, analysisId: string, resu
  * @param batchId - Batch ID
  * @param progress - Progress data
  */
-export declare const sendBatchProgress: (io: Server, batchId: string, progress: any) => void;
+export declare const sendBatchProgress: (io: Server, batchId: string, progress: unknown) => void;
 /**
  * Send batch analysis completion notification
  *
@@ -39,4 +47,4 @@ export declare const sendBatchProgress: (io: Server, batchId: string, progress: 
  * @param batchId - Batch ID
  * @param result - Batch result
  */
-export declare const sendBatchComplete: (io: Server, batchId: string, result: any) => void;
+export declare const sendBatchComplete: (io: Server, batchId: string, result: unknown) => void;
