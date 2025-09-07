@@ -210,7 +210,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
           <h2>Architectural Patterns</h2>
           <ul className="print-list">
             {analysis.codeAnalysis.patterns.map((pattern, index) => (
-              <li key={index}>
+              <li key={`${pattern.name}-${pattern.confidence}`}>
                 <strong>{pattern.name}</strong> ({pattern.confidence}% confidence):{' '}
                 {pattern.description}
               </li>
@@ -228,7 +228,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <th>Tokens</th>
             </tr>
             {analysis.structure.keyFiles.slice(0, 15).map((file, index) => (
-              <tr key={index}>
+              <tr key={file.path}>
                 <td>{file.path}</td>
                 <td>{file.language}</td>
                 <td>{file.lineCount}</td>
@@ -246,7 +246,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               {analysis.dependencies.production.length > 0 ? (
                 <ul className="print-list">
                   {analysis.dependencies.production.map((dep: any, index) => (
-                    <li key={index}>
+                    <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>
                   ))}
@@ -260,7 +260,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               {analysis.dependencies.development.length > 0 ? (
                 <ul className="print-list">
                   {analysis.dependencies.development.map((dep: any, index) => (
-                    <li key={index}>
+                    <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>
                   ))}
@@ -276,7 +276,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
           <h2>Recommendations</h2>
           <ul className="print-list">
             {analysis.insights.recommendations.map((rec, index) => (
-              <li key={index}>{rec}</li>
+              <li key={`rec-${index}-${rec.slice(0, 30)}`}>{rec}</li>
             ))}
           </ul>
         </div>
@@ -285,7 +285,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
           <h2>Potential Issues</h2>
           <ul className="print-list">
             {analysis.insights.potentialIssues.map((issue, index) => (
-              <li key={index}>{issue}</li>
+              <li key={`issue-${index}-${issue.slice(0, 30)}`}>{issue}</li>
             ))}
           </ul>
         </div>
@@ -427,21 +427,21 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
             <h3>Commonalities</h3>
             <ul className="print-list">
               {batchAnalysis.combinedInsights.commonalities.map((item, index) => (
-                <li key={index}>{item}</li>
+                <li key={`common-${index}-${item.slice(0, 30)}`}>{item}</li>
               ))}
             </ul>
 
             <h3>Differences</h3>
             <ul className="print-list">
               {batchAnalysis.combinedInsights.differences.map((item, index) => (
-                <li key={index}>{item}</li>
+                <li key={`diff-${index}-${item.slice(0, 30)}`}>{item}</li>
               ))}
             </ul>
 
             <h3>Integration Opportunities</h3>
             <ul className="print-list">
               {batchAnalysis.combinedInsights.integrationOpportunities.map((item, index) => (
-                <li key={index}>{item}</li>
+                <li key={`int-op-${index}-${item.slice(0, 30)}`}>{item}</li>
               ))}
             </ul>
           </div>

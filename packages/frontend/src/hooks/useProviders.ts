@@ -42,10 +42,10 @@ interface UseProvidersReturn {
     modelId: string
   ) => Promise<{
     valid: boolean;
-    model?: any;
+    model?: unknown;
     error?: string;
   }>;
-  getModelRecommendations: (providerId: string, modelId: string) => Promise<any>;
+  getModelRecommendations: (providerId: string, modelId: string) => Promise<unknown>;
   defaultProvider: string | null;
 }
 
@@ -163,7 +163,7 @@ export const useProviders = (): UseProvidersReturn => {
       modelId: string
     ): Promise<{
       valid: boolean;
-      model?: any;
+      model?: unknown;
       error?: string;
     }> => {
       try {
@@ -190,7 +190,7 @@ export const useProviders = (): UseProvidersReturn => {
   );
 
   const getModelRecommendations = useCallback(
-    async (providerId: string, modelId: string): Promise<any> => {
+    async (providerId: string, modelId: string): Promise<unknown> => {
       try {
         const response = await getModelRecommendationsApi(providerId, modelId);
         if (response) {

@@ -132,7 +132,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
           <div className="flex flex-wrap gap-2">
             {recentRepositories.map((repo, index) => (
               <button
-                key={index}
+                key={`repo-${repo}`}
                 className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200"
                 onClick={() => handleRecentRepositoryClick(repo)}
               >
@@ -198,7 +198,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
           ) : (
             <ul className="space-y-1">
               {directoryItems.map((item, index) => (
-                <li key={index}>
+                <li key={`item-${item.name}-${index}`}>
                   <button
                     type="button"
                     className={`w-full text-left px-2 py-1 rounded-md hover:bg-gray-100 flex items-center ${

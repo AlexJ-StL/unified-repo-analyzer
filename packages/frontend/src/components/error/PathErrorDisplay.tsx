@@ -57,7 +57,7 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
               <h4 className="text-sm font-medium text-red-800">Suggestions:</h4>
               <ul className="mt-1 text-sm text-red-700 list-disc list-inside space-y-1">
                 {error.suggestions.map((suggestion, index) => (
-                  <li key={index}>{suggestion}</li>
+                  <li key={`suggestion-${index}`}>{suggestion}</li>
                 ))}
               </ul>
             </div>
@@ -87,7 +87,7 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
                     <strong>Errors:</strong>
                     <ul className="list-disc list-inside ml-2">
                       {error.technicalDetails.errors.map((err, index) => (
-                        <li key={index}>
+                        <li key={`error-${err.code}-${index}`}>
                           <code>{err.code}</code>: {err.message}
                           {err.details && <div className="ml-4 text-gray-600">{err.details}</div>}
                         </li>
@@ -101,7 +101,7 @@ const PathErrorDisplay: React.FC<PathErrorDisplayProps> = ({
                     <strong>Warnings:</strong>
                     <ul className="list-disc list-inside ml-2">
                       {error.technicalDetails.warnings.map((warning, index) => (
-                        <li key={index}>
+                        <li key={`warning-${warning.code}-${index}`}>
                           <code>{warning.code}</code>: {warning.message}
                           {warning.details && (
                             <div className="ml-4 text-gray-600">{warning.details}</div>

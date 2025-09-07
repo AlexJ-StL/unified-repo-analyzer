@@ -1,7 +1,7 @@
 interface UseErrorHandlerOptions {
   showToast?: boolean;
   logError?: boolean;
-  onError?: (error: any) => void;
+  onError?: (error: unknown) => void;
 }
 export declare const useErrorHandler: (options?: UseErrorHandlerOptions) => {
   handleError: (error: unknown, context?: string) => any;

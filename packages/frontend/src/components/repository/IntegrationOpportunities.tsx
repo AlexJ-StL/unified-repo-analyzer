@@ -201,7 +201,7 @@ const IntegrationOpportunities: React.FC<IntegrationOpportunitiesProps> = ({
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Benefits</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         {opportunity.benefits.map((benefit, index) => (
-                          <li key={index} className="flex items-start gap-2">
+                          <li key={`benefit-${index}`} className="flex items-start gap-2">
                             <svg
                               className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0"
                               fill="none"
@@ -226,7 +226,7 @@ const IntegrationOpportunities: React.FC<IntegrationOpportunitiesProps> = ({
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Challenges</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         {opportunity.challenges.map((challenge, index) => (
-                          <li key={index} className="flex items-start gap-2">
+                          <li key={`challenge-${index}`} className="flex items-start gap-2">
                             <svg
                               className="h-4 w-4 text-yellow-500 mt-0.5 flex-shrink-0"
                               fill="none"
@@ -253,7 +253,7 @@ const IntegrationOpportunities: React.FC<IntegrationOpportunitiesProps> = ({
                       </h4>
                       <ol className="text-sm text-gray-600 space-y-1">
                         {opportunity.implementationSteps.map((step, index) => (
-                          <li key={index} className="flex items-start gap-2">
+                          <li key={`step-${index}`} className="flex items-start gap-2">
                             <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-800 text-xs rounded-full flex items-center justify-center font-medium">
                               {index + 1}
                             </span>

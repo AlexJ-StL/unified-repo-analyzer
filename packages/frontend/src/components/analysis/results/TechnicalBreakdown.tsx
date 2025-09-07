@@ -80,7 +80,7 @@ const TechnicalBreakdown: React.FC<TechnicalBreakdownProps> = ({ analysis }) => 
             <div className="space-y-4">
               {codeAnalysis.patterns.map((pattern, index) => (
                 <div
-                  key={index}
+                  key={`pattern-${pattern.name}-${index}`}
                   className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0"
                 >
                   <div className="flex justify-between items-center mb-1">
@@ -133,7 +133,7 @@ const TechnicalBreakdown: React.FC<TechnicalBreakdownProps> = ({ analysis }) => 
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {structure.keyFiles.slice(0, 10).map((file, index) => (
-                <tr key={index}>
+                <tr key={file.path}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {file.path.split('/').pop()}
                   </td>

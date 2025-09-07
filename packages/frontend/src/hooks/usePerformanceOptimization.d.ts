@@ -5,14 +5,14 @@ import { DependencyList } from 'react';
 /**
  * Hook for debouncing function calls
  */
-export declare function useDebounce<T extends (...args: any[]) => any>(
+export declare function useDebounce<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T;
 /**
  * Hook for throttling function calls
  */
-export declare function useThrottle<T extends (...args: any[]) => any>(
+export declare function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T;
@@ -29,7 +29,7 @@ export declare function useMemoWithInvalidation<T>(
  */
 export declare function useRenderPerformance(
   componentName: string,
-  props?: Record<string, any>
+  props?: Record<string, unknown>
 ): {
   startTimer: () => void;
   endTimer: () => number;

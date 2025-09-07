@@ -23,13 +23,13 @@ interface UseApiOptions {
 }
 
 interface UseApiReturn<T> extends UseApiState<T> {
-  execute: (...args: any[]) => Promise<T | null>;
-  executeWithRetry: (...args: any[]) => Promise<T | null>;
+  execute: (...args: unknown[]) => Promise<T | null>;
+  executeWithRetry: (...args: unknown[]) => Promise<T | null>;
   reset: () => void;
   retry: () => Promise<T | null>;
 }
 
-type ApiFunction = (...args: any[]) => Promise<any>;
+type ApiFunction = (...args: unknown[]) => Promise<unknown>;
 
 export function useApi<T = any>(
   apiFunc: ApiFunction,
@@ -52,7 +52,7 @@ export function useApi<T = any>(
     retryCount: 0,
   });
 
-  const [lastArgs, setLastArgs] = useState<any[]>([]);
+  const [lastArgs, setLastArgs] = useState<unknown[]>([]);
   const { handleError } = useErrorHandler({ showToast: showErrorToast });
   const { executeWithRetry: retryExecute } = useRetry({
     maxAttempts: maxRetries,
@@ -61,13 +61,13 @@ export function useApi<T = any>(
   const { showSuccess } = useToast();
 
   const execute = useCallback(
-    async (...args: any[]): Promise<T | null> => {
+    async (...args: unknown[]): Promise<T | null> => {
       try {
         setState((prev) => ({ ...prev, isLoading: true, error: null }));
         setLastArgs(args);
 
         const response = await apiFunc(...args);
-        const data = response.data;
+        const data = (response as { data: T }).data;
 
         setState({
           data,
@@ -105,7 +105,7 @@ export function useApi<T = any>(
   );
 
   const executeWithRetry = useCallback(
-    async (...args: any[]): Promise<T | null> => {
+    async (...args: unknown[]): Promise<T | null> => {
       if (!enableRetry) {
         return execute(...args);
       }
@@ -116,7 +116,7 @@ export function useApi<T = any>(
 
         const result = await retryExecute(async () => {
           const response = await apiFunc(...args);
-          return response.data;
+          return (response as { data: T }).data;
         });
 
         setState({

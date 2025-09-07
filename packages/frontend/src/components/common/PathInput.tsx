@@ -221,11 +221,11 @@ export function PathInput({
         <div className="text-sm text-red-600">
           <div className="font-medium">Path validation failed</div>
           {validationResult.errors.map((error, index) => (
-            <div key={index} className="mt-1">
+            <div key={`error-${error.code}-${index}`} className="mt-1">
               <div className="font-medium">{error.code}</div>
               <div>{error.message}</div>
               {error.suggestions?.map((suggestion, suggestionIndex) => (
-                <div key={suggestionIndex} className="text-xs text-gray-600 ml-2">
+                <div key={`suggestion-${suggestionIndex}`} className="text-xs text-gray-600 ml-2">
                   • {suggestion}
                 </div>
               ))}
@@ -242,7 +242,7 @@ export function PathInput({
           <div className="mb-2">
             <div className="font-medium text-blue-700">Examples:</div>
             {formatHints.examples.map((example, index) => (
-              <div key={index} className="font-mono text-xs text-blue-600 ml-2">
+              <div key={`example-${index}`} className="font-mono text-xs text-blue-600 ml-2">
                 {example}
               </div>
             ))}
@@ -251,7 +251,7 @@ export function PathInput({
           <div>
             <div className="font-medium text-blue-700">Tips:</div>
             {formatHints.tips.map((tip, index) => (
-              <div key={index} className="text-blue-600 ml-2">
+              <div key={`tip-${index}`} className="text-blue-600 ml-2">
                 • {tip}
               </div>
             ))}

@@ -133,7 +133,7 @@ const ConfigurationManager: React.FC = () => {
           <div className="flex-1">
             <Tab.Panels>
               {tabs.map((tab, index) => (
-                <Tab.Panel key={index} className="focus:outline-none">
+                <Tab.Panel key={`tab-${index}`} className="focus:outline-none">
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                     <tab.component />
                   </div>

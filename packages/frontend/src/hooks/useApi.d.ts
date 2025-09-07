@@ -14,13 +14,13 @@ interface UseApiOptions {
   retryDelay?: number;
 }
 interface UseApiReturn<T> extends UseApiState<T> {
-  execute: (...args: any[]) => Promise<T | null>;
-  executeWithRetry: (...args: any[]) => Promise<T | null>;
+  execute: (...args: unknown[]) => Promise<T | null>;
+  executeWithRetry: (...args: unknown[]) => Promise<T | null>;
   reset: () => void;
   retry: () => Promise<T | null>;
 }
-type ApiFunction = (...args: any[]) => Promise<any>;
-export declare function useApi<T = any>(
+type ApiFunction = (...args: unknown[]) => Promise<unknown>;
+export declare function useApi<T = unknown>(
   apiFunc: ApiFunction,
   options?: UseApiOptions
 ): UseApiReturn<T>;

@@ -11,6 +11,18 @@ const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
   return <div>No error</div>;
 };
 
+// Test component for retry functionality
+const TestComponent = () => {
+  const [shouldThrow, setShouldThrow] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShouldThrow(false), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return <ThrowError shouldThrow={shouldThrow} />;
+};
+
 describe('ErrorBoundary', () => {
   let consoleError: any;
 
@@ -77,17 +89,6 @@ describe('ErrorBoundary', () => {
   });
 
   it('resets error state when retry button is clicked', () => {
-    const TestComponent = () => {
-      const [shouldThrow, setShouldThrow] = React.useState(true);
-
-      React.useEffect(() => {
-        const timer = setTimeout(() => setShouldThrow(false), 100);
-        return () => clearTimeout(timer);
-      }, []);
-
-      return <ThrowError shouldThrow={shouldThrow} />;
-    };
-
     render(
       <ErrorBoundary>
         <TestComponent />

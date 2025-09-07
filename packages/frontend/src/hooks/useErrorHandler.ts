@@ -5,7 +5,7 @@ import { useToast } from './useToast';
 interface UseErrorHandlerOptions {
   showToast?: boolean;
   logError?: boolean;
-  onError?: (error: any) => void;
+  onError?: (error: unknown) => void;
 }
 
 export const useErrorHandler = (options: UseErrorHandlerOptions = {}) => {

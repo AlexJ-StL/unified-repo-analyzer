@@ -134,7 +134,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
               <h4 className={`text-sm font-medium ${colors.text}`}>Suggestions:</h4>
               <ul className={`mt-1 text-sm ${colors.text} list-disc list-inside space-y-1`}>
                 {displayMessage.suggestions.map((suggestion, index) => (
-                  <li key={index}>{suggestion}</li>
+                  <li key={`suggestion-${index}`}>{suggestion}</li>
                 ))}
               </ul>
             </div>
@@ -158,7 +158,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                     className={`text-xs ${colors.text} list-disc list-inside space-y-1 opacity-75`}
                   >
                     {errorMessageService.getPlatformSpecificSuggestions().tips.map((tip, index) => (
-                      <li key={index}>{tip}</li>
+                      <li key={`tip-${index}`}>{tip}</li>
                     ))}
                   </ul>
                 </div>
@@ -192,7 +192,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                     <strong>Errors ({errors.length}):</strong>
                     <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
                       {errors.map((error, index) => (
-                        <li key={index}>
+                        <li key={`error-${error.code}-${index}`}>
                           <code className="bg-black bg-opacity-10 px-1 rounded">{error.code}</code>:{' '}
                           {error.message}
                           {error.details && (
@@ -209,7 +209,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                     <strong>Warnings ({warnings.length}):</strong>
                     <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
                       {warnings.map((warning, index) => (
-                        <li key={index}>
+                        <li key={`warning-${warning.code}-${index}`}>
                           <code className="bg-black bg-opacity-10 px-1 rounded">
                             {warning.code}
                           </code>

@@ -215,7 +215,7 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
                   <ul className="mt-1 space-y-1">
                     {selectedFile.functions.map((func: FunctionInfo, index: number) => (
                       <li
-                        key={`${selectedFile.path}-func-${func.name}-${index}`}
+                        key={`${selectedFile.path}-func-${func.name}`}
                         className="text-sm text-gray-600"
                       >
                         <span className="font-mono">{func.name}</span>
@@ -234,7 +234,7 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
                   <ul className="mt-1 space-y-1">
                     {selectedFile.classes.map((cls: ClassInfo, index: number) => (
                       <li
-                        key={`${selectedFile.path}-class-${cls.name}-${index}`}
+                        key={`${selectedFile.path}-class-${cls.name}`}
                         className="text-sm text-gray-600"
                       >
                         <span className="font-mono">{cls.name}</span>
