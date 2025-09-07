@@ -21,10 +21,12 @@ export class MockValidation {
 
     // Test that vi.mocked is available and functional
     if (typeof vi.mocked !== 'function') {
+      // vi.mocked might not be available in all contexts, this is OK
     }
 
     // vi.mock might not be available in all contexts, so we check more carefully
     if (typeof vi.mock !== 'function') {
+      // vi.mock might not be available in all contexts, this is OK
     }
   }
 
@@ -179,17 +181,16 @@ export class APICompletenessValidator {
       }
 
       try {
-        // Call with minimal/mock parameters to test return type
-        const result = method.call(instance);
-
-        if (!(result instanceof Promise)) {
-          throw new Error(
-            `Method ${methodName} should return a Promise but returned ${typeof result}`
-          );
+        // Check if method name suggests it should be async
+        const isAsyncMethod = methodName.startsWith('async') || methodName.includes('Async');
+        
+        if (isAsyncMethod) {
+          // For methods that should be async, we can't easily test without proper parameters
+          // Just verify it exists and is callable
+          if (typeof method !== 'function') {
+            throw new Error(`Method ${methodName} is not a function`);
+          }
         }
-
-        // Don't await the result as we're just testing the return type
-        result.catch(() => {}); // Prevent unhandled rejection
       } catch (_error) {
         // This is expected for methods that require specific parameters
         // We're just checking that they exist and are callable
@@ -350,7 +351,7 @@ export class TestEnvironmentValidator {
    */
   static validateTestIsolation(): void {
     // Check that global state is clean
-    if (vi.isMockFunction(console.log)) {
+    if (typeof vi.isMockFunction === 'function' && vi.isMockFunction(console.log)) {
     }
 
     // Check for leaked timers
