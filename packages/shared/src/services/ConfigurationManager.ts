@@ -147,7 +147,11 @@ export class ConfigurationManager extends EventEmitter {
     const configObj = config as Record<string, unknown>;
 
     // Validate required fields
-    if (!('level' in configObj) || typeof configObj.level !== 'string' || !CONFIG_SCHEMA.level.enum.includes(configObj.level as LogLevel)) {
+    if (
+      !('level' in configObj) ||
+      typeof configObj.level !== 'string' ||
+      !CONFIG_SCHEMA.level.enum.includes(configObj.level as LogLevel)
+    ) {
       result.errors.push({
         field: 'level',
         message: `Invalid log level. Must be one of: ${CONFIG_SCHEMA.level.enum.join(', ')}`,
@@ -155,7 +159,11 @@ export class ConfigurationManager extends EventEmitter {
       });
     }
 
-    if (!('format' in configObj) || typeof configObj.format !== 'string' || !CONFIG_SCHEMA.format.enum.includes(configObj.format as LogFormat)) {
+    if (
+      !('format' in configObj) ||
+      typeof configObj.format !== 'string' ||
+      !CONFIG_SCHEMA.format.enum.includes(configObj.format as LogFormat)
+    ) {
       result.errors.push({
         field: 'format',
         message: `Invalid log format. Must be one of: ${CONFIG_SCHEMA.format.enum.join(', ')}`,
@@ -171,7 +179,10 @@ export class ConfigurationManager extends EventEmitter {
       });
     }
 
-    if (!('redactSensitiveData' in configObj) || typeof configObj.redactSensitiveData !== 'boolean') {
+    if (
+      !('redactSensitiveData' in configObj) ||
+      typeof configObj.redactSensitiveData !== 'boolean'
+    ) {
       result.errors.push({
         field: 'redactSensitiveData',
         message: 'redactSensitiveData must be a boolean',
@@ -180,7 +191,11 @@ export class ConfigurationManager extends EventEmitter {
     }
 
     // Validate outputs
-    if (!('outputs' in configObj) || !Array.isArray(configObj.outputs) || configObj.outputs.length === 0) {
+    if (
+      !('outputs' in configObj) ||
+      !Array.isArray(configObj.outputs) ||
+      configObj.outputs.length === 0
+    ) {
       result.errors.push({
         field: 'outputs',
         message: 'At least one output must be configured',

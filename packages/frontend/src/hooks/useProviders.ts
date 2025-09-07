@@ -83,17 +83,25 @@ export const useProviders = (): UseProvidersReturn => {
     execute: validateProviderModelApi,
     isLoading: isValidatingModel,
     error: validateModelError,
-  } = useApi((providerId: unknown, modelId: unknown) => apiService.validateProviderModel(providerId as string, modelId as string), {
-    showErrorToast: false,
-  });
+  } = useApi(
+    (providerId: unknown, modelId: unknown) =>
+      apiService.validateProviderModel(providerId as string, modelId as string),
+    {
+      showErrorToast: false,
+    }
+  );
 
   const {
     execute: getModelRecommendationsApi,
     isLoading: isFetchingRecommendations,
     error: recommendationsError,
-  } = useApi((providerId: unknown, modelId: unknown) => apiService.getModelRecommendations(providerId as string, modelId as string), {
-    showErrorToast: false,
-  });
+  } = useApi(
+    (providerId: unknown, modelId: unknown) =>
+      apiService.getModelRecommendations(providerId as string, modelId as string),
+    {
+      showErrorToast: false,
+    }
+  );
 
   const refreshProviders = useCallback(async () => {
     setLoading(true);

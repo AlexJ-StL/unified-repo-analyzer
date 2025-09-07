@@ -155,7 +155,7 @@ class CoverageMonitor {
       }
 
       // Regression alert
-      if (previousCoverage && previousCoverage[metric]) {
+      if (previousCoverage?.[metric]) {
         const previous = previousCoverage[metric].pct;
         const regression = previous - current;
 

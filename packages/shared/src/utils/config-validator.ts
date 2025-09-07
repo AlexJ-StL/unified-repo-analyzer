@@ -6,9 +6,9 @@
 import type {
   ConfigValidationResult,
   LogFormat,
+  LoggerConfig,
   LogLevel,
   LogOutputType,
-  LoggerConfig,
 } from '../types/logging-config.js';
 
 export class ConfigValidator {

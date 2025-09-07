@@ -145,7 +145,7 @@ export class RecoverySystem extends EventEmitter {
     operationName: string,
     operation: () => Promise<T>,
     config: RecoveryConfig,
-    attempts: number
+    _attempts: number
   ): Promise<RecoveryResult<T>> {
     const maxRetries = config.maxRetries || 3;
     const retryDelay = config.retryDelay || 1000;
@@ -538,7 +538,7 @@ export function withRecovery(config: RecoveryConfig) {
 
       const result = await recoverySystem.executeWithRecovery(
         operationName,
-        () => method!.apply(this, args),
+        () => method?.apply(this, args),
         config
       );
 

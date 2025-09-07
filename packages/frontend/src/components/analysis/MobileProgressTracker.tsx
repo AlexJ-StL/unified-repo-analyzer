@@ -51,7 +51,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
     if (progress.log && !logs.includes(progress.log)) {
       setLogs((prev) => [...prev, progress.log!]);
     }
-  }, [progress.log]); // Remove logs from dependencies to avoid infinite loop
+  }, [progress.log, logs.includes]); // Remove logs from dependencies to avoid infinite loop
 
   // Handle cancellation
   const handleCancel = async () => {

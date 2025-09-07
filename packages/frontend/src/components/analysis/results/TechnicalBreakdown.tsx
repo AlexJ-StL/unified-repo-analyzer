@@ -132,7 +132,7 @@ const TechnicalBreakdown: React.FC<TechnicalBreakdownProps> = ({ analysis }) => 
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {structure.keyFiles.slice(0, 10).map((file, index) => (
+              {structure.keyFiles.slice(0, 10).map((file, _index) => (
                 <tr key={file.path}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {file.path.split('/').pop()}

@@ -218,7 +218,7 @@ Please provide:
           if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return 0;
           const modelA = a as { id?: string; name?: string };
           const modelB = b as { id?: string; name?: string };
-          
+
           // Sort by name, but prioritize popular models
           const popularModels = [
             'anthropic/claude-3-haiku',
@@ -230,8 +230,12 @@ Please provide:
             'google/gemini-pro',
           ];
 
-          const aIndex = modelA.id ? popularModels.findIndex((popular) => modelA.id?.includes(popular)) : -1;
-          const bIndex = modelB.id ? popularModels.findIndex((popular) => modelB.id?.includes(popular)) : -1;
+          const aIndex = modelA.id
+            ? popularModels.findIndex((popular) => modelA.id?.includes(popular))
+            : -1;
+          const bIndex = modelB.id
+            ? popularModels.findIndex((popular) => modelB.id?.includes(popular))
+            : -1;
 
           if (aIndex !== -1 && bIndex !== -1) {
             return aIndex - bIndex;

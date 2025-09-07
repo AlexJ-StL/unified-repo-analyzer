@@ -130,7 +130,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-700 mb-1">Recent Repositories</h3>
           <div className="flex flex-wrap gap-2">
-            {recentRepositories.map((repo, index) => (
+            {recentRepositories.map((repo, _index) => (
               <button
                 key={`repo-${repo}`}
                 className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200"

@@ -1,5 +1,9 @@
 import path from 'node:path';
-import type { AnalysisOptions, OutputFormat, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type {
+  AnalysisOptions,
+  OutputFormat,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared';
 import {
   ApiClient,
   config,

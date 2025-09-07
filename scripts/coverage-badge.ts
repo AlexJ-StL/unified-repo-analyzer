@@ -39,7 +39,6 @@ class CoverageBadgeGenerator {
 
     // Type guard to ensure we have the right structure
     if (typeof coverageData !== 'object' || coverageData === null || !('summary' in coverageData)) {
-      console.error('Invalid coverage data format');
       return;
     }
 

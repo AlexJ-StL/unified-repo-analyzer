@@ -209,7 +209,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
         <div className="print-section">
           <h2>Architectural Patterns</h2>
           <ul className="print-list">
-            {analysis.codeAnalysis.patterns.map((pattern, index) => (
+            {analysis.codeAnalysis.patterns.map((pattern, _index) => (
               <li key={`${pattern.name}-${pattern.confidence}`}>
                 <strong>{pattern.name}</strong> ({pattern.confidence}% confidence):{' '}
                 {pattern.description}
@@ -227,7 +227,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <th>Lines</th>
               <th>Tokens</th>
             </tr>
-            {analysis.structure.keyFiles.slice(0, 15).map((file, index) => (
+            {analysis.structure.keyFiles.slice(0, 15).map((file, _index) => (
               <tr key={file.path}>
                 <td>{file.path}</td>
                 <td>{file.language}</td>
@@ -245,7 +245,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <h3>Production Dependencies</h3>
               {analysis.dependencies.production.length > 0 ? (
                 <ul className="print-list">
-                  {analysis.dependencies.production.map((dep: any, index) => (
+                  {analysis.dependencies.production.map((dep: any, _index) => (
                     <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>
@@ -259,7 +259,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <h3>Development Dependencies</h3>
               {analysis.dependencies.development.length > 0 ? (
                 <ul className="print-list">
-                  {analysis.dependencies.development.map((dep: any, index) => (
+                  {analysis.dependencies.development.map((dep: any, _index) => (
                     <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>

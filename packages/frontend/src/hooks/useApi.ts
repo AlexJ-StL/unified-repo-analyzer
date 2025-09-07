@@ -34,7 +34,6 @@ export function useApi<T = any, F extends ApiFunction<T> = ApiFunction<T>>(
   apiFunc: F,
   options: UseApiOptions = {}
 ): UseApiReturn<T> {
-
   const {
     showErrorToast = false, // Disabled by default to avoid duplicate toasts
     showSuccessToast = false,

@@ -88,7 +88,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
         <div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Frameworks & Technologies</h3>
           <div className="flex flex-wrap gap-2">
-            {frameworks.map((framework, index) => (
+            {frameworks.map((framework, _index) => (
               <span
                 key={`framework-${framework}`}
                 className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"

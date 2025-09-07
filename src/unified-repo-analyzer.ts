@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { promisify } from 'util';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { promisify } from 'node:util';
 
 // Promisify fs functions for easier async/await usage
 const readdir = promisify(fs.readdir);
@@ -115,11 +115,7 @@ async function buildDirectoryStructure(
         directoryStructure.children.push(fileMetadata);
       }
     }
-  } catch (error) {
-    console.warn(
-      `Warning: Could not read directory ${dirPath}: ${error instanceof Error ? error.message : String(error)}`
-    );
-  }
+  } catch (_error) {}
 
   return directoryStructure;
 }

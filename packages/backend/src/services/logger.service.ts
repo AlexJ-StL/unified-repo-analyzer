@@ -6,7 +6,6 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { env } from '../config/environment';
 
-
 // Types and interfaces for structured logging
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
 
@@ -134,7 +133,9 @@ export class Logger {
           timestamp: String(info.timestamp),
           level: String(info.level).toUpperCase(),
           component: String(info.component || this.defaultComponent),
-          requestId: String(info.requestId || requestContext.get('current') || this.generateRequestId()),
+          requestId: String(
+            info.requestId || requestContext.get('current') || this.generateRequestId()
+          ),
           message: String(info.message),
           metadata: (() => {
             if (info.metadata && typeof info.metadata === 'object') {

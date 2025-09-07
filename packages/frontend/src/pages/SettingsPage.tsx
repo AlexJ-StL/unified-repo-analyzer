@@ -215,7 +215,7 @@ const SettingsPage = () => {
                   onChange={(e) =>
                     setLocalPreferences({
                       ...localPreferences,
-                      maxTokens: Number.parseInt(e.target.value) || 0,
+                      maxTokens: Number.parseInt(e.target.value, 10) || 0,
                     })
                   }
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"

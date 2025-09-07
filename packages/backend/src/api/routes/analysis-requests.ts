@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
   try {
     const { status, clientId, limit } = req.query;
     const filter: Record<string, unknown> = {};
-    
+
     if (status) {
       filter.status = status;
     }

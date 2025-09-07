@@ -64,7 +64,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
         ]);
       }
     }
-  }, [progress.log]); // Remove logs from dependencies to avoid infinite loop
+  }, [progress.log, logs.find]); // Remove logs from dependencies to avoid infinite loop
 
   // Handle cancellation
   const handleCancel = async () => {

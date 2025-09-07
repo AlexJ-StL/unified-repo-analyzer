@@ -200,9 +200,12 @@ class TestExecutionOptimizer {
     }
   }
 
-  private estimateTestDuration(testFile: string, metrics: {
-    averageDurations: Record<string, number>;
-  }): number {
+  private estimateTestDuration(
+    testFile: string,
+    metrics: {
+      averageDurations: Record<string, number>;
+    }
+  ): number {
     // Use historical data if available
     if (metrics.averageDurations[testFile]) {
       return metrics.averageDurations[testFile];
