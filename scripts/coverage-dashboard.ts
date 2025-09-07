@@ -36,7 +36,7 @@ class CoverageDashboard {
     console.log('🌐 Open in browser to view interactive coverage dashboard');
   }
 
-  private async loadCoverageData(): Promise<any> {
+  private async loadCoverageData(): Promise<unknown> {
     try {
       // Placeholder: Implement actual coverage data loading
       // For example, from 'coverage-reports/summary.json' or similar
@@ -68,7 +68,35 @@ class CoverageDashboard {
     return 'coverage-critical';
   }
 
-  private async generateHTML(coverageData: any): Promise<void> {
+  private async generateHTML(coverageData: unknown): Promise<void> {
+    const data = coverageData as {
+      summary: {
+        branches: { pct: number; covered: number; total: number };
+        statements: { pct: number; covered: number; total: number };
+        functions: { pct: number; covered: number; total: number };
+        lines: { pct: number; covered: number; total: number };
+      };
+      packages?: Array<{
+        name: string;
+        branches: { pct: number };
+        statements: { pct: number };
+        functions: { pct: number };
+        lines: { pct: number };
+      }>;
+      files?: Array<{
+        path: string;
+        coverage: number;
+        type?: string;
+      }>;
+      trends?: Array<{
+        date: string;
+        branches: { pct: number };
+        statements: { pct: number };
+        functions: { pct: number };
+        lines: { pct: number };
+      }>;
+    };
+
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,44 +129,44 @@ class CoverageDashboard {
                     <div class="summary-card">
                         <h3>Branch Coverage</h3>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${coverageData.summary.branches.pct}%"></div>
+                            <div class="progress-fill" style="width: ${data.summary.branches.pct}%"></div>
                         </div>
-                        <p><span class="metric-value">${coverageData.summary.branches.pct.toFixed(1)}%</span> (${coverageData.summary.branches.covered}/${coverageData.summary.branches.total})</p>
+                        <p><span class="metric-value">${data.summary.branches.pct.toFixed(1)}%</span> (${data.summary.branches.covered}/${data.summary.branches.total})</p>
                     </div>
                     <div class="summary-card">
                         <h3>Statement Coverage</h3>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${coverageData.summary.statements.pct}%"></div>
+                            <div class="progress-fill" style="width: ${data.summary.statements.pct}%"></div>
                         </div>
-                        <p><span class="metric-value">${coverageData.summary.statements.pct.toFixed(1)}%</span> (${coverageData.summary.statements.covered}/${coverageData.summary.statements.total})</p>
+                        <p><span class="metric-value">${data.summary.statements.pct.toFixed(1)}%</span> (${data.summary.statements.covered}/${data.summary.statements.total})</p>
                     </div>
                     <div class="summary-card">
                         <h3>Function Coverage</h3>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${coverageData.summary.functions.pct}%"></div>
+                            <div class="progress-fill" style="width: ${data.summary.functions.pct}%"></div>
                         </div>
-                        <p><span class="metric-value">${coverageData.summary.functions.pct.toFixed(1)}%</span> (${coverageData.summary.functions.covered}/${coverageData.summary.functions.total})</p>
+                        <p><span class="metric-value">${data.summary.functions.pct.toFixed(1)}%</span> (${data.summary.functions.covered}/${data.summary.functions.total})</p>
                     </div>
                     <div class="summary-card">
                         <h3>Line Coverage</h3>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${coverageData.summary.lines.pct}%"></div>
+                            <div class="progress-fill" style="width: ${data.summary.lines.pct}%"></div>
                         </div>
-                        <p><span class="metric-value">${coverageData.summary.lines.pct.toFixed(1)}%</span> (${coverageData.summary.lines.covered}/${coverageData.summary.lines.total})</p>
+                        <p><span class="metric-value">${data.summary.lines.pct.toFixed(1)}%</span> (${data.summary.lines.covered}/${data.summary.lines.total})</p>
                     </div>
                 </div>
                 <p class="last-updated">Last updated: ${new Date().toLocaleString()}</p>
             </section>
 
             ${
-              coverageData.packages && coverageData.packages.length > 0
+              data.packages && data.packages.length > 0
                 ? `
             <section class="package-breakdown">
                 <h2>Package Breakdown</h2>
                 <div class="package-grid">
-                    ${coverageData.packages
+                    ${data.packages
                       .map(
-                        (pkg: any) => `
+                        (pkg) => `
                         <div class="package-card">
                             <h3>${pkg.name}</h3>
                             <div class="package-metrics">
@@ -170,7 +198,7 @@ class CoverageDashboard {
             }
 
             ${
-              coverageData.files && coverageData.files.length > 0
+              data.files && data.files.length > 0
                 ? `
             <section class="low-coverage-files">
                 <h2>Files Needing Attention</h2>
@@ -184,12 +212,12 @@ class CoverageDashboard {
                         </tr>
                     </thead>
                     <tbody>
-                        ${coverageData.files
-                          .filter((file: any) => file.coverage < 70)
-                          .sort((a: any, b: any) => a.coverage - b.coverage)
+                        ${data.files
+                          .filter((file) => file.coverage < 70)
+                          .sort((a, b) => a.coverage - b.coverage)
                           .slice(0, 20)
                           .map(
-                            (file: any) => `
+                            (file) => `
                                 <tr class="${this.getCoverageClass(file.coverage)}">
                                     <td class="file-path">${file.path}</td>
                                     <td class="priority ${this.getPriorityClass(file.coverage)}">${this.getPriorityLabel(file.coverage)}</td>
@@ -207,7 +235,7 @@ class CoverageDashboard {
             }
 
             ${
-              coverageData.trends && coverageData.trends.length > 0
+              data.trends && data.trends.length > 0
                 ? `
             <section class="trends-section">
                 <h2>Coverage Trends Over Time</h2>

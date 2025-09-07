@@ -5,9 +5,9 @@
  * Validates coverage configuration and provides health status
  */
 
-import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 
 class CoverageValidator {
   async validateCoverage(): Promise<void> {
@@ -22,7 +22,7 @@ class CoverageValidator {
     ];
 
     let passed = 0;
-    const total = checks.length;
+    let total = checks.length;
 
     for (const check of checks) {
       try {

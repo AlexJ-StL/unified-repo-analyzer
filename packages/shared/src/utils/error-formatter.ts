@@ -3,6 +3,7 @@ import { platform } from 'node:os';
 import {
   type ClassifiedError,
   ErrorCode,
+  type ErrorContext,
   type ErrorResponse,
   ErrorSeverity,
   type ErrorSuggestion,
@@ -114,7 +115,7 @@ export class ErrorFormatter {
 
     // Add learn more URL if requested
     if (opts.includeLearnMore && error.learnMoreUrl) {
-      (response.error as any).learnMoreUrl = error.learnMoreUrl;
+      (response.error as Record<string, unknown>).learnMoreUrl = error.learnMoreUrl;
     }
 
     return response;
@@ -357,13 +358,13 @@ export class ErrorFormatter {
   /**
    * Sanitize context for output (remove sensitive information)
    */
-  private sanitizeContext(context: any): any {
+  private sanitizeContext(context: ErrorContext): ErrorContext {
     const sensitiveKeys = ['userId', 'sessionId', 'apiKey', 'token', 'password'];
     const sanitized = { ...context };
 
     sensitiveKeys.forEach((key) => {
-      if (sanitized[key]) {
-        sanitized[key] = '[REDACTED]';
+      if (sanitized[key as keyof ErrorContext]) {
+        sanitized[key as keyof ErrorContext] = '[REDACTED]' as any;
       }
     });
 
@@ -432,7 +433,7 @@ export class ErrorFormatter {
   /**
    * Check if context has relevant information to display
    */
-  private hasRelevantContext(context: any): boolean {
+  private hasRelevantContext(context: ErrorContext): boolean {
     const relevantKeys = [
       'platform',
       'nodeVersion',
@@ -442,14 +443,14 @@ export class ErrorFormatter {
       'duration',
       'provider',
     ];
-    return relevantKeys.some((key) => context[key] !== undefined);
+    return relevantKeys.some((key) => context[key as keyof ErrorContext] !== undefined);
   }
 
   /**
    * Format context for console display
    */
   private formatContextForConsole(
-    context: any,
+    context: ErrorContext,
     indent: string,
     _options: ConsoleFormattingOptions
   ): string[] {

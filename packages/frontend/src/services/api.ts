@@ -12,7 +12,7 @@ import { performanceService } from './performance.service';
 export interface AnalysisRequest {
   id: string;
   path: string;
-  options: any;
+  options: unknown;
   status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
   progress: number;
   currentFile?: string;
@@ -23,10 +23,10 @@ export interface AnalysisRequest {
     message: string;
     code: string;
     recoverable: boolean;
-    context?: Record<string, any>;
+    context?: Record<string, unknown>;
   };
   clientId?: string;
-  result?: any;
+  result?: unknown;
 }
 
 export interface AnalysisRequestStats {
@@ -263,7 +263,7 @@ export const apiService = {
   ): Promise<
     AxiosResponse<{
       provider: string;
-      models: any[];
+      models: unknown[];
     }>
   > => {
     return api.get(`/providers/${providerId}/models`);
@@ -278,7 +278,7 @@ export const apiService = {
       provider: string;
       modelId: string;
       valid: boolean;
-      model?: any;
+      model?: unknown;
       error?: string;
     }>
   > => {
@@ -293,7 +293,7 @@ export const apiService = {
     AxiosResponse<{
       provider: string;
       modelId: string;
-      recommendations: any;
+      recommendations: unknown;
     }>
   > => {
     return api.get(
@@ -383,7 +383,19 @@ export interface PathErrorResponse {
 // Extract detailed error information for path-related errors
 export const extractPathErrorDetails = (error: unknown): PathErrorResponse | null => {
   if (axios.isAxiosError(error) && error.response) {
-    const data = error.response.data as any;
+    const data = error.response.data as Partial<PathErrorResponse> & {
+      error?: string;
+      message?: string;
+      details?: string;
+      path?: string;
+      normalizedPath?: string;
+      suggestions?: string[];
+      learnMoreUrl?: string;
+      technicalDetails?: {
+        errors: Array<{ code: string; message: string; details?: string }>;
+        warnings: Array<{ code: string; message: string; details?: string }>;
+      };
+    };
 
     // Check if this is a path-related error response
     if (
@@ -610,7 +622,7 @@ export const createApiService = (onError?: (error: unknown) => void) => {
     ): Promise<
       AxiosResponse<{
         provider: string;
-        models: any[];
+        models: unknown[];
       }>
     > => {
       try {

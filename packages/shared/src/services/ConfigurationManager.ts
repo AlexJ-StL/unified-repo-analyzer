@@ -11,7 +11,9 @@ import {
   DEFAULT_LOGGER_CONFIG,
   FILE_SIZE_UNITS,
   type FileSizeUnit,
+  type LogFormat,
   type LoggerConfig,
+  type LogLevel,
 } from '../types/logging-config.js';
 
 export class ConfigurationManager extends EventEmitter {
@@ -123,15 +125,29 @@ export class ConfigurationManager extends EventEmitter {
   /**
    * Validate configuration object
    */
-  public validateConfiguration(config: any): ConfigValidationResult {
+  public validateConfiguration(config: unknown): ConfigValidationResult {
     const result: ConfigValidationResult = {
       isValid: true,
       errors: [],
       warnings: [],
     };
 
+    // Type guard to ensure config is an object
+    if (!config || typeof config !== 'object') {
+      result.errors.push({
+        field: 'config',
+        message: 'Configuration must be an object',
+        code: 'INVALID_CONFIG_TYPE',
+      });
+      result.isValid = false;
+      return result;
+    }
+
+    // Type assertion after validation
+    const configObj = config as Record<string, unknown>;
+
     // Validate required fields
-    if (!config.level || !CONFIG_SCHEMA.level.enum.includes(config.level)) {
+    if (!('level' in configObj) || typeof configObj.level !== 'string' || !CONFIG_SCHEMA.level.enum.includes(configObj.level as LogLevel)) {
       result.errors.push({
         field: 'level',
         message: `Invalid log level. Must be one of: ${CONFIG_SCHEMA.level.enum.join(', ')}`,
@@ -139,7 +155,7 @@ export class ConfigurationManager extends EventEmitter {
       });
     }
 
-    if (!config.format || !CONFIG_SCHEMA.format.enum.includes(config.format)) {
+    if (!('format' in configObj) || typeof configObj.format !== 'string' || !CONFIG_SCHEMA.format.enum.includes(configObj.format as LogFormat)) {
       result.errors.push({
         field: 'format',
         message: `Invalid log format. Must be one of: ${CONFIG_SCHEMA.format.enum.join(', ')}`,
@@ -147,7 +163,7 @@ export class ConfigurationManager extends EventEmitter {
       });
     }
 
-    if (typeof config.includeStackTrace !== 'boolean') {
+    if (!('includeStackTrace' in configObj) || typeof configObj.includeStackTrace !== 'boolean') {
       result.errors.push({
         field: 'includeStackTrace',
         message: 'includeStackTrace must be a boolean',
@@ -155,7 +171,7 @@ export class ConfigurationManager extends EventEmitter {
       });
     }
 
-    if (typeof config.redactSensitiveData !== 'boolean') {
+    if (!('redactSensitiveData' in configObj) || typeof configObj.redactSensitiveData !== 'boolean') {
       result.errors.push({
         field: 'redactSensitiveData',
         message: 'redactSensitiveData must be a boolean',
@@ -164,14 +180,14 @@ export class ConfigurationManager extends EventEmitter {
     }
 
     // Validate outputs
-    if (!Array.isArray(config.outputs) || config.outputs.length === 0) {
+    if (!('outputs' in configObj) || !Array.isArray(configObj.outputs) || configObj.outputs.length === 0) {
       result.errors.push({
         field: 'outputs',
         message: 'At least one output must be configured',
         code: 'NO_OUTPUTS',
       });
     } else {
-      config.outputs.forEach((output: any, index: number) => {
+      configObj.outputs.forEach((output: unknown, index: number) => {
         this.validateOutput(output, index, result);
       });
     }
@@ -238,7 +254,7 @@ export class ConfigurationManager extends EventEmitter {
 
   // Private methods
 
-  private async readConfigurationFile(_path: string): Promise<any> {
+  private async readConfigurationFile(_path: string): Promise<LoggerConfig> {
     // Simulate reading configuration file
     // In real implementation, this would use fs.readFile
     return new Promise((resolve) => {
@@ -271,7 +287,7 @@ export class ConfigurationManager extends EventEmitter {
     });
   }
 
-  private mergeWithDefaults(config: any): LoggerConfig {
+  private mergeWithDefaults(config: Partial<LoggerConfig>): LoggerConfig {
     return {
       ...DEFAULT_LOGGER_CONFIG,
       ...config,
@@ -279,10 +295,21 @@ export class ConfigurationManager extends EventEmitter {
     };
   }
 
-  private validateOutput(output: any, index: number, result: ConfigValidationResult): void {
+  private validateOutput(output: unknown, index: number, result: ConfigValidationResult): void {
     const fieldPrefix = `outputs[${index}]`;
 
-    if (!output.type || !['console', 'file', 'external'].includes(output.type)) {
+    // Type guard to check if output has the required properties
+    if (!output || typeof output !== 'object') {
+      result.errors.push({
+        field: fieldPrefix,
+        message: 'Output must be an object',
+        code: 'INVALID_OUTPUT_TYPE',
+      });
+      return;
+    }
+
+    // Check if output has required properties
+    if (!('type' in output) || !['console', 'file', 'external'].includes(output.type as string)) {
       result.errors.push({
         field: `${fieldPrefix}.type`,
         message: 'Output type must be console, file, or external',
@@ -291,7 +318,7 @@ export class ConfigurationManager extends EventEmitter {
       return;
     }
 
-    if (typeof output.enabled !== 'boolean') {
+    if (!('enabled' in output) || typeof output.enabled !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.enabled`,
         message: 'Output enabled must be a boolean',
@@ -300,35 +327,56 @@ export class ConfigurationManager extends EventEmitter {
     }
 
     // Validate type-specific configuration
-    switch (output.type) {
-      case 'file':
-        this.validateFileConfig(output.config, fieldPrefix, result);
-        break;
-      case 'external':
-        this.validateExternalConfig(output.config, fieldPrefix, result);
-        break;
-      case 'console':
-        this.validateConsoleConfig(output.config, fieldPrefix, result);
-        break;
+    if ('type' in output && typeof output.type === 'string') {
+      switch (output.type) {
+        case 'file':
+          if ('config' in output && output.config) {
+            this.validateFileConfig(output.config, fieldPrefix, result);
+          }
+          break;
+        case 'external':
+          if ('config' in output && output.config) {
+            this.validateExternalConfig(output.config, fieldPrefix, result);
+          }
+          break;
+        case 'console':
+          if ('config' in output && output.config) {
+            this.validateConsoleConfig(output.config, fieldPrefix, result);
+          }
+          break;
+      }
     }
   }
 
   private validateFileConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    if (!config.path || typeof config.path !== 'string') {
+    // Type guard for config object
+    if (!config || typeof config !== 'object') {
+      result.errors.push({
+        field: `${fieldPrefix}.config`,
+        message: 'File config must be an object',
+        code: 'INVALID_CONFIG_TYPE',
+      });
+      return;
+    }
+
+    // Check if config has path property
+    if (!('path' in config) || typeof config.path !== 'string') {
       result.errors.push({
         field: `${fieldPrefix}.config.path`,
         message: 'File path is required and must be a string',
         code: 'MISSING_FILE_PATH',
       });
+      return;
     }
 
-    if (config.maxSize) {
+    // Check maxSize if present
+    if ('maxSize' in config && config.maxSize) {
       try {
-        this.parseFileSize(config.maxSize);
+        this.parseFileSize(config.maxSize as string);
       } catch (error) {
         result.errors.push({
           field: `${fieldPrefix}.config.maxSize`,
@@ -338,44 +386,78 @@ export class ConfigurationManager extends EventEmitter {
       }
     }
 
-    if (config.maxFiles && (!Number.isInteger(config.maxFiles) || config.maxFiles < 1)) {
-      result.errors.push({
-        field: `${fieldPrefix}.config.maxFiles`,
-        message: 'maxFiles must be a positive integer',
-        code: 'INVALID_MAX_FILES',
-      });
+    // Check maxFiles if present
+    if ('maxFiles' in config && config.maxFiles !== undefined) {
+      const maxFiles = config.maxFiles as number;
+      if (!Number.isInteger(maxFiles) || maxFiles < 1) {
+        result.errors.push({
+          field: `${fieldPrefix}.config.maxFiles`,
+          message: 'maxFiles must be a positive integer',
+          code: 'INVALID_MAX_FILES',
+        });
+      }
     }
   }
 
   private validateExternalConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    if (!config.endpoint || typeof config.endpoint !== 'string') {
+    // Type guard for config object
+    if (!config || typeof config !== 'object') {
+      result.errors.push({
+        field: `${fieldPrefix}.config`,
+        message: 'External config must be an object',
+        code: 'INVALID_CONFIG_TYPE',
+      });
+      return;
+    }
+
+    // Check if config has endpoint property
+    if (!('endpoint' in config) || typeof config.endpoint !== 'string') {
       result.errors.push({
         field: `${fieldPrefix}.config.endpoint`,
         message: 'External endpoint is required and must be a string',
         code: 'MISSING_ENDPOINT',
       });
+      return;
     }
 
-    if (config.batchSize && (!Number.isInteger(config.batchSize) || config.batchSize < 1)) {
-      result.errors.push({
-        field: `${fieldPrefix}.config.batchSize`,
-        message: 'batchSize must be a positive integer',
-        code: 'INVALID_BATCH_SIZE',
-      });
+    // Check batchSize if present
+    if ('batchSize' in config && config.batchSize !== undefined) {
+      const batchSize = config.batchSize as number;
+      if (!Number.isInteger(batchSize) || batchSize < 1) {
+        result.errors.push({
+          field: `${fieldPrefix}.config.batchSize`,
+          message: 'batchSize must be a positive integer',
+          code: 'INVALID_BATCH_SIZE',
+        });
+      }
     }
   }
 
   private validateConsoleConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    // Console config validation is minimal since it has sensible defaults
-    if (config.colorize !== undefined && typeof config.colorize !== 'boolean') {
+    // Type guard for config object
+    if (!config || typeof config !== 'object') {
+      result.warnings.push({
+        field: `${fieldPrefix}.config`,
+        message: 'Console config should be an object',
+        suggestion: 'Provide a valid console configuration object',
+      });
+      return;
+    }
+
+    // Check colorize if present
+    if (
+      'colorize' in config &&
+      config.colorize !== undefined &&
+      typeof config.colorize !== 'boolean'
+    ) {
       result.warnings.push({
         field: `${fieldPrefix}.config.colorize`,
         message: 'colorize should be a boolean',
@@ -417,11 +499,23 @@ export class ConfigurationManager extends EventEmitter {
     // File path changes typically require restart
     const previousFilePaths = previous.outputs
       .filter((o) => o.type === 'file')
-      .map((o) => (o.config as any).path);
+      .map((o) => {
+        // Type guard to ensure config is FileConfig and has path
+        if (typeof o.config === 'object' && o.config !== null && 'path' in o.config) {
+          return (o.config as { path: string }).path;
+        }
+        return '';
+      });
 
     const currentFilePaths = current.outputs
       .filter((o) => o.type === 'file')
-      .map((o) => (o.config as any).path);
+      .map((o) => {
+        // Type guard to ensure config is FileConfig and has path
+        if (typeof o.config === 'object' && o.config !== null && 'path' in o.config) {
+          return (o.config as { path: string }).path;
+        }
+        return '';
+      });
 
     return JSON.stringify(previousFilePaths) !== JSON.stringify(currentFilePaths);
   }

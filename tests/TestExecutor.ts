@@ -426,11 +426,12 @@ export class TestExecutor {
         timeout: 120000, // 2 minute timeout
       });
       return { stdout, stderr, exitCode: 0 };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { stdout?: string; stderr?: string; code?: number };
       return {
-        stdout: error.stdout || '',
-        stderr: error.stderr || '',
-        exitCode: error.code || 1,
+        stdout: err.stdout || '',
+        stderr: err.stderr || '',
+        exitCode: err.code || 1,
       };
     }
   }

@@ -124,7 +124,12 @@ class CoverageMonitor {
     } catch (_error) {}
   }
 
-  private async checkForAlerts(currentCoverage: any): Promise<CoverageAlert[]> {
+  private async checkForAlerts(currentCoverage: {
+    lines: { pct: number; covered: number; total: number };
+    functions: { pct: number; covered: number; total: number };
+    statements: { pct: number; covered: number; total: number };
+    branches: { pct: number; covered: number; total: number };
+  }): Promise<CoverageAlert[]> {
     const alerts: CoverageAlert[] = [];
 
     // Load previous coverage data
@@ -150,7 +155,7 @@ class CoverageMonitor {
       }
 
       // Regression alert
-      if (previousCoverage?.[metric]) {
+      if (previousCoverage && previousCoverage[metric]) {
         const previous = previousCoverage[metric].pct;
         const regression = previous - current;
 
@@ -184,7 +189,12 @@ class CoverageMonitor {
     return alerts;
   }
 
-  private async loadPreviousCoverage(): Promise<any> {
+  private async loadPreviousCoverage(): Promise<{
+    lines: { pct: number; covered: number; total: number };
+    functions: { pct: number; covered: number; total: number };
+    statements: { pct: number; covered: number; total: number };
+    branches: { pct: number; covered: number; total: number };
+  } | null> {
     const snapshotFile = 'coverage-reports/coverage-snapshot.json';
 
     if (!existsSync(snapshotFile)) {
@@ -199,7 +209,12 @@ class CoverageMonitor {
     }
   }
 
-  private async saveCoverageSnapshot(coverage: any): Promise<void> {
+  private async saveCoverageSnapshot(coverage: {
+    lines: { pct: number; covered: number; total: number };
+    functions: { pct: number; covered: number; total: number };
+    statements: { pct: number; covered: number; total: number };
+    branches: { pct: number; covered: number; total: number };
+  }): Promise<void> {
     const snapshotFile = 'coverage-reports/coverage-snapshot.json';
     await mkdir('coverage-reports', { recursive: true });
     await writeFile(snapshotFile, JSON.stringify(coverage, null, 2));

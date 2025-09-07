@@ -17,6 +17,14 @@ interface BadgeConfig {
   value: string;
 }
 
+interface CoverageSummary {
+  [key: string]: { pct: number; total: number; covered: number };
+}
+
+interface CoverageData {
+  summary: CoverageSummary;
+}
+
 class CoverageBadgeGenerator {
   private readonly badgesDir = 'coverage-reports/badges';
 
@@ -29,13 +37,21 @@ class CoverageBadgeGenerator {
       return;
     }
 
+    // Type guard to ensure we have the right structure
+    if (typeof coverageData !== 'object' || coverageData === null || !('summary' in coverageData)) {
+      console.error('Invalid coverage data format');
+      return;
+    }
+
+    const data = coverageData as CoverageData;
+
     await mkdir(this.badgesDir, { recursive: true });
 
     // Generate badges for each metric
     const metrics = ['lines', 'functions', 'statements', 'branches'] as const;
 
     for (const metric of metrics) {
-      const coverage = coverageData.summary[metric].pct;
+      const coverage = data.summary[metric].pct;
       const badge = this.createBadge({
         metric,
         label: this.getMetricLabel(metric),
@@ -49,7 +65,7 @@ class CoverageBadgeGenerator {
     }
 
     // Generate overall coverage badge
-    const overallCoverage = this.calculateOverallCoverage(coverageData.summary);
+    const overallCoverage = this.calculateOverallCoverage(data.summary);
     const overallBadge = this.createBadge({
       metric: 'lines', // Not used for overall
       label: 'coverage',
@@ -65,7 +81,7 @@ class CoverageBadgeGenerator {
     await this.generateReadmeSnippet();
   }
 
-  private async loadCoverageData(): Promise<any> {
+  private async loadCoverageData(): Promise<unknown> {
     const reportFile = 'coverage-reports/coverage-analysis.json';
 
     if (!existsSync(reportFile)) {
@@ -99,7 +115,7 @@ class CoverageBadgeGenerator {
     return '#e05d44'; // Red
   }
 
-  private calculateOverallCoverage(summary: any): number {
+  private calculateOverallCoverage(summary: { [key: string]: { pct: number } }): number {
     // Weighted average of all metrics
     const weights = {
       lines: 0.3,

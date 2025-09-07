@@ -18,6 +18,27 @@ interface CoverageStatus {
   recommendations: string[];
 }
 
+interface CoverageReport {
+  timestamp: string;
+  status: {
+    configured: boolean;
+    working: boolean;
+    hasData: boolean;
+    overall: string;
+  };
+  issues: string[];
+  recommendations: string[];
+  configuration: {
+    vitestConfig: boolean;
+    coverageDir: boolean;
+    reportsDir: boolean;
+    nycConfig: boolean;
+    coverageIgnore: boolean;
+  };
+  availableScripts: string[];
+  nextSteps: string[];
+}
+
 class CoverageSummary {
   private readonly projectRoot = process.cwd();
   private readonly coverageDir = 'coverage';
@@ -245,7 +266,7 @@ class CoverageSummary {
     return steps;
   }
 
-  private async generateMarkdownReport(report: any): Promise<void> {
+  private async generateMarkdownReport(report: CoverageReport): Promise<void> {
     let markdown = '# Coverage Collection Status Report\n\n';
     markdown += `Generated: ${new Date().toLocaleString()}\n\n`;
 

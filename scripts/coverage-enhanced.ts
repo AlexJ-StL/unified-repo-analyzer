@@ -18,6 +18,46 @@ interface CoverageMetrics {
   branches: { total: number; covered: number; pct: number };
 }
 
+interface StatementMap {
+  [key: string]: {
+    start: { line: number; column: number };
+    end: { line: number; column: number };
+  };
+}
+
+interface FnMap {
+  [key: string]: {
+    name: string;
+    decl: {
+      start: { line: number; column: number };
+      end: { line: number; column: number };
+    };
+  };
+}
+
+interface BranchMap {
+  [key: string]: {
+    locations: Array<{
+      start: { line: number; column: number };
+      end: { line: number; column: number };
+    }>;
+  };
+}
+
+interface FileCoverageData {
+  path: string;
+  statementMap: StatementMap;
+  fnMap: FnMap;
+  branchMap: BranchMap;
+  s: Record<string, number>;
+  f: Record<string, number>;
+  b: Record<string, number[]>;
+}
+
+interface CoverageData {
+  [filePath: string]: FileCoverageData;
+}
+
 interface CoverageReport {
   timestamp: string;
   provider: string;
@@ -489,53 +529,48 @@ class EnhancedCoverageCollector {
     console.log('✅ Realistic mock coverage data created');
   }
 
-  private generateLcovData(coverageData: any): string {
+  private generateLcovData(coverageData: CoverageData): string {
     let lcov = '';
 
     for (const [filePath, fileData] of Object.entries(coverageData)) {
-      const data = fileData as any;
-
       lcov += 'TN:\n';
       lcov += `SF:${filePath}\n`;
 
       // Functions
-      for (const [_fnId, fnData] of Object.entries(data.fnMap || {})) {
-        const fn = fnData as any;
-        lcov += `FN:${fn.decl.start.line},${fn.name}\n`;
+      for (const [_fnId, fnData] of Object.entries(fileData.fnMap || {})) {
+        lcov += `FN:${fnData.decl.start.line},${fnData.name}\n`;
       }
 
-      const fnCount = Object.keys(data.fnMap || {}).length;
-      const fnHit = Object.values(data.f || {}).filter((count) => (count as number) > 0).length;
+      const fnCount = Object.keys(fileData.fnMap || {}).length;
+      const fnHit = Object.values(fileData.f || {}).filter((count) => count > 0).length;
       lcov += `FNF:${fnCount}\n`;
       lcov += `FNH:${fnHit}\n`;
 
       // Function execution counts
-      for (const [fnId, fnData] of Object.entries(data.fnMap || {})) {
-        const fn = fnData as any;
-        const count = data.f?.[fnId] || 0;
-        lcov += `FNDA:${count},${fn.name}\n`;
+      for (const [fnId, fnData] of Object.entries(fileData.fnMap || {})) {
+        const count = fileData.f?.[fnId] || 0;
+        lcov += `FNDA:${count},${fnData.name}\n`;
       }
 
       // Lines
-      for (const [stmtId, count] of Object.entries(data.s || {})) {
-        const stmt = data.statementMap?.[stmtId];
+      for (const [stmtId, count] of Object.entries(fileData.s || {})) {
+        const stmt = fileData.statementMap?.[stmtId];
         if (stmt) {
           lcov += `DA:${stmt.start.line},${count}\n`;
         }
       }
 
-      const lineCount = Object.keys(data.s || {}).length;
-      const lineHit = Object.values(data.s || {}).filter((count) => (count as number) > 0).length;
+      const lineCount = Object.keys(fileData.s || {}).length;
+      const lineHit = Object.values(fileData.s || {}).filter((count) => count > 0).length;
       lcov += `LF:${lineCount}\n`;
       lcov += `LH:${lineHit}\n`;
 
       // Branches
       let branchCount = 0;
       let branchHit = 0;
-      for (const [_branchId, branches] of Object.entries(data.b || {})) {
-        const branchArray = branches as number[];
-        branchCount += branchArray.length;
-        branchHit += branchArray.filter((count) => count > 0).length;
+      for (const [_branchId, branches] of Object.entries(fileData.b || {})) {
+        branchCount += branches.length;
+        branchHit += branches.filter((count) => count > 0).length;
       }
       lcov += `BRF:${branchCount}\n`;
       lcov += `BRH:${branchHit}\n`;
@@ -555,11 +590,15 @@ class EnhancedCoverageCollector {
 
     // Load coverage data
     const coverageFile = join(this.coverageDir, 'coverage-final.json');
-    let coverageData: any = {};
+    let coverageData: CoverageData = {};
 
     if (existsSync(coverageFile)) {
       try {
-        coverageData = JSON.parse(await readFile(coverageFile, 'utf-8'));
+        const rawData = JSON.parse(await readFile(coverageFile, 'utf-8'));
+        // Type guard to ensure we have the right structure
+        if (typeof rawData === 'object' && rawData !== null) {
+          coverageData = rawData as CoverageData;
+        }
       } catch (_error) {}
     }
 
@@ -579,7 +618,7 @@ class EnhancedCoverageCollector {
     };
   }
 
-  private calculateCoverageMetrics(coverageData: any): CoverageMetrics {
+  private calculateCoverageMetrics(coverageData: CoverageData): CoverageMetrics {
     let totalLines = 0;
     let coveredLines = 0;
     let totalFunctions = 0;
@@ -590,24 +629,22 @@ class EnhancedCoverageCollector {
     let coveredBranches = 0;
 
     for (const [_filePath, fileData] of Object.entries(coverageData)) {
-      const data = fileData as any;
-
       // Count statements
-      const statements = Object.keys(data.s || {});
+      const statements = Object.keys(fileData.s || {});
       totalStatements += statements.length;
-      coveredStatements += statements.filter((stmt) => data.s[stmt] > 0).length;
+      coveredStatements += statements.filter((stmt) => fileData.s[stmt] > 0).length;
 
       // Count functions
-      const functions = Object.keys(data.f || {});
+      const functions = Object.keys(fileData.f || {});
       totalFunctions += functions.length;
-      coveredFunctions += functions.filter((fn) => data.f[fn] > 0).length;
+      coveredFunctions += functions.filter((fn) => fileData.f[fn] > 0).length;
 
       // Count branches
-      const branches = Object.keys(data.b || {});
+      const branches = Object.keys(fileData.b || {});
       for (const branch of branches) {
-        const branchData = data.b[branch] || [];
+        const branchData = fileData.b[branch] || [];
         totalBranches += branchData.length;
-        coveredBranches += branchData.filter((b: number) => b > 0).length;
+        coveredBranches += branchData.filter((b) => b > 0).length;
       }
     }
 
@@ -639,8 +676,8 @@ class EnhancedCoverageCollector {
     };
   }
 
-  private calculatePackageBreakdown(coverageData: any): Record<string, CoverageMetrics> {
-    const packages: Record<string, any> = {};
+  private calculatePackageBreakdown(coverageData: CoverageData): Record<string, CoverageMetrics> {
+    const packages: Record<string, CoverageData> = {};
 
     // Group files by package
     for (const [filePath, fileData] of Object.entries(coverageData)) {

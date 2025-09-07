@@ -8,6 +8,7 @@ import type {
   LogFormat,
   LogLevel,
   LogOutputType,
+  LoggerConfig,
 } from '../types/logging-config.js';
 
 export class ConfigValidator {
@@ -19,7 +20,7 @@ export class ConfigValidator {
   /**
    * Validate complete logger configuration
    */
-  public static validateLoggerConfig(config: any): ConfigValidationResult {
+  public static validateLoggerConfig(config: unknown): ConfigValidationResult {
     const result: ConfigValidationResult = {
       isValid: true,
       errors: [],
@@ -36,14 +37,17 @@ export class ConfigValidator {
       return result;
     }
 
+    // Type guard to ensure config has the required properties
+    const configObj = config as Partial<LoggerConfig>;
+
     // Validate top-level properties
-    ConfigValidator.validateLogLevel(config.level, result);
-    ConfigValidator.validateLogFormat(config.format, result);
-    ConfigValidator.validateBooleanField(config, 'includeStackTrace', result);
-    ConfigValidator.validateBooleanField(config, 'redactSensitiveData', result);
-    ConfigValidator.validateStringField(config, 'requestIdHeader', result, false);
-    ConfigValidator.validateStringField(config, 'componentName', result, false);
-    ConfigValidator.validateOutputs(config.outputs, result);
+    ConfigValidator.validateLogLevel(configObj.level, result);
+    ConfigValidator.validateLogFormat(configObj.format, result);
+    ConfigValidator.validateBooleanField(configObj, 'includeStackTrace', result);
+    ConfigValidator.validateBooleanField(configObj, 'redactSensitiveData', result);
+    ConfigValidator.validateStringField(configObj, 'requestIdHeader', result, false);
+    ConfigValidator.validateStringField(configObj, 'componentName', result, false);
+    ConfigValidator.validateOutputs(configObj.outputs, result);
 
     result.isValid = result.errors.length === 0;
     return result;
@@ -52,7 +56,7 @@ export class ConfigValidator {
   /**
    * Validate log level
    */
-  private static validateLogLevel(level: any, result: ConfigValidationResult): void {
+  private static validateLogLevel(level: unknown, result: ConfigValidationResult): void {
     if (level === undefined) {
       result.errors.push({
         field: 'level',
@@ -83,7 +87,7 @@ export class ConfigValidator {
   /**
    * Validate log format
    */
-  private static validateLogFormat(format: any, result: ConfigValidationResult): void {
+  private static validateLogFormat(format: unknown, result: ConfigValidationResult): void {
     if (format === undefined) {
       result.errors.push({
         field: 'format',
@@ -115,7 +119,7 @@ export class ConfigValidator {
    * Validate boolean field
    */
   private static validateBooleanField(
-    config: any,
+    config: Record<string, unknown>,
     fieldName: string,
     result: ConfigValidationResult,
     required = true
@@ -146,7 +150,7 @@ export class ConfigValidator {
    * Validate string field
    */
   private static validateStringField(
-    config: any,
+    config: Record<string, unknown>,
     fieldName: string,
     result: ConfigValidationResult,
     required = true
@@ -182,7 +186,7 @@ export class ConfigValidator {
   /**
    * Validate outputs array
    */
-  private static validateOutputs(outputs: any, result: ConfigValidationResult): void {
+  private static validateOutputs(outputs: unknown, result: ConfigValidationResult): void {
     if (outputs === undefined) {
       result.errors.push({
         field: 'outputs',
@@ -211,7 +215,13 @@ export class ConfigValidator {
     }
 
     // Check for enabled outputs
-    const enabledOutputs = outputs.filter((output: any) => output.enabled === true);
+    const enabledOutputs = (outputs as unknown[]).filter((output) => {
+      if (typeof output === 'object' && output !== null) {
+        const outputObj = output as Record<string, unknown>;
+        return outputObj.enabled === true;
+      }
+      return false;
+    });
     if (enabledOutputs.length === 0) {
       result.warnings.push({
         field: 'outputs',
@@ -221,7 +231,7 @@ export class ConfigValidator {
     }
 
     // Validate each output
-    outputs.forEach((output: any, index: number) => {
+    (outputs as unknown[]).forEach((output, index) => {
       ConfigValidator.validateOutput(output, index, result);
     });
   }
@@ -229,7 +239,11 @@ export class ConfigValidator {
   /**
    * Validate individual output configuration
    */
-  private static validateOutput(output: any, index: number, result: ConfigValidationResult): void {
+  private static validateOutput(
+    output: unknown,
+    index: number,
+    result: ConfigValidationResult
+  ): void {
     const fieldPrefix = `outputs[${index}]`;
 
     if (!output || typeof output !== 'object') {
@@ -241,23 +255,29 @@ export class ConfigValidator {
       return;
     }
 
+    // Type cast for property access
+    const outputObj = output as Record<string, unknown>;
+
     // Validate type
-    if (!output.type) {
+    if (!outputObj.type) {
       result.errors.push({
         field: `${fieldPrefix}.type`,
         message: 'Output type is required',
         code: 'MISSING_OUTPUT_TYPE',
       });
-    } else if (!ConfigValidator.VALID_OUTPUT_TYPES.includes(output.type)) {
+    } else if (
+      typeof outputObj.type === 'string' &&
+      !ConfigValidator.VALID_OUTPUT_TYPES.includes(outputObj.type as LogOutputType)
+    ) {
       result.errors.push({
         field: `${fieldPrefix}.type`,
-        message: `Invalid output type '${output.type}'. Must be one of: ${ConfigValidator.VALID_OUTPUT_TYPES.join(', ')}`,
+        message: `Invalid output type '${outputObj.type}'. Must be one of: ${ConfigValidator.VALID_OUTPUT_TYPES.join(', ')}`,
         code: 'INVALID_OUTPUT_TYPE',
       });
     }
 
     // Validate enabled
-    if (typeof output.enabled !== 'boolean') {
+    if (typeof outputObj.enabled !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.enabled`,
         message: 'Output enabled must be a boolean',
@@ -266,16 +286,17 @@ export class ConfigValidator {
     }
 
     // Validate config based on type
-    if (output.config) {
-      switch (output.type) {
+    if (outputObj.config) {
+      const type = outputObj.type as string;
+      switch (type) {
         case 'console':
-          ConfigValidator.validateConsoleConfig(output.config, fieldPrefix, result);
+          ConfigValidator.validateConsoleConfig(outputObj.config, fieldPrefix, result);
           break;
         case 'file':
-          ConfigValidator.validateFileConfig(output.config, fieldPrefix, result);
+          ConfigValidator.validateFileConfig(outputObj.config, fieldPrefix, result);
           break;
         case 'external':
-          ConfigValidator.validateExternalConfig(output.config, fieldPrefix, result);
+          ConfigValidator.validateExternalConfig(outputObj.config, fieldPrefix, result);
           break;
       }
     } else {
@@ -291,11 +312,11 @@ export class ConfigValidator {
    * Validate console output configuration
    */
   private static validateConsoleConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    if (typeof config !== 'object') {
+    if (typeof config !== 'object' || config === null) {
       result.errors.push({
         field: `${fieldPrefix}.config`,
         message: 'Console config must be an object',
@@ -304,7 +325,9 @@ export class ConfigValidator {
       return;
     }
 
-    if (config.colorize !== undefined && typeof config.colorize !== 'boolean') {
+    const configObj = config as Record<string, unknown>;
+
+    if (configObj.colorize !== undefined && typeof configObj.colorize !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.config.colorize`,
         message: 'colorize must be a boolean',
@@ -312,7 +335,7 @@ export class ConfigValidator {
       });
     }
 
-    if (config.timestamp !== undefined && typeof config.timestamp !== 'boolean') {
+    if (configObj.timestamp !== undefined && typeof configObj.timestamp !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.config.timestamp`,
         message: 'timestamp must be a boolean',
@@ -320,10 +343,14 @@ export class ConfigValidator {
       });
     }
 
-    if (config.level !== undefined && !ConfigValidator.VALID_LOG_LEVELS.includes(config.level)) {
+    if (
+      configObj.level !== undefined &&
+      typeof configObj.level === 'string' &&
+      !ConfigValidator.VALID_LOG_LEVELS.includes(configObj.level as LogLevel)
+    ) {
       result.errors.push({
         field: `${fieldPrefix}.config.level`,
-        message: `Invalid level '${config.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
+        message: `Invalid level '${configObj.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }
@@ -333,11 +360,11 @@ export class ConfigValidator {
    * Validate file output configuration
    */
   private static validateFileConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    if (typeof config !== 'object') {
+    if (typeof config !== 'object' || config === null) {
       result.errors.push({
         field: `${fieldPrefix}.config`,
         message: 'File config must be an object',
@@ -346,14 +373,16 @@ export class ConfigValidator {
       return;
     }
 
+    const configObj = config as Record<string, unknown>;
+
     // Validate path
-    if (!config.path || typeof config.path !== 'string') {
+    if (!configObj.path || typeof configObj.path !== 'string') {
       result.errors.push({
         field: `${fieldPrefix}.config.path`,
         message: 'File path is required and must be a string',
         code: 'MISSING_FILE_PATH',
       });
-    } else if (config.path.trim().length === 0) {
+    } else if (typeof configObj.path === 'string' && configObj.path.trim().length === 0) {
       result.errors.push({
         field: `${fieldPrefix}.config.path`,
         message: 'File path cannot be empty',
@@ -362,8 +391,8 @@ export class ConfigValidator {
     }
 
     // Validate maxSize
-    if (config.maxSize !== undefined) {
-      if (typeof config.maxSize !== 'string') {
+    if (configObj.maxSize !== undefined) {
+      if (typeof configObj.maxSize !== 'string') {
         result.errors.push({
           field: `${fieldPrefix}.config.maxSize`,
           message: 'maxSize must be a string (e.g., "10MB")',
@@ -371,7 +400,7 @@ export class ConfigValidator {
         });
       } else {
         try {
-          ConfigValidator.parseFileSize(config.maxSize);
+          ConfigValidator.parseFileSize(configObj.maxSize);
         } catch (error) {
           result.errors.push({
             field: `${fieldPrefix}.config.maxSize`,
@@ -383,8 +412,11 @@ export class ConfigValidator {
     }
 
     // Validate maxFiles
-    if (config.maxFiles !== undefined) {
-      if (!Number.isInteger(config.maxFiles) || config.maxFiles < 1) {
+    if (configObj.maxFiles !== undefined) {
+      if (
+        typeof configObj.maxFiles === 'number' &&
+        (!Number.isInteger(configObj.maxFiles) || configObj.maxFiles < 1)
+      ) {
         result.errors.push({
           field: `${fieldPrefix}.config.maxFiles`,
           message: 'maxFiles must be a positive integer',
@@ -394,7 +426,7 @@ export class ConfigValidator {
     }
 
     // Validate boolean fields
-    if (config.rotateDaily !== undefined && typeof config.rotateDaily !== 'boolean') {
+    if (configObj.rotateDaily !== undefined && typeof configObj.rotateDaily !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.config.rotateDaily`,
         message: 'rotateDaily must be a boolean',
@@ -402,7 +434,7 @@ export class ConfigValidator {
       });
     }
 
-    if (config.compress !== undefined && typeof config.compress !== 'boolean') {
+    if (configObj.compress !== undefined && typeof configObj.compress !== 'boolean') {
       result.errors.push({
         field: `${fieldPrefix}.config.compress`,
         message: 'compress must be a boolean',
@@ -410,10 +442,14 @@ export class ConfigValidator {
       });
     }
 
-    if (config.level !== undefined && !ConfigValidator.VALID_LOG_LEVELS.includes(config.level)) {
+    if (
+      configObj.level !== undefined &&
+      typeof configObj.level === 'string' &&
+      !ConfigValidator.VALID_LOG_LEVELS.includes(configObj.level as LogLevel)
+    ) {
       result.errors.push({
         field: `${fieldPrefix}.config.level`,
-        message: `Invalid level '${config.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
+        message: `Invalid level '${configObj.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }
@@ -423,11 +459,11 @@ export class ConfigValidator {
    * Validate external output configuration
    */
   private static validateExternalConfig(
-    config: any,
+    config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
   ): void {
-    if (typeof config !== 'object') {
+    if (typeof config !== 'object' || config === null) {
       result.errors.push({
         field: `${fieldPrefix}.config`,
         message: 'External config must be an object',
@@ -436,23 +472,29 @@ export class ConfigValidator {
       return;
     }
 
+    const configObj = config as Record<string, unknown>;
+
     // Validate type
-    if (config.type && !ConfigValidator.VALID_EXTERNAL_TYPES.includes(config.type)) {
+    if (
+      configObj.type &&
+      typeof configObj.type === 'string' &&
+      !ConfigValidator.VALID_EXTERNAL_TYPES.includes(configObj.type)
+    ) {
       result.errors.push({
         field: `${fieldPrefix}.config.type`,
-        message: `Invalid external type '${config.type}'. Must be one of: ${ConfigValidator.VALID_EXTERNAL_TYPES.join(', ')}`,
+        message: `Invalid external type '${configObj.type}'. Must be one of: ${ConfigValidator.VALID_EXTERNAL_TYPES.join(', ')}`,
         code: 'INVALID_EXTERNAL_TYPE',
       });
     }
 
     // Validate endpoint
-    if (!config.endpoint || typeof config.endpoint !== 'string') {
+    if (!configObj.endpoint || typeof configObj.endpoint !== 'string') {
       result.errors.push({
         field: `${fieldPrefix}.config.endpoint`,
         message: 'External endpoint is required and must be a string',
         code: 'MISSING_EXTERNAL_ENDPOINT',
       });
-    } else if (config.endpoint.trim().length === 0) {
+    } else if (typeof configObj.endpoint === 'string' && configObj.endpoint.trim().length === 0) {
       result.errors.push({
         field: `${fieldPrefix}.config.endpoint`,
         message: 'External endpoint cannot be empty',
@@ -461,7 +503,7 @@ export class ConfigValidator {
     } else {
       // Basic URL validation
       try {
-        new URL(config.endpoint);
+        new URL(configObj.endpoint as string);
       } catch {
         result.warnings.push({
           field: `${fieldPrefix}.config.endpoint`,
@@ -472,8 +514,11 @@ export class ConfigValidator {
     }
 
     // Validate optional fields
-    if (config.batchSize !== undefined) {
-      if (!Number.isInteger(config.batchSize) || config.batchSize < 1) {
+    if (configObj.batchSize !== undefined) {
+      if (
+        typeof configObj.batchSize === 'number' &&
+        (!Number.isInteger(configObj.batchSize) || configObj.batchSize < 1)
+      ) {
         result.errors.push({
           field: `${fieldPrefix}.config.batchSize`,
           message: 'batchSize must be a positive integer',
@@ -482,8 +527,11 @@ export class ConfigValidator {
       }
     }
 
-    if (config.flushInterval !== undefined) {
-      if (!Number.isInteger(config.flushInterval) || config.flushInterval < 100) {
+    if (configObj.flushInterval !== undefined) {
+      if (
+        typeof configObj.flushInterval === 'number' &&
+        (!Number.isInteger(configObj.flushInterval) || configObj.flushInterval < 100)
+      ) {
         result.errors.push({
           field: `${fieldPrefix}.config.flushInterval`,
           message: 'flushInterval must be an integer >= 100 milliseconds',
@@ -492,10 +540,14 @@ export class ConfigValidator {
       }
     }
 
-    if (config.level !== undefined && !ConfigValidator.VALID_LOG_LEVELS.includes(config.level)) {
+    if (
+      configObj.level !== undefined &&
+      typeof configObj.level === 'string' &&
+      !ConfigValidator.VALID_LOG_LEVELS.includes(configObj.level as LogLevel)
+    ) {
       result.errors.push({
         field: `${fieldPrefix}.config.level`,
-        message: `Invalid level '${config.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
+        message: `Invalid level '${configObj.level}'. Must be one of: ${ConfigValidator.VALID_LOG_LEVELS.join(', ')}`,
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }

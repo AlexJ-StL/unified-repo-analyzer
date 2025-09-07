@@ -14,7 +14,7 @@ import { join } from 'node:path';
 interface CoverageResult {
   success: boolean;
   provider: string;
-  coverage?: any;
+  coverage?: unknown;
   error?: string;
 }
 
@@ -593,51 +593,59 @@ export default defineConfig({
     console.log('✅ Comprehensive mock coverage data created');
   }
 
-  private generateLcovData(coverageData: any): string {
+  private generateLcovData(coverageData: Record<string, unknown>): string {
     let lcov = '';
 
     for (const [filePath, fileData] of Object.entries(coverageData)) {
-      const data = fileData as any;
+      const data = fileData as Record<string, unknown>;
 
       lcov += 'TN:\n';
       lcov += `SF:${filePath}\n`;
 
       // Functions
-      for (const [_fnId, fnData] of Object.entries(data.fnMap || {})) {
-        const fn = fnData as any;
-        lcov += `FN:${fn.decl.start.line},${fn.name}\n`;
+      const fnMap = (data.fnMap as Record<string, unknown>) || {};
+      for (const [_fnId, fnData] of Object.entries(fnMap)) {
+        const fn = fnData as Record<string, unknown>;
+        const decl = fn.decl as Record<string, unknown>;
+        const start = decl.start as Record<string, unknown>;
+        lcov += `FN:${start.line},${fn.name}\n`;
       }
 
-      const fnCount = Object.keys(data.fnMap || {}).length;
-      const fnHit = Object.values(data.f || {}).filter((count) => (count as number) > 0).length;
+      const fnCount = Object.keys(fnMap).length;
+      const f = (data.f as Record<string, number>) || {};
+      const fnHit = Object.values(f).filter((count) => count > 0).length;
       lcov += `FNF:${fnCount}\n`;
       lcov += `FNH:${fnHit}\n`;
 
       // Function execution counts
-      for (const [fnId, fnData] of Object.entries(data.fnMap || {})) {
-        const fn = fnData as any;
-        const count = data.f?.[fnId] || 0;
+      for (const [fnId, fnData] of Object.entries(fnMap)) {
+        const fn = fnData as Record<string, unknown>;
+        const count = f[fnId] || 0;
         lcov += `FNDA:${count},${fn.name}\n`;
       }
 
       // Lines
-      for (const [stmtId, count] of Object.entries(data.s || {})) {
-        const stmt = data.statementMap?.[stmtId];
+      const s = (data.s as Record<string, number>) || {};
+      const statementMap = (data.statementMap as Record<string, unknown>) || {};
+      for (const [stmtId, count] of Object.entries(s)) {
+        const stmt = statementMap[stmtId] as Record<string, unknown>;
         if (stmt) {
-          lcov += `DA:${stmt.start.line},${count}\n`;
+          const start = stmt.start as Record<string, unknown>;
+          lcov += `DA:${start.line},${count}\n`;
         }
       }
 
-      const lineCount = Object.keys(data.s || {}).length;
-      const lineHit = Object.values(data.s || {}).filter((count) => (count as number) > 0).length;
+      const lineCount = Object.keys(s).length;
+      const lineHit = Object.values(s).filter((count) => count > 0).length;
       lcov += `LF:${lineCount}\n`;
       lcov += `LH:${lineHit}\n`;
 
       // Branches
       let branchCount = 0;
       let branchHit = 0;
-      for (const [_branchId, branches] of Object.entries(data.b || {})) {
-        const branchArray = branches as number[];
+      const b = (data.b as Record<string, number[]>) || {};
+      for (const [_branchId, branches] of Object.entries(b)) {
+        const branchArray = branches;
         branchCount += branchArray.length;
         branchHit += branchArray.filter((count) => count > 0).length;
       }
@@ -657,11 +665,12 @@ export default defineConfig({
 
     // Load coverage data
     const coverageFile = join(this.coverageDir, 'coverage-final.json');
-    let coverageData: any = {};
+    let coverageData: Record<string, unknown> = {};
 
     if (existsSync(coverageFile)) {
       try {
-        coverageData = JSON.parse(await readFile(coverageFile, 'utf-8'));
+        const fileContent = await readFile(coverageFile, 'utf-8');
+        coverageData = JSON.parse(fileContent) as Record<string, unknown>;
       } catch {}
     }
 
@@ -688,7 +697,7 @@ export default defineConfig({
     console.log('✅ Coverage reports generated');
   }
 
-  private calculateCoverageMetrics(coverageData: any): any {
+  private calculateCoverageMetrics(coverageData: Record<string, unknown>): Record<string, unknown> {
     let totalLines = 0;
     let coveredLines = 0;
     let totalFunctions = 0;
@@ -699,22 +708,25 @@ export default defineConfig({
     let coveredBranches = 0;
 
     for (const [_filePath, fileData] of Object.entries(coverageData)) {
-      const data = fileData as any;
+      const data = fileData as Record<string, unknown>;
+      const s = (data.s as Record<string, number>) || {};
+      const f = (data.f as Record<string, number>) || {};
+      const b = (data.b as Record<string, number[]>) || {};
 
       // Count statements
-      const statements = Object.keys(data.s || {});
+      const statements = Object.keys(s);
       totalStatements += statements.length;
-      coveredStatements += statements.filter((stmt) => data.s[stmt] > 0).length;
+      coveredStatements += statements.filter((stmt) => s[stmt] > 0).length;
 
       // Count functions
-      const functions = Object.keys(data.f || {});
+      const functions = Object.keys(f);
       totalFunctions += functions.length;
-      coveredFunctions += functions.filter((fn) => data.f[fn] > 0).length;
+      coveredFunctions += functions.filter((fn) => f[fn] > 0).length;
 
       // Count branches
-      const branches = Object.keys(data.b || {});
+      const branches = Object.keys(b);
       for (const branch of branches) {
-        const branchData = data.b[branch] || [];
+        const branchData = b[branch] || [];
         totalBranches += branchData.length;
         coveredBranches += branchData.filter((b: number) => b > 0).length;
       }
@@ -748,14 +760,14 @@ export default defineConfig({
     };
   }
 
-  private getCoverageStatus(metrics: any): string {
+  private getCoverageStatus(metrics: Record<string, unknown>): string {
     const threshold = 70;
-    const allMetrics = [
-      metrics.lines.pct,
-      metrics.functions.pct,
-      metrics.statements.pct,
-      metrics.branches.pct,
-    ];
+    const lines = (metrics.lines as Record<string, number>) || {};
+    const functions = (metrics.functions as Record<string, number>) || {};
+    const statements = (metrics.statements as Record<string, number>) || {};
+    const branches = (metrics.branches as Record<string, number>) || {};
+
+    const allMetrics = [lines.pct || 0, functions.pct || 0, statements.pct || 0, branches.pct || 0];
 
     if (allMetrics.every((pct) => pct >= threshold)) {
       return 'excellent';
@@ -769,8 +781,16 @@ export default defineConfig({
     return 'poor';
   }
 
-  private async generateMarkdownReport(report: any): Promise<void> {
-    const { metrics, provider, timestamp, status } = report;
+  private async generateMarkdownReport(report: Record<string, unknown>): Promise<void> {
+    const metrics = (report.metrics as Record<string, unknown>) || {};
+    const provider = (report.provider as string) || '';
+    const timestamp = (report.timestamp as string) || new Date().toISOString();
+    const status = (report.status as string) || 'unknown';
+
+    const lines = (metrics.lines as Record<string, unknown>) || {};
+    const functions = (metrics.functions as Record<string, unknown>) || {};
+    const statements = (metrics.statements as Record<string, unknown>) || {};
+    const branches = (metrics.branches as Record<string, unknown>) || {};
 
     let markdown = '# Coverage Report\n\n';
     markdown += `**Generated:** ${new Date(timestamp).toLocaleString()}\n`;
@@ -780,10 +800,10 @@ export default defineConfig({
     markdown += '## Summary\n\n';
     markdown += '| Metric | Coverage | Total | Covered |\n';
     markdown += '|--------|----------|-------|----------|\n';
-    markdown += `| Lines | ${metrics.lines.pct.toFixed(1)}% | ${metrics.lines.total} | ${metrics.lines.covered} |\n`;
-    markdown += `| Functions | ${metrics.functions.pct.toFixed(1)}% | ${metrics.functions.total} | ${metrics.functions.covered} |\n`;
-    markdown += `| Statements | ${metrics.statements.pct.toFixed(1)}% | ${metrics.statements.total} | ${metrics.statements.covered} |\n`;
-    markdown += `| Branches | ${metrics.branches.pct.toFixed(1)}% | ${metrics.branches.total} | ${metrics.branches.covered} |\n\n`;
+    markdown += `| Lines | ${((lines.pct as number) || 0).toFixed(1)}% | ${lines.total || 0} | ${lines.covered || 0} |\n`;
+    markdown += `| Functions | ${((functions.pct as number) || 0).toFixed(1)}% | ${functions.total || 0} | ${functions.covered || 0} |\n`;
+    markdown += `| Statements | ${((statements.pct as number) || 0).toFixed(1)}% | ${statements.total || 0} | ${statements.covered || 0} |\n`;
+    markdown += `| Branches | ${((branches.pct as number) || 0).toFixed(1)}% | ${branches.total || 0} | ${branches.covered || 0} |\n\n`;
 
     markdown += '## Status\n\n';
     const statusEmoji = {
@@ -813,8 +833,21 @@ export default defineConfig({
     await writeFile(join(this.reportsDir, 'coverage-status.md'), markdown);
   }
 
-  private async generateHTMLDashboard(report: any): Promise<void> {
-    const { metrics, provider, timestamp, status } = report;
+  private async generateHTMLDashboard(report: Record<string, unknown>): Promise<void> {
+    const metrics = (report.metrics as Record<string, unknown>) || {};
+    const provider = (report.provider as string) || '';
+    const timestamp = (report.timestamp as string) || new Date().toISOString();
+    const status = (report.status as string) || 'unknown';
+
+    // Create a helper function to safely access metric data
+    const getMetricData = (metricName: string) => {
+      const metric = (metrics[metricName] as Record<string, number>) || {};
+      return {
+        pct: metric.pct || 0,
+        covered: metric.covered || 0,
+        total: metric.total || 0,
+      };
+    };
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -858,7 +891,7 @@ export default defineConfig({
         <div class="metrics">
             ${['lines', 'functions', 'statements', 'branches']
               .map((metric) => {
-                const data = metrics[metric];
+                const data = getMetricData(metric);
                 const statusClass = this.getStatusClass(data.pct);
                 return `
                 <div class="metric-card">
@@ -875,7 +908,14 @@ export default defineConfig({
         </div>
 
         <div class="info">
-            <h3>Overall Status: <span class="${this.getStatusClass(Math.min(...['lines', 'functions', 'statements', 'branches'].map((m) => metrics[m].pct)))}">${status.toUpperCase()}</span></h3>
+            <h3>Overall Status: <span class="${this.getStatusClass(
+              Math.min(
+                getMetricData('lines').pct,
+                getMetricData('functions').pct,
+                getMetricData('statements').pct,
+                getMetricData('branches').pct
+              )
+            )}">${status.toUpperCase()}</span></h3>
             <p>Coverage collection is ${provider === 'mock' ? 'using mock data due to configuration issues' : 'working properly'}.</p>
             ${provider === 'mock' ? '<p><strong>Note:</strong> This is mock data. Please fix the coverage configuration to get real metrics.</p>' : ''}
         </div>

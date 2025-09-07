@@ -200,7 +200,9 @@ class TestExecutionOptimizer {
     }
   }
 
-  private estimateTestDuration(testFile: string, metrics: any): number {
+  private estimateTestDuration(testFile: string, metrics: {
+    averageDurations: Record<string, number>;
+  }): number {
     // Use historical data if available
     if (metrics.averageDurations[testFile]) {
       return metrics.averageDurations[testFile];
@@ -225,7 +227,7 @@ class TestExecutionOptimizer {
     return Math.round(estimation);
   }
 
-  private calculateTestPriority(testFile: string, stats: any): number {
+  private calculateTestPriority(testFile: string, stats: { mtime: Date; size: number }): number {
     let priority = 50; // Base priority
 
     // Higher priority for recently modified files
@@ -824,7 +826,12 @@ if (import.meta.main) {
     return recommendations;
   }
 
-  private async loadMetrics(): Promise<any> {
+  private async loadMetrics(): Promise<{
+    testDurations: Record<string, number>;
+    testSuccess: Record<string, boolean>;
+    lastRun: Record<string, string>;
+    averageDurations: Record<string, number>;
+  }> {
     try {
       const content = await readFile(this.metricsFile, 'utf-8');
       return JSON.parse(content);
@@ -838,7 +845,11 @@ if (import.meta.main) {
     }
   }
 
-  private async loadDependencyMap(): Promise<any> {
+  private async loadDependencyMap(): Promise<{
+    fileDependencies: Record<string, string[]>;
+    testDependencies: Record<string, string[]>;
+    lastUpdated: string;
+  }> {
     try {
       const content = await readFile(this.dependencyMapFile, 'utf-8');
       return JSON.parse(content);
