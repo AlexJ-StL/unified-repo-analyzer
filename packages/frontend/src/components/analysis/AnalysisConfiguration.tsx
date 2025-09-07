@@ -55,10 +55,13 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         setIsLoading(true);
         setConfigError(null);
 
-        if (!options.mode) {
+        if (!options.mode || !options.llmProvider) {
+          // Get the first available provider as fallback, or mock as ultimate fallback
+          const firstAvailableProvider = providers.find((p) => p.available)?.id || 'mock';
+          
           const defaultOptions = {
             mode: preferences.analysis?.defaultMode || 'standard',
-            llmProvider: preferences.llmProvider?.defaultProvider || 'claude',
+            llmProvider: preferences.llmProvider?.defaultProvider || firstAvailableProvider,
             outputFormats: ['json'] as OutputFormat[],
           };
 
@@ -87,7 +90,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         // Fallback to safe defaults
         const safeDefaults = {
           mode: 'standard' as const,
-          llmProvider: 'claude',
+          llmProvider: 'mock', // Always fall back to mock provider
           outputFormats: ['json'] as OutputFormat[],
           maxFiles: 100,
           maxLinesPerFile: 1000,
@@ -166,6 +169,14 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         throw new Error(`Provider "${llmProvider}" is not available`);
       }
 
+      // If provider is not configured and not mock, show warning but allow selection
+      if (!provider.configured && provider.id !== 'mock') {
+        showWarning(
+          'Provider Not Configured',
+          `Provider "${provider.displayName}" is not configured. You may need to add API keys in settings. Analysis may fail if provider is not properly configured.`
+        );
+      }
+
       const finalOptions = { ...options, llmProvider };
 
       const isValid = validateOptions(finalOptions);
@@ -179,7 +190,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         onConfigChange(finalOptions);
       }
 
-      showSuccess('Provider Updated', `LLM provider changed to ${llmProvider}`);
+      showSuccess('Provider Updated', `LLM provider changed to ${provider.displayName}`);
     }, 'provider change');
   };
 
@@ -263,7 +274,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
     await handleAsyncError(async () => {
       const defaultOptions = {
         mode: 'standard' as const,
-        llmProvider: 'claude',
+        llmProvider: 'mock',
         outputFormats: ['json'] as OutputFormat[],
         maxFiles: 100,
         maxLinesPerFile: 1000,
@@ -345,7 +356,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
         <GracefulDegradation
           feature="LLM Provider Selection"
-          isEnabled={providers.length > 0}
+          isEnabled={providers.some((p) => p.available)}
           error={
             configError || providersError ? new Error(providersError || 'Provider error') : null
           }
@@ -364,21 +375,27 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md disabled:bg-gray-100 disabled:text-gray-500"
             >
               {providers
-                .filter((provider) => provider.configured) // Only show configured providers
+                .filter((provider) => provider.available) // Show all available providers
                 .map((provider) => (
                   <option key={provider.id} value={provider.id}>
                     {provider.displayName}
                     {provider.id === 'openrouter' && ' (Recommended)'}
+                    {!provider.configured && provider.id !== 'mock' && ' (Not configured)'}
                   </option>
                 ))}
-              {providers.length === 0 && <option value="">No providers available</option>}
+              {providers.length === 0 && <option value="mock">Mock Provider (Default)</option>}
             </select>
+            {!options.includeLLMAnalysis && (
+              <p className="mt-1 text-xs text-gray-500">
+                Enable "Include LLM Analysis" to select a different provider.
+              </p>
+            )}
             {providersError && (
               <p className="mt-1 text-xs text-red-500">Error loading providers: {providersError}</p>
             )}
             <div className="mt-2 flex flex-wrap gap-2">
               {providers
-                .filter((provider) => provider.configured)
+                .filter((provider) => provider.available)
                 .map((provider) => (
                   <span
                     key={provider.id}

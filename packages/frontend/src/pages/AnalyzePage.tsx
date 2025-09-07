@@ -57,7 +57,7 @@ const AnalyzePage = () => {
     setPathError(null);
     setIsSubmitting(true);
     setProgress({
-      status: 'running',
+      status: 'initializing',
       currentStep: 'Initializing analysis',
       progress: 0,
       totalSteps: 100,
@@ -147,8 +147,9 @@ const AnalyzePage = () => {
         )}
 
         <div className="space-y-6">
-          {/* Show progress tracker when analysis is running or completed */}
-          {(progress.status === 'running' ||
+          {/* Show progress tracker when analysis is in progress or completed */}
+          {(progress.status === 'initializing' ||
+            progress.status === 'processing' ||
             progress.status === 'completed' ||
             progress.status === 'failed') && (
             <div className="border border-gray-200 rounded-md p-4">
@@ -184,8 +185,8 @@ const AnalyzePage = () => {
               );
             })()}
 
-          {/* Only show repository selection and configuration when not running */}
-          {progress.status !== 'running' && (
+          {/* Only show repository selection and configuration when analysis is not in progress */}
+          {progress.status !== 'initializing' && progress.status !== 'processing' && (
             <>
               <div className="border border-gray-200 rounded-md p-4">
                 <h2 className="text-lg font-medium text-gray-900 mb-2">Repository Selection</h2>
@@ -203,7 +204,7 @@ const AnalyzePage = () => {
           )}
 
           <div className="flex justify-end">
-            {progress.status !== 'running' && (
+            {progress.status !== 'initializing' && progress.status !== 'processing' && (
               <button
                 type="button"
                 className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${

@@ -130,8 +130,12 @@ export class AdvancedAnalyzer {
     // Detect architectural patterns
     await this.analyzeArchitecturalPatterns(analysis, result);
 
-    // Perform LLM analysis if requested
-    if (analysis.metadata.llmProvider && analysis.metadata.llmProvider !== 'none') {
+    // Perform LLM analysis if requested and not using mock provider
+    if (
+      analysis.metadata.llmProvider &&
+      analysis.metadata.llmProvider !== 'none' &&
+      analysis.metadata.llmProvider !== 'mock'
+    ) {
       try {
         const llmResult = await this.performLLMAnalysis(analysis);
         if (llmResult) {
