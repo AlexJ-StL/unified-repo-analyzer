@@ -538,7 +538,17 @@ export function withRecovery(config: RecoveryConfig) {
 
       const result = await recoverySystem.executeWithRecovery(
         operationName,
-        () => method?.apply(this, args),
+        () => {
+          if (method) {
+            return method.apply(this, args);
+          }
+          throw createEnhancedError(
+            ErrorCategory.INTERNAL,
+            ErrorSeverity.HIGH,
+            `Method ${propertyName} is undefined`,
+            500
+          );
+        },
         config
       );
 
