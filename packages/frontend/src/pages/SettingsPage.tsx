@@ -6,7 +6,7 @@ import { useToast } from '../hooks/useToast';
 import { useSettingsStore } from '../store/useSettingsStore';
 
 const SettingsPage = () => {
-  const { preferences, updatePreferences } = useSettingsStore();
+  const { preferences, updatePreferences, loadPreferences } = useSettingsStore();
   const { showToast } = useToast();
   const {
     providers,
@@ -18,10 +18,11 @@ const SettingsPage = () => {
   const [_isCacheDirectoryValid, setIsCacheDirectoryValid] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Fetch providers when component mounts
+  // Load preferences and fetch providers when component mounts
   useEffect(() => {
+    loadPreferences();
     refreshProviders();
-  }, [refreshProviders]);
+  }, [loadPreferences, refreshProviders]);
 
   // Initialize state with current preferences
   const [localPreferences, setLocalPreferences] = useState({

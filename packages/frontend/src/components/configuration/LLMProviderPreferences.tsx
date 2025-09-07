@@ -20,7 +20,7 @@ import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
 
 const LLMProviderPreferences: React.FC = () => {
-  const { preferences, updatePreferenceSection } = useSettingsStore();
+  const { preferences, updatePreferenceSection, loadPreferences } = useSettingsStore();
   const { showToast } = useToast();
   const [showApiKeys, setShowApiKeys] = useState<Record<string, boolean>>({});
   const [newProviderName, setNewProviderName] = useState('');
@@ -50,10 +50,11 @@ const LLMProviderPreferences: React.FC = () => {
     >
   >({});
 
-  // Fetch backend providers when component mounts
+  // Load preferences and fetch backend providers when component mounts
   useEffect(() => {
+    loadPreferences();
     refreshProviders();
-  }, [refreshProviders]);
+  }, [loadPreferences, refreshProviders]);
 
   const handleUpdate = async (updates: any) => {
     try {
@@ -177,14 +178,14 @@ const LLMProviderPreferences: React.FC = () => {
         // Optionally get and apply model recommendations
         try {
           const recommendations = await getModelRecommendations(providerId, modelId);
-          if (recommendations.maxTokens || recommendations.temperature !== undefined) {
+          if (recommendations && (recommendations as any).maxTokens || (recommendations as any).temperature !== undefined) {
             updateProvider(providerId, {
               maxTokens:
-                recommendations.maxTokens ||
+                (recommendations as any).maxTokens ||
                 preferences.llmProvider.providers[providerId]?.maxTokens,
               temperature:
-                recommendations.temperature !== undefined
-                  ? recommendations.temperature
+                (recommendations as any).temperature !== undefined
+                  ? (recommendations as any).temperature
                   : preferences.llmProvider.providers[providerId]?.temperature,
             });
           }
