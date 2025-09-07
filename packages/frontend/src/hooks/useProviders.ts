@@ -67,7 +67,7 @@ export const useProviders = (): UseProvidersReturn => {
     execute: testProviderApi,
     isLoading: isTesting,
     error: testError,
-  } = useApi(apiService.testProvider, {
+  } = useApi((providerId: unknown) => apiService.testProvider(providerId as string), {
     showErrorToast: false,
   });
 
@@ -75,7 +75,7 @@ export const useProviders = (): UseProvidersReturn => {
     execute: fetchProviderModelsApi,
     isLoading: isFetchingModels,
     error: fetchModelsError,
-  } = useApi(apiService.getProviderModels, {
+  } = useApi((providerId: unknown) => apiService.getProviderModels(providerId as string), {
     showErrorToast: false,
   });
 
@@ -83,7 +83,7 @@ export const useProviders = (): UseProvidersReturn => {
     execute: validateProviderModelApi,
     isLoading: isValidatingModel,
     error: validateModelError,
-  } = useApi(apiService.validateProviderModel, {
+  } = useApi((providerId: unknown, modelId: unknown) => apiService.validateProviderModel(providerId as string, modelId as string), {
     showErrorToast: false,
   });
 
@@ -91,7 +91,7 @@ export const useProviders = (): UseProvidersReturn => {
     execute: getModelRecommendationsApi,
     isLoading: isFetchingRecommendations,
     error: recommendationsError,
-  } = useApi(apiService.getModelRecommendations, {
+  } = useApi((providerId: unknown, modelId: unknown) => apiService.getModelRecommendations(providerId as string, modelId as string), {
     showErrorToast: false,
   });
 

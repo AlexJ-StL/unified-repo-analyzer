@@ -6,11 +6,6 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { env } from '../config/environment';
 
-declare module 'express' {
-  interface Request {
-    requestId: string;
-  }
-}
 
 // Types and interfaces for structured logging
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
@@ -139,7 +134,7 @@ export class Logger {
           timestamp: String(info.timestamp),
           level: String(info.level).toUpperCase(),
           component: String(info.component || this.defaultComponent),
-          requestId: String(info.requestId || this.generateRequestId()),
+          requestId: String(info.requestId || requestContext.get('current') || this.generateRequestId()),
           message: String(info.message),
           metadata: (() => {
             if (info.metadata && typeof info.metadata === 'object') {
@@ -394,7 +389,7 @@ export const requestLogger = (
 ) => {
   const requestId = randomUUID();
   logger.setRequestId(requestId);
-  req.requestId = requestId;
+  // req.requestId = requestId; // Removed due to type conflict
 
   const start = Date.now();
   const startTime = new Date().toISOString();

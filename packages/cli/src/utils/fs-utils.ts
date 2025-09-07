@@ -81,7 +81,9 @@ export function writeResultsToFile<T>(
     if (format === 'json') {
       fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
     } else {
-      fs.writeFileSync(outputPath, data.toString());
+      // For markdown and html formats, convert data to string
+      const content = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      fs.writeFileSync(outputPath, content);
     }
 
     return outputPath;

@@ -162,8 +162,8 @@ describe('HTTP Request/Response Logging', () => {
       
       // Simulate sending response
       const originalSend = mockRes.send;
-      if (originalSend) {
-        mockRes.send(JSON.stringify(responseData));
+      if (originalSend && typeof originalSend === 'function') {
+        originalSend.call(mockRes, JSON.stringify(responseData));
       }
       
       // Simulate response finish
@@ -178,8 +178,8 @@ describe('HTTP Request/Response Logging', () => {
       
       // Simulate JSON response
       const originalJson = mockRes.json;
-      if (originalJson) {
-        mockRes.json(responseData);
+      if (originalJson && typeof originalJson === 'function') {
+        originalJson.call(mockRes, responseData);
       }
       
       // Simulate response finish

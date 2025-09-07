@@ -29,12 +29,12 @@ interface UseApiReturn<T> extends UseApiState<T> {
   retry: () => Promise<T | null>;
 }
 
-type ApiFunction = (...args: unknown[]) => Promise<unknown>;
-
-export function useApi<T = any>(
-  apiFunc: ApiFunction,
+type ApiFunction<T = any> = (...args: any[]) => Promise<{ data: T }>;
+export function useApi<T = any, F extends ApiFunction<T> = ApiFunction<T>>(
+  apiFunc: F,
   options: UseApiOptions = {}
 ): UseApiReturn<T> {
+
   const {
     showErrorToast = false, // Disabled by default to avoid duplicate toasts
     showSuccessToast = false,
@@ -67,7 +67,7 @@ export function useApi<T = any>(
         setLastArgs(args);
 
         const response = await apiFunc(...args);
-        const data = (response as { data: T }).data;
+        const data = response.data;
 
         setState({
           data,
@@ -116,7 +116,7 @@ export function useApi<T = any>(
 
         const result = await retryExecute(async () => {
           const response = await apiFunc(...args);
-          return (response as { data: T }).data;
+          return response.data;
         });
 
         setState({
