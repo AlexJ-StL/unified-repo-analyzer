@@ -571,7 +571,7 @@ export class PathHandler {
 
       // First check if the path exists
       let pathExists = false;
-      let stats: any = null;
+      let stats: import('fs').Stats | null = null;
 
       try {
         stats = await fs.stat(pathToCheck);
@@ -685,7 +685,10 @@ export class PathHandler {
   /**
    * Get file ownership information
    */
-  private async getFileOwnership(stats: any, result: PermissionResult): Promise<void> {
+  private async getFileOwnership(
+    stats: import('fs').Stats,
+    result: PermissionResult
+  ): Promise<void> {
     try {
       if (this.isWindows) {
         // On Windows, try to get owner information if available
@@ -711,7 +714,7 @@ export class PathHandler {
    */
   private async checkWindowsPermissions(
     pathToCheck: string,
-    stats: any,
+    stats: import('fs').Stats,
     result: PermissionResult
   ): Promise<void> {
     try {
@@ -993,8 +996,11 @@ export class PathHandler {
       }
 
       // Check for control characters (ASCII 0-31)
-      const controlChars = /[\x00-\x1f]/;
-      if (controlChars.test(inputPath)) {
+      const hasControlChars = inputPath.split('').some((char) => {
+        const code = char.charCodeAt(0);
+        return code >= 0 && code <= 31;
+      });
+      if (hasControlChars) {
         errors.push({
           code: 'CONTROL_CHARACTERS',
           message: 'Path contains control characters',

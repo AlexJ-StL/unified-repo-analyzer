@@ -26,7 +26,7 @@ export interface OperationContext {
   sessionId?: string;
   requestId?: string;
   startTime: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -55,7 +55,7 @@ export class EnhancedLogger {
    */
   startOperation(
     operationType: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     requestId?: string
   ): string {
     const operationId = `${operationType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -86,7 +86,7 @@ export class EnhancedLogger {
   endOperation(
     operationId: string,
     success = true,
-    result?: any,
+    result?: unknown,
     error?: Error
   ): PerformanceMetrics | null {
     const context = this.operations.get(operationId);
@@ -151,7 +151,7 @@ export class EnhancedLogger {
     operationId: string,
     progress: number,
     message: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     const context = this.operations.get(operationId);
     if (!context) {
@@ -261,7 +261,7 @@ export class EnhancedLogger {
     severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
     description: string,
     req?: Request,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     const logData = {
       eventType,
@@ -293,7 +293,7 @@ export class EnhancedLogger {
   /**
    * Sanitize sensitive data from logs
    */
-  private sanitizeResult(result: any): any {
+  private sanitizeResult(result: unknown): unknown {
     if (!result) return result;
 
     if (typeof result === 'string') {
@@ -301,13 +301,13 @@ export class EnhancedLogger {
     }
 
     if (typeof result === 'object') {
-      return this.sanitizeObject(result);
+      return this.sanitizeObject(result as Record<string, unknown>);
     }
 
     return result;
   }
 
-  private sanitizeQuery(query: any): any {
+  private sanitizeQuery(query: Record<string, unknown>): Record<string, unknown> {
     const sensitiveKeys = ['password', 'token', 'key', 'secret', 'auth'];
     const sanitized = { ...query };
 
@@ -320,7 +320,7 @@ export class EnhancedLogger {
     return sanitized;
   }
 
-  private sanitizeHeaders(headers: any): any {
+  private sanitizeHeaders(headers: Record<string, unknown>): Record<string, unknown> {
     const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'x-auth-token'];
     const sanitized = { ...headers };
 
@@ -338,7 +338,7 @@ export class EnhancedLogger {
     return str.replace(/(password|token|key|secret)=[\w\-.]+/gi, '$1=[REDACTED]');
   }
 
-  private sanitizeObject(obj: any): any {
+  private sanitizeObject(obj: Record<string, unknown>): Record<string, unknown> {
     const sensitiveKeys = ['password', 'token', 'key', 'secret', 'auth', 'credential'];
     const sanitized = { ...obj };
 
@@ -346,7 +346,7 @@ export class EnhancedLogger {
       if (sensitiveKeys.some((sensitive) => key.toLowerCase().includes(sensitive))) {
         sanitized[key] = '[REDACTED]';
       } else if (typeof sanitized[key] === 'object' && sanitized[key] !== null) {
-        sanitized[key] = this.sanitizeObject(sanitized[key]);
+        sanitized[key] = this.sanitizeObject(sanitized[key] as Record<string, unknown>);
       }
     }
 
@@ -394,10 +394,10 @@ setInterval(
  * Decorator for automatic operation logging
  */
 export function logOperation(operationType: string) {
-  return (_target: any, propertyName: string, descriptor: PropertyDescriptor) => {
+  return (_target: unknown, propertyName: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       const operationId = enhancedLogger.startOperation(operationType, {
         method: propertyName,
         args: args.length,

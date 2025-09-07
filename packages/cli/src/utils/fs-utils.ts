@@ -64,9 +64,9 @@ export function ensureOutputDirectory(outputDir: string): string {
 /**
  * Write analysis results to file
  */
-export function writeResultsToFile(
+export function writeResultsToFile<T>(
   outputPath: string,
-  data: any,
+  data: T,
   format: 'json' | 'markdown' | 'html' = 'json'
 ): string {
   try {

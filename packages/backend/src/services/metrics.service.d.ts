@@ -13,7 +13,7 @@ declare class MetricsService {
   recordAnalysisMetric(success: boolean, duration: number, repositoryCount?: number): void;
   incrementActiveConnections(): void;
   decrementActiveConnections(): void;
-  getMetrics(): Record<string, any>;
+  getMetrics(): Record<string, unknown>;
   private logMetricsSummary;
   requestMiddleware(): (req: Request, res: Response, next: NextFunction) => void;
   metricsHandler: (req: Request, res: Response) => void;

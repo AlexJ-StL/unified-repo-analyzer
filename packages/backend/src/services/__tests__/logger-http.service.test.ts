@@ -3,11 +3,11 @@ import { mockFunction } from '../../../../../tests/MockManager';
 import { requestLogger } from '../logger.service.js';
 
 describe('HTTP Request/Response Logging', () => {
-  let mockReq: any;
-  let mockRes: any;
-  let mockNext: any;
-  let finishCallback: any;
-  let errorCallback: any;
+  let mockReq: Partial<import('express').Request>;
+  let mockRes: Partial<import('express').Response>;
+  let mockNext: import('express').NextFunction;
+  let finishCallback: Function;
+  let errorCallback: Function;
 
   beforeEach(() => {
     mockReq = {

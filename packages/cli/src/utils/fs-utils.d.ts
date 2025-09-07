@@ -11,6 +11,6 @@ export declare function ensureOutputDirectory(outputDir: string): string;
  */
 export declare function writeResultsToFile(
   outputPath: string,
-  data: any,
+  data: unknown,
   format?: 'json' | 'markdown' | 'html'
 ): string;

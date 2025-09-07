@@ -30,7 +30,7 @@ export interface LogAlert {
   type: 'DISK_USAGE' | 'FILE_SIZE' | 'ERROR_RATE' | 'CLEANUP_FAILED';
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   message: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   timestamp: Date;
 }
 

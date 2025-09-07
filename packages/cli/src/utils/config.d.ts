@@ -5,7 +5,7 @@ interface CLIConfigSchema {
   defaultOptions: Partial<AnalysisOptions>;
   outputDir: string;
   userPreferences: UserPreferences;
-  profiles?: Record<string, any>;
+  profiles?: Record<string, unknown>;
   activeProfile?: string;
 }
 declare const config: Conf<CLIConfigSchema>;

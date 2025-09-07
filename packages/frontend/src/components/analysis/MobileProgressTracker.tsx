@@ -51,7 +51,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
     if (progress.log && !logs.includes(progress.log)) {
       setLogs((prev) => [...prev, progress.log!]);
     }
-  }, [progress.log, logs]);
+  }, [progress.log]); // Remove logs from dependencies to avoid infinite loop
 
   // Handle cancellation
   const handleCancel = async () => {
@@ -75,7 +75,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
           </div>
         );
 
-      case 'running':
+      case 'processing':
         return (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -206,7 +206,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
             <div className="mt-2 bg-gray-50 border border-gray-200 rounded-md p-2 max-h-24 overflow-y-auto">
               <ul className="space-y-1 text-xs font-mono">
                 {logs.slice(-5).map((log, index) => (
-                  <li key={index} className="text-gray-700 truncate">
+                  <li key={`log-${index}-${log.slice(0, 50)}`} className="text-gray-700 truncate">
                     <span className="text-gray-500">[{new Date().toLocaleTimeString()}]</span> {log}
                   </li>
                 ))}

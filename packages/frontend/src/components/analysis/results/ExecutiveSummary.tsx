@@ -63,7 +63,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Recommendations</h3>
           <ul className="list-disc pl-5 space-y-1">
             {insights.recommendations.map((recommendation, index) => (
-              <li key={index} className="text-gray-700">
+              <li key={`rec-${index}-${recommendation.slice(0, 30)}`} className="text-gray-700">
                 {recommendation}
               </li>
             ))}
@@ -76,7 +76,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Potential Issues</h3>
           <ul className="list-disc pl-5 space-y-1">
             {insights.potentialIssues.map((issue, index) => (
-              <li key={index} className="text-gray-700">
+              <li key={`issue-${index}-${issue.slice(0, 30)}`} className="text-gray-700">
                 {issue}
               </li>
             ))}
@@ -90,7 +90,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
           <div className="flex flex-wrap gap-2">
             {frameworks.map((framework, index) => (
               <span
-                key={index}
+                key={`framework-${framework}`}
                 className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
               >
                 {framework}

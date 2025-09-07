@@ -19,7 +19,7 @@ describe('Logger Output Destinations', () => {
 
       const logger = new Logger(config);
       expect(logger.getConfig().outputs[0].type).toBe('console');
-      expect((logger.getConfig().outputs[0].config as any).colorize).toBe(true);
+      expect((logger.getConfig().outputs[0].config as { colorize: boolean }).colorize).toBe(true);
     });
 
     it('should create logger with non-colorized console output', () => {
@@ -34,7 +34,7 @@ describe('Logger Output Destinations', () => {
       };
 
       const logger = new Logger(config);
-      expect((logger.getConfig().outputs[0].config as any).colorize).toBe(false);
+      expect((logger.getConfig().outputs[0].config as { colorize: boolean }).colorize).toBe(false);
     });
   });
 

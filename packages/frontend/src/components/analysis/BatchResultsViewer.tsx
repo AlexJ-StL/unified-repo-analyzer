@@ -249,7 +249,10 @@ const BatchResultsViewer: React.FC<BatchResultsViewerProps> = ({ batchResult }) 
                   <div className="bg-green-50 p-4 rounded-lg">
                     <ul className="space-y-2">
                       {batchResult.combinedInsights.integrationOpportunities.map((item, index) => (
-                        <li key={index} className="text-sm text-green-800 flex items-start">
+                        <li
+                          key={`int-op-${index}-${item.slice(0, 30)}`}
+                          className="text-sm text-green-800 flex items-start"
+                        >
                           <span className="inline-block w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                           {item}
                         </li>

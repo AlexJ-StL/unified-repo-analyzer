@@ -514,7 +514,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should report progress during validation', async () => {
-      const progressUpdates: any[] = [];
+      const progressUpdates: Array<{ stage: string; percentage: number; message: string }> = [];
 
       const result = await pathHandler.validatePath('/test/path', {
         onProgress: (progress) => {
@@ -660,7 +660,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should provide detailed progress information', async () => {
-      const progressUpdates: any[] = [];
+      const progressUpdates: Array<{ stage: string; percentage: number; message: string }> = [];
 
       // Ensure the path exists so permission check runs
       mockFs.stat.mockResolvedValue({

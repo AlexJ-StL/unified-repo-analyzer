@@ -10,7 +10,7 @@ export interface PerformanceMetric {
   unit: string;
   timestamp: number;
   tags?: Record<string, string>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   [key: string]: unknown; // Index signature to allow compatibility with Record<string, unknown>
 }
 
@@ -24,7 +24,7 @@ export interface OperationTiming {
   endTime: number;
   success: boolean;
   error?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -78,7 +78,8 @@ export class PerformanceMonitor extends EventEmitter {
   private timings: OperationTiming[] = [];
   private baselines: Map<string, PerformanceBaseline> = new Map();
   private resourceHistory: ResourceUsage[] = [];
-  private activeOperations: Map<string, { startTime: number; metadata?: any }> = new Map();
+  private activeOperations: Map<string, { startTime: number; metadata?: Record<string, unknown> }> =
+    new Map();
   private resourceMonitorInterval?: NodeJS.Timeout;
 
   constructor(config?: Partial<PerformanceConfig>) {
@@ -111,7 +112,11 @@ export class PerformanceMonitor extends EventEmitter {
   /**
    * Start timing an operation
    */
-  public startOperation(operationId: string, operationName: string, metadata?: any): void {
+  public startOperation(
+    operationId: string,
+    operationName: string,
+    metadata?: Record<string, unknown>
+  ): void {
     if (!this.config.enabled || Math.random() > this.config.sampleRate) {
       return;
     }
@@ -146,7 +151,7 @@ export class PerformanceMonitor extends EventEmitter {
     const duration = endTime - activeOp.startTime;
 
     const timing: OperationTiming = {
-      operation: activeOp.metadata?.operation || 'unknown',
+      operation: (activeOp.metadata?.operation as string) || 'unknown',
       duration,
       startTime: activeOp.startTime,
       endTime,
@@ -186,7 +191,7 @@ export class PerformanceMonitor extends EventEmitter {
     value: number,
     unit: string,
     tags?: Record<string, string>,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     if (!this.config.enabled) {
       return;

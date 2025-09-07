@@ -11,7 +11,7 @@ interface ProgressTrackerProps {
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className = '' }) => {
   const { progress } = useAnalysisStore();
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<Array<{ id: string; message: string; timestamp: Date }>>([]);
   const [isConnected, setIsConnected] = useState(false);
 
   // Connect to WebSocket when component mounts
@@ -34,7 +34,14 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
       websocketService.subscribeToAnalysis(analysisId);
 
       // Add subscription log
-      setLogs((prev) => [...prev, `Subscribed to analysis ${analysisId}`]);
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: `sub-${Date.now()}`,
+          message: `Subscribed to analysis ${analysisId}`,
+          timestamp: new Date(),
+        },
+      ]);
 
       return () => {
         websocketService.unsubscribeFromAnalysis(analysisId);
@@ -44,10 +51,20 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
 
   // Listen for log updates from the store
   useEffect(() => {
-    if (progress.log && !logs.includes(progress.log)) {
-      setLogs((prev) => [...prev, progress.log!]);
+    if (progress.log) {
+      const existingLog = logs.find((log) => log.message === progress.log);
+      if (!existingLog) {
+        setLogs((prev) => [
+          ...prev,
+          {
+            id: `log-${Date.now()}-${Math.random()}`,
+            message: progress.log!,
+            timestamp: new Date(),
+          },
+        ]);
+      }
     }
-  }, [progress.log, logs]);
+  }, [progress.log]); // Remove logs from dependencies to avoid infinite loop
 
   // Handle cancellation
   const handleCancel = async () => {
@@ -55,9 +72,19 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
 
     try {
       await apiService.cancelAnalysis(analysisId);
-      setLogs((prev) => [...prev, 'Analysis cancellation requested']);
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: `cancel-${Date.now()}`,
+          message: 'Analysis cancellation requested',
+          timestamp: new Date(),
+        },
+      ]);
     } catch (_error) {
-      setLogs((prev) => [...prev, 'Failed to cancel analysis']);
+      setLogs((prev) => [
+        ...prev,
+        { id: `error-${Date.now()}`, message: 'Failed to cancel analysis', timestamp: new Date() },
+      ]);
     }
   };
 
@@ -71,7 +98,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
           </div>
         );
 
-      case 'running':
+      case 'processing':
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -186,9 +213,10 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ analysisId, className
           <h3 className="text-sm font-medium text-gray-700 mb-2">Activity Log</h3>
           <div className="bg-gray-50 border border-gray-200 rounded-md p-3 max-h-40 overflow-y-auto">
             <ul className="space-y-1 text-xs font-mono">
-              {logs.map((log, index) => (
-                <li key={index} className="text-gray-700">
-                  <span className="text-gray-500">[{new Date().toLocaleTimeString()}]</span> {log}
+              {logs.map((log) => (
+                <li key={log.id} className="text-gray-700">
+                  <span className="text-gray-500">[{log.timestamp.toLocaleTimeString()}]</span>{' '}
+                  {log.message}
                 </li>
               ))}
             </ul>

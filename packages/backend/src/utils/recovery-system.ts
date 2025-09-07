@@ -29,8 +29,8 @@ export interface RecoveryConfig {
   strategy: RecoveryStrategy;
   maxRetries?: number;
   retryDelay?: number;
-  fallbackValue?: any;
-  fallbackFunction?: () => Promise<any>;
+  fallbackValue?: unknown;
+  fallbackFunction?: () => Promise<unknown>;
   circuitBreakerThreshold?: number;
   circuitBreakerTimeout?: number;
   healthCheckFunction?: () => Promise<boolean>;
@@ -152,7 +152,8 @@ export class RecoverySystem extends EventEmitter {
     const startTime = Date.now();
     let lastError: EnhancedError;
 
-    for (attempts = 1; attempts <= maxRetries; attempts++) {
+    let attemptCount = 1;
+    for (; attemptCount <= maxRetries; attemptCount++) {
       try {
         const result = await operation();
 
@@ -163,21 +164,21 @@ export class RecoverySystem extends EventEmitter {
           success: true,
           result,
           strategy: RecoveryStrategy.RETRY,
-          attempts,
+          attempts: attemptCount,
           totalDuration: Date.now() - startTime,
         };
       } catch (error) {
         lastError = error as EnhancedError;
 
-        logger.warn(`Operation ${operationName} failed, attempt ${attempts}/${maxRetries}`, {
+        logger.warn(`Operation ${operationName} failed, attempt ${attemptCount}/${maxRetries}`, {
           error: lastError.message,
-          attempt: attempts,
+          attempt: attemptCount,
           maxRetries,
         });
 
-        if (attempts < maxRetries) {
+        if (attemptCount < maxRetries) {
           // Exponential backoff
-          const delay = retryDelay * 2 ** (attempts - 1);
+          const delay = retryDelay * 2 ** (attemptCount - 1);
           await this.delay(delay);
         }
       }
@@ -217,9 +218,9 @@ export class RecoverySystem extends EventEmitter {
       let fallbackResult: T;
 
       if (config.fallbackFunction) {
-        fallbackResult = await config.fallbackFunction();
+        fallbackResult = (await config.fallbackFunction()) as T;
       } else if (config.fallbackValue !== undefined) {
-        fallbackResult = config.fallbackValue;
+        fallbackResult = config.fallbackValue as T;
       } else {
         throw error;
       }
@@ -330,9 +331,9 @@ export class RecoverySystem extends EventEmitter {
       let degradedResult: T;
 
       if (config.fallbackFunction) {
-        degradedResult = await config.fallbackFunction();
+        degradedResult = (await config.fallbackFunction()) as T;
       } else if (config.fallbackValue !== undefined) {
-        degradedResult = config.fallbackValue;
+        degradedResult = config.fallbackValue as T;
       } else {
         // Return empty/default result for graceful degradation
         degradedResult = {} as T;
@@ -525,15 +526,19 @@ export const recoverySystem = new RecoverySystem();
  * Decorator for automatic recovery
  */
 export function withRecovery(config: RecoveryConfig) {
-  return (target: any, propertyName: string, descriptor: PropertyDescriptor) => {
+  return <T>(
+    target: Record<string, unknown>,
+    propertyName: string,
+    descriptor: TypedPropertyDescriptor<(...args: unknown[]) => Promise<T>>
+  ) => {
     const method = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       const operationName = `${target.constructor.name}.${propertyName}`;
 
       const result = await recoverySystem.executeWithRecovery(
         operationName,
-        () => method.apply(this, args),
+        () => method!.apply(this, args),
         config
       );
 
@@ -541,7 +546,7 @@ export function withRecovery(config: RecoveryConfig) {
         throw result.error;
       }
 
-      return result.result;
+      return result.result!;
     };
 
     return descriptor;

@@ -1,7 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { AnalysisOptions, OutputFormat } from '@unified-repo-analyzer/shared';
+import type {
+  AnalysisOptions,
+  BatchAnalysisResult,
+  OutputFormat,
+  RepositoryAnalysis,
+} from '@unified-repo-analyzer/shared';
 
 import {
   ApiClient,
@@ -74,20 +79,24 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     // Start batch analysis
     progress.start(`Analyzing ${repositories.length} repositories`);
 
-    let result: any;
+    let result: BatchAnalysisResult;
 
     // In test mode, create a mock result instead of calling API
     if (process.env.NODE_ENV === 'test') {
       result = {
+        id: `test-batch-${Date.now()}`,
         repositories: repositories.map((repoPath, index) => ({
           id: `test-${index}`,
           name: path.basename(repoPath),
           path: repoPath,
           language: 'JavaScript',
           languages: ['JavaScript'],
+          frameworks: ['Node.js'],
           fileCount: 10,
           directoryCount: 3,
           totalSize: 1024 * 50,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           metadata: {
             processingTime: 100,
             analysisMode: options.mode,
@@ -95,16 +104,46 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
           description: `Test analysis of ${path.basename(repoPath)}`,
           insights: {
             executiveSummary: `This is a test analysis of the ${path.basename(repoPath)} repository.`,
+            technicalBreakdown: 'Technical breakdown would go here.',
+            recommendations: ['Recommendation 1', 'Recommendation 2'],
+            potentialIssues: ['Potential issue 1', 'Potential issue 2'],
           },
-          updatedAt: new Date(),
+          codeAnalysis: {
+            functionCount: 5,
+            classCount: 2,
+            importCount: 10,
+            complexity: {
+              cyclomaticComplexity: 2.5,
+              maintainabilityIndex: 85,
+              technicalDebt: 'Low',
+              codeQuality: 'good',
+            },
+            patterns: [],
+          },
+          structure: {
+            directories: [],
+            keyFiles: [],
+            tree: '',
+          },
+          dependencies: {
+            production: [],
+            development: [],
+            frameworks: [],
+          },
         })),
         status: {
+          total: repositories.length,
           completed: repositories.length,
           failed: 0,
+          inProgress: 0,
+          pending: 0,
+          progress: 100,
         },
         processingTime: 500,
+        createdAt: new Date(),
         combinedInsights: {
           commonalities: ['JavaScript', 'Node.js'],
+          differences: ['Different frameworks', 'Different architectures'],
           integrationOpportunities: ['Shared utilities', 'Common build system'],
         },
       };
@@ -124,7 +163,7 @@ export async function executeBatch(basePath: string, options: BatchCommandOption
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
     // Save individual repository results
-    result.repositories.forEach((repoAnalysis) => {
+    result.repositories.forEach((repoAnalysis: RepositoryAnalysis) => {
       const repoName = path.basename(repoAnalysis.path);
       const outputFilename = `${repoName}-analysis-${timestamp}.${options.output}`;
       const outputPath = path.join(outputDirPath, outputFilename);

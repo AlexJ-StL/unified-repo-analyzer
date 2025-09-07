@@ -43,7 +43,7 @@ export interface EnhancedError extends Error {
   userMessage: string;
   technicalMessage: string;
   suggestions: string[];
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   requestId?: string;
   timestamp: Date;
   recoverable: boolean;
@@ -159,7 +159,7 @@ export function createEnhancedError(
   severity: ErrorSeverity,
   technicalMessage: string,
   statusCode = 500,
-  context?: Record<string, any>,
+  context?: Record<string, unknown>,
   requestId?: string
 ): EnhancedError {
   const errorInfo = ERROR_MESSAGES[category];
@@ -186,7 +186,7 @@ export function createEnhancedError(
 export function handleError(
   error: Error | EnhancedError,
   req?: Request,
-  additionalContext?: Record<string, any>
+  additionalContext?: Record<string, unknown>
 ): EnhancedError {
   const requestId = (req?.headers['x-request-id'] as string) || 'unknown';
 
@@ -216,7 +216,7 @@ function isEnhancedError(error: Error): error is EnhancedError {
 function categorizeError(
   error: Error,
   requestId: string,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): EnhancedError {
   // File system errors
   if (error.message.includes('ENOENT') || error.message.includes('no such file')) {
@@ -294,7 +294,7 @@ function categorizeError(
 function logError(
   error: EnhancedError,
   req?: Request,
-  additionalContext?: Record<string, any>
+  additionalContext?: Record<string, unknown>
 ): void {
   const logContext = {
     category: error.category,
@@ -332,7 +332,19 @@ function logError(
  * Create error response for API
  */
 export function createErrorResponse(error: EnhancedError, includeStack = false) {
-  const response: any = {
+  const response: {
+    error: {
+      category: ErrorCategory;
+      message: string;
+      suggestions: string[];
+      requestId?: string;
+      timestamp: Date;
+      recoverable: boolean;
+      technicalMessage?: string;
+      context?: Record<string, unknown>;
+      stack?: string;
+    };
+  } = {
     error: {
       category: error.category,
       message: error.userMessage,
