@@ -4,14 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../App';
 import { ToastProvider } from '../../hooks/useToast';
-import * as apiService from '../../services/apiService';
+import * as apiService from '../../services/api';
 
 // Mock API service
-vi.mock('../../services/apiService');
+vi.mock('../../services/api');
 const mockApiService = apiService as typeof apiService & {
   analyzeRepository: ReturnType<typeof vi.fn>;
   getAnalysisStatus: ReturnType<typeof vi.fn>;
-  getRepositoryList: ReturnType<typeof vi.fn>;
+  getRepositories: ReturnType<typeof vi.fn>;
+  analyzeBatch: ReturnType<typeof vi.fn>;
+  searchRepositories: ReturnType<typeof vi.fn>;
+  exportAnalysis: ReturnType<typeof vi.fn>;
 };
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -233,7 +236,7 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
     it('should help team lead analyze multiple projects', async () => {
       const user = userEvent.setup();
 
-      mockApiService.batchAnalyzeRepositories = vi.fn().mockResolvedValue({
+      mockApiService.analyzeBatch = vi.fn().mockResolvedValue({
         id: 'batch-analysis-1',
         repositories: realWorldRepositories.map((repo) => ({
           path: repo.path,

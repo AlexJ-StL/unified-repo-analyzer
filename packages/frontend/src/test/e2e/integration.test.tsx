@@ -4,15 +4,18 @@ import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../App';
 import { ToastProvider } from '../../hooks/useToast';
-import * as apiService from '../../services/apiService';
+import * as apiService from '../../services/api';
 
 // Mock API service
-vi.mock('../../services/apiService');
+vi.mock('../../services/api');
 
 const mockApiService = apiService as typeof apiService & {
   analyzeRepository: ReturnType<typeof vi.fn>;
   getAnalysisStatus: ReturnType<typeof vi.fn>;
-  getRepositoryList: ReturnType<typeof vi.fn>;
+  getRepositories: ReturnType<typeof vi.fn>;
+  analyzeBatch: ReturnType<typeof vi.fn>;
+  searchRepositories: ReturnType<typeof vi.fn>;
+  exportAnalysis: ReturnType<typeof vi.fn>;
 };
 
 // Test wrapper component
@@ -28,7 +31,7 @@ describe('End-to-End Integration Tests', () => {
 
     // Setup default API mocks
     mockApiService.analyzeRepository = vi.fn();
-    mockApiService.batchAnalyzeRepositories = vi.fn();
+    mockApiService.analyzeBatch = vi.fn();
     mockApiService.searchRepositories = vi.fn();
     mockApiService.getRepositories = vi.fn();
     mockApiService.exportAnalysis = vi.fn();
@@ -149,7 +152,7 @@ describe('End-to-End Integration Tests', () => {
         },
       };
 
-      mockApiService.batchAnalyzeRepositories.mockResolvedValue(mockBatchResult);
+      mockApiService.analyzeBatch.mockResolvedValue(mockBatchResult);
 
       render(
         <TestWrapper>
@@ -328,7 +331,7 @@ describe('End-to-End Integration Tests', () => {
         },
       };
 
-      mockApiService.batchAnalyzeRepositories.mockResolvedValue(mockBatchResult);
+      mockApiService.analyzeBatch.mockResolvedValue(mockBatchResult);
 
       render(
         <TestWrapper>
