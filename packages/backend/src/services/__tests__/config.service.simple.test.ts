@@ -19,7 +19,7 @@ const mockFs = fs as any;
 
 vi.mock('os', () => ({
   homedir: () => '/mock/home',
-  platform: () => 'linux'
+  platform: () => 'linux',
 }));
 
 vi.mock('uuid', () => ({

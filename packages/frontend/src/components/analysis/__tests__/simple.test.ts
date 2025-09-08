@@ -1,8 +1,7 @@
 // Import setup first to ensure JSDOM environment
 import '../../../test/setup';
 
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Simple JSDOM Test', () => {
   it('should have access to DOM globals', () => {

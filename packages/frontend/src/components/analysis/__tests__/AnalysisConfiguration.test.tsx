@@ -3,10 +3,8 @@
 // Import setup first to ensure JSDOM environment
 import '../../../test/setup';
 
-import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { type AnalysisOptions, useAnalysisStore } from '../../../store/useAnalysisStore';
-import { useSettingsStore } from '../../../store/useSettingsStore';
+import { render } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import AnalysisConfiguration from '../AnalysisConfiguration';
 
 // Simple test to verify JSDOM environment is working

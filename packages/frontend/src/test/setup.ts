@@ -66,7 +66,7 @@ globalThis.IntersectionObserver = class IntersectionObserver {
   rootMargin = '0px';
   thresholds: number[] = [0];
 
-  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+  constructor(_callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.root = options?.root ? (options.root as Element) : null;
     this.rootMargin = options?.rootMargin || '0px';
     this.thresholds = Array.isArray(options?.threshold)
@@ -93,7 +93,7 @@ globalThis.PerformanceObserver = class PerformanceObserver {
   takeRecords(): PerformanceEntryList {
     return [];
   }
-  
+
   // Add static property to fix TypeScript error
   static supportedEntryTypes: readonly string[] = [];
 };

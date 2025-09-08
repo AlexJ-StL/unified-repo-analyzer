@@ -178,7 +178,10 @@ const LLMProviderPreferences: React.FC = () => {
         // Optionally get and apply model recommendations
         try {
           const recommendations = await getModelRecommendations(providerId, modelId);
-          if (recommendations && (recommendations as any).maxTokens || (recommendations as any).temperature !== undefined) {
+          if (
+            (recommendations && (recommendations as any).maxTokens) ||
+            (recommendations as any).temperature !== undefined
+          ) {
             updateProvider(providerId, {
               maxTokens:
                 (recommendations as any).maxTokens ||
