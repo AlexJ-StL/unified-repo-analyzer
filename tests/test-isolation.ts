@@ -154,7 +154,9 @@ export class IsolationManager {
     // Reset console to prevent test output pollution
     if (process.env.NODE_ENV === 'test') {
       console.log = vi?.fn?.() || (() => {});
+      // biome-ignore lint/suspicious/noConsole: Test environment console mocking
       console.warn = vi?.fn?.() || (() => {});
+      // biome-ignore lint/suspicious/noConsole: Test environment console mocking
       console.error = vi?.fn?.() || (() => {});
     }
   }

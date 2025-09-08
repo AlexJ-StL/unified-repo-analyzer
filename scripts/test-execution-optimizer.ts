@@ -148,7 +148,7 @@ class TestExecutionOptimizer {
 
       // Extract import statements
       const importRegex = /import\s+.*?\s+from\s+['"]([^'"]+)['"]/g;
-      let match;
+      let match: RegExpExecArray | null;
 
       while ((match = importRegex.exec(content)) !== null) {
         const importPath = match[1];

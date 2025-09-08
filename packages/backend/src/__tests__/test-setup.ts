@@ -3,7 +3,10 @@ import { vi } from 'vitest';
 // Mock the health check to avoid file system operations in tests
 vi.mock('../services/health.service', () => ({
   healthService: {
-    healthCheckHandler: async (_req: any, res: any) => {
+    healthCheckHandler: async (
+      _req: unknown,
+      res: { status: (code: number) => { json: (data: unknown) => void } }
+    ) => {
       res.status(200).json({
         status: 'healthy',
         timestamp: new Date(),
@@ -42,10 +45,16 @@ vi.mock('../services/health.service', () => ({
         ],
       });
     },
-    readinessHandler: async (_req: any, res: any) => {
+    readinessHandler: async (
+      _req: unknown,
+      res: { status: (code: number) => { json: (data: unknown) => void } }
+    ) => {
       res.status(200).json({ status: 'ready' });
     },
-    livenessHandler: async (_req: any, res: any) => {
+    livenessHandler: async (
+      _req: unknown,
+      res: { status: (code: number) => { json: (data: unknown) => void } }
+    ) => {
       res.status(200).json({
         status: 'alive',
         timestamp: new Date(),

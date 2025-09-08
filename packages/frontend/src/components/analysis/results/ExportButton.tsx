@@ -82,7 +82,10 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
 
     setIsExporting(format);
     try {
-      let response;
+      let response:
+        | Awaited<ReturnType<typeof apiService.exportAnalysis>>
+        | Awaited<ReturnType<typeof apiService.exportBatchAnalysis>>
+        | undefined;
 
       if (validAnalysis) {
         response = await apiService.exportAnalysis(analysis, format, download);
@@ -168,7 +171,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
     try {
       const response = validAnalysis
         ? await apiService.exportAnalysis(analysis, format, false)
-        : await apiService.exportBatchAnalysis(batchAnalysis!, format, false);
+        : await apiService.exportBatchAnalysis(batchAnalysis as BatchAnalysisResult, format, false);
 
       if (response?.data && typeof response.data === 'object' && 'downloadUrl' in response.data) {
         const exportData = response.data as { downloadUrl: string };
@@ -254,6 +257,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
                   </div>
                   <div className="flex space-x-2 ml-4">
                     <button
+                      type="button"
                       onClick={() => handleExport(format.value, true)}
                       className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       disabled={isExporting !== null}
@@ -262,6 +266,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
                       Download
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleShare(format.value)}
                       className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                       disabled={isExporting !== null}
@@ -290,6 +295,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ analysis, batchAnalysis, cl
                           </div>
                         </div>
                         <button
+                          type="button"
                           onClick={() => handleDownloadFromHistory(exportInfo)}
                           className="text-xs text-blue-600 hover:text-blue-800"
                         >

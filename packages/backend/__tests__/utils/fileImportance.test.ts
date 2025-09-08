@@ -173,7 +173,9 @@ describe('File Importance Utilities', () => {
       ];
 
       const fileSizes = new Map<string, number>();
-      files.forEach((file) => fileSizes.set(file, 1024));
+      files.forEach((file) => {
+        fileSizes.set(file, 1024);
+      });
 
       const sortedFiles = sortFilesByImportance(files, mockRepoPath, fileSizes);
 

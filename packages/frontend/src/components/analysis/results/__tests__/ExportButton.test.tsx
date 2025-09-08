@@ -123,9 +123,9 @@ describe('ExportButton', () => {
   it('handles direct download correctly', async () => {
     const mockResponse = {
       data: new Blob(['test content']),
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
-    (apiService.exportAnalysis as any).mockResolvedValue(mockResponse);
+    vi.mocked(apiService.exportAnalysis).mockResolvedValue(mockResponse);
 
     render(<ExportButton analysis={mockAnalysis} />);
 
@@ -151,9 +151,9 @@ describe('ExportButton', () => {
         downloadUrl: '/api/export/download/test-export-id',
         filename: 'test.json',
       },
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
-    (apiService.exportAnalysis as any).mockResolvedValue(mockResponse);
+    vi.mocked(apiService.exportAnalysis).mockResolvedValue(mockResponse);
 
     render(<ExportButton analysis={mockAnalysis} />);
 
@@ -175,10 +175,10 @@ describe('ExportButton', () => {
   it('shows loading state during export', async () => {
     const mockResponse = {
       data: new Blob(['test content']),
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
     // Make the API call take some time
-    (apiService.exportAnalysis as any).mockImplementation(
+    vi.mocked(apiService.exportAnalysis).mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve(mockResponse), 100))
     );
 
@@ -210,7 +210,7 @@ describe('ExportButton', () => {
 
   it('handles export errors gracefully', async () => {
     const mockError = new Error('Export failed');
-    (apiService.exportAnalysis as any).mockRejectedValue(mockError);
+    vi.mocked(apiService.exportAnalysis).mockRejectedValue(mockError);
 
     // Mock window.alert
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
@@ -241,9 +241,9 @@ describe('ExportButton', () => {
         downloadUrl: '/api/export/download/test-export-id',
         filename: 'test.json',
       },
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
-    (apiService.exportAnalysis as any).mockResolvedValue(mockResponse);
+    vi.mocked(apiService.exportAnalysis).mockResolvedValue(mockResponse);
 
     render(<ExportButton analysis={mockAnalysis} />);
 
@@ -276,9 +276,9 @@ describe('ExportButton', () => {
 
     const mockResponse = {
       data: new Blob(['test content']),
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportBatchAnalysis>>;
 
-    (apiService.exportBatchAnalysis as any).mockResolvedValue(mockResponse);
+    vi.mocked(apiService.exportBatchAnalysis).mockResolvedValue(mockResponse);
 
     render(<ExportButton batchAnalysis={mockBatchAnalysis} />);
 
@@ -304,10 +304,10 @@ describe('ExportButton', () => {
         downloadUrl: '/api/export/download/test-export-id',
         filename: 'test.json',
       },
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
-    (apiService.exportAnalysis as any).mockResolvedValue(mockResponse);
-    (navigator.share as any).mockResolvedValue(undefined);
+    vi.mocked(apiService.exportAnalysis).mockResolvedValue(mockResponse);
+    vi.mocked(navigator.share).mockResolvedValue(undefined);
 
     render(<ExportButton analysis={mockAnalysis} />);
 
@@ -337,13 +337,13 @@ describe('ExportButton', () => {
         downloadUrl: '/api/export/download/test-export-id',
         filename: 'test.json',
       },
-    };
+    } as unknown as Awaited<ReturnType<typeof apiService.exportAnalysis>>;
 
-    (apiService.exportAnalysis as any).mockResolvedValue(mockResponse);
+    vi.mocked(apiService.exportAnalysis).mockResolvedValue(mockResponse);
 
     // Remove navigator.share to test fallback
     const originalShare = navigator.share;
-    delete (navigator as any).share;
+    delete (navigator as { share?: unknown }).share;
 
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
@@ -367,7 +367,7 @@ describe('ExportButton', () => {
     });
 
     // Restore navigator.share
-    (navigator as any).share = originalShare;
+    (navigator as { share?: typeof originalShare }).share = originalShare;
     alertSpy.mockRestore();
   });
 });

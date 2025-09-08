@@ -82,24 +82,16 @@ app.post('/api/path/validate', (req, res) => {
         suggestions: ['Use format like C:\\ or D:\\'],
       },
     ];
-  } else if (path.includes('<') || path.includes('>')) {
-    isValid = false;
-    errors = [
-      {
-        code: 'INVALID_CHARACTERS',
-        message: 'Path contains invalid characters',
-      },
-    ];
   } else if (!isValid) {
     errors = [{ code: 'PATH_NOT_FOUND', message: 'Invalid path' }];
   }
 
   // Normalize path by ensuring consistent format and removing trailing separators
-  let normalizedPath;
+  let normalizedPath: string | undefined;
   if (isValid) {
     normalizedPath = path.replace(/\//g, '\\');
     // Remove trailing backslash if it's not the root directory
-    if (normalizedPath.endsWith('\\') && normalizedPath.length > 3) {
+    if (normalizedPath?.endsWith('\\') && normalizedPath.length > 3) {
       normalizedPath = normalizedPath.slice(0, -1);
     }
   }
@@ -473,7 +465,9 @@ describe('Path Integration Tests', () => {
           expect(Array.isArray(response.body.errors)).toBe(true);
           // And that it has at least one error with the expected code
           expect(
-            response.body.errors.some((error: any) => error.code === testCase.expectedCode)
+            response.body.errors.some(
+              (error: { code: string }) => error.code === testCase.expectedCode
+            )
           ).toBe(true);
         }
       }
@@ -490,7 +484,8 @@ describe('Path Integration Tests', () => {
       if (!response.body.isValid) {
         expect(
           response.body.errors.some(
-            (error: any) => error.suggestions && error.suggestions.length > 0
+            (error: { suggestions?: unknown[] }) =>
+              error.suggestions && error.suggestions.length > 0
           )
         ).toBe(true);
       }
@@ -567,7 +562,7 @@ describe('Path Integration Tests', () => {
         // (though they may not exist)
         if (!response.body.isValid) {
           // If invalid, should not be due to format issues
-          const formatErrors = response.body.errors.filter((error: any) =>
+          const formatErrors = response.body.errors.filter((error: { code: string }) =>
             ['INVALID_CHARACTERS', 'RESERVED_NAME'].includes(error.code)
           );
           expect(formatErrors).toHaveLength(0);
@@ -613,8 +608,8 @@ describe('PathHandler Service Unit Tests', () => {
 
     it('should throw error for invalid input', () => {
       expect(() => pathHandler.normalizePath('')).toThrow();
-      expect(() => pathHandler.normalizePath(null as any)).toThrow();
-      expect(() => pathHandler.normalizePath(undefined as any)).toThrow();
+      expect(() => pathHandler.normalizePath(null as unknown as string)).toThrow();
+      expect(() => pathHandler.normalizePath(undefined as unknown as string)).toThrow();
     });
   });
 

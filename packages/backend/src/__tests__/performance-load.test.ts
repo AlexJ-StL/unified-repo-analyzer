@@ -131,7 +131,11 @@ describe('Performance and Load Testing', () => {
         // Execute batches sequentially, but within each batch concurrently
         for (const batch of batches) {
           const results = await Promise.all(batch);
-          expect(results.every((r: any) => r.isValid)).toBe(true);
+          expect(
+            results.every(
+              (r) => (r as import('../services/path-handler.service').PathValidationResult).isValid
+            )
+          ).toBe(true);
         }
 
         const end = performance.now();
@@ -544,7 +548,9 @@ describe('Performance and Load Testing', () => {
 
       // Cancel some operations
       setTimeout(() => {
-        usedControllers.slice(0, 25).forEach((controller) => controller.abort());
+        usedControllers.slice(0, 25).forEach((controller) => {
+          controller.abort();
+        });
       }, 100);
 
       const results = await Promise.all(validationPromises);

@@ -744,10 +744,10 @@ export class AdvancedAnalyzer {
     // Scan for each pattern type
     for (const [_category, patterns] of Object.entries(securityPatterns)) {
       for (const { pattern, type } of patterns) {
-        let match;
-        while ((match = pattern.exec(content)) !== null) {
+        let match: RegExpExecArray | null;
+        match = pattern.exec(content);
+        while (match !== null) {
           const lineNumber = this.getLineNumber(content, match.index);
-
           // Determine severity based on vulnerability type
           let severity: 'low' | 'medium' | 'high' | 'critical';
           if (type.includes('SQL Injection') || type.includes('Command Injection')) {
@@ -769,6 +769,9 @@ export class AdvancedAnalyzer {
             line: lineNumber,
             recommendation: this.getSecurityRecommendation(type),
           });
+          
+          // Move to next match
+          match = pattern.exec(content);
         }
       }
     }

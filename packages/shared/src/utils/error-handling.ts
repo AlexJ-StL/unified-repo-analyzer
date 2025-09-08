@@ -432,7 +432,7 @@ export class ErrorAnalyzer {
 
     // Parse TypeScript error format: file(line,column): error TSxxxx: message
     const errorRegex = /(.+?)\((\d+),(\d+)\):\s*error\s+(TS\d+):\s*(.+)/g;
-    let match;
+    let match: RegExpExecArray | null;
 
     while ((match = errorRegex.exec(stderr)) !== null) {
       errors.push({

@@ -21,7 +21,7 @@ if (typeof document === 'undefined') {
   });
 
   // Make jsdom globals available
-  globalThis.window = dom.window as any;
+  globalThis.window = dom.window as unknown as Window & typeof globalThis;
   globalThis.document = dom.window.document;
   globalThis.navigator = dom.window.navigator;
   globalThis.HTMLElement = dom.window.HTMLElement;
