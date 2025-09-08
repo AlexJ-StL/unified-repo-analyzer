@@ -11,8 +11,11 @@
   "scripts": {
     "dev": "bun --watch src/index.ts || npm run dev:node",
     "dev:node": "ts-node src/index.ts",
-    "build": "rimraf dist && (bun build src/index.ts --outdir dist --target node --sourcemap || npm run build:tsc) && node scripts/insert-shebang.cjs",
-    "build:tsc": "bunx tsc --project tsconfig.json",
+    "build": "npm run build:clean && npm run build:types && npm run build:shebang",
+    "build:clean": "npx rimraf dist",
+    "build:types": "..\\..\\node_modules\\.bin\\tsc --project tsconfig.json",
+    "build:shebang": "node ../../scripts/insert-shebang.js",
+    "build:tsc": "..\\..\\node_modules\\.bin\\tsc --project tsconfig.json",
     "start": "bun dist/index.js || node dist/index.js",
     "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
     "lint": "biome lint .",

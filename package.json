@@ -12,7 +12,7 @@
     "dev:frontend": "bun run --cwd packages/frontend dev || npm run dev --workspace @unified-repo-analyzer/frontend",
     "dev:cli": "bun run --cwd packages/cli dev || npm run dev --workspace @unified-repo-analyzer/cli",
     "cli": "bun packages/cli/dist/bin/repo-analyzer.js",
-    "build": "bun run scripts/enhanced-build.ts",
+    "build": "tsx scripts/enhanced-build.ts",
     "build:legacy": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",
     "build:backend": "bun run --cwd packages/backend build || npm run build --workspace @unified-repo-analyzer/backend",
     "build:frontend": "bun run --cwd packages/frontend build || npm run build --workspace @unified-repo-analyzer/frontend",

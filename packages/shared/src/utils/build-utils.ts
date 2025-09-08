@@ -487,7 +487,7 @@ export class BuildExecutor {
       const timeout = packageInfo.name.includes('frontend') ? 600000 : 300000; // 10 minutes for frontend, 5 for others
 
       const buildResult = await this.executeBuildCommand({
-        command: 'bun',
+        command: 'npm',
         args: ['run', 'build'],
         cwd: packageInfo.path,
         timeout,

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+
 
 /**
  * Enhanced build script with comprehensive error handling and logging
