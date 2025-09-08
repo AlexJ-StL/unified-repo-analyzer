@@ -9,7 +9,10 @@ import { ConfigurationService } from '../config.service';
 
 // Mock dependencies
 vi.mock('fs/promises');
-vi.mock('os', () => ({ homedir: () => '/mock/home' }));
+vi.mock('os', () => ({
+  homedir: () => '/mock/home',
+  platform: () => 'linux'
+}));
 vi.mock('uuid', () => ({ v4: () => 'mock-uuid-123' }));
 vi.mock('../../utils/logger', () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },

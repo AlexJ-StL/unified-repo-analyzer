@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../App';
-import { ToastProvider } from '../../contexts/ToastContext';
+import { ToastProvider } from '../../hooks/useToast';
 import * as apiService from '../../services/apiService';
 
 // Mock API service
