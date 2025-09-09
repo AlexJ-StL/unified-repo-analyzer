@@ -9,8 +9,16 @@
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
-  },
+    "allowSyntheticDefaultImports": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": false,
+    "paths": {
+      "@unified-repo-analyzer/shared": ["../shared/dist/index.d.ts"],
+      "@unified-repo-analyzer/shared/*": ["../shared/src/*"],
+      "@unified-repo-analyzer/shared/src/*": ["../shared/src/*"]
+    }
+  },,
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "node_modules",
@@ -21,5 +29,11 @@
     "**/*.spec.js",
     "**/__tests__/**",
     "**/*.test.ts"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "nodenext",
+      "moduleResolution": "nodenext"
+    }
+  }
 }

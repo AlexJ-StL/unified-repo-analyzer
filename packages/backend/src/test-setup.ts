@@ -8,7 +8,7 @@ let testApp: Express | null = null;
 
 export async function setupTestServer(): Promise<void> {
   // Import the app dynamically to avoid circular dependencies
-  const { app } = await import('./index');
+  const { app } = await import('./index.js');
   testApp = app;
 }
 

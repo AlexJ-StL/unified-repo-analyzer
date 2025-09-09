@@ -7,10 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "echo \"Please run backend and frontend separately in different terminals:\" && echo \"Terminal 1: bun run dev:backend\" && echo \"Terminal 2: bun run dev:frontend\"",
-    "dev:backend": "bun run --cwd packages/backend dev || npm run dev --workspace @unified-repo-analyzer/backend",
-    "dev:frontend": "bun run --cwd packages/frontend dev || npm run dev --workspace @unified-repo-analyzer/frontend",
-    "dev:cli": "bun run --cwd packages/cli dev || npm run dev --workspace @unified-repo-analyzer/cli",
+    "dev": "echo \"Please run backend and frontend separately in different terminals:\" && echo \"Terminal 1: npm run dev:backend\" && echo \"Terminal 2: npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=@unified-repo-analyzer/backend",
+    "dev:frontend": "npm run dev --workspace=@unified-repo-analyzer/frontend",
+    "dev:cli": "npm run dev --workspace=@unified-repo-analyzer/cli",
     "cli": "bun packages/cli/dist/bin/repo-analyzer.js",
     "build": "tsx scripts/enhanced-build.ts",
     "build:legacy": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",

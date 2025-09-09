@@ -4,7 +4,7 @@ import path from 'node:path';
 import type * as express from 'express';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { env } from '../config/environment';
+import { env } from '../config/environment.js';
 
 // Types and interfaces for structured logging
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';

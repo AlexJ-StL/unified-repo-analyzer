@@ -3,16 +3,16 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { Server } from 'socket.io';
-import { errorHandler, notFound } from './api/middleware/error.middleware';
-import { initializeWebSocketHandlers } from './api/websocket';
-import { env, validateProductionConfig } from './config/environment';
-import * as core from './core';
-import { backupService } from './services/backup.service';
-import { configurationService } from './services/config.service';
-import { healthService } from './services/health.service';
-import logger, { requestLogger } from './services/logger.service';
-import { metricsService } from './services/metrics.service';
-import { initializeProvidersWithConfig } from './services/provider-initialization.service';
+import { errorHandler, notFound } from './api/middleware/error.middleware.js';
+import { initializeWebSocketHandlers } from './api/websocket/index.js';
+import { env, validateProductionConfig } from './config/environment.js';
+import * as core from './core/index.js';
+import { backupService } from './services/backup.service.js';
+import { configurationService } from './services/config.service.js';
+import { healthService } from './services/health.service.js';
+import logger, { requestLogger } from './services/logger.service.js';
+import { metricsService } from './services/metrics.service.js';
+import { initializeProvidersWithConfig } from './services/provider-initialization.service.js';
 
 // Import error middleware
 // Import API routes
@@ -42,7 +42,7 @@ const io = new Server(httpServer, {
 });
 
 // Import API routes after app initialization to avoid circular dependency
-import apiRoutes from './api/routes';
+import apiRoutes from './api/routes/index.js';
 
 // Security middleware
 app.use(

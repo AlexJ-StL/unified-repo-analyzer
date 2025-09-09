@@ -3,9 +3,9 @@
  * Responsible for initializing the ProviderRegistry with configurations from user preferences
  */
 
-import { ProviderRegistry } from '../providers/ProviderRegistry';
-import { logger } from '../utils/logger';
-import { configurationService } from './config.service';
+import { ProviderRegistry } from '../providers/ProviderRegistry.js';
+import { logger } from '../utils/logger.js';
+import { configurationService } from './config.service.js';
 
 /**
  * Initialize providers with configurations from user preferences

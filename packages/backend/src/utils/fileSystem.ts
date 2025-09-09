@@ -10,7 +10,7 @@ import { promisify } from 'node:util';
 import type { ErrorContext } from '@unified-repo-analyzer/shared';
 import { errorClassifier } from '@unified-repo-analyzer/shared';
 import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import ignore from 'ignore';
+import * as ignore from 'ignore';
 import { logger, logPerformance } from '../services/logger.service.js';
 
 // Promisify fs functions

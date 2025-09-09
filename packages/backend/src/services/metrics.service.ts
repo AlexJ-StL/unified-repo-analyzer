@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { env } from '../config/environment';
-import logger from './logger.service';
+import { env } from '../config/environment.js';
+import logger from './logger.service.js';
 
 interface Metric {
   name: string;

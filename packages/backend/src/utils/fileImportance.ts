@@ -3,7 +3,7 @@
  */
 
 import path from 'node:path';
-import { detectLanguageFromPath } from './languageDetection';
+import { detectLanguageFromPath } from './languageDetection.js';
 
 /**
  * Importance score factors

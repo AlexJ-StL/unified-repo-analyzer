@@ -3,16 +3,16 @@
  */
 
 import { Router } from 'express';
-import analysisRequestsRoutes from './analysis-requests';
-import analyzeRoutes from './analyze';
-import backupRoutes from './backup.routes';
-import configRoutes from './config.routes';
-import exportRoutes from './export';
-import filesystemRoutes from './filesystem';
-import metricsRoutes from './metrics';
-import pathRoutes from './path';
-import providersRoutes from './providers';
-import repositoriesRoutes from './repositories';
+import analysisRequestsRoutes from './analysis-requests.js';
+import analyzeRoutes from './analyze.js';
+import backupRoutes from './backup.routes.js';
+import configRoutes from './config.routes.js';
+import exportRoutes from './export.js';
+import filesystemRoutes from './filesystem.js';
+import metricsRoutes from './metrics.js';
+import pathRoutes from './path.js';
+import providersRoutes from './providers.js';
+import repositoriesRoutes from './repositories.js';
 
 const router = Router();
 

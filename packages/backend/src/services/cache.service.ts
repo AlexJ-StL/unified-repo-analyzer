@@ -5,7 +5,7 @@ import type {
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { LRUCache } from 'lru-cache';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 export interface CacheOptions {
   ttl?: number; // Time to live in milliseconds

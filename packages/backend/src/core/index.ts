@@ -2,6 +2,6 @@
  * Core module exports
  */
 
-export * from './AnalysisEngine';
-export * from './codeStructureAnalyzer';
-export * from './tokenAnalyzer';
+export * from './AnalysisEngine.js';
+export * from './codeStructureAnalyzer.js';
+export * from './tokenAnalyzer.js';

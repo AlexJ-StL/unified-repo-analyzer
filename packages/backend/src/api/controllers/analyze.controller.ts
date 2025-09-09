@@ -14,7 +14,7 @@ import { io } from '../../index';
 import { analysisRequestTracker } from '../../services/analysis-request-tracker.service';
 import { errorMessageService } from '../../services/error-message.service';
 import logger from '../../services/logger.service';
-import { pathHandler } from '../../services/path-handler.service';
+import { pathHandler } from '../../services/path-handler.service.js';
 
 // Default analysis options
 const defaultOptions: AnalysisOptions = {

@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Request, Response } from 'express';
-import { env } from '../config/environment';
-import logger from './logger.service';
+import { env } from '../config/environment.js';
+import logger from './logger.service.js';
 
 interface HealthCheck {
   name: string;

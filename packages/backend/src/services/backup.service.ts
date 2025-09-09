@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { env } from '../config/environment';
-import logger from './logger.service';
+import { env } from '../config/environment.js';
+import logger from './logger.service.js';
 
 interface BackupMetadata {
   timestamp: Date;

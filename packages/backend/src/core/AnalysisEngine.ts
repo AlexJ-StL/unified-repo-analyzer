@@ -752,7 +752,7 @@ export class AnalysisEngine {
   private async getIndexSystem(): Promise<IndexSystem> {
     // This is a placeholder that will be replaced with proper dependency injection
     // For now, we'll just import the IndexSystem directly
-    const { IndexSystem } = await import('./IndexSystem');
+    const { IndexSystem } = await import('./IndexSystem.js');
 
     // Create a new instance if needed
     if (!this._indexSystem) {

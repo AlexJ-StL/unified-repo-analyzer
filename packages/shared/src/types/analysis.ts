@@ -8,7 +8,7 @@ import type {
   FileInfo,
   Framework,
   IndexedRepository,
-} from './repository';
+} from './repository.js';
 
 export type AnalysisMode = 'quick' | 'standard' | 'comprehensive';
 export type OutputFormat = 'json' | 'markdown' | 'html';

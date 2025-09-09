@@ -21,7 +21,7 @@ import {
   getCombinedIgnorePatterns,
   type TraversalOptions,
   traverseDirectory,
-} from './fileSystem';
+} from './fileSystem.js';
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);

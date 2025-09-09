@@ -7,7 +7,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "cross-env LOG_LEVEL=debug bun --watch src/index.ts || npm run dev:node",
+    "dev": "npm run build && node dist/index.js",
     "dev:node": "ts-node src/index.ts",
     "build": "npx rimraf dist && ..\\..\\node_modules\\.bin\\tsc --project tsconfig.json",
     "build:tsc": "bunx tsc --project tsconfig.prod.json",
