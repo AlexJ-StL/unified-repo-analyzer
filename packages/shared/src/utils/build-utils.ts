@@ -12,10 +12,9 @@ import {
   type DependencyErrorContext,
   EnhancedLogger,
   ErrorAnalyzer,
-  ErrorCategory,
   ErrorHandler,
-  ErrorSeverity,
 } from './error-handling.js';
+import { ErrorCategory, ErrorSeverity } from '../types/error-classification.js';
 
 /**
  * Build command configuration

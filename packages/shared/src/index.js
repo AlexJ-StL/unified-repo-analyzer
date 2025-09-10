@@ -11,34 +11,10 @@ export * from './utils/error-classifier';
 export * from './utils/error-formatter';
 export * from './utils/error-handling';
 export * from './validation';
-
-// Export specific types that are needed by the backend
-export type {
-  ErrorContext,
-  ClassifiedError,
-  ErrorCategory,
-  ErrorSeverity,
-  ErrorCode,
-  ErrorSuggestion,
-  ErrorResponse,
-  ErrorStatistics,
-  ErrorCorrelation,
-} from './types/error-classification.js';
-
-export type {
-  ConfigurationProfile,
-  ConfigurationValidationResult,
-  ConfigurationBackup,
-  ProjectConfiguration,
-  UserPreferences,
-  AnalysisModePreset,
-  WorkspaceConfiguration,
-} from './types/config.js';
-
 export { ErrorClassifier } from './utils/error-classifier.js';
 export { errorClassifier } from './utils/error-classifier.js';
 export { userPreferencesSchema } from './validation/schemas.js';
-
 // Export default values
 export { DEFAULT_ANALYSIS_MODE_PRESETS } from './types/config.js';
 export { DEFAULT_USER_PREFERENCES } from './types/config.js';
+//# sourceMappingURL=index.js.map

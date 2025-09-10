@@ -1,16 +1,11 @@
-
-
 /**
  * Enhanced build script with comprehensive error handling and logging
  * Uses the new error handling utilities to provide detailed feedback
  */
 
 import { runBuildProcess } from '../packages/shared/src/utils/build-utils.js';
-import {
-  EnhancedLogger,
-  ErrorCategory,
-  ErrorSeverity,
-} from '../packages/shared/src/utils/error-handling.js';
+import { EnhancedLogger } from '../packages/shared/src/utils/error-handling.js';
+import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 
 /**
  * Main build function
@@ -100,7 +95,7 @@ async function main(): Promise<void> {
 process.on('uncaughtException', (error) => {
   EnhancedLogger.logError({
     id: 'UNCAUGHT_EXCEPTION',
-    category: ErrorCategory.RUNTIME,
+    category: ErrorCategory.CONFIGURATION,
     severity: ErrorSeverity.CRITICAL,
     title: 'Uncaught Exception',
     message: error.message,
@@ -120,7 +115,7 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason) => {
   EnhancedLogger.logError({
     id: 'UNHANDLED_REJECTION',
-    category: ErrorCategory.RUNTIME,
+    category: ErrorCategory.CONFIGURATION,
     severity: ErrorSeverity.CRITICAL,
     title: 'Unhandled Promise Rejection',
     message: reason instanceof Error ? reason.message : String(reason),

@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npm run build:clean && npm run build:types",
     "build:clean": "npx rimraf dist",
-    "build:types": "..\\..\\node_modules\\.bin\\tsc",
+    "build:types": "tsc",
     "build:bundle": "bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap",
     "build:tsc": "bunx tsc --project tsconfig.json",
     "lint": "biome lint .",

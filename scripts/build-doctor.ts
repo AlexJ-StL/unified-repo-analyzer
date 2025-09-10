@@ -11,12 +11,8 @@ import { join, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import type { BuildResult } from '../packages/shared/src/utils/build-utils.js';
 // Import our enhanced error handling utilities
-import {
-  EnhancedLogger,
-  ErrorAnalyzer,
-  ErrorCategory,
-  ErrorSeverity,
-} from '../packages/shared/src/utils/error-handling.js';
+import { EnhancedLogger, ErrorAnalyzer } from '../packages/shared/src/utils/error-handling.js';
+import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 
 /**
  * Diagnostic check result
@@ -803,7 +799,7 @@ class BuildDoctor {
           } else {
             EnhancedLogger.logError({
               id: 'RECOVERY_ACTION_FAILED',
-              category: ErrorCategory.BUILD,
+              category: ErrorCategory.ANALYSIS,
               severity: ErrorSeverity.MEDIUM,
               title: `Recovery Action Failed: ${action.name}`,
               message: result.error || 'Unknown error',
@@ -820,7 +816,7 @@ class BuildDoctor {
         } catch (error) {
           EnhancedLogger.logError({
             id: 'RECOVERY_ACTION_ERROR',
-            category: ErrorCategory.BUILD,
+            category: ErrorCategory.ANALYSIS,
             severity: ErrorSeverity.MEDIUM,
             title: `Recovery Action Error: ${action.name}`,
             message: error instanceof Error ? error.message : String(error),
@@ -940,7 +936,7 @@ async function main(): Promise<void> {
   } catch (error) {
     EnhancedLogger.logError({
       id: 'BUILD_DOCTOR_ERROR',
-      category: ErrorCategory.BUILD,
+      category: ErrorCategory.ANALYSIS,
       severity: ErrorSeverity.CRITICAL,
       title: 'Build Doctor Failed',
       message: error instanceof Error ? error.message : String(error),

@@ -3,36 +3,12 @@
  * Provides clear error messages, actionable suggestions, and detailed logging
  */
 
-/**
- * Error categories for better classification
- */
-export enum ErrorCategory {
-  BUILD = 'BUILD',
-  DEPENDENCY = 'DEPENDENCY',
-  TYPESCRIPT = 'TYPESCRIPT',
-  RUNTIME = 'RUNTIME',
-  VALIDATION = 'VALIDATION',
-}
-
-/**
- * Error severity levels
- */
-export enum ErrorSeverity {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
-
-/**
- * Actionable suggestion interface
- */
-export interface ErrorSuggestion {
-  action: string;
-  command?: string;
-  description: string;
-  automated?: boolean;
-}
+// Import types and enums from error-classification module
+import {
+  ErrorCategory,
+  ErrorSeverity,
+  type ErrorSuggestion,
+} from '../types/error-classification.js';
 
 /**
  * Enhanced error information
@@ -192,7 +168,7 @@ export class ErrorHandler {
   handleBuildError(error: Error, context?: BuildErrorContext): EnhancedError {
     const enhancedError: EnhancedError = {
       id: this.generateErrorId(),
-      category: ErrorCategory.BUILD,
+      category: ErrorCategory.ANALYSIS,
       severity: ErrorSeverity.HIGH,
       title: 'Build Process Failed',
       message: error.message,
@@ -211,7 +187,7 @@ export class ErrorHandler {
   handleTypeScriptError(error: Error, context: TypeScriptErrorContext): EnhancedError {
     const enhancedError: EnhancedError = {
       id: this.generateErrorId(),
-      category: ErrorCategory.TYPESCRIPT,
+      category: ErrorCategory.ANALYSIS,
       severity: ErrorSeverity.HIGH,
       title: 'TypeScript Compilation Error',
       message: error.message,
@@ -233,7 +209,7 @@ export class ErrorHandler {
   handleDependencyError(error: Error, context?: DependencyErrorContext): EnhancedError {
     const enhancedError: EnhancedError = {
       id: this.generateErrorId(),
-      category: ErrorCategory.DEPENDENCY,
+      category: ErrorCategory.CONFIGURATION,
       severity: ErrorSeverity.MEDIUM,
       title: 'Dependency Resolution Failed',
       message: error.message,

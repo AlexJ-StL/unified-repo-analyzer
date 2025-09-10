@@ -1,7 +1,7 @@
 /**
  * Configuration-related interfaces and types
  */
-import { AnalysisMode, OutputFormat } from './analysis';
+import type { AnalysisMode, OutputFormat } from './analysis';
 export interface UserPreferences {
   general: GeneralPreferences;
   analysis: AnalysisPreferences;
