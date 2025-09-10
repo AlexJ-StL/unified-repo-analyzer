@@ -4,7 +4,7 @@ import type {
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { mockManager } from '../../../../../tests/MockManager';
+import { mockManager } from '../../../../../tests/MockManager.js';
 import { ExportService } from '../export.service';
 
 // Setup mocks using MockManager

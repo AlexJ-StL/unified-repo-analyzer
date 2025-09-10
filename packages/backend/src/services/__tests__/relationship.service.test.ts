@@ -5,7 +5,7 @@
 /// <reference types="vitest/globals" />
 import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { vi } from 'vitest';
-import { IndexSystem } from '../../core/IndexSystem';
+import { IndexSystem } from '../../core/IndexSystem.js';
 import { RelationshipService } from '../relationship.service';
 
 // Mock IndexSystem

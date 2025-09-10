@@ -4,7 +4,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { mockManager } from '../../../../../tests/MockManager';
+import { mockManager } from '../../../../../tests/MockManager.js';
 
 // Import the service to test
 import { ErrorMessageService } from '../error-message.service';

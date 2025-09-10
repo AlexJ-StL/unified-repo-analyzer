@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mockFunction } from '../../../../../tests/MockManager';
+import { mockFunction } from '../../../../../tests/MockManager.js';
 import { requestLogger } from '../logger.service.js';
 import { logger } from '../logger.service.js';
 
@@ -15,7 +15,7 @@ describe('HTTP Request/Response Logging', () => {
     vi.spyOn(logger, 'info').mockImplementation(() => {});
     vi.spyOn(logger, 'warn').mockImplementation(() => {});
     vi.spyOn(logger, 'error').mockImplementation(() => {});
-    
+
     mockReq = {
       method: 'GET',
       url: '/api/test',
@@ -54,11 +54,11 @@ describe('HTTP Request/Response Logging', () => {
           errorCallback = callback;
         }
       }) as unknown as (event: string, callback: Function) => void,
-      send: mockFunction(function (body: unknown) {
+      send: mockFunction((body: unknown) => {
         // Simulate the actual send method behavior
         return body;
       }),
-      json: mockFunction(function (obj: unknown) {
+      json: mockFunction((obj: unknown) => {
         // Simulate the actual json method behavior
         return JSON.stringify(obj);
       }),
@@ -98,10 +98,10 @@ describe('HTTP Request/Response Logging', () => {
 
       expect(mockNext).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalled();
-      
+
       // Verify that sensitive headers are redacted
-      const callArgs = (logger.info as any).mock.calls.find((call: any) => 
-        call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as any).mock.calls.find(
+        (call: any) => call[0] === 'HTTP Request Started'
       );
       if (callArgs) {
         const requestData = callArgs[1];
@@ -122,10 +122,10 @@ describe('HTTP Request/Response Logging', () => {
 
       expect(mockNext).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalled();
-      
+
       // Verify that sensitive query params are redacted
-      const callArgs = (logger.info as any).mock.calls.find((call: any) => 
-        call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as any).mock.calls.find(
+        (call: any) => call[0] === 'HTTP Request Started'
       );
       if (callArgs) {
         const requestData = callArgs[1];
@@ -146,10 +146,10 @@ describe('HTTP Request/Response Logging', () => {
 
       expect(mockNext).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalled();
-      
+
       // Verify that sensitive body fields are redacted
-      const callArgs = (logger.info as any).mock.calls.find((call: any) => 
-        call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as any).mock.calls.find(
+        (call: any) => call[0] === 'HTTP Request Started'
       );
       if (callArgs) {
         const requestData = callArgs[1];
@@ -250,7 +250,7 @@ describe('HTTP Request/Response Logging', () => {
       mockReq.body = { data: 'test' };
 
       requestLogger(mockReq, mockRes, mockNext);
-      
+
       if (finishCallback) {
         finishCallback();
       }
@@ -263,7 +263,7 @@ describe('HTTP Request/Response Logging', () => {
       mockReq.body = { id: 1, data: 'updated' };
 
       requestLogger(mockReq, mockRes, mockNext);
-      
+
       if (finishCallback) {
         finishCallback();
       }
@@ -275,7 +275,7 @@ describe('HTTP Request/Response Logging', () => {
       mockReq.method = 'DELETE';
 
       requestLogger(mockReq, mockRes, mockNext);
-      
+
       if (finishCallback) {
         finishCallback();
       }

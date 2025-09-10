@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events';
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { env } from '../config/environment';
+import { env } from '../config/environment.js';
 import { logger } from './logger.service';
 
 const readdir = promisify(fs.readdir);

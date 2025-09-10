@@ -3,8 +3,8 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import logger from './logger.service';
-import { metricsService } from './metrics.service';
+import logger from './logger.service.js';
+import { metricsService } from './metrics.service.js';
 
 export interface AnalysisRequest {
   id: string;

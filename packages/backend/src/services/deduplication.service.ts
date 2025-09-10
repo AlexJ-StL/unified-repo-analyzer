@@ -5,7 +5,7 @@
 import crypto from 'node:crypto';
 // NodeJS.Timeout is available globally
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 interface PendingRequest<T> {
   promise: Promise<T>;

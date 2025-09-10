@@ -3,11 +3,8 @@
  * Provides advanced relationship analysis and visualization data
  */
 
-import type {
-  IndexedRepository,
-  RepositoryRelationship,
-} from '@unified-repo-analyzer/shared/src/types/repository';
-import { IndexSystem } from '../core/IndexSystem';
+import type { IndexedRepository, RepositoryRelationship } from '@unified-repo-analyzer/shared';
+import { IndexSystem } from '../core/IndexSystem.js';
 
 export interface RelationshipGraph {
   nodes: GraphNode[];
@@ -191,7 +188,7 @@ export class RelationshipService {
     // Calculate language statistics
     const languageCount = new Map<string, number>();
     repositories.forEach((repo) => {
-      repo.languages.forEach((lang) => {
+      repo.languages.forEach((lang: string) => {
         languageCount.set(lang, (languageCount.get(lang) || 0) + 1);
       });
     });
@@ -204,7 +201,7 @@ export class RelationshipService {
     // Calculate framework statistics
     const frameworkCount = new Map<string, number>();
     repositories.forEach((repo) => {
-      repo.frameworks.forEach((fw) => {
+      repo.frameworks.forEach((fw: string) => {
         frameworkCount.set(fw, (frameworkCount.get(fw) || 0) + 1);
       });
     });
@@ -243,14 +240,16 @@ export class RelationshipService {
   private determineRepositoryType(repo: IndexedRepository): GraphNode['type'] {
     // Check for frontend
     if (
-      repo.frameworks.some((fw) => ['react', 'vue', 'angular', 'svelte'].includes(fw.toLowerCase()))
+      repo.frameworks.some((fw: string) =>
+        ['react', 'vue', 'angular', 'svelte'].includes(fw.toLowerCase())
+      )
     ) {
       return 'frontend';
     }
 
     // Check for backend
     if (
-      repo.frameworks.some((fw) =>
+      repo.frameworks.some((fw: string) =>
         ['express', 'nest', 'django', 'flask', 'spring'].includes(fw.toLowerCase())
       )
     ) {
@@ -259,8 +258,12 @@ export class RelationshipService {
 
     // Check for mobile
     if (
-      repo.languages.some((lang) => ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())) ||
-      repo.frameworks.some((fw) => ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase()))
+      repo.languages.some((lang: string) =>
+        ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())
+      ) ||
+      repo.frameworks.some((fw: string) =>
+        ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase())
+      )
     ) {
       return 'mobile';
     }
@@ -293,7 +296,7 @@ export class RelationshipService {
     // Language-based clusters
     const languageGroups = new Map<string, IndexedRepository[]>();
     repositories.forEach((repo) => {
-      repo.languages.forEach((lang) => {
+      repo.languages.forEach((lang: string) => {
         if (!languageGroups.has(lang)) {
           languageGroups.set(lang, []);
         }
@@ -320,7 +323,7 @@ export class RelationshipService {
     // Framework-based clusters
     const frameworkGroups = new Map<string, IndexedRepository[]>();
     repositories.forEach((repo) => {
-      repo.frameworks.forEach((fw) => {
+      repo.frameworks.forEach((fw: string) => {
         if (!frameworkGroups.has(fw)) {
           frameworkGroups.set(fw, []);
         }
@@ -444,11 +447,11 @@ export class RelationshipService {
     const opportunities: IntegrationOpportunity[] = [];
 
     const frontendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
+      repo.frameworks.some((fw: string) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
     );
 
     const backendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw) =>
+      repo.frameworks.some((fw: string) =>
         ['express', 'nest', 'django', 'flask'].includes(fw.toLowerCase())
       )
     );
@@ -456,7 +459,7 @@ export class RelationshipService {
     for (const frontend of frontendRepos) {
       for (const backend of backendRepos) {
         if (frontend.id !== backend.id) {
-          const sharedLanguages = frontend.languages.filter((lang) =>
+          const sharedLanguages = frontend.languages.filter((lang: string) =>
             backend.languages.includes(lang)
           );
           const compatibility = sharedLanguages.length > 0 ? 0.8 : 0.6;
@@ -508,7 +511,7 @@ export class RelationshipService {
     const serviceRepos = repositories.filter(
       (repo) =>
         repo.name.toLowerCase().includes('service') ||
-        repo.tags.some((tag) => tag.toLowerCase().includes('service'))
+        repo.tags.some((tag: string) => tag.toLowerCase().includes('service'))
     );
 
     if (serviceRepos.length >= 2) {
@@ -567,7 +570,7 @@ export class RelationshipService {
       (repo) =>
         repo.name.toLowerCase().includes('lib') ||
         repo.name.toLowerCase().includes('util') ||
-        repo.tags.some((tag) => tag.toLowerCase().includes('library'))
+        repo.tags.some((tag: string) => tag.toLowerCase().includes('library'))
     );
 
     const applicationRepos = repositories.filter(
@@ -577,7 +580,7 @@ export class RelationshipService {
     if (libraryRepos.length > 0 && applicationRepos.length > 0) {
       for (const app of applicationRepos) {
         const compatibleLibraries = libraryRepos.filter((lib) =>
-          lib.languages.some((lang) => app.languages.includes(lang))
+          lib.languages.some((lang: string) => app.languages.includes(lang))
         );
 
         if (compatibleLibraries.length > 0) {
@@ -626,14 +629,16 @@ export class RelationshipService {
 
     const mobileRepos = repositories.filter(
       (repo) =>
-        repo.languages.some((lang) => ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())) ||
-        repo.frameworks.some((fw) =>
+        repo.languages.some((lang: string) =>
+          ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())
+        ) ||
+        repo.frameworks.some((fw: string) =>
           ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase())
         )
     );
 
     const backendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw) =>
+      repo.frameworks.some((fw: string) =>
         ['express', 'nest', 'django', 'flask'].includes(fw.toLowerCase())
       )
     );
@@ -737,18 +742,20 @@ export class RelationshipService {
 
     repositories.forEach((repo) => {
       // Detect patterns from frameworks and languages
-      if (repo.frameworks.some((fw) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))) {
+      if (
+        repo.frameworks.some((fw: string) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
+      ) {
         patternCount.set(
           'SPA (Single Page Application)',
           (patternCount.get('SPA (Single Page Application)') || 0) + 1
         );
       }
 
-      if (repo.frameworks.some((fw) => ['express', 'nest'].includes(fw.toLowerCase()))) {
+      if (repo.frameworks.some((fw: string) => ['express', 'nest'].includes(fw.toLowerCase()))) {
         patternCount.set('REST API', (patternCount.get('REST API') || 0) + 1);
       }
 
-      if (repo.frameworks.some((fw) => ['next.js', 'nuxt'].includes(fw.toLowerCase()))) {
+      if (repo.frameworks.some((fw: string) => ['next.js', 'nuxt'].includes(fw.toLowerCase()))) {
         patternCount.set(
           'Server-Side Rendering',
           (patternCount.get('Server-Side Rendering') || 0) + 1
@@ -757,12 +764,16 @@ export class RelationshipService {
 
       if (
         repo.name.toLowerCase().includes('service') ||
-        repo.tags.some((tag) => tag.includes('service'))
+        repo.tags.some((tag: string) => tag.includes('service'))
       ) {
         patternCount.set('Microservices', (patternCount.get('Microservices') || 0) + 1);
       }
 
-      if (repo.frameworks.some((fw) => ['django', 'flask', 'spring'].includes(fw.toLowerCase()))) {
+      if (
+        repo.frameworks.some((fw: string) =>
+          ['django', 'flask', 'spring'].includes(fw.toLowerCase())
+        )
+      ) {
         patternCount.set(
           'MVC (Model-View-Controller)',
           (patternCount.get('MVC (Model-View-Controller)') || 0) + 1

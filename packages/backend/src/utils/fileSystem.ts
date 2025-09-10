@@ -9,7 +9,7 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import type { ErrorContext } from '@unified-repo-analyzer/shared';
 import { errorClassifier } from '@unified-repo-analyzer/shared';
-import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository.js';
 import * as ignore from 'ignore';
 import { logger, logPerformance } from '../services/logger.service.js';
 
@@ -260,7 +260,7 @@ export async function traverseDirectory(
   }
 
   // Set up ignore filter if ignore patterns are provided
-  const ignoreFilter = ignorePatterns.length > 0 ? ignore().add(ignorePatterns) : null;
+  const ignoreFilter = ignorePatterns.length > 0 ? ignore.default().add(ignorePatterns) : null;
 
   // Initialize result
   const result: TraversalResult = {

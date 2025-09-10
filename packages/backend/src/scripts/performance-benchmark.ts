@@ -13,11 +13,11 @@ import type {
   BatchAnalysisResult,
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { AnalysisEngine } from '../core/AnalysisEngine';
+import { AnalysisEngine } from '../core/AnalysisEngine.js';
 import { analysisCache } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);

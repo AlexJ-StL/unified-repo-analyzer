@@ -2,7 +2,7 @@
  * Repository Relationship Service
  * Provides advanced relationship analysis and visualization data
  */
-import { IndexSystem } from '../core/IndexSystem';
+import { IndexSystem } from '../core/IndexSystem.js';
 export interface RelationshipGraph {
   nodes: GraphNode[];
   edges: GraphEdge[];

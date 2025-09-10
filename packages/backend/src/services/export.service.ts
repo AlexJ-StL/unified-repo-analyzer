@@ -9,7 +9,7 @@ import type {
   BatchAnalysisResult,
   OutputFormat,
   RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
+} from '@unified-repo-analyzer/shared';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -132,13 +132,16 @@ ${analysis.insights.technicalBreakdown}
 
 ## Architectural Patterns
 
-${analysis.codeAnalysis.patterns.map((pattern) => `- **${pattern.name}** (${pattern.confidence}% confidence): ${pattern.description}`).join('\n')}
+${analysis.codeAnalysis.patterns.map((pattern: { name: string; confidence: number; description: string }) => `- **${pattern.name}** (${pattern.confidence}% confidence): ${pattern.description}`).join('\n')}
 
 ## Key Files
 
 ${analysis.structure.keyFiles
   .slice(0, 10)
-  .map((file) => `- **${file.path}** (${file.language}, ${file.lineCount} lines)`)
+  .map(
+    (file: { path: string; language: string; lineCount: number }) =>
+      `- **${file.path}** (${file.language}, ${file.lineCount} lines)`
+  )
   .join('\n')}
 
 ## Directory Structure
@@ -152,24 +155,28 @@ ${analysis.structure.tree}
 ### Production Dependencies
 ${
   analysis.dependencies.production.length > 0
-    ? analysis.dependencies.production.map((dep) => `- ${dep.name}@${dep.version}`).join('\n')
+    ? analysis.dependencies.production
+        .map((dep: { name: string; version: string }) => `- ${dep.name}@${dep.version}`)
+        .join('\n')
     : 'None detected'
 }
 
 ### Development Dependencies
 ${
   analysis.dependencies.development.length > 0
-    ? analysis.dependencies.development.map((dep) => `- ${dep.name}@${dep.version}`).join('\n')
+    ? analysis.dependencies.development
+        .map((dep: { name: string; version: string }) => `- ${dep.name}@${dep.version}`)
+        .join('\n')
     : 'None detected'
 }
 
 ## Recommendations
 
-${analysis.insights.recommendations.map((rec) => `- ${rec}`).join('\n')}
+${analysis.insights.recommendations.map((rec: string) => `- ${rec}`).join('\n')}
 
 ## Potential Issues
 
-${analysis.insights.potentialIssues.map((issue) => `- ${issue}`).join('\n')}
+${analysis.insights.potentialIssues.map((issue: string) => `- ${issue}`).join('\n')}
 
 ## Analysis Metadata
 
@@ -385,7 +392,7 @@ ${analysis.insights.potentialIssues.map((issue) => `- ${issue}`).join('\n')}
   <ul>
     ${analysis.codeAnalysis.patterns
       .map(
-        (pattern) =>
+        (pattern: { name: string; confidence: number; description: string }) =>
           `<li><strong>${pattern.name}</strong> (${pattern.confidence}% confidence): ${pattern.description}</li>`
       )
       .join('\n')}
@@ -402,14 +409,14 @@ ${analysis.insights.potentialIssues.map((issue) => `- ${issue}`).join('\n')}
     ${analysis.structure.keyFiles
       .slice(0, 10)
       .map(
-        (file) => `
-      <tr>
-        <td>${file.path}</td>
-        <td>${file.language}</td>
-        <td>${file.lineCount}</td>
-        <td>${file.tokenCount || 'N/A'}</td>
-      </tr>
-    `
+        (file: { path: string; language: string; lineCount: number; tokenCount?: number }) => `
+        <tr>
+          <td>${file.path}</td>
+          <td>${file.language}</td>
+          <td>${file.lineCount}</td>
+          <td>${file.tokenCount || 'N/A'}</td>
+        </tr>
+      `
       )
       .join('')}
   </table>
@@ -422,25 +429,25 @@ ${analysis.insights.potentialIssues.map((issue) => `- ${issue}`).join('\n')}
   <h3>Production Dependencies</h3>
   ${
     analysis.dependencies.production.length > 0
-      ? `<ul>${analysis.dependencies.production.map((dep) => `<li>${dep.name}@${dep.version}</li>`).join('')}</ul>`
+      ? `<ul>${analysis.dependencies.production.map((dep: { name: string; version: string }) => `<li>${dep.name}@${dep.version}</li>`).join('')}</ul>`
       : '<p>None detected</p>'
   }
   
   <h3>Development Dependencies</h3>
   ${
     analysis.dependencies.development.length > 0
-      ? `<ul>${analysis.dependencies.development.map((dep) => `<li>${dep.name}@${dep.version}</li>`).join('')}</ul>`
+      ? `<ul>${analysis.dependencies.development.map((dep: { name: string; version: string }) => `<li>${dep.name}@${dep.version}</li>`).join('')}</ul>`
       : '<p>None detected</p>'
   }
   
   <h2 id="recommendations">Recommendations</h2>
   <ul>
-    ${analysis.insights.recommendations.map((rec) => `<li>${rec}</li>`).join('')}
+    ${analysis.insights.recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
   </ul>
   
   <h2 id="potential-issues">Potential Issues</h2>
   <ul>
-    ${analysis.insights.potentialIssues.map((issue) => `<li>${issue}</li>`).join('')}
+    ${analysis.insights.potentialIssues.map((issue: string) => `<li>${issue}</li>`).join('')}
   </ul>
   
   <h2 id="metadata">Analysis Metadata</h2>
@@ -511,7 +518,7 @@ ${analysis.insights.potentialIssues.map((issue) => `- ${issue}`).join('\n')}
 `;
 
     // Add summary for each repository
-    repositories.forEach((repo, index) => {
+    repositories.forEach((repo: any, index: number) => {
       markdown += `### ${index + 1}. ${repo.name}
 
 - **Path:** ${repo.path}
@@ -533,15 +540,15 @@ ${repo.insights.executiveSummary}
 
 ### Commonalities
 
-${batchResult.combinedInsights.commonalities.map((item) => `- ${item}`).join('\n')}
+${batchResult.combinedInsights.commonalities.map((item: string) => `- ${item}`).join('\n')}
 
 ### Differences
 
-${batchResult.combinedInsights.differences.map((item) => `- ${item}`).join('\n')}
+${batchResult.combinedInsights.differences.map((item: string) => `- ${item}`).join('\n')}
 
 ### Integration Opportunities
 
-${batchResult.combinedInsights.integrationOpportunities.map((item) => `- ${item}`).join('\n')}
+${batchResult.combinedInsights.integrationOpportunities.map((item: string) => `- ${item}`).join('\n')}
 
 `;
     }
@@ -561,9 +568,9 @@ ${batchResult.combinedInsights.integrationOpportunities.map((item) => `- ${item}
     // Generate repository cards HTML
     const repoCardsHtml = repositories
       .map(
-        (repo, index) => `
-      <div class="repo-card">
-        <h3>${index + 1}. ${repo.name}</h3>
+        (repo: any, index: number) => `
+        <div class="repo-card">
+          <h3>${index + 1}. ${repo.name}</h3>
         <div class="repo-details">
           <p><strong>Path:</strong> ${repo.path}</p>
           <p><strong>Primary Language:</strong> ${repo.language}</p>
@@ -584,23 +591,23 @@ ${batchResult.combinedInsights.integrationOpportunities.map((item) => `- ${item}
     let combinedInsightsHtml = '';
     if (batchResult.combinedInsights) {
       combinedInsightsHtml = `
-        <h2 id="combined-insights">Combined Insights</h2>
-        
-        <h3>Commonalities</h3>
-        <ul>
-          ${batchResult.combinedInsights.commonalities.map((item) => `<li>${item}</li>`).join('')}
-        </ul>
-        
-        <h3>Differences</h3>
-        <ul>
-          ${batchResult.combinedInsights.differences.map((item) => `<li>${item}</li>`).join('')}
-        </ul>
-        
-        <h3>Integration Opportunities</h3>
-        <ul>
-          ${batchResult.combinedInsights.integrationOpportunities.map((item) => `<li>${item}</li>`).join('')}
-        </ul>
-      `;
+            <h2 id="combined-insights">Combined Insights</h2>
+            
+            <h3>Commonalities</h3>
+            <ul>
+              ${batchResult.combinedInsights.commonalities.map((item: string) => `<li>${item}</li>`).join('')}
+            </ul>
+            
+            <h3>Differences</h3>
+            <ul>
+              ${batchResult.combinedInsights.differences.map((item: string) => `<li>${item}</li>`).join('')}
+            </ul>
+            
+            <h3>Integration Opportunities</h3>
+            <ul>
+              ${batchResult.combinedInsights.integrationOpportunities.map((item: string) => `<li>${item}</li>`).join('')}
+            </ul>
+          `;
     }
 
     return `<!DOCTYPE html>

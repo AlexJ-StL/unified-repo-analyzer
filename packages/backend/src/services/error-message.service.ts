@@ -1,5 +1,5 @@
 import { platform } from 'node:os';
-import type { PathError, PathWarning } from './path-handler.service';
+import type { PathError, PathWarning } from './path-handler.service.js';
 
 /**
  * Error message template interface

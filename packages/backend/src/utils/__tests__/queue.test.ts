@@ -3,7 +3,7 @@
  */
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { QueueEvent, TaskQueue, TaskStatus } from '../queue';
+import { QueueEvent, TaskQueue, TaskStatus } from '../queue.js';
 
 describe('TaskQueue', () => {
   // Mock processor function
