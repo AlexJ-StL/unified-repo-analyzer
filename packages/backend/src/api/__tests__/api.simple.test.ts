@@ -4,7 +4,7 @@
 
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { getTestApp, setupTestServer } from '../../test-setup';
+import { getTestApp, setupTestServer } from '../../test-setup.js';
 
 describe('API Simple Integration Tests', () => {
   beforeAll(async () => {

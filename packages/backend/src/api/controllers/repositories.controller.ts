@@ -2,11 +2,11 @@
  * Repositories controller
  */
 
-import type { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { SearchQuery } from '@unified-repo-analyzer/shared';
 import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { AnalysisEngine } from '../../core/AnalysisEngine';
-import { IndexSystem } from '../../core/IndexSystem';
+import { AnalysisEngine } from '../../core/AnalysisEngine.js';
+import { IndexSystem } from '../../core/IndexSystem.js';
 
 /**
  * Get all indexed repositories
@@ -212,7 +212,7 @@ export const getRelationshipGraph = async (req: Request, res: Response): Promise
     }
 
     // Import and create relationship service
-    const { RelationshipService } = await import('../../services/relationship.service');
+    const { RelationshipService } = await import('../../services/relationship.service.js');
     const relationshipService = new RelationshipService();
 
     // Generate relationship graph
@@ -244,7 +244,7 @@ export const getIntegrationOpportunities = async (req: Request, res: Response): 
     }
 
     // Import and create relationship service
-    const { RelationshipService } = await import('../../services/relationship.service');
+    const { RelationshipService } = await import('../../services/relationship.service.js');
     const relationshipService = new RelationshipService();
 
     // Analyze integration opportunities
@@ -279,7 +279,7 @@ export const getRelationshipInsights = async (req: Request, res: Response): Prom
     }
 
     // Import and create relationship service
-    const { RelationshipService } = await import('../../services/relationship.service');
+    const { RelationshipService } = await import('../../services/relationship.service.js');
     const relationshipService = new RelationshipService();
 
     // Generate relationship insights

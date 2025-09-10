@@ -6,7 +6,7 @@ import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import { configurationService } from '../../services/config.service';
 import { updateProviderConfigurations } from '../../services/provider-initialization.service';
-import { logger } from '../../utils/logger';
+import { logger } from '../../utils/logger.js';
 
 const router = Router();
 

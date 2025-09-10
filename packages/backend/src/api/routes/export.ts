@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { body, param } from 'express-validator';
-import { exportController } from '../controllers';
+import { exportController } from '../controllers.js';
 
 const router = Router();
 

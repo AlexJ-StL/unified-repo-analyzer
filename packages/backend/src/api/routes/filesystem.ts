@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { query } from 'express-validator';
-import * as filesystemController from '../controllers/filesystem.controller';
+import * as filesystemController from '../controllers/filesystem.controller.js';
 
 const router = Router();
 

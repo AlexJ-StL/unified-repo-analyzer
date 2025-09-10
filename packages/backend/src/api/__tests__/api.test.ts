@@ -7,14 +7,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock } from 'vitest-mock-extended';
 
 // Import types for proper typing
-import type { AnalysisEngine } from '../../core/AnalysisEngine';
-import type { IndexSystem } from '../../core/IndexSystem';
+import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
+import type { IndexSystem } from '../../core/IndexSystem.js';
 
 // Import before mocking
-const { AnalysisEngine: AnalysisEngineClass } = await import('../../core/AnalysisEngine');
-const { IndexSystem: IndexSystemClass } = await import('../../core/IndexSystem');
+const { AnalysisEngine: AnalysisEngineClass } = await import('../../core/AnalysisEngine.js');
+const { IndexSystem: IndexSystemClass } = await import('../../core/IndexSystem.js');
 
-import { app } from '../../index';
+import { app } from '../../index.js';
 
 describe('API Integration Tests', () => {
   // Default mock for BatchAnalysisResult

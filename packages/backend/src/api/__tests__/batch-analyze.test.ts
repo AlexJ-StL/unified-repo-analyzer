@@ -8,7 +8,7 @@ import { Server } from 'socket.io';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { AnalysisEngine } from '../../core/AnalysisEngine';
+import { AnalysisEngine } from '../../core/AnalysisEngine.js';
 
 describe('Batch Analysis API', () => {
   let app: express.Application;
@@ -265,7 +265,7 @@ describe('Batch Analysis API', () => {
     });
 
     // Import routes
-    const { default: analyzeRoutes } = await import('../routes/analyze');
+    const { default: analyzeRoutes } = await import('../routes/analyze.js');
     app.use('/api/analyze', analyzeRoutes);
   });
 

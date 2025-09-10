@@ -5,7 +5,7 @@
 import { performance } from 'node:perf_hooks';
 import type { NextFunction, Request, Response } from 'express';
 import { metricsService } from '../../services/metrics.service';
-import { logger } from '../../utils/logger';
+import { logger } from '../../utils/logger.js';
 
 interface PerformanceRequest extends Request {
   startTime?: number;

@@ -5,11 +5,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import type { OutputFormat } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { OutputFormat } from '@unified-repo-analyzer/shared/src/types/analysis.js';
 import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { v4 as uuidv4 } from 'uuid';
-import exportService from '../../services/export.service';
+import exportService from '../../services/export.service.js';
 
 const mkdir = promisify(fs.mkdir);
 const stat = promisify(fs.stat);

@@ -7,8 +7,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import type { Request, Response } from 'express';
-import logger from '../../services/logger.service';
-import { pathHandler } from '../../services/path-handler.service';
+import logger from '../../services/logger.service.js';
+import { pathHandler } from '../../services/path-handler.service.js';
 
 // Promisify fs functions
 const readdir = promisify(fs.readdir);

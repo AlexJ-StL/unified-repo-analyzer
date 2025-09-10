@@ -3,7 +3,7 @@
  */
 
 import { Router } from 'express';
-import { ProviderRegistry } from '../../providers/ProviderRegistry';
+import { ProviderRegistry } from '../../providers/ProviderRegistry.js';
 
 const router = Router();
 

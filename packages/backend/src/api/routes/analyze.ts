@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { analyzeController } from '../controllers';
+import { analyzeController } from '../controllers.js';
 
 const router = Router();
 

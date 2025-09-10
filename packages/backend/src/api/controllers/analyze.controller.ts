@@ -3,17 +3,14 @@
  */
 
 import path from 'node:path';
-import type {
-  AnalysisOptions,
-  RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { AnalysisOptions, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { AnalysisEngine } from '../../core/AnalysisEngine';
-import { io } from '../../index';
-import { analysisRequestTracker } from '../../services/analysis-request-tracker.service';
-import { errorMessageService } from '../../services/error-message.service';
-import logger from '../../services/logger.service';
+import { AnalysisEngine } from '../../core/AnalysisEngine.js';
+import { io } from '../../index.js';
+import { analysisRequestTracker } from '../../services/analysis-request-tracker.service.js';
+import { errorMessageService } from '../../services/error-message.service.js';
+import logger from '../../services/logger.service.js';
 import { pathHandler } from '../../services/path-handler.service.js';
 
 // Default analysis options
@@ -332,7 +329,7 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
       });
 
       // Import export service
-      const { default: exportService } = await import('../../services/export.service');
+      const { default: exportService } = await import('../../services/export.service.js');
 
       // Generate exports for each requested format
       const exports: Record<string, { content: string; size: number } | null> = {
@@ -800,7 +797,7 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
       });
 
       // Import export service
-      const { default: exportService } = await import('../../services/export.service');
+      const { default: exportService } = await import('../../services/export.service.js');
 
       // Generate exports for each requested format
       const exports: Record<string, { content: string; size: number } | null> = {

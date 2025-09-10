@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { body } from 'express-validator';
-import * as pathController from '../controllers/path.controller';
+import * as pathController from '../controllers/path.controller.js';
 
 const router = Router();
 

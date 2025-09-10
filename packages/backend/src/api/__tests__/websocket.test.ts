@@ -10,7 +10,7 @@ import {
   initializeWebSocketHandlers,
   sendAnalysisComplete,
   sendAnalysisProgress,
-} from '../websocket/index';
+} from '../websocket/index.js';
 
 describe('WebSocket Tests', () => {
   let io: Server;

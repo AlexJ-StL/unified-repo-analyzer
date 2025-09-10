@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { query } from 'express-validator';
-import { repositoriesController } from '../controllers';
+import { repositoriesController } from '../controllers.js';
 
 const router = Router();
 
@@ -59,10 +59,7 @@ router.get('/relationships/graph', repositoriesController.getRelationshipGraph);
  * POST /api/repositories/relationships/opportunities
  * Analyze integration opportunities
  */
-router.post(
-  '/relationships/opportunities',
-  repositoriesController.getIntegrationOpportunities
-);
+router.post('/relationships/opportunities', repositoriesController.getIntegrationOpportunities);
 
 /**
  * GET /api/repositories/relationships/insights
