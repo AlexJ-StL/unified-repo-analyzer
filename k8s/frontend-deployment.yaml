@@ -1,36 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: repo-analyzer-frontend
-  namespace: repo-analyzer
+  name: unified-repo-analyzer-frontend
+  namespace: unified-repo-analyzer
   labels:
-    app: repo-analyzer-frontend
+    app: unified-repo-analyzer-frontend
     component: frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: repo-analyzer-frontend
+      app: unified-repo-analyzer-frontend
   template:
     metadata:
       labels:
-        app: repo-analyzer-frontend
+        app: unified-repo-analyzer-frontend
         component: frontend
     spec:
       containers:
         - name: frontend
-          image: repo-analyzer-frontend:latest
+          image: unified-repo-analyzer-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
               name: http
           resources:
             requests:
-              memory: '128Mi'
-              cpu: '100m'
+              memory: "128Mi"
+              cpu: "100m"
             limits:
-              memory: '256Mi'
-              cpu: '200m'
+              memory: "256Mi"
+              cpu: "200m"
           livenessProbe:
             httpGet:
               path: /

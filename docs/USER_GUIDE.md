@@ -1,6 +1,7 @@
 # User Guide — Unified Repository Analyzer
 
 This guide explains how to analyze repositories using the web UI and CLI, interpret results, and optimize workflows.
+
 - Project version: root 1.0.0; packages @unified-repo-analyzer/{backend,frontend,cli,shared} 0.1.0
 
 ## Table of Contents
@@ -18,16 +19,19 @@ This guide explains how to analyze repositories using the web UI and CLI, interp
 
 ### First-time setup
 
-1) Access the application
+1. Access the application
+
 - Web Interface: http://localhost:3000 (default)
 - CLI: bun install -g @unified-repo-analyzer/cli
 
-2) Configure LLM provider
+2. Configure LLM provider
+
 - Settings → LLM Providers
 - Provide at least one API key (Claude, Gemini, OpenRouter)
 - Test the connection
 
-3) Set analysis preferences
+3. Set analysis preferences
+
 - Choose default mode (Quick, Standard, Comprehensive)
 - Set file and line limits
 - Choose output formats (json, markdown, html)
@@ -67,13 +71,15 @@ The dashboard provides an overview of your analyzed repositories and quick acces
 
 #### Single Repository Analysis
 
-1) Repository selection
+1. Repository selection
+
 - Path input: enter a full path
 - File browser: use the integrated selector
 - Recent paths: pick from recent
 - Validation: path and access checks are automatic
 
-2) Analysis configuration
+2. Analysis configuration
+
 - Mode
   - Quick: 5–15s
   - Standard: 30–90s
@@ -125,6 +131,7 @@ For analyzing multiple repositories simultaneously:
    - Use filters to narrow results
 
 2. **Advanced Filters**
+
    ```
    Languages: Filter by programming languages
    Frameworks: Filter by frameworks and libraries
@@ -150,18 +157,21 @@ For analyzing multiple repositories simultaneously:
 ### Results Visualization
 
 #### Executive Summary
+
 - **Project Overview**: High-level description of the repository's purpose
 - **Technology Stack**: Primary languages, frameworks, and tools used
 - **Key Metrics**: File counts, size, complexity indicators
 - **Health Score**: Overall assessment of code quality and maintainability
 
 #### Technical Breakdown
+
 - **Architecture Analysis**: Code structure and organization patterns
 - **Dependency Analysis**: External dependencies and their relationships
 - **Code Quality Metrics**: Complexity, maintainability, and technical debt
 - **Security Considerations**: Potential security issues and recommendations
 
 #### Interactive Features
+
 - **Expandable Sections**: Click to expand detailed information
 - **File Tree Navigation**: Browse the repository structure interactively
 - **Code Snippets**: View important code sections with syntax highlighting
@@ -170,6 +180,7 @@ For analyzing multiple repositories simultaneously:
 ### Export and Sharing
 
 #### Export Options
+
 1. **JSON Export**
    - Complete analysis data in structured format
    - Suitable for integration with other tools
@@ -186,6 +197,7 @@ For analyzing multiple repositories simultaneously:
    - Includes interactive elements and charts
 
 #### Sharing Features
+
 - **Direct Links**: Share analysis results with team members
 - **Email Integration**: Send reports via email
 - **Slack/Teams Integration**: Post summaries to team channels
@@ -206,6 +218,7 @@ npx @unified-repo-analyzer/cli --help
 ### Basic commands
 
 #### Single repository analysis
+
 ```bash
 # Basic analysis
 repo-analyzer analyze /path/to/repository
@@ -219,6 +232,7 @@ repo-analyzer analyze /path/to/repository \
 ```
 
 #### Batch Analysis
+
 ```bash
 # Analyze multiple repositories
 repo-analyzer batch /projects/repo1 /projects/repo2 /projects/repo3
@@ -231,6 +245,7 @@ repo-analyzer batch "/projects/*/"
 ```
 
 #### Search and discovery
+
 ```bash
 # Search repositories
 repo-analyzer search "javascript react"
@@ -243,6 +258,7 @@ repo-analyzer list --sort-by date --limit 20
 ```
 
 #### Export Operations
+
 ```bash
 # Export specific analysis
 repo-analyzer export analysis-id --format html --output report.html
@@ -254,6 +270,7 @@ repo-analyzer search "python" --export results.json
 ### Configuration
 
 #### Global configuration
+
 ```bash
 # Set default LLM provider
 repo-analyzer config set llm.provider claude
@@ -267,7 +284,9 @@ repo-analyzer config set output.formats json,markdown
 ```
 
 #### Project configuration
+
 Place .repo-analyzer.json in your project root:
+
 ```json
 {
   "analysis": {
@@ -285,13 +304,14 @@ Place .repo-analyzer.json in your project root:
     "formats": ["json", "markdown"],
     "directory": "./analysis-results"
   },
-  "ignore": ["node_modules","dist","build","*.log"]
+  "ignore": ["node_modules", "dist", "build", "*.log"]
 }
 ```
 
 ### Advanced CLI Usage
 
 #### Scripting and Automation
+
 ```bash
 #!/bin/bash
 # analyze-all-projects.sh
@@ -305,8 +325,8 @@ for project in "$PROJECTS_DIR"/*; do
   if [ -d "$project" ]; then
     project_name=$(basename "$project")
     echo "Analyzing $project_name..."
-    
-    repo-analyzer analyze "$project" \
+
+   unified-repo-analyzer analyze "$project" \
       --mode standard \
       --output json,markdown \
       --output-dir "$RESULTS_DIR/$project_name" \
@@ -318,6 +338,7 @@ echo "Analysis complete. Results in $RESULTS_DIR"
 ```
 
 #### CI/CD Integration
+
 ```yaml
 # .github/workflows/analyze.yml
 name: Repository Analysis
@@ -333,25 +354,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          
+          node-version: "18"
+
       - name: Install analyzer
         run: bun install -g @unified-repo-analyzer/cli
-        
+
       - name: Analyze repository
         run: |
-          repo-analyzer analyze . \
-            --mode quick \
-            --provider mock \
-            --output json \
-            --output-file analysis.json
+          unified-repo-analyzer analyze . \
+             --mode quick \
+             --provider mock \
+             --output json \
+             --output-file analysis.json
         env:
           CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
-          
+
       - name: Upload results
         uses: actions/upload-artifact@v3
         with:
@@ -362,16 +383,19 @@ jobs:
 ## Analysis Modes
 
 ### Quick (5–15s)
+
 Includes: structure, language/framework detection, basic metrics, dependencies, simple patterns.
 Excludes: LLM insights and deep analysis.
 Use: overviews, CI, cataloging.
 
 ### Standard (30–90s)
+
 Includes: Quick + LLM summary, technical breakdown, recommendations, potential issues, code quality.
 Excludes: deep architecture/security/performance.
 Use: daily workflow, reviews, docs, team sharing.
 
 ### Comprehensive (2–10m)
+
 Includes: Standard + deep architecture, comprehensive metrics, security assessment, performance suggestions, advanced patterns, technical debt.
 Use: architecture reviews, debt assessment, security audits, major decisions.
 
@@ -391,6 +415,7 @@ Maintenance: Well-structured, moderate maintenance requirements
 ```
 
 **Key sections**:
+
 - **Project Purpose**: What the application does
 - **Technology Assessment**: Modern vs. legacy technologies
 - **Code Quality**: Overall health and maintainability
@@ -402,6 +427,7 @@ Maintenance: Well-structured, moderate maintenance requirements
 Detailed technical information for developers and architects:
 
 #### Architecture Analysis
+
 ```
 Pattern: Microservices with API Gateway
 Structure: Well-organized with clear separation of concerns
@@ -411,6 +437,7 @@ Testability: Excellent - comprehensive test suite
 ```
 
 #### Code Quality Metrics
+
 ```
 Cyclomatic Complexity: 12 (Good)
 Maintainability Index: 78/100 (Good)
@@ -420,6 +447,7 @@ Documentation: Comprehensive
 ```
 
 #### Dependencies
+
 ```
 Production Dependencies: 45
 Development Dependencies: 67
@@ -433,16 +461,19 @@ License Issues: None detected
 Actionable suggestions for improvement:
 
 #### High Priority
+
 - Update outdated dependencies (security patches available)
 - Add error boundaries to React components
 - Implement API rate limiting
 
 #### Medium Priority
+
 - Improve test coverage for edge cases
 - Add performance monitoring
 - Consider code splitting for better loading times
 
 #### Low Priority
+
 - Update documentation for new features
 - Consider migrating to TypeScript
 - Optimize bundle size
@@ -452,16 +483,19 @@ Actionable suggestions for improvement:
 Identified problems and risks:
 
 #### Security
+
 - Missing input validation on user registration endpoint
 - Sensitive data logged in production environment
 - CORS configuration too permissive
 
 #### Performance
+
 - Large bundle size affecting load times
 - N+1 query problem in user dashboard
 - Missing database indexes on frequently queried columns
 
 #### Maintainability
+
 - Some components exceed recommended complexity
 - Inconsistent error handling patterns
 - Missing documentation for complex algorithms
@@ -501,6 +535,7 @@ Automatically discover relationships between repositories:
 Create custom analysis profiles for different use cases:
 
 #### Security-Focused Profile
+
 ```json
 {
   "name": "Security Audit",
@@ -518,6 +553,7 @@ Create custom analysis profiles for different use cases:
 ```
 
 #### Performance Profile
+
 ```json
 {
   "name": "Performance Analysis",
@@ -533,37 +569,39 @@ Create custom analysis profiles for different use cases:
 ### Integration APIs
 
 #### Webhook Integration
+
 ```javascript
 // Webhook endpoint for analysis completion
-app.post('/webhook/analysis-complete', (req, res) => {
+app.post("/webhook/analysis-complete", (req, res) => {
   const { analysisId, status, results } = req.body;
-  
-  if (status === 'completed') {
+
+  if (status === "completed") {
     // Process results
     processAnalysisResults(results);
-    
+
     // Notify team
     notifyTeam(`Analysis ${analysisId} completed`);
   }
-  
-  res.status(200).send('OK');
+
+  res.status(200).send("OK");
 });
 ```
 
 #### REST API Usage
+
 ```javascript
 // Programmatic analysis
-const response = await fetch('/api/analyze', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/analyze", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    path: '/path/to/repository',
-    mode: 'standard',
+    path: "/path/to/repository",
+    mode: "standard",
     options: {
       maxFiles: 200,
-      includeLLMAnalysis: true
-    }
-  })
+      includeLLMAnalysis: true,
+    },
+  }),
 });
 
 const analysis = await response.json();
@@ -573,12 +611,14 @@ const analysis = await response.json();
 
 ### Repository preparation
 
-1) Clean up before analysis
+1. Clean up before analysis
+
 - Remove build artifacts and temporary files
 - Install dependencies
 - Update documentation
 
-2) Configure ignore patterns
+2. Configure ignore patterns
+
 ```text
 # .repo-analyzer-ignore
 node_modules/
@@ -589,7 +629,8 @@ build/
 coverage/
 ```
 
-3) Organize code structure
+3. Organize code structure
+
 - Consistent naming
 - Group related files
 - Clear separation of concerns
@@ -650,60 +691,72 @@ coverage/
 ### Common Issues
 
 #### Analysis Fails to Start
+
 **Symptoms**: Analysis doesn't begin or fails immediately
 
 **Possible Causes**:
+
 - Invalid repository path
 - Permission issues
 - Missing LLM API key
 - Network connectivity problems
 
 **Solutions**:
+
 1. Verify repository path exists and is accessible
 2. Check file permissions
 3. Validate LLM provider configuration
 4. Test network connectivity
 
 #### Slow Analysis Performance
+
 **Symptoms**: Analysis takes much longer than expected
 
 **Possible Causes**:
+
 - Large repository size
 - High file count
 - Network latency to LLM provider
 - System resource constraints
 
 **Solutions**:
+
 1. Reduce file limits
 2. Use ignore patterns to exclude unnecessary files
 3. Choose faster analysis mode
 4. Check system resources (CPU, memory)
 
 #### Incomplete Results
+
 **Symptoms**: Analysis completes but results seem incomplete
 
 **Possible Causes**:
+
 - File access permissions
 - Unsupported file types
 - LLM provider rate limiting
 - Token limit exceeded
 
 **Solutions**:
+
 1. Check file permissions
 2. Review supported file types
 3. Monitor API rate limits
 4. Adjust token limits in configuration
 
 #### Export Failures
+
 **Symptoms**: Cannot export or download results
 
 **Possible Causes**:
+
 - Browser security restrictions
 - Server storage issues
 - Large file size
 - Network interruption
 
 **Solutions**:
+
 1. Try different export format
 2. Check browser download settings
 3. Verify server disk space
@@ -712,22 +765,26 @@ coverage/
 ### Error Messages
 
 #### "Repository not found or inaccessible"
+
 - Verify the path is correct
 - Check file system permissions
 - Ensure the directory contains a valid repository
 
 #### "LLM provider authentication failed"
+
 - Verify API key is correct
 - Check API key permissions
 - Ensure provider service is available
 
 #### "Analysis timeout"
+
 - Reduce file limits
 - Use faster analysis mode
 - Check network connectivity
 - Increase timeout settings
 
 #### "Insufficient system resources"
+
 - Close other applications
 - Increase available memory
 - Reduce concurrent analyses
@@ -735,21 +792,25 @@ coverage/
 
 ### Getting help
 
-1) Documentation
+1. Documentation
+
 - User guide (this document)
 - API docs
 - Troubleshooting
 
-2) Community
+2. Community
+
 - GitHub Discussions
 - Stack Overflow (tag: unified-repo-analyzer)
 
-3) Support
+3. Support
+
 - Email: support@unified-repo-analyzer.com
 
 ### Reporting issues
 
 Include:
+
 - System: OS, Node.js, app version
 - Error: message, steps to reproduce, expected vs actual
 - Configuration: analysis settings, LLM provider config, custom settings

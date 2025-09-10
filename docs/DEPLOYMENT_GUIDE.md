@@ -18,6 +18,7 @@ This guide covers deploying the Unified Repository Analyzer in various environme
 ### System Requirements
 
 #### Minimum Requirements
+
 - **CPU**: 2 cores
 - **Memory**: 4GB RAM
 - **Storage**: 10GB available space
@@ -25,17 +26,20 @@ This guide covers deploying the Unified Repository Analyzer in various environme
 - **npm**: Version 8.0.0 or higher
 
 #### Recommended Requirements
+
 - **CPU**: 4+ cores
 - **Memory**: 8GB+ RAM
 - **Storage**: 50GB+ available space (for repository cache)
 - **Network**: Stable internet connection for LLM API calls
 
 #### Supported Operating Systems
+
 - Linux (Ubuntu 20.04+, CentOS 8+, RHEL 8+)
 - macOS (10.15+)
 - Windows (10/11, Windows Server 2019+)
 
 ### External Dependencies
+
 - **LLM Provider API Keys**: At least one of:
   - Anthropic Claude API key
   - Google Gemini API key
@@ -90,6 +94,7 @@ RATE_LIMIT_WINDOW=900000  # 15 minutes
 ### Configuration Files
 
 #### Backend Configuration (`packages/backend/.env.production`)
+
 ```bash
 NODE_ENV=production
 PORT=3001
@@ -111,6 +116,7 @@ RATE_LIMITING_ENABLED=true
 ```
 
 #### Frontend Configuration (`packages/frontend/.env.production`)
+
 ```bash
 VITE_API_BASE_URL=https://your-api-domain.com
 VITE_WS_URL=wss://your-api-domain.com
@@ -123,6 +129,7 @@ VITE_APP_VERSION=1.0.0
 ### Using Docker Compose (Recommended)
 
 1. **Clone and prepare the repository:**
+
 ```bash
 git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git
 cd unified-repo-analyzer
@@ -131,12 +138,14 @@ cp .env.example .env
 ```
 
 2. **Build and start services:**
+
 ```bash
 bun run docker:build
 bun run docker:up
 ```
 
 3. **Verify deployment:**
+
 ```bash
 # Check service status
 docker-compose ps
@@ -151,8 +160,9 @@ curl http://localhost:3000/health
 ### Custom Docker Configuration
 
 #### Production Docker Compose
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -231,6 +241,7 @@ volumes:
 ## Kubernetes Deployment
 
 ### Prerequisites
+
 - Kubernetes cluster (1.20+)
 - kubectl configured
 - Helm 3.0+ (optional but recommended)
@@ -238,16 +249,18 @@ volumes:
 ### Using Helm Chart
 
 1. **Add the Helm repository:**
+
 ```bash
 helm repo add unified-repo-analyzer https://charts.unified-repo-analyzer.com
 helm repo update
 ```
 
 2. **Create values file (`values.yaml`):**
+
 ```yaml
 global:
   domain: your-domain.com
-  
+
 frontend:
   replicaCount: 2
   image:
@@ -310,27 +323,29 @@ redis:
 ```
 
 3. **Deploy with Helm:**
+
 ```bash
 helm install unified-repo-analyzer unified-repo-analyzer/unified-repo-analyzer \
   -f values.yaml \
-  --namespace repo-analyzer \
+  --namespaceunified-repo-analyzer \
   --create-namespace
 ```
 
 ### Manual Kubernetes Deployment
 
 #### Namespace and ConfigMap
+
 ```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: repo-analyzer
+  name:unified-repo-analyzer
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: repo-analyzer
+  namespace:unified-repo-analyzer
 data:
   NODE_ENV: "production"
   API_BASE_URL: "https://api.your-domain.com"
@@ -338,12 +353,13 @@ data:
 ```
 
 #### Backend Deployment
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: repo-analyzer
+  namespace:unified-repo-analyzer
 spec:
   replicas: 3
   selector:
@@ -394,7 +410,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: repo-analyzer
+  namespace:unified-repo-analyzer
 spec:
   selector:
     app: backend
@@ -409,6 +425,7 @@ spec:
 ### System Preparation
 
 1. **Install Node.js and npm:**
+
 ```bash
 # Ubuntu/Debian
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
@@ -423,40 +440,45 @@ brew install node@18
 ```
 
 2. **Create application user:**
+
 ```bash
-sudo useradd -r -s /bin/false -d /opt/repo-analyzer repo-analyzer
+sudo useradd -r -s /bin/false -d /opt/repo-analyzerunified-repo-analyzer
 sudo mkdir -p /opt/repo-analyzer
-sudo chown repo-analyzer:repo-analyzer /opt/repo-analyzer
+sudo chownunified-repo-analyzer:repo-analyzer /opt/repo-analyzer
 ```
 
 3. **Create directories:**
+
 ```bash
 sudo mkdir -p /var/log/repo-analyzer
 sudo mkdir -p /var/cache/repo-analyzer
 sudo mkdir -p /etc/repo-analyzer
-sudo chown repo-analyzer:repo-analyzer /var/log/repo-analyzer
-sudo chown repo-analyzer:repo-analyzer /var/cache/repo-analyzer
+sudo chownunified-repo-analyzer:repo-analyzer /var/log/repo-analyzer
+sudo chownunified-repo-analyzer:repo-analyzer /var/cache/repo-analyzer
 ```
 
 ### Application Installation
 
 1. **Clone and build:**
+
 ```bash
 cd /opt/repo-analyzer
-sudo -u repo-analyzer git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git .
-sudo -u repo-analyzer bun install
-sudo -u repo-analyzer bun run build:prod
+sudo -uunified-repo-analyzer git clone https://github.com/unified-repo-analyzer/unified-repo-analyzer.git .
+sudo -uunified-repo-analyzer bun install
+sudo -uunified-repo-analyzer bun run build:prod
 ```
 
 2. **Configure environment:**
+
 ```bash
-sudo -u repo-analyzer cp .env.example .env
+sudo -uunified-repo-analyzer cp .env.example .env
 sudo nano .env  # Edit configuration
 ```
 
 3. **Create systemd service files:**
 
 **Backend Service (`/etc/systemd/system/repo-analyzer-backend.service`):**
+
 ```ini
 [Unit]
 Description=Repository Analyzer Backend
@@ -485,10 +507,11 @@ WantedBy=multi-user.target
 ```
 
 **Frontend Service (`/etc/systemd/system/repo-analyzer-frontend.service`):**
+
 ```ini
 [Unit]
 Description=Repository Analyzer Frontend
-After=network.target repo-analyzer-backend.service
+After=network.targetunified-repo-analyzer-backend.service
 
 [Service]
 Type=simple
@@ -505,17 +528,19 @@ WantedBy=multi-user.target
 ```
 
 4. **Start services:**
+
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable repo-analyzer-backend
-sudo systemctl enable repo-analyzer-frontend
-sudo systemctl start repo-analyzer-backend
-sudo systemctl start repo-analyzer-frontend
+sudo systemctl enableunified-repo-analyzer-backend
+sudo systemctl enableunified-repo-analyzer-frontend
+sudo systemctl startunified-repo-analyzer-backend
+sudo systemctl startunified-repo-analyzer-frontend
 ```
 
 ### Nginx Configuration
 
 **`/etc/nginx/sites-available/repo-analyzer`:**
+
 ```nginx
 upstream backend {
     server 127.0.0.1:3001;
@@ -584,7 +609,7 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
-        
+
         # Handle client-side routing
         try_files $uri $uri/ @fallback;
     }
@@ -642,6 +667,7 @@ server {
 ### Backup and Recovery
 
 1. **Database Backups:**
+
 ```bash
 # PostgreSQL backup
 pg_dump -h localhost -U analyzer repo_analyzer > backup_$(date +%Y%m%d_%H%M%S).sql
@@ -651,12 +677,14 @@ mongodump --host localhost --db repo_analyzer --out backup_$(date +%Y%m%d_%H%M%S
 ```
 
 2. **Application Data:**
+
 ```bash
 # Backup cache and logs
 tar -czf app_data_$(date +%Y%m%d_%H%M%S).tar.gz /var/cache/repo-analyzer /var/log/repo-analyzer
 ```
 
 3. **Automated Backup Script:**
+
 ```bash
 #!/bin/bash
 # /opt/repo-analyzer/scripts/backup.sh
@@ -682,6 +710,7 @@ find $BACKUP_DIR -name "*.tar.gz" -mtime +30 -delete
 ### Application Monitoring
 
 1. **Health Checks:**
+
 ```bash
 # Backend health check
 curl -f http://localhost:3000/health || exit 1
@@ -691,21 +720,23 @@ curl -f http://localhost:3001/ || exit 1
 ```
 
 2. **Prometheus Metrics:**
+
 ```yaml
 # prometheus.yml
 global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'repo-analyzer-backend'
+  - job_name: "repo-analyzer-backend"
     static_configs:
-      - targets: ['localhost:3000']
-    metrics_path: '/metrics'
+      - targets: ["localhost:3000"]
+    metrics_path: "/metrics"
 ```
 
 ### Log Management
 
 1. **Log Rotation:**
+
 ```bash
 # /etc/logrotate.d/repo-analyzer
 /var/log/repo-analyzer/*.log {
@@ -715,17 +746,18 @@ scrape_configs:
     compress
     delaycompress
     notifempty
-    create 644 repo-analyzer repo-analyzer
+    create 644unified-repo-analyzerunified-repo-analyzer
     postrotate
-        systemctl reload repo-analyzer-backend
+        systemctl reloadunified-repo-analyzer-backend
     endscript
 }
 ```
 
 2. **Centralized Logging:**
+
 ```yaml
 # docker-compose.logging.yml
-version: '3.8'
+version: "3.8"
 
 services:
   elasticsearch:
@@ -757,6 +789,7 @@ volumes:
 ### Common Issues
 
 1. **High Memory Usage:**
+
 ```bash
 # Check memory usage
 free -h
@@ -767,6 +800,7 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 ```
 
 2. **API Rate Limiting:**
+
 ```bash
 # Check rate limit status
 curl -I http://localhost:3000/api/health
@@ -777,6 +811,7 @@ RATE_LIMIT_WINDOW=900000
 ```
 
 3. **Database Connection Issues:**
+
 ```bash
 # Test database connection
 psql -h localhost -U analyzer -d repo_analyzer -c "SELECT 1;"
@@ -812,7 +847,7 @@ tail -f /var/log/repo-analyzer/app.log
 grep -i error /var/log/repo-analyzer/app.log
 
 # Monitor system logs
-journalctl -u repo-analyzer-backend -f
+journalctl -uunified-repo-analyzer-backend -f
 ```
 
 For additional support, please refer to our [troubleshooting documentation](TROUBLESHOOTING.md) or contact support.

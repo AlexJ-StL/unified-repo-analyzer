@@ -434,7 +434,7 @@ Enable detailed logging:
 
 ```bash
 # CLI debug mode
-DEBUG=* repo-analyzer analyze /path/to/repo
+DEBUG=*unified-repo-analyzer analyze /path/to/repo
 
 # Web interface debug
 NODE_ENV=development bun run dev

@@ -99,7 +99,8 @@ BACKUP_RETENTION_DAYS=30
 
 ### Quick start
 
-1) Clone and configure
+1. Clone and configure
+
 ```bash
 git clone <repository-url>
 cd unified-repo-analyzer
@@ -107,7 +108,8 @@ cp packages/backend/.env.example packages/backend/.env
 # Edit .env with your configuration
 ```
 
-2) Deploy
+2. Deploy
+
 ```bash
 bun run deploy:prod             # Bun task builds and brings up Docker
 # or:
@@ -115,7 +117,8 @@ bun run deploy:prod             # Bun task builds and brings up Docker
 .\scripts\deploy.ps1            # Windows
 ```
 
-3) Verify
+3. Verify
+
 ```bash
 curl http://localhost:3000/health
 curl http://localhost/
@@ -124,12 +127,14 @@ curl http://localhost/
 ### Manual Docker Deployment
 
 1. **Build and start services**:
+
    ```bash
    docker-compose build
    docker-compose up -d
    ```
 
 2. **Check service status**:
+
    ```bash
    docker-compose ps
    docker-compose logs -f
@@ -278,6 +283,7 @@ Access metrics at:
 - `GET /metrics/prometheus` - Prometheus format
 
 Key metrics include:
+
 - Request count and response times
 - Analysis success/failure rates
 - Memory and CPU usage
@@ -286,6 +292,7 @@ Key metrics include:
 ### Log Management
 
 Logs are written to:
+
 - `logs/combined.log` - All application logs
 - `logs/error.log` - Error logs only
 - `logs/exceptions.log` - Uncaught exceptions
@@ -344,12 +351,14 @@ cp packages/backend/.env backups/manual-$(date +%Y%m%d)/
 ### Recovery Procedures
 
 1. **Stop the application**:
+
    ```bash
    docker-compose down
    # or kill the Node.js process
    ```
 
 2. **Restore data**:
+
    ```bash
    # Using backup service
    curl -X POST http://localhost:3000/api/backup/restore/backup-filename.tar.gz
@@ -418,24 +427,26 @@ For Kubernetes deployment, see the example manifests in k8s/:
 - backend-deployment.yaml — Backend Deployment with containerPort 3000 and metrics 9090
 - frontend-deployment.yaml — Frontend Deployment with containerPort 80
 - services.yaml — ClusterIP services exposing:
-  - repo-analyzer-backend-service: ports 3000 (http) and 9090 (metrics)
-  - repo-analyzer-frontend-service: port 80 (http)
+  -unified-repo-analyzer-backend-service: ports 3000 (http) and 9090 (metrics)
+  -unified-repo-analyzer-frontend-service: port 80 (http)
 - ingress.yaml — Ingress routing:
-  - /api, /socket.io, /health, /metrics -> repo-analyzer-backend-service:3000
-  - / -> repo-analyzer-frontend-service:80
+  - /api, /socket.io, /health, /metrics ->unified-repo-analyzer-backend-service:3000
+  - / ->unified-repo-analyzer-frontend-service:80
 - configmap.yaml — Application configuration (PORT=3000, ENABLE_METRICS=true, METRICS_PORT=9090, etc.)
 - secret.yaml — Secrets (JWT_SECRET, SESSION_SECRET, ENCRYPTION_KEY, provider API keys)
 - namespace.yaml — Target namespace (repo-analyzer)
 - persistent-volumes.yaml — PV/PVC for data/logs/backups
 
 Deploy with:
+
 ```bash
 kubectl apply -f k8s/
 ```
 
 Verify services:
+
 ```bash
-kubectl -n repo-analyzer get deploy,svc,ingress,pods
-kubectl -n repo-analyzer get svc repo-analyzer-backend-service -o yaml | grep -A4 ports:
-kubectl -n repo-analyzer describe ingress repo-analyzer-ingress
+kubectl -nunified-repo-analyzer get deploy,svc,ingress,pods
+kubectl -nunified-repo-analyzer get svcunified-repo-analyzer-backend-service -o yaml | grep -A4 ports:
+kubectl -nunified-repo-analyzer describe ingressunified-repo-analyzer-ingress
 ```

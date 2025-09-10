@@ -150,6 +150,9 @@
     "zod": "^3.22.4"
   },
   "trustedDependencies": [
-    "@sentry/cli"
+    "@sentry/cli",
+    "bun",
+    "core-js",
+    "esbuild"
   ]
 }

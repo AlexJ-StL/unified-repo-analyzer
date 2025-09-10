@@ -2,21 +2,24 @@
 
 ## Issue Description
 
-The CLI was failing to execute with the error: `error: could not determine executable to run for package repo-analyzer`. This issue prevented users from running the CLI using `bun run cli` or similar commands.
+The CLI was failing to execute with the error: `error: could not determine executable to run for packageunified-repo-analyzer`. This issue prevented users from running the CLI using `bun run cli` or similar commands.
 
 ## Root Causes Identified
 
 ### 1. Missing CLI Script in Root Package.json
+
 - **Problem**: The `cli` script was missing from the root `package.json`
 - **Impact**: Users couldn't run `bun run cli` from the project root
 - **Solution**: Added the `cli` script pointing to the correct CLI binary
 
 ### 2. ES Module Configuration Issues
+
 - **Problem**: Both the root and CLI package.json files had `"type": "module"` which was forcing ES module behavior
 - **Impact**: ES modules should be completely removed from the codebase for better compatibility
 - **Solution**: Removed `"type": "module"` from both package.json files
 
 ### 3. ES Module Syntax in CLI Binary
+
 - **Problem**: The CLI binary was using ES module `import` syntax instead of CommonJS `require` syntax
 - **Impact**: Caused compatibility issues with Bun and Node.js runtime
 - **Solution**: Changed `import("../index.js")` to `require("../index.js")` in the CLI binary
@@ -24,6 +27,7 @@ The CLI was failing to execute with the error: `error: could not determine execu
 ## Fixes Applied
 
 ### 1. Updated Root Package.json
+
 ```json
 {
   "scripts": {
@@ -31,10 +35,12 @@ The CLI was failing to execute with the error: `error: could not determine execu
   }
 }
 ```
+
 - Removed `"type": "module"` from the root package.json
 - Updated the `cli` script to use `bun` instead of `node`
 
 ### 2. Updated CLI Package.json
+
 ```json
 {
   "name": "@unified-repo-analyzer/cli",
@@ -45,10 +51,12 @@ The CLI was failing to execute with the error: `error: could not determine execu
   }
 }
 ```
+
 - Removed `"type": "module"` from the CLI package.json
 - Maintained the existing `main` and `bin` configurations
 
 ### 3. Fixed CLI Binary to Use CommonJS
+
 ```typescript
 // Before (ES Module)
 void (async () => {
@@ -60,12 +68,14 @@ void (async () => {
   require("../index.js");
 })();
 ```
+
 - Changed the import syntax in `packages/cli/bin/repo-analyzer.ts`
 - Used `__filename` instead of `import.meta.url` for CommonJS compatibility
 
 ## Testing Results
 
 ### Commands That Now Work:
+
 - ✅ `bun run cli --help` - Shows CLI help from root directory
 - ✅ `bun run cli analyze /path/to/repository` - Runs CLI analysis
 - ✅ `bun run cli batch /path/to/repositories` - Runs batch analysis
@@ -74,7 +84,8 @@ void (async () => {
 - ✅ `node packages/cli/dist/bin/repo-analyzer.js --help` - Direct execution with Node.js (no warnings)
 
 ### Commands That Still Need Work:
-- ❌ `bunx repo-analyzer analyze --help` - Global package installation not working (requires global npm install)
+
+- ❌ `bunxunified-repo-analyzer analyze --help` - Global package installation not working (requires global npm install)
 
 ## Current Status
 
@@ -82,11 +93,12 @@ void (async () => {
 ✅ **ES modules completely removed** - No more ES module warnings or errors  
 ✅ **CommonJS compatibility restored** - Using `__filename` and `require` as expected  
 ✅ **Bun compatibility maintained** - All configurations work with Bun  
-✅ **Biome and Vitest configurations intact** - No changes to these tools  
+✅ **Biome and Vitest configurations intact** - No changes to these tools
 
 ## Impact on Development Workflow
 
 ### Before Fix:
+
 ```bash
 # These commands would fail
 bun run cli --help
@@ -94,6 +106,7 @@ bun run cli analyze /path/to/repo
 ```
 
 ### After Fix:
+
 ```bash
 # These commands now work
 bun run build:cli

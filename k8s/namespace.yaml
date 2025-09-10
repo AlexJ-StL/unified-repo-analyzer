@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: repo-analyzer
+  name: unified-repo-analyzer
   labels:
-    name: repo-analyzer
-    app: unified-repo-analyzer
+    name: unified-repo-analyzer
+    app: unified-unified-repo-analyzer

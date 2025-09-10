@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm run build && node dist/index.js",
     "dev:node": "ts-node src/index.ts",
-    "build": "npx rimraf dist && ..\\..\\node_modules\\.bin\\tsc --project tsconfig.json",
+    "build": "bunx rimraf dist && bunx tsc --project tsconfig.json",
     "build:tsc": "bunx tsc --project tsconfig.prod.json",
     "build:prod": "cross-env NODE_ENV=production bun run build --minify || cross-env NODE_ENV=production npm run build:tsc",
     "start": "bun dist/index.js || node dist/index.js",
@@ -47,6 +47,7 @@
     "express": "^4.19.2",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
+    "ignore": "^7.0.5",
     "lru-cache": "^10.2.0",
     "morgan": "^1.10.0",
     "socket.io": "^4.7.5",

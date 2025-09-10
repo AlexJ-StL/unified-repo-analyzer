@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: repo-analyzer-backend-service
-  namespace: repo-analyzer
+  name: unified-repo-analyzer-backend-service
+  namespace: unified-repo-analyzer
   labels:
-    app: repo-analyzer-backend
+    app: unified-repo-analyzer-backend
     component: backend
 spec:
   selector:
-    app: repo-analyzer-backend
+    app: unified-repo-analyzer-backend
   ports:
     - name: http
       port: 3000
@@ -24,14 +24,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: repo-analyzer-frontend-service
-  namespace: repo-analyzer
+  name: unified-repo-analyzer-frontend-service
+  namespace: unified-repo-analyzer
   labels:
-    app: repo-analyzer-frontend
+    app: unified-repo-analyzer-frontend
     component: frontend
 spec:
   selector:
-    app: repo-analyzer-frontend
+    app: unified-repo-analyzer-frontend
   ports:
     - name: http
       port: 80
