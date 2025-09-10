@@ -8,9 +8,9 @@
   ],
   "scripts": {
     "dev": "echo \"Please run backend and frontend separately in different terminals:\" && echo \"Terminal 1: bun run dev:backend\" && echo \"Terminal 2: bun run dev:frontend\"",
-    "dev:backend": "bun run dev --cwd packages/backend",
-    "dev:frontend": "bun run dev --cwd packages/frontend",
-    "dev:cli": "bun run dev --cwd packages/cli",
+    "dev:backend": "cd packages/backend && bun run dev",
+    "dev:frontend": "cd packages/frontend && bun run dev",
+    "dev:cli": "cd packages/cli && bun run dev",
     "cli": "bun packages/cli/dist/bin/repo-analyzer.js",
     "build": "tsx scripts/enhanced-build.ts",
     "build:legacy": "bun run build:shared && bun run build:backend && bun run build:cli && bun run build:frontend",
