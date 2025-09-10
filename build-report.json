@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-09-10T07:46:56.578Z",
+  "timestamp": "2025-09-10T10:49:55.296Z",
   "success": false,
-  "duration": 31702.896399999998,
+  "duration": 31467.801000000003,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
       "success": true,
       "exitCode": 0,
-      "duration": 10059.6525,
+      "duration": 10014.7061,
       "stdout": "\n> @unified-repo-analyzer/shared@1.0.0 build\n> npm run build:clean && npm run build:types\n\n\n> @unified-repo-analyzer/shared@1.0.0 build:clean\n> npx rimraf dist\n\n\n> @unified-repo-analyzer/shared@1.0.0 build:types\n> tsc\n\n"
     },
     "@unified-repo-analyzer/backend": {
@@ -24,68 +24,68 @@
     "@unified-repo-analyzer/cli": {
       "success": true,
       "exitCode": 0,
-      "duration": 8717.774099999999,
+      "duration": 9319.086800000005,
       "stdout": "\n> @unified-repo-analyzer/cli@1.0.0 build\n> npm run build:clean && npm run build:types && npm run build:shebang\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:clean\n> npx rimraf dist\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:types\n> ..\\..\\node_modules\\.bin\\tsc --project tsconfig.json\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:shebang\n> node ../../scripts/insert-shebang.js\n\nInserted shebang and copied to C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\\dist\\bin\\repo-analyzer.js\n"
     },
     "@unified-repo-analyzer/frontend": {
       "success": true,
       "exitCode": 0,
-      "duration": 12925.469799999999,
-      "stdout": "\n> @unified-repo-analyzer/frontend@1.0.0 build\n> npx vite build\n\n\u001b[36mvite v7.0.4 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1327 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-C_F5ag-d.js   \u001b[39m\u001b[1m\u001b[2m  0.65 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-BCX6114c.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-B19M5LAm.js       \u001b[39m\u001b[1m\u001b[2m  7.11 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DKrPLKA6.js     \u001b[39m\u001b[1m\u001b[2m  7.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  3.37 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-CSRltLFx.js   \u001b[39m\u001b[1m\u001b[2m 22.76 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.42 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-BaDS38dW.js  \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.49 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-D9fI6xYV.js         \u001b[39m\u001b[1m\u001b[2m 37.63 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.75 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-CBq_O2jQ.js                \u001b[39m\u001b[1m\u001b[2m 43.77 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.69 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-DMePki_D.js          \u001b[39m\u001b[1m\u001b[2m 95.55 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 23.05 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-D86hg577.js              \u001b[39m\u001b[1m\u001b[2m177.46 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.68 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-BecQaL0S.js        \u001b[39m\u001b[1m\u001b[2m244.48 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 69.02 kB\u001b[22m\n\u001b[32m✓ built in 9.57s\u001b[39m\n"
+      "duration": 12134.0081,
+      "stdout": "\n> @unified-repo-analyzer/frontend@1.0.0 build\n> npx vite build\n\n\u001b[36mvite v7.0.4 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1327 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-C_F5ag-d.js   \u001b[39m\u001b[1m\u001b[2m  0.65 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-BCX6114c.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-B19M5LAm.js       \u001b[39m\u001b[1m\u001b[2m  7.11 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DKrPLKA6.js     \u001b[39m\u001b[1m\u001b[2m  7.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  3.37 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-CSRltLFx.js   \u001b[39m\u001b[1m\u001b[2m 22.76 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.42 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-BaDS38dW.js  \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.49 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-D9fI6xYV.js         \u001b[39m\u001b[1m\u001b[2m 37.63 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.75 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-CBq_O2jQ.js                \u001b[39m\u001b[1m\u001b[2m 43.77 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.69 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-DMePki_D.js          \u001b[39m\u001b[1m\u001b[2m 95.55 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 23.05 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-D86hg577.js              \u001b[39m\u001b[1m\u001b[2m177.46 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.68 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-BecQaL0S.js        \u001b[39m\u001b[1m\u001b[2m244.48 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 69.02 kB\u001b[22m\n\u001b[32m✓ built in 8.75s\u001b[39m\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-09-10T07:46:06.505Z",
+      "timestamp": "2025-09-10T10:49:05.682Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-09-10T07:46:06.701Z",
+      "timestamp": "2025-09-10T10:49:06.086Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-10T07:46:16.760Z",
+      "timestamp": "2025-09-10T10:49:16.101Z",
       "level": "success",
-      "message": "Command completed successfully in 10060ms",
+      "message": "Command completed successfully in 10015ms",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-10T07:46:16.762Z",
+      "timestamp": "2025-09-10T10:49:16.103Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-10T07:46:25.651Z",
+      "timestamp": "2025-09-10T10:49:24.449Z",
       "level": "warning",
       "message": "Command failed, retrying (1/1)",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-10T07:46:34.933Z",
+      "timestamp": "2025-09-10T10:49:33.841Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-10T07:46:43.651Z",
+      "timestamp": "2025-09-10T10:49:43.160Z",
       "level": "success",
-      "message": "Command completed successfully in 8718ms",
+      "message": "Command completed successfully in 9319ms",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-10T07:46:43.651Z",
+      "timestamp": "2025-09-10T10:49:43.160Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/frontend"
     },
     {
-      "timestamp": "2025-09-10T07:46:56.577Z",
+      "timestamp": "2025-09-10T10:49:55.294Z",
       "level": "success",
-      "message": "Command completed successfully in 12925ms",
+      "message": "Command completed successfully in 12134ms",
       "package": "@unified-repo-analyzer/frontend"
     }
   ],
