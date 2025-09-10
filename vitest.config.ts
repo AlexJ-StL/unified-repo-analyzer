@@ -1,5 +1,9 @@
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   // No plugins to avoid Vite/Vitest version conflicts
@@ -106,13 +110,14 @@ export default defineConfig({
     outputFile: process.env.CI ? './test-results.xml' : undefined,
 
     // CRITICAL: Ultra-conservative concurrency limits to prevent system overload
-    pool: 'forks',
+    pool: 'threads',
     poolOptions: {
-      forks: {
-        singleFork: true, // Force single process to prevent Bun explosion
+      threads: {
+        singleThread: false,
         isolate: true,
-        maxForks: 1, // ABSOLUTE MAXIMUM 1 process
-        minForks: 1,
+        useAtomics: true,
+        maxThreads: 1,
+        minThreads: 1,
       },
     },
 
