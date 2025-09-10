@@ -3,9 +3,9 @@
  * Uses the new error handling utilities to provide detailed feedback
  */
 
+import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 import { runBuildProcess } from '../packages/shared/src/utils/build-utils.js';
 import { EnhancedLogger } from '../packages/shared/src/utils/error-handling.js';
-import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 
 /**
  * Main build function

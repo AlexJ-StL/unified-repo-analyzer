@@ -9,10 +9,10 @@ import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
+import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 import type { BuildResult } from '../packages/shared/src/utils/build-utils.js';
 // Import our enhanced error handling utilities
 import { EnhancedLogger, ErrorAnalyzer } from '../packages/shared/src/utils/error-handling.js';
-import { ErrorCategory, ErrorSeverity } from '../packages/shared/src/types/error-classification.js';
 
 /**
  * Diagnostic check result

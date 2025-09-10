@@ -4,8 +4,8 @@
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import type { LLMResponse, ProjectInfo, ProviderConfig } from '@unified-repo-analyzer/shared';
+import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import axios from 'axios';
 import { logger, logPerformance } from '../services/logger.service.js';
 import { LLMProvider } from './LLMProvider.js';

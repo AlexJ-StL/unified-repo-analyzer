@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockFunction } from '../../../../../tests/MockManager.js';
-import { requestLogger } from '../logger.service.js';
-import { logger } from '../logger.service.js';
+import { logger, requestLogger } from '../logger.service.js';
 
 describe('HTTP Request/Response Logging', () => {
   let mockReq: any;

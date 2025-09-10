@@ -7,12 +7,11 @@ import path from 'node:path';
 import type {
   ArchitecturalPattern,
   ComplexityMetrics,
-  RepositoryAnalysis,
-  DirectoryInfo,
-  Framework,
   Dependency,
+  DirectoryInfo,
+  FileInfo,
+  RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared';
-import type { FileInfo } from '@unified-repo-analyzer/shared';
 import { ProviderRegistry } from '../providers/ProviderRegistry.js';
 import { readFileWithErrorHandling } from '../utils/fileSystem.js';
 

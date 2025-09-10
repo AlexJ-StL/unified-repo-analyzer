@@ -5,7 +5,6 @@
  */
 
 import path from 'node:path';
-import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import type {
   AnalysisOptions,
   BatchAnalysisResult,
@@ -14,6 +13,7 @@ import type {
   SearchQuery,
   SearchResult,
 } from '@unified-repo-analyzer/shared';
+import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { cacheService } from '../services/cache.service.js';
 import { deduplicationService } from '../services/deduplication.service.js';

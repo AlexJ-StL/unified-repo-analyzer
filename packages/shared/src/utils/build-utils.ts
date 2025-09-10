@@ -7,6 +7,7 @@ import { type ChildProcess, spawn } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
+import { ErrorCategory, ErrorSeverity } from '../types/error-classification.js';
 import {
   type BuildErrorContext,
   type DependencyErrorContext,
@@ -14,7 +15,6 @@ import {
   ErrorAnalyzer,
   ErrorHandler,
 } from './error-handling.js';
-import { ErrorCategory, ErrorSeverity } from '../types/error-classification.js';
 
 /**
  * Build command configuration

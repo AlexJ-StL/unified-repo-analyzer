@@ -14,7 +14,6 @@ export class ErrorClassifier {
   errorHistory = new Map();
   correlationMap = new Map(); // correlationId -> errorIds
   maxHistorySize = 1000;
-  constructor() {}
   /**
    * Get singleton instance
    */
@@ -27,7 +26,7 @@ export class ErrorClassifier {
   /**
    * Classify an error and return a structured error object
    */
-  classifyError(error, context = {}, parentErrorId) {
+  classifyError(error, context, parentErrorId) {
     const errorMessage = typeof error === 'string' ? error : error.message;
     const originalError = typeof error === 'string' ? undefined : error;
     // Generate unique identifiers

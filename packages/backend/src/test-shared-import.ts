@@ -1,7 +1,7 @@
 // Test shared package import
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared';
 
-const test: AnalysisOptions = {
+const _test: AnalysisOptions = {
   mode: 'standard',
   maxFiles: 100,
   maxLinesPerFile: 1000,
