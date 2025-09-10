@@ -136,18 +136,18 @@
     "cross-env": "^7.0.3",
     "jest-axe": "^10.0.0",
     "jsdom": "^26.1.0",
-    "tsx": "^4.20.4",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.2.2",
-    "@sentry/bun": "^10.5.0",
-    "@sentry/cli": "^2.52.0",
+    "@biomejs/biome": "^2.2.4",
+    "@sentry/bun": "^10.11.0",
+    "@sentry/cli": "^2.53.0",
     "biome": "^0.3.3",
-    "bun": "^1.2.20",
+    "bun": "^1.2.21",
     "vitest-mock-extended": "^3.1.0",
-    "zod": "^3.22.4"
+    "zod": "^3.25.76"
   },
   "trustedDependencies": [
     "@sentry/cli",
