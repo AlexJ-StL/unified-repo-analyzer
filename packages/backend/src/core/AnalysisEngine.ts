@@ -13,21 +13,21 @@ import type {
   RepositoryAnalysis,
   SearchQuery,
   SearchResult,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
+} from '@unified-repo-analyzer/shared';
 import { v4 as uuidv4 } from 'uuid';
-import { cacheService } from '../services/cache.service';
-import { deduplicationService } from '../services/deduplication.service';
+import { cacheService } from '../services/cache.service.js';
+import { deduplicationService } from '../services/deduplication.service.js';
 import { logAnalysis, logger, logPerformance } from '../services/logger.service.js';
-import { metricsService } from '../services/metrics.service';
-import { readFileWithErrorHandling } from '../utils/fileSystem';
+import { metricsService } from '../services/metrics.service.js';
+import { readFileWithErrorHandling } from '../utils/fileSystem.js';
 import {
   analysisOptionsToDiscoveryOptions,
   discoverRepository,
-} from '../utils/repositoryDiscovery';
-import { AdvancedAnalyzer } from './advancedAnalyzer';
-import { analyzeCodeStructure } from './codeStructureAnalyzer';
-import type { IndexSystem, RepositoryMatch } from './IndexSystem';
-import { countTokens } from './tokenAnalyzer';
+} from '../utils/repositoryDiscovery.js';
+import { AdvancedAnalyzer } from './advancedAnalyzer.js';
+import { analyzeCodeStructure } from './codeStructureAnalyzer.js';
+import type { IndexSystem, RepositoryMatch } from './IndexSystem.js';
+import { countTokens } from './tokenAnalyzer.js';
 
 /**
  * Core Analysis Engine for repository processing
@@ -512,7 +512,7 @@ export class AnalysisEngine {
       const batchId = uuidv4();
 
       // Import TaskQueue
-      const { TaskQueue, QueueEvent } = await import('../utils/queue');
+      const { TaskQueue, QueueEvent } = await import('../utils/queue.js');
 
       // Create queue for processing repositories
       const queue = new TaskQueue(
@@ -611,7 +611,7 @@ export class AnalysisEngine {
     let commonLanguages: string[] = [];
     if (languageSets.length > 0) {
       const firstSet = languageSets[0];
-      const common = new Set<string>(firstSet);
+      const common = new Set<string>(firstSet as Set<string>);
       for (let i = 1; i < languageSets.length; i++) {
         const currentSet = languageSets[i];
         for (const item of common) {
@@ -628,7 +628,7 @@ export class AnalysisEngine {
     let commonFrameworks: string[] = [];
     if (frameworkSets.length > 0) {
       const firstSet = frameworkSets[0];
-      const common = new Set<string>(firstSet);
+      const common = new Set<string>(firstSet as Set<string>);
       for (let i = 1; i < frameworkSets.length; i++) {
         const currentSet = frameworkSets[i];
         for (const item of common) {
@@ -644,7 +644,7 @@ export class AnalysisEngine {
     const uniqueLanguages = repositories.map((repo) => {
       return {
         name: repo.name,
-        languages: repo.languages.filter((lang) => !commonLanguages.includes(lang)),
+        languages: repo.languages.filter((lang: string) => !commonLanguages.includes(lang)),
       };
     });
 
@@ -652,7 +652,9 @@ export class AnalysisEngine {
     const uniqueFrameworks = repositories.map((repo) => {
       return {
         name: repo.name,
-        frameworks: repo.frameworks.filter((framework) => !commonFrameworks.includes(framework)),
+        frameworks: repo.frameworks.filter(
+          (framework: string) => !commonFrameworks.includes(framework)
+        ),
       };
     });
 
@@ -691,10 +693,12 @@ export class AnalysisEngine {
 
     // Check for frontend/backend pairs
     const hasFrontend = repositories.some((repo) =>
-      repo.frameworks.some((f) => ['react', 'vue', 'angular', 'svelte'].includes(f.toLowerCase()))
+      repo.frameworks.some((f: string) =>
+        ['react', 'vue', 'angular', 'svelte'].includes(f.toLowerCase())
+      )
     );
     const hasBackend = repositories.some((repo) =>
-      repo.frameworks.some((f) =>
+      repo.frameworks.some((f: string) =>
         ['express', 'nest', 'django', 'flask', 'spring'].includes(f.toLowerCase())
       )
     );
@@ -722,7 +726,7 @@ export class AnalysisEngine {
     format: OutputFormat
   ): Promise<string> {
     // Import export service
-    const { default: exportService } = await import('../services/export.service');
+    const { default: exportService } = await import('../services/export.service.js');
 
     // Use export service to generate content
     return exportService.exportAnalysis(analysis, format);
@@ -783,7 +787,7 @@ export class AnalysisEngine {
     let totalTokenCount = 0;
 
     // Process each key file
-    const filePromises = analysis.structure.keyFiles.map(async (fileInfo) => {
+    const filePromises = analysis.structure.keyFiles.map(async (fileInfo: any) => {
       try {
         // Get absolute file path
         const filePath = path.join(analysis.path, fileInfo.path);

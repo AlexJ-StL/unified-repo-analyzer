@@ -11,7 +11,7 @@ import type {
   RepositoryAnalysis,
 } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { AnalysisEngine } from '../core/AnalysisEngine';
+import { AnalysisEngine } from '../core/AnalysisEngine.js';
 import { analysisCache } from '../services/cache.service';
 import { deduplicationService } from '../services/deduplication.service';
 import { metricsService } from '../services/metrics.service';

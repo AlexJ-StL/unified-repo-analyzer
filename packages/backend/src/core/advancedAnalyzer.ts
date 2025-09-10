@@ -8,12 +8,15 @@ import type {
   ArchitecturalPattern,
   ComplexityMetrics,
   RepositoryAnalysis,
-} from '@unified-repo-analyzer/shared/src/types/analysis';
-import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repository';
-import { ProviderRegistry } from '../providers/ProviderRegistry';
-import { readFileWithErrorHandling } from '../utils/fileSystem';
+  DirectoryInfo,
+  Framework,
+  Dependency,
+} from '@unified-repo-analyzer/shared';
+import type { FileInfo } from '@unified-repo-analyzer/shared';
+import { ProviderRegistry } from '../providers/ProviderRegistry.js';
+import { readFileWithErrorHandling } from '../utils/fileSystem.js';
 
-import { countTokens } from './tokenAnalyzer';
+import { countTokens } from './tokenAnalyzer.js';
 
 /**
  * Security vulnerability information
@@ -769,7 +772,7 @@ export class AdvancedAnalyzer {
             line: lineNumber,
             recommendation: this.getSecurityRecommendation(type),
           });
-          
+
           // Move to next match
           match = pattern.exec(content);
         }
@@ -839,13 +842,13 @@ export class AdvancedAnalyzer {
     const recommendations: string[] = [];
 
     // General recommendations based on project type
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('express'))) {
+    if (analysis.frameworks.some((f: string) => f.toLowerCase().includes('express'))) {
       recommendations.push('Use helmet.js for security headers');
       recommendations.push('Implement rate limiting');
       recommendations.push('Use HTTPS in production');
     }
 
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('react'))) {
+    if (analysis.frameworks.some((f: string) => f.toLowerCase().includes('react'))) {
       recommendations.push('Sanitize user inputs to prevent XSS');
       recommendations.push('Use Content Security Policy (CSP)');
     }
@@ -960,14 +963,16 @@ export class AdvancedAnalyzer {
    */
   private detectStructuralPatterns(analysis: RepositoryAnalysis): ArchitecturalPattern[] {
     const patterns: ArchitecturalPattern[] = [];
-    const directories = analysis.structure.directories.map((d) => d.path.toLowerCase());
-    const files = analysis.structure.keyFiles.map((f) => f.path.toLowerCase());
+    const directories = analysis.structure.directories.map((d: DirectoryInfo) =>
+      d.path.toLowerCase()
+    );
+    const files = analysis.structure.keyFiles.map((f: FileInfo) => f.path.toLowerCase());
 
     // MVC Pattern
     const hasMVC =
-      directories.some((d) => d.includes('model')) &&
-      directories.some((d) => d.includes('view')) &&
-      directories.some((d) => d.includes('controller'));
+      directories.some((d: string) => d.includes('model')) &&
+      directories.some((d: string) => d.includes('view')) &&
+      directories.some((d: string) => d.includes('controller'));
 
     if (hasMVC) {
       patterns.push({
@@ -980,9 +985,9 @@ export class AdvancedAnalyzer {
 
     // Layered Architecture
     const hasLayers =
-      directories.some((d) => d.includes('service')) &&
-      directories.some((d) => d.includes('repository')) &&
-      directories.some((d) => d.includes('controller'));
+      directories.some((d: string) => d.includes('service')) &&
+      directories.some((d: string) => d.includes('repository')) &&
+      directories.some((d: string) => d.includes('controller'));
 
     if (hasLayers) {
       patterns.push({
@@ -994,9 +999,9 @@ export class AdvancedAnalyzer {
 
     // Microservices
     const hasMicroservices =
-      directories.filter((d) => d.includes('service')).length > 3 ||
-      files.some((f) => f.includes('docker')) ||
-      files.some((f) => f.includes('kubernetes'));
+      directories.filter((d: string) => d.includes('service')).length > 3 ||
+      files.some((f: string) => f.includes('docker')) ||
+      files.some((f: string) => f.includes('kubernetes'));
 
     if (hasMicroservices) {
       patterns.push({
@@ -1041,11 +1046,13 @@ export class AdvancedAnalyzer {
    */
   private detectFrameworkPatterns(analysis: RepositoryAnalysis): ArchitecturalPattern[] {
     const patterns: ArchitecturalPattern[] = [];
-    const frameworks = analysis.frameworks.map((f) => f.toLowerCase());
+    const frameworks = analysis.frameworks.map((f: string) => f.toLowerCase());
 
     // REST API
     if (
-      frameworks.some((f) => f.includes('express') || f.includes('fastify') || f.includes('koa'))
+      frameworks.some(
+        (f: string) => f.includes('express') || f.includes('fastify') || f.includes('koa')
+      )
     ) {
       patterns.push({
         name: 'REST API',
@@ -1171,14 +1178,14 @@ export class AdvancedAnalyzer {
     }
 
     // Framework-specific recommendations
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('react'))) {
+    if (analysis.frameworks.some((f: string) => f.toLowerCase().includes('react'))) {
       if (!patternNames.some((p) => p.includes('component'))) {
         recommendations.push('Implement proper component hierarchy and state management');
       }
       recommendations.push('Consider using React hooks for state management');
     }
 
-    if (analysis.frameworks.some((f) => f.toLowerCase().includes('express'))) {
+    if (analysis.frameworks.some((f: string) => f.toLowerCase().includes('express'))) {
       if (!patternNames.some((p) => p.includes('rest'))) {
         recommendations.push('Follow REST API conventions for better maintainability');
       }
@@ -1258,8 +1265,8 @@ export class AdvancedAnalyzer {
         directoryCount: analysis.directoryCount,
         description: analysis.description,
         readme: '', // We don't have README content in the analysis object
-        directories: analysis.structure.directories.map((dir) => dir.path),
-        fileAnalysis: analysis.structure.keyFiles.map((file) => ({
+        directories: analysis.structure.directories.map((dir: DirectoryInfo) => dir.path),
+        fileAnalysis: analysis.structure.keyFiles.map((file: FileInfo) => ({
           path: file.path,
           lineCount: file.lineCount,
           functionCount: file.functions?.length || 0,
@@ -1270,12 +1277,12 @@ export class AdvancedAnalyzer {
           classes: file.classes?.map((c) => c.name) || [],
           sample: '', // We don't have file content in the analysis object
         })),
-        keyFiles: analysis.structure.keyFiles.map((file) => file.path),
+        keyFiles: analysis.structure.keyFiles.map((file: FileInfo) => file.path),
         dependencies: Object.fromEntries(
-          analysis.dependencies.production.map((dep) => [dep.name, dep.version])
+          analysis.dependencies.production.map((dep: Dependency) => [dep.name, dep.version])
         ),
         devDependencies: Object.fromEntries(
-          analysis.dependencies.development.map((dep) => [dep.name, dep.version])
+          analysis.dependencies.development.map((dep: Dependency) => [dep.name, dep.version])
         ),
       };
 

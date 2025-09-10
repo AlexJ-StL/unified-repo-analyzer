@@ -4,7 +4,7 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AnalysisEngine } from '../AnalysisEngine';
+import { AnalysisEngine } from '../AnalysisEngine.js';
 
 // Mock dependencies
 vi.mock('../../utils/fileSystem', () => ({
@@ -103,11 +103,11 @@ vi.mock('../../services/metrics.service', () => ({
   },
 }));
 
-const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem');
+const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem.js');
 const {
   discoverRepository: mockDiscoverRepository,
   analysisOptionsToDiscoveryOptions: mockAnalysisOptionsToDiscoveryOptions,
-} = await import('../../utils/repositoryDiscovery');
+} = await import('../../utils/repositoryDiscovery.js');
 
 describe('AnalysisEngine Advanced Features Integration', () => {
   let engine: AnalysisEngine;

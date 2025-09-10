@@ -3,7 +3,7 @@
  */
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { ProviderRegistry } from '../../../providers/ProviderRegistry';
+import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 
 // Helper function to create mock response object
 function createMockResponse() {
@@ -36,7 +36,7 @@ describe('providers routes', () => {
       });
 
       // Import the route handler
-      const providersRoute = (await import('../providers')).default;
+      const providersRoute = (await import('../providers.js')).default;
 
       // Create a mock request and response
       const req: any = {};
@@ -80,7 +80,7 @@ describe('providers routes', () => {
 
     test('should handle errors gracefully', async () => {
       // Import the route handler
-      const providersRoute = (await import('../providers')).default;
+      const providersRoute = (await import('../providers.js')).default;
 
       // Create a mock request and response
       const req: any = {};
@@ -114,7 +114,7 @@ describe('providers routes', () => {
   describe('Requirements Validation', () => {
     test('should meet requirement 1.1 - OpenRouter listed as available provider', async () => {
       // Import the route handler
-      const providersRoute = (await import('../providers')).default;
+      const providersRoute = (await import('../providers.js')).default;
 
       // Create a mock request and response
       const req: any = {};
@@ -150,7 +150,7 @@ describe('providers routes', () => {
       });
 
       // Import the route handler
-      const providersRoute = (await import('../providers')).default;
+      const providersRoute = (await import('../providers.js')).default;
 
       // Create a mock request and response
       const req: any = {};
@@ -181,7 +181,7 @@ describe('providers routes', () => {
 
     test('should meet requirement 7.3 - clearly indicate provider capabilities', async () => {
       // Import the route handler
-      const providersRoute = (await import('../providers')).default;
+      const providersRoute = (await import('../providers.js')).default;
 
       // Create a mock request and response
       const req: any = {};

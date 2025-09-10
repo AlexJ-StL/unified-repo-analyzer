@@ -1,7 +1,7 @@
 import type { SearchQuery } from '@unified-repo-analyzer/shared/src/types/analysis';
 import type { IndexedRepository } from '@unified-repo-analyzer/shared/src/types/repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { IndexSystem, type RepositoryIndex } from '../core/IndexSystem';
+import { IndexSystem, type RepositoryIndex } from '../core/IndexSystem.js';
 
 describe('File Type Filtering', () => {
   let indexSystem: IndexSystem;

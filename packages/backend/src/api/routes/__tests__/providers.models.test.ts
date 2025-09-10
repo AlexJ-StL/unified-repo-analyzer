@@ -5,8 +5,8 @@
 import express from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProviderRegistry } from '../../../providers/ProviderRegistry';
-import providersRouter from '../providers';
+import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
+import providersRouter from '../providers.js';
 
 // Mock the ProviderRegistry
 vi.mock('../../../providers/ProviderRegistry');

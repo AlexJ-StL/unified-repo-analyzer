@@ -3,22 +3,22 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["node", "vitest/globals", "bun-types"],
+    "types": [],
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
     "paths": {
       "@unified-repo-analyzer/shared": ["../shared/dist/index.d.ts"],
-      "@unified-repo-analyzer/shared/*": ["../shared/src/*"],
-      "@unified-repo-analyzer/shared/src/*": ["../shared/src/*"]
-    }
-  },,
+      "@unified-repo-analyzer/shared/*": ["../shared/dist/*"]
+    },
+    "typeRoots": ["../shared/dist", "./node_modules/@types"],
+    "resolveJsonModule": true
+  },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "node_modules",
@@ -28,12 +28,12 @@
     "**/*.test.js",
     "**/*.spec.js",
     "**/__tests__/**",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "../shared/src/**"
   ],
   "ts-node": {
     "compilerOptions": {
-      "module": "nodenext",
-      "moduleResolution": "nodenext"
+      "moduleResolution": "bundler"
     }
   }
 }

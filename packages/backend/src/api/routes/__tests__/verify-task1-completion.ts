@@ -3,7 +3,7 @@
  * This script demonstrates that all task requirements are met
  */
 
-import { ProviderRegistry } from '../../../providers/ProviderRegistry';
+import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 
 console.log('=== Task 1 Verification: Backend Provider Discovery API Endpoint ===\n');
 

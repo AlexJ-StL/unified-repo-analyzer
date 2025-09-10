@@ -4,7 +4,7 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { AnalysisEngine } from '../AnalysisEngine';
+import { AnalysisEngine } from '../AnalysisEngine.js';
 
 // Mock dependencies
 vi.mock('../../utils/repositoryDiscovery', () => ({
@@ -47,7 +47,7 @@ describe('AnalysisEngine - Batch Processing', () => {
     };
 
     // Get the mocked discoverRepository function
-    const { discoverRepository } = await import('../../utils/repositoryDiscovery');
+    const { discoverRepository } = await import('../../utils/repositoryDiscovery.js');
     mockDiscoverRepository = vi.mocked(discoverRepository);
   });
 

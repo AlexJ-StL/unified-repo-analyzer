@@ -4,7 +4,7 @@
 
 import request from 'supertest';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mockManager, mockModule } from '../../../../../tests/setup-minimal';
+import { mockManager, mockModule } from '../../../../../tests/setup-minimal.js';
 
 // Mock the modules before importing the app
 mockModule('../../core/AnalysisEngine', () => ({
@@ -29,7 +29,7 @@ mockModule('../../core/IndexSystem', () => ({
 }));
 
 // Import app after mocking
-import { app } from '../../index';
+import { app } from '../../index.js';
 
 describe('Fixed API Integration Tests', () => {
   let mockAnalysisEngine: InstanceType<typeof MockAnalysisEngine>;

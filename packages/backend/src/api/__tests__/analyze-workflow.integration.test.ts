@@ -10,7 +10,7 @@ import type { FileInfo } from '@unified-repo-analyzer/shared/src/types/repositor
 import express from 'express';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import routes from '../routes';
+import routes from '../routes.js';
 
 // Create test app
 const app = express();

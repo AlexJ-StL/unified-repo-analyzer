@@ -4,7 +4,7 @@
 
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AdvancedAnalyzer } from '../advancedAnalyzer';
+import { AdvancedAnalyzer } from '../advancedAnalyzer.js';
 
 // Mock file system operations
 vi.mock('../../utils/fileSystem', () => ({
@@ -17,7 +17,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem');
+const { readFileWithErrorHandling: mockReadFile } = await import('../../utils/fileSystem.js');
 
 // Cast the mock function to have proper mock methods
 const _mockReadFileWithMockMethods = mockReadFile as any;

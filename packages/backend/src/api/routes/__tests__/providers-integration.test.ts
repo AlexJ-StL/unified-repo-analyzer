@@ -3,7 +3,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { ProviderRegistry } from '../../../providers/ProviderRegistry';
+import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 
 describe('Providers API Integration - Task 1 Requirements', () => {
   let registry: ProviderRegistry;
