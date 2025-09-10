@@ -11,8 +11,6 @@ import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
 import type { IndexSystem } from '../../core/IndexSystem.js';
 
 // Import before mocking
-const { AnalysisEngine: AnalysisEngineClass } = await import('../../core/AnalysisEngine.js');
-const { IndexSystem: IndexSystemClass } = await import('../../core/IndexSystem.js');
 
 import { app } from '../../index.js';
 

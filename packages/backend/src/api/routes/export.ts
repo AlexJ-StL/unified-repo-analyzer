@@ -2,9 +2,9 @@
  * Export routes
  */
 
-import { Router } from "express";
-import { body, param } from "express-validator";
-import { exportController } from "../controllers";
+import { Router } from 'express';
+import { body, param } from 'express-validator';
+import { exportController } from '../controllers';
 
 const router = Router();
 
@@ -13,13 +13,13 @@ const router = Router();
  * Export a repository analysis
  */
 router.post(
-  "/",
+  '/',
   [
-    body("analysisId").optional().isString(),
-    body("format")
-      .isIn(["json", "markdown", "html"])
-      .withMessage("Format must be json, markdown, or html"),
-    body("analysis").optional().isObject(),
+    body('analysisId').optional().isString(),
+    body('format')
+      .isIn(['json', 'markdown', 'html'])
+      .withMessage('Format must be json, markdown, or html'),
+    body('analysis').optional().isObject(),
   ],
   exportController.exportAnalysis as any
 );
@@ -29,13 +29,13 @@ router.post(
  * Export a batch analysis result
  */
 router.post(
-  "/batch",
+  '/batch',
   [
-    body("batchId").optional().isString(),
-    body("format")
-      .isIn(["json", "markdown", "html"])
-      .withMessage("Format must be json, markdown, or html"),
-    body("batchAnalysis").optional().isObject(),
+    body('batchId').optional().isString(),
+    body('format')
+      .isIn(['json', 'markdown', 'html'])
+      .withMessage('Format must be json, markdown, or html'),
+    body('batchAnalysis').optional().isObject(),
   ],
   exportController.exportBatchAnalysis as any
 );
@@ -45,13 +45,8 @@ router.post(
  * Download an export file
  */
 router.get(
-  "/download/:exportId",
-  [
-    param("exportId")
-      .isString()
-      .notEmpty()
-      .withMessage("Export ID is required"),
-  ],
+  '/download/:exportId',
+  [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
   exportController.downloadExport as any
 );
 
@@ -59,20 +54,15 @@ router.get(
  * GET /api/export/history
  * Get export history
  */
-router.get("/history", exportController.getExportHistory as any);
+router.get('/history', exportController.getExportHistory as any);
 
 /**
  * DELETE /api/export/:exportId
  * Delete an export file
  */
 router.delete(
-  "/:exportId",
-  [
-    param("exportId")
-      .isString()
-      .notEmpty()
-      .withMessage("Export ID is required"),
-  ],
+  '/:exportId',
+  [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
   exportController.deleteExport as any
 );
 
