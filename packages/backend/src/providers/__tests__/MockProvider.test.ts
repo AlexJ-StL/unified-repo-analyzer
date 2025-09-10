@@ -4,7 +4,7 @@
 
 import type { ProjectInfo } from '@unified-repo-analyzer/shared/src/types/provider';
 import { describe, expect, test } from 'vitest';
-import { MockProvider } from '../MockProvider';
+import { MockProvider } from '../MockProvider.js';
 
 describe('MockProvider', () => {
   describe('constructor', () => {

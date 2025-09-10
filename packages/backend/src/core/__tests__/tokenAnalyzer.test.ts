@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { countTokens, sampleText } from '../tokenAnalyzer';
+import { countTokens, sampleText } from '../tokenAnalyzer.js';
 
 describe('Token Analyzer', () => {
   describe('countTokens', () => {

@@ -2,12 +2,12 @@
  * Registry for managing LLM providers
  */
 
-import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
-import { ClaudeProvider } from './ClaudeProvider';
-import { GeminiProvider } from './GeminiProvider';
-import type { LLMProvider } from './LLMProvider';
-import { MockProvider } from './MockProvider';
-import { OpenRouterProvider } from './OpenRouterProvider';
+import type { ProviderConfig } from '@unified-repo-analyzer/shared';
+import { ClaudeProvider } from './ClaudeProvider.js';
+import { GeminiProvider } from './GeminiProvider.js';
+import type { LLMProvider } from './LLMProvider.js';
+import { MockProvider } from './MockProvider.js';
+import { OpenRouterProvider } from './OpenRouterProvider.js';
 
 /**
  * Provider factory function type

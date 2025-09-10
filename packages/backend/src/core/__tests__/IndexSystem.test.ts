@@ -5,7 +5,7 @@
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { v4 as uuidv4 } from 'uuid';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { IndexSystem } from '../IndexSystem';
+import { IndexSystem } from '../IndexSystem.js';
 
 describe('IndexSystem', () => {
   let indexSystem: IndexSystem;

@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { analyzeCodeStructure } from '../codeStructureAnalyzer';
+import { analyzeCodeStructure } from '../codeStructureAnalyzer.js';
 
 describe('Code Structure Analyzer', () => {
   describe('JavaScript/TypeScript detection', () => {

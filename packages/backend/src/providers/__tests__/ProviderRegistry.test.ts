@@ -4,7 +4,7 @@
 
 import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type ProviderError, ProviderErrorType, ProviderRegistry } from '../ProviderRegistry';
+import { type ProviderError, ProviderErrorType, ProviderRegistry } from '../ProviderRegistry.js';
 
 // We'll mock axios calls directly in tests where needed
 

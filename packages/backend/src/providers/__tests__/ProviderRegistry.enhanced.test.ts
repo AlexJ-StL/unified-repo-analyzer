@@ -4,7 +4,7 @@
 
 import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { type ProviderError, ProviderErrorType, ProviderRegistry } from '../ProviderRegistry';
+import { type ProviderError, ProviderErrorType, ProviderRegistry } from '../ProviderRegistry.js';
 
 describe('ProviderRegistry - Enhanced Status Tracking', () => {
   let registry: ProviderRegistry;

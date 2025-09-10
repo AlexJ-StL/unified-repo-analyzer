@@ -8,7 +8,7 @@ import type {
   ProviderConfig,
 } from '@unified-repo-analyzer/shared/src/types/provider';
 import { describe, expect, test } from 'vitest';
-import { LLMProvider } from '../LLMProvider';
+import { LLMProvider } from '../LLMProvider.js';
 
 // Concrete implementation for testing abstract class
 class TestProvider extends LLMProvider {

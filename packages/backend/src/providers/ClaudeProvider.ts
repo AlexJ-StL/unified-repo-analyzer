@@ -5,14 +5,10 @@
  */
 
 import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
-import type {
-  LLMResponse,
-  ProjectInfo,
-  ProviderConfig,
-} from '@unified-repo-analyzer/shared/src/types/provider';
+import type { LLMResponse, ProjectInfo, ProviderConfig } from '@unified-repo-analyzer/shared';
 import axios from 'axios';
 import { logger, logPerformance } from '../services/logger.service.js';
-import { LLMProvider } from './LLMProvider';
+import { LLMProvider } from './LLMProvider.js';
 
 /**
  * Claude API response interface
@@ -84,11 +80,11 @@ ${projectInfo.description ? `# Description\n${projectInfo.description}\n` : ''}
 ${projectInfo.readme ? `# README\n${projectInfo.readme}\n` : ''}
 
 # Key Directories
-${projectInfo.directories.map((dir) => `- ${dir}`).join('\n')}
+${projectInfo.directories.map((dir: string) => `- ${dir}`).join('\n')}
 
 # Key Files
 ${projectInfo.fileAnalysis
-  .map((file) => {
+  .map((file: any) => {
     return `## ${file.path}
 - Lines: ${file.lineCount}
 - Functions: ${file.functionCount}

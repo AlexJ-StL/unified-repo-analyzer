@@ -2,12 +2,8 @@
  * Mock LLM provider implementation for testing
  */
 
-import type {
-  LLMResponse,
-  ProjectInfo,
-  ProviderConfig,
-} from '@unified-repo-analyzer/shared/src/types/provider';
-import { LLMProvider } from './LLMProvider';
+import type { LLMResponse, ProjectInfo, ProviderConfig } from '@unified-repo-analyzer/shared';
+import { LLMProvider } from './LLMProvider.js';
 
 /**
  * Mock LLM provider implementation for testing

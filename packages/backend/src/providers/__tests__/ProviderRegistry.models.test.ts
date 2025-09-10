@@ -3,7 +3,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProviderRegistry } from '../ProviderRegistry';
+import { ProviderRegistry } from '../ProviderRegistry.js';
 
 describe('ProviderRegistry Model Selection', () => {
   let registry: ProviderRegistry;

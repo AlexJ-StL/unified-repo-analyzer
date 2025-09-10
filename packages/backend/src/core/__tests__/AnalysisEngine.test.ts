@@ -4,8 +4,8 @@
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { beforeEach, describe, expect, test } from 'vitest';
-import { MockManager } from '../../../../../tests/MockManager';
-import { AnalysisEngine } from '../AnalysisEngine';
+import { MockManager } from '../../../../../tests/MockManager.js';
+import { AnalysisEngine } from '../AnalysisEngine.js';
 
 // Initialize MockManager
 const mockManager = MockManager.getInstance();
