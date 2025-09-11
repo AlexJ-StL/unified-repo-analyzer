@@ -290,7 +290,7 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
       // Ensure cleanup runs even if test throws
       cleanup.cleanup().catch((error) => {
         // Log cleanup error without using console
-        if (typeof process !== 'undefined' && process.stderr) {
+        if (process?.stderr) {
           process.stderr.write(`Cleanup error: ${error}\n`);
         }
       });

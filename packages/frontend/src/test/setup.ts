@@ -99,7 +99,7 @@ globalThis.PerformanceObserver = class PerformanceObserver {
 };
 
 // Mock performance.getEntriesByType
-if (typeof globalThis.window !== 'undefined' && globalThis.window.performance) {
+if (globalThis.window?.performance) {
   Object.defineProperty(globalThis.window, 'performance', {
     writable: true,
     value: {

@@ -633,7 +633,7 @@ export class TestExecutor {
    * Get current memory usage in MB
    */
   private getCurrentMemoryUsage(): number {
-    if (typeof process !== 'undefined' && process.memoryUsage) {
+    if (process?.memoryUsage) {
       return process.memoryUsage().heapUsed / 1024 / 1024;
     }
     return 0;

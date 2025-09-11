@@ -116,7 +116,7 @@ export class TestMemoryManager {
   private static memoryThreshold = 500 * 1024 * 1024; // 500MB
 
   static checkMemoryUsage(): boolean {
-    if (typeof process !== 'undefined' && process.memoryUsage) {
+    if (process?.memoryUsage) {
       const usage = process.memoryUsage();
       return usage.heapUsed < TestMemoryManager.memoryThreshold;
     }
@@ -124,7 +124,7 @@ export class TestMemoryManager {
   }
 
   static async forceGarbageCollection(): Promise<void> {
-    if (typeof global !== 'undefined' && global.gc) {
+    if (global?.gc) {
       global.gc();
     }
 

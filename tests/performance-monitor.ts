@@ -68,7 +68,7 @@ export class TestPerformanceMonitor {
    * Get current memory usage
    */
   private getMemoryUsage() {
-    if (typeof process !== 'undefined' && process.memoryUsage) {
+    if (process?.memoryUsage) {
       const usage = process.memoryUsage();
       return {
         heapUsed: usage.heapUsed,
@@ -232,7 +232,7 @@ export class MemoryUsageChecker {
   }
 
   static async forceGarbageCollection(): Promise<void> {
-    if (typeof global !== 'undefined' && global.gc) {
+    if (global?.gc) {
       global.gc();
       // Wait a bit for GC to complete
       await new Promise((resolve) => setTimeout(resolve, 100));

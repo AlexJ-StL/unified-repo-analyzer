@@ -115,7 +115,7 @@ export class IsolationManager {
       }
 
       // Clear Node.js require cache
-      if (typeof require !== 'undefined' && require.cache) {
+      if (require?.cache) {
         Object.keys(require.cache).forEach((key) => {
           // Only clear test-related modules, preserve core Node modules
           if (!key.includes('node_modules') || key.includes('vitest') || key.includes('test')) {
@@ -398,7 +398,7 @@ export namespace ModuleIsolation {
   export function createCacheSnapshot(): void {
     requireCacheSnapshot.clear();
 
-    if (typeof require !== 'undefined' && require.cache) {
+    if (require?.cache) {
       Object.entries(require.cache).forEach(([key, value]) => {
         requireCacheSnapshot.set(key, value);
       });
@@ -409,7 +409,7 @@ export namespace ModuleIsolation {
    * Restore module cache from snapshot
    */
   export function restoreCacheFromSnapshot(): void {
-    if (typeof require !== 'undefined' && require.cache) {
+    if (require?.cache) {
       // Clear current cache
       Object.keys(require.cache).forEach((key) => {
         delete require.cache[key];
@@ -426,7 +426,7 @@ export namespace ModuleIsolation {
    * Clear module cache selectively
    */
   export function clearCache(patterns?: string[]): void {
-    if (typeof require !== 'undefined' && require.cache) {
+    if (require?.cache) {
       const keysToDelete = Object.keys(require.cache).filter((key) => {
         if (!patterns || patterns.length === 0) {
           // Clear test-related modules by default
@@ -521,7 +521,7 @@ export namespace ModuleIsolation {
    */
   export function forceClearAll(): void {
     // Clear require cache
-    if (typeof require !== 'undefined' && require.cache) {
+    if (require?.cache) {
       Object.keys(require.cache).forEach((key) => {
         delete require.cache[key];
       });
@@ -547,8 +547,7 @@ export namespace ModuleIsolation {
     snapshotsCount: number;
   } {
     return {
-      requireCacheSize:
-        typeof require !== 'undefined' && require.cache ? Object.keys(require.cache).length : 0,
+      requireCacheSize: require?.cache ? Object.keys(require.cache).length : 0,
       mockedModulesCount: mockedModules.size,
       snapshotsCount: moduleSnapshots.size,
     };
