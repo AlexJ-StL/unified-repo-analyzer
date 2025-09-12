@@ -251,3 +251,6 @@ tests/e2e/playwright-report/
 
 # Ignore local tool lock/state files occasionally generated
 **/.DS_Store
+
+# Test Analysis Results
+analysis-results/*
