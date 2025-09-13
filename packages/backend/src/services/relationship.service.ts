@@ -3,8 +3,11 @@
  * Provides advanced relationship analysis and visualization data
  */
 
-import type { IndexedRepository, RepositoryRelationship } from '@unified-repo-analyzer/shared';
-import { IndexSystem } from '../core/IndexSystem.js';
+import type {
+  IndexedRepository,
+  RepositoryRelationship
+} from "@unified-repo-analyzer/shared";
+import { IndexSystem } from "../core/IndexSystem.js";
 
 export interface RelationshipGraph {
   nodes: GraphNode[];
@@ -15,7 +18,7 @@ export interface RelationshipGraph {
 export interface GraphNode {
   id: string;
   name: string;
-  type: 'frontend' | 'backend' | 'mobile' | 'library' | 'tool' | 'application';
+  type: "frontend" | "backend" | "mobile" | "library" | "tool" | "application";
   size: number;
   complexity: number;
   languages: string[];
@@ -27,7 +30,7 @@ export interface GraphNode {
 export interface GraphEdge {
   source: string;
   target: string;
-  type: 'similar' | 'complementary' | 'dependency' | 'fork';
+  type: "similar" | "complementary" | "dependency" | "fork";
   strength: number;
   reason: string;
 }
@@ -43,13 +46,18 @@ export interface GraphCluster {
 export interface IntegrationOpportunity {
   id: string;
   repositories: string[];
-  type: 'full-stack' | 'microservices' | 'library-ecosystem' | 'mobile-backend' | 'tool-chain';
+  type:
+    | "full-stack"
+    | "microservices"
+    | "library-ecosystem"
+    | "mobile-backend"
+    | "tool-chain";
   title: string;
   description: string;
   benefits: string[];
   challenges: string[];
   implementationSteps: string[];
-  estimatedEffort: 'low' | 'medium' | 'high';
+  estimatedEffort: "low" | "medium" | "high";
   priority: number;
 }
 
@@ -80,7 +88,9 @@ export class RelationshipService {
    * @param repositoryIds - Optional filter for specific repositories
    * @returns Relationship graph data
    */
-  public async generateRelationshipGraph(repositoryIds?: string[]): Promise<RelationshipGraph> {
+  public async generateRelationshipGraph(
+    repositoryIds?: string[]
+  ): Promise<RelationshipGraph> {
     const index = this.indexSystem.getIndex();
 
     // Filter repositories if IDs provided
@@ -96,7 +106,7 @@ export class RelationshipService {
       size: repo.size,
       complexity: repo.complexity,
       languages: repo.languages,
-      frameworks: repo.frameworks,
+      frameworks: repo.frameworks
     }));
 
     // Generate edges from relationships
@@ -111,14 +121,21 @@ export class RelationshipService {
         target: rel.targetId,
         type: rel.type,
         strength: rel.strength,
-        reason: rel.reason,
+        reason: rel.reason
       }));
 
     // Generate clusters
-    const clusters = await this.generateClusters(repositories, index.relationships);
+    const clusters = await this.generateClusters(
+      repositories,
+      index.relationships
+    );
 
     // Apply force-directed layout positions
-    const graphWithPositions = this.applyForceDirectedLayout({ nodes, edges, clusters });
+    const graphWithPositions = this.applyForceDirectedLayout({
+      nodes,
+      edges,
+      clusters
+    });
 
     return graphWithPositions;
   }
@@ -144,19 +161,29 @@ export class RelationshipService {
     const opportunities: IntegrationOpportunity[] = [];
 
     // Analyze full-stack opportunities
-    opportunities.push(...(await this.analyzeFullStackOpportunities(repositories)));
+    opportunities.push(
+      ...(await this.analyzeFullStackOpportunities(repositories))
+    );
 
     // Analyze microservices opportunities
-    opportunities.push(...(await this.analyzeMicroservicesOpportunities(repositories)));
+    opportunities.push(
+      ...(await this.analyzeMicroservicesOpportunities(repositories))
+    );
 
     // Analyze library ecosystem opportunities
-    opportunities.push(...(await this.analyzeLibraryEcosystemOpportunities(repositories)));
+    opportunities.push(
+      ...(await this.analyzeLibraryEcosystemOpportunities(repositories))
+    );
 
     // Analyze mobile-backend opportunities
-    opportunities.push(...(await this.analyzeMobileBackendOpportunities(repositories)));
+    opportunities.push(
+      ...(await this.analyzeMobileBackendOpportunities(repositories))
+    );
 
     // Analyze tool-chain opportunities
-    opportunities.push(...(await this.analyzeToolChainOpportunities(repositories)));
+    opportunities.push(
+      ...(await this.analyzeToolChainOpportunities(repositories))
+    );
 
     // Sort by priority and estimated impact
     opportunities.sort((a, b) => b.priority - a.priority);
@@ -212,7 +239,8 @@ export class RelationshipService {
       .slice(0, 10);
 
     // Analyze architectural patterns
-    const architecturalPatterns = this.analyzeArchitecturalPatterns(repositories);
+    const architecturalPatterns =
+      this.analyzeArchitecturalPatterns(repositories);
 
     // Generate integration opportunities
     const integrationOpportunities = await this.analyzeIntegrationOpportunities(
@@ -225,62 +253,78 @@ export class RelationshipService {
     return {
       totalRepositories: repositories.length,
       totalRelationships: relationships.length,
-      strongRelationships: relationships.filter((rel) => rel.strength > 0.7).length,
+      strongRelationships: relationships.filter((rel) => rel.strength > 0.7)
+        .length,
       clusters: clusters.length,
       topLanguages,
       topFrameworks,
       architecturalPatterns,
-      integrationOpportunities: integrationOpportunities.slice(0, 5), // Top 5 opportunities
+      integrationOpportunities: integrationOpportunities.slice(0, 5) // Top 5 opportunities
     };
   }
 
   /**
    * Determines the type of a repository for visualization
    */
-  private determineRepositoryType(repo: IndexedRepository): GraphNode['type'] {
+  private determineRepositoryType(repo: IndexedRepository): GraphNode["type"] {
     // Check for frontend
     if (
       repo.frameworks.some((fw: string) =>
-        ['react', 'vue', 'angular', 'svelte'].includes(fw.toLowerCase())
+        ["react", "vue", "angular", "svelte"].includes(fw.toLowerCase())
       )
     ) {
-      return 'frontend';
+      return "frontend";
     }
 
     // Check for backend
     if (
       repo.frameworks.some((fw: string) =>
-        ['express', 'nest', 'django', 'flask', 'spring'].includes(fw.toLowerCase())
+        ["express", "nest", "django", "flask", "spring"].includes(
+          fw.toLowerCase()
+        )
       )
     ) {
-      return 'backend';
+      return "backend";
     }
 
     // Check for mobile
     if (
       repo.languages.some((lang: string) =>
-        ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())
+        ["swift", "kotlin", "dart"].includes(lang.toLowerCase())
       ) ||
       repo.frameworks.some((fw: string) =>
-        ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase())
+        ["react-native", "flutter", "ionic"].includes(fw.toLowerCase())
       )
     ) {
-      return 'mobile';
+      return "mobile";
     }
 
     // Check for library
-    const libraryKeywords = ['lib', 'library', 'sdk', 'toolkit', 'util', 'helper'];
-    if (libraryKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
-      return 'library';
+    const libraryKeywords = [
+      "lib",
+      "library",
+      "sdk",
+      "toolkit",
+      "util",
+      "helper"
+    ];
+    if (
+      libraryKeywords.some((keyword) =>
+        repo.name.toLowerCase().includes(keyword)
+      )
+    ) {
+      return "library";
     }
 
     // Check for tool
-    const toolKeywords = ['tool', 'cli', 'script', 'build', 'deploy'];
-    if (toolKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))) {
-      return 'tool';
+    const toolKeywords = ["tool", "cli", "script", "build", "deploy"];
+    if (
+      toolKeywords.some((keyword) => repo.name.toLowerCase().includes(keyword))
+    ) {
+      return "tool";
     }
 
-    return 'application';
+    return "application";
   }
 
   /**
@@ -304,7 +348,7 @@ export class RelationshipService {
       });
     });
 
-    languageGroups.forEach((repos, language) => {
+    for (const [language, repos] of languageGroups) {
       if (repos.length >= 2) {
         const clusterRepos = repos.filter((repo) => !visited.has(repo.id));
         if (clusterRepos.length >= 2) {
@@ -313,12 +357,14 @@ export class RelationshipService {
             name: `${language} Projects`,
             repositories: clusterRepos.map((repo) => repo.id),
             theme: `${language}-ecosystem`,
-            color: this.getLanguageColor(language),
+            color: this.getLanguageColor(language)
           });
-          clusterRepos.forEach((repo) => visited.add(repo.id));
+          for (const repo of clusterRepos) {
+            visited.add(repo.id);
+          }
         }
       }
-    });
+    }
 
     // Framework-based clusters
     const frameworkGroups = new Map<string, IndexedRepository[]>();
@@ -331,7 +377,7 @@ export class RelationshipService {
       });
     });
 
-    frameworkGroups.forEach((repos, framework) => {
+    for (const [framework, repos] of frameworkGroups) {
       if (repos.length >= 2) {
         const clusterRepos = repos.filter((repo) => !visited.has(repo.id));
         if (clusterRepos.length >= 2) {
@@ -340,16 +386,21 @@ export class RelationshipService {
             name: `${framework} Applications`,
             repositories: clusterRepos.map((repo) => repo.id),
             theme: `${framework}-applications`,
-            color: this.getFrameworkColor(framework),
+            color: this.getFrameworkColor(framework)
           });
-          clusterRepos.forEach((repo) => visited.add(repo.id));
+          for (const repo of clusterRepos) {
+            visited.add(repo.id);
+          }
         }
       }
-    });
+    }
 
     // Relationship-based clusters (strongly connected components)
-    const stronglyConnected = this.findStronglyConnectedComponents(repositories, relationships);
-    stronglyConnected.forEach((component, index) => {
+    const stronglyConnected = this.findStronglyConnectedComponents(
+      repositories,
+      relationships
+    );
+    for (const [index, component] of stronglyConnected.entries()) {
       if (component.length >= 2) {
         const clusterRepos = component.filter((repo) => !visited.has(repo.id));
         if (clusterRepos.length >= 2) {
@@ -357,13 +408,15 @@ export class RelationshipService {
             id: `connected-${index}`,
             name: `Connected Group ${index + 1}`,
             repositories: clusterRepos.map((repo) => repo.id),
-            theme: 'connected-components',
-            color: this.getClusterColor(index),
+            theme: "connected-components",
+            color: this.getClusterColor(index)
           });
-          clusterRepos.forEach((repo) => visited.add(repo.id));
+          for (const repo of clusterRepos) {
+            visited.add(repo.id);
+          }
         }
       }
-    });
+    }
 
     return clusters;
   }
@@ -371,7 +424,9 @@ export class RelationshipService {
   /**
    * Applies force-directed layout algorithm for graph positioning
    */
-  private applyForceDirectedLayout(graph: RelationshipGraph): RelationshipGraph {
+  private applyForceDirectedLayout(
+    graph: RelationshipGraph
+  ): RelationshipGraph {
     const { nodes, edges } = graph;
 
     // Simple force-directed layout simulation
@@ -447,12 +502,14 @@ export class RelationshipService {
     const opportunities: IntegrationOpportunity[] = [];
 
     const frontendRepos = repositories.filter((repo) =>
-      repo.frameworks.some((fw: string) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
+      repo.frameworks.some((fw: string) =>
+        ["react", "vue", "angular"].includes(fw.toLowerCase())
+      )
     );
 
     const backendRepos = repositories.filter((repo) =>
       repo.frameworks.some((fw: string) =>
-        ['express', 'nest', 'django', 'flask'].includes(fw.toLowerCase())
+        ["express", "nest", "django", "flask"].includes(fw.toLowerCase())
       )
     );
 
@@ -467,31 +524,31 @@ export class RelationshipService {
           opportunities.push({
             id: `fullstack-${frontend.id}-${backend.id}`,
             repositories: [frontend.id, backend.id],
-            type: 'full-stack',
+            type: "full-stack",
             title: `Full-Stack Application: ${frontend.name} + ${backend.name}`,
             description: `Integrate ${frontend.name} frontend with ${backend.name} backend to create a complete web application.`,
             benefits: [
-              'Unified development workflow',
-              'Shared data models and validation',
-              'Consistent user experience',
-              'Simplified deployment pipeline',
+              "Unified development workflow",
+              "Shared data models and validation",
+              "Consistent user experience",
+              "Simplified deployment pipeline"
             ],
             challenges: [
-              'API design and versioning',
-              'Authentication and authorization',
-              'State management synchronization',
-              'Cross-origin resource sharing (CORS)',
+              "API design and versioning",
+              "Authentication and authorization",
+              "State management synchronization",
+              "Cross-origin resource sharing (CORS)"
             ],
             implementationSteps: [
-              'Design RESTful API endpoints',
-              'Implement authentication system',
-              'Create shared data models',
-              'Set up API client in frontend',
-              'Implement error handling and loading states',
-              'Configure build and deployment pipeline',
+              "Design RESTful API endpoints",
+              "Implement authentication system",
+              "Create shared data models",
+              "Set up API client in frontend",
+              "Implement error handling and loading states",
+              "Configure build and deployment pipeline"
             ],
-            estimatedEffort: compatibility > 0.7 ? 'medium' : 'high',
-            priority: compatibility * 100,
+            estimatedEffort: compatibility > 0.7 ? "medium" : "high",
+            priority: compatibility * 100
           });
         }
       }
@@ -510,8 +567,8 @@ export class RelationshipService {
 
     const serviceRepos = repositories.filter(
       (repo) =>
-        repo.name.toLowerCase().includes('service') ||
-        repo.tags.some((tag: string) => tag.toLowerCase().includes('service'))
+        repo.name.toLowerCase().includes("service") ||
+        repo.tags.some((tag: string) => tag.toLowerCase().includes("service"))
     );
 
     if (serviceRepos.length >= 2) {
@@ -523,33 +580,34 @@ export class RelationshipService {
       for (const combination of combinations) {
         if (combination.length >= 2) {
           opportunities.push({
-            id: `microservices-${combination.map((r) => r.id).join('-')}`,
+            id: `microservices-${combination.map((r) => r.id).join("-")}`,
             repositories: combination.map((r) => r.id),
-            type: 'microservices',
-            title: `Microservices Architecture: ${combination.map((r) => r.name).join(' + ')}`,
-            description: 'Integrate multiple services into a cohesive microservices architecture.',
+            type: "microservices",
+            title: `Microservices Architecture: ${combination.map((r) => r.name).join(" + ")}`,
+            description:
+              "Integrate multiple services into a cohesive microservices architecture.",
             benefits: [
-              'Scalable and maintainable architecture',
-              'Independent deployment and scaling',
-              'Technology diversity support',
-              'Fault isolation and resilience',
+              "Scalable and maintainable architecture",
+              "Independent deployment and scaling",
+              "Technology diversity support",
+              "Fault isolation and resilience"
             ],
             challenges: [
-              'Service discovery and communication',
-              'Distributed data management',
-              'Monitoring and observability',
-              'Network latency and reliability',
+              "Service discovery and communication",
+              "Distributed data management",
+              "Monitoring and observability",
+              "Network latency and reliability"
             ],
             implementationSteps: [
-              'Design service boundaries and APIs',
-              'Implement service discovery mechanism',
-              'Set up inter-service communication',
-              'Implement distributed logging and monitoring',
-              'Configure load balancing and routing',
-              'Establish deployment and orchestration',
+              "Design service boundaries and APIs",
+              "Implement service discovery mechanism",
+              "Set up inter-service communication",
+              "Implement distributed logging and monitoring",
+              "Configure load balancing and routing",
+              "Establish deployment and orchestration"
             ],
-            estimatedEffort: 'high',
-            priority: combination.length * 20,
+            estimatedEffort: "high",
+            priority: combination.length * 20
           });
         }
       }
@@ -568,13 +626,15 @@ export class RelationshipService {
 
     const libraryRepos = repositories.filter(
       (repo) =>
-        repo.name.toLowerCase().includes('lib') ||
-        repo.name.toLowerCase().includes('util') ||
-        repo.tags.some((tag: string) => tag.toLowerCase().includes('library'))
+        repo.name.toLowerCase().includes("lib") ||
+        repo.name.toLowerCase().includes("util") ||
+        repo.tags.some((tag: string) => tag.toLowerCase().includes("library"))
     );
 
     const applicationRepos = repositories.filter(
-      (repo) => !libraryRepos.includes(repo) && (repo.frameworks.length > 0 || repo.size > 1000000)
+      (repo) =>
+        !libraryRepos.includes(repo) &&
+        (repo.frameworks.length > 0 || repo.size > 1000000)
     );
 
     if (libraryRepos.length > 0 && applicationRepos.length > 0) {
@@ -585,32 +645,32 @@ export class RelationshipService {
 
         if (compatibleLibraries.length > 0) {
           opportunities.push({
-            id: `library-ecosystem-${app.id}-${compatibleLibraries.map((l) => l.id).join('-')}`,
+            id: `library-ecosystem-${app.id}-${compatibleLibraries.map((l) => l.id).join("-")}`,
             repositories: [app.id, ...compatibleLibraries.map((l) => l.id)],
-            type: 'library-ecosystem',
+            type: "library-ecosystem",
             title: `Library Ecosystem: ${app.name} with ${compatibleLibraries.length} libraries`,
             description: `Integrate shared libraries with ${app.name} to create a modular ecosystem.`,
             benefits: [
-              'Code reusability and consistency',
-              'Reduced duplication and maintenance',
-              'Standardized patterns and utilities',
-              'Faster development cycles',
+              "Code reusability and consistency",
+              "Reduced duplication and maintenance",
+              "Standardized patterns and utilities",
+              "Faster development cycles"
             ],
             challenges: [
-              'Version management and compatibility',
-              'Dependency resolution conflicts',
-              'Testing across multiple packages',
-              'Documentation and API stability',
+              "Version management and compatibility",
+              "Dependency resolution conflicts",
+              "Testing across multiple packages",
+              "Documentation and API stability"
             ],
             implementationSteps: [
-              'Extract common functionality into libraries',
-              'Set up package management and versioning',
-              'Implement automated testing pipeline',
-              'Create comprehensive documentation',
-              'Establish release and distribution process',
+              "Extract common functionality into libraries",
+              "Set up package management and versioning",
+              "Implement automated testing pipeline",
+              "Create comprehensive documentation",
+              "Establish release and distribution process"
             ],
-            estimatedEffort: 'medium',
-            priority: compatibleLibraries.length * 15,
+            estimatedEffort: "medium",
+            priority: compatibleLibraries.length * 15
           });
         }
       }
@@ -630,16 +690,16 @@ export class RelationshipService {
     const mobileRepos = repositories.filter(
       (repo) =>
         repo.languages.some((lang: string) =>
-          ['swift', 'kotlin', 'dart'].includes(lang.toLowerCase())
+          ["swift", "kotlin", "dart"].includes(lang.toLowerCase())
         ) ||
         repo.frameworks.some((fw: string) =>
-          ['react-native', 'flutter', 'ionic'].includes(fw.toLowerCase())
+          ["react-native", "flutter", "ionic"].includes(fw.toLowerCase())
         )
     );
 
     const backendRepos = repositories.filter((repo) =>
       repo.frameworks.some((fw: string) =>
-        ['express', 'nest', 'django', 'flask'].includes(fw.toLowerCase())
+        ["express", "nest", "django", "flask"].includes(fw.toLowerCase())
       )
     );
 
@@ -648,31 +708,31 @@ export class RelationshipService {
         opportunities.push({
           id: `mobile-backend-${mobile.id}-${backend.id}`,
           repositories: [mobile.id, backend.id],
-          type: 'mobile-backend',
+          type: "mobile-backend",
           title: `Mobile Application: ${mobile.name} + ${backend.name}`,
           description: `Connect ${mobile.name} mobile app with ${backend.name} backend services.`,
           benefits: [
-            'Native mobile experience',
-            'Centralized business logic',
-            'Real-time data synchronization',
-            'Push notification support',
+            "Native mobile experience",
+            "Centralized business logic",
+            "Real-time data synchronization",
+            "Push notification support"
           ],
           challenges: [
-            'Mobile-optimized API design',
-            'Offline data handling',
-            'Authentication and security',
-            'Platform-specific considerations',
+            "Mobile-optimized API design",
+            "Offline data handling",
+            "Authentication and security",
+            "Platform-specific considerations"
           ],
           implementationSteps: [
-            'Design mobile-friendly API endpoints',
-            'Implement authentication and authorization',
-            'Set up push notification system',
-            'Create offline data synchronization',
-            'Implement error handling and retry logic',
-            'Configure app store deployment',
+            "Design mobile-friendly API endpoints",
+            "Implement authentication and authorization",
+            "Set up push notification system",
+            "Create offline data synchronization",
+            "Implement error handling and retry logic",
+            "Configure app store deployment"
           ],
-          estimatedEffort: 'high',
-          priority: 70,
+          estimatedEffort: "high",
+          priority: 70
         });
       }
     }
@@ -690,42 +750,47 @@ export class RelationshipService {
 
     const toolRepos = repositories.filter(
       (repo) =>
-        repo.name.toLowerCase().includes('tool') ||
-        repo.name.toLowerCase().includes('cli') ||
-        repo.name.toLowerCase().includes('build')
+        repo.name.toLowerCase().includes("tool") ||
+        repo.name.toLowerCase().includes("cli") ||
+        repo.name.toLowerCase().includes("build")
     );
 
-    const projectRepos = repositories.filter((repo) => !toolRepos.includes(repo));
+    const projectRepos = repositories.filter(
+      (repo) => !toolRepos.includes(repo)
+    );
 
     if (toolRepos.length > 0 && projectRepos.length > 0) {
       opportunities.push({
-        id: `toolchain-${toolRepos.map((t) => t.id).join('-')}-${projectRepos.map((p) => p.id).join('-')}`,
-        repositories: [...toolRepos.map((t) => t.id), ...projectRepos.map((p) => p.id)],
-        type: 'tool-chain',
-        title: 'Development Tool Chain Integration',
+        id: `toolchain-${toolRepos.map((t) => t.id).join("-")}-${projectRepos.map((p) => p.id).join("-")}`,
+        repositories: [
+          ...toolRepos.map((t) => t.id),
+          ...projectRepos.map((p) => p.id)
+        ],
+        type: "tool-chain",
+        title: "Development Tool Chain Integration",
         description:
-          'Integrate development tools with project repositories for streamlined workflow.',
+          "Integrate development tools with project repositories for streamlined workflow.",
         benefits: [
-          'Automated development workflow',
-          'Consistent code quality and standards',
-          'Reduced manual tasks and errors',
-          'Improved developer productivity',
+          "Automated development workflow",
+          "Consistent code quality and standards",
+          "Reduced manual tasks and errors",
+          "Improved developer productivity"
         ],
         challenges: [
-          'Tool configuration and customization',
-          'Integration with existing workflows',
-          'Maintenance and updates',
-          'Learning curve for team members',
+          "Tool configuration and customization",
+          "Integration with existing workflows",
+          "Maintenance and updates",
+          "Learning curve for team members"
         ],
         implementationSteps: [
-          'Analyze current development workflow',
-          'Configure tools for project requirements',
-          'Set up automated pipelines',
-          'Create documentation and training',
-          'Implement monitoring and feedback',
+          "Analyze current development workflow",
+          "Configure tools for project requirements",
+          "Set up automated pipelines",
+          "Create documentation and training",
+          "Implement monitoring and feedback"
         ],
-        estimatedEffort: 'medium',
-        priority: 40,
+        estimatedEffort: "medium",
+        priority: 40
       });
     }
 
@@ -743,40 +808,53 @@ export class RelationshipService {
     repositories.forEach((repo) => {
       // Detect patterns from frameworks and languages
       if (
-        repo.frameworks.some((fw: string) => ['react', 'vue', 'angular'].includes(fw.toLowerCase()))
+        repo.frameworks.some((fw: string) =>
+          ["react", "vue", "angular"].includes(fw.toLowerCase())
+        )
       ) {
         patternCount.set(
-          'SPA (Single Page Application)',
-          (patternCount.get('SPA (Single Page Application)') || 0) + 1
+          "SPA (Single Page Application)",
+          (patternCount.get("SPA (Single Page Application)") || 0) + 1
         );
-      }
-
-      if (repo.frameworks.some((fw: string) => ['express', 'nest'].includes(fw.toLowerCase()))) {
-        patternCount.set('REST API', (patternCount.get('REST API') || 0) + 1);
-      }
-
-      if (repo.frameworks.some((fw: string) => ['next.js', 'nuxt'].includes(fw.toLowerCase()))) {
-        patternCount.set(
-          'Server-Side Rendering',
-          (patternCount.get('Server-Side Rendering') || 0) + 1
-        );
-      }
-
-      if (
-        repo.name.toLowerCase().includes('service') ||
-        repo.tags.some((tag: string) => tag.includes('service'))
-      ) {
-        patternCount.set('Microservices', (patternCount.get('Microservices') || 0) + 1);
       }
 
       if (
         repo.frameworks.some((fw: string) =>
-          ['django', 'flask', 'spring'].includes(fw.toLowerCase())
+          ["express", "nest"].includes(fw.toLowerCase())
+        )
+      ) {
+        patternCount.set("REST API", (patternCount.get("REST API") || 0) + 1);
+      }
+
+      if (
+        repo.frameworks.some((fw: string) =>
+          ["next.js", "nuxt"].includes(fw.toLowerCase())
         )
       ) {
         patternCount.set(
-          'MVC (Model-View-Controller)',
-          (patternCount.get('MVC (Model-View-Controller)') || 0) + 1
+          "Server-Side Rendering",
+          (patternCount.get("Server-Side Rendering") || 0) + 1
+        );
+      }
+
+      if (
+        repo.name.toLowerCase().includes("service") ||
+        repo.tags.some((tag: string) => tag.includes("service"))
+      ) {
+        patternCount.set(
+          "Microservices",
+          (patternCount.get("Microservices") || 0) + 1
+        );
+      }
+
+      if (
+        repo.frameworks.some((fw: string) =>
+          ["django", "flask", "spring"].includes(fw.toLowerCase())
+        )
+      ) {
+        patternCount.set(
+          "MVC (Model-View-Controller)",
+          (patternCount.get("MVC (Model-View-Controller)") || 0) + 1
         );
       }
     });
@@ -807,11 +885,14 @@ export class RelationshipService {
 
         // Find connected repositories
         const connectedRelationships = relationships.filter(
-          (rel) => (rel.sourceId === repoId || rel.targetId === repoId) && rel.strength > 0.5
+          (rel) =>
+            (rel.sourceId === repoId || rel.targetId === repoId) &&
+            rel.strength > 0.5
         );
 
         connectedRelationships.forEach((rel) => {
-          const connectedId = rel.sourceId === repoId ? rel.targetId : rel.sourceId;
+          const connectedId =
+            rel.sourceId === repoId ? rel.targetId : rel.sourceId;
           dfs(connectedId, component);
         });
       }
@@ -861,20 +942,20 @@ export class RelationshipService {
    */
   private getLanguageColor(language: string): string {
     const colors: { [key: string]: string } = {
-      javascript: '#f7df1e',
-      typescript: '#3178c6',
-      python: '#3776ab',
-      java: '#ed8b00',
-      'c#': '#239120',
-      go: '#00add8',
-      rust: '#000000',
-      php: '#777bb4',
-      ruby: '#cc342d',
-      swift: '#fa7343',
-      kotlin: '#7f52ff',
+      javascript: "#f7df1e",
+      typescript: "#3178c6",
+      python: "#3776ab",
+      java: "#ed8b00",
+      "c#": "#239120",
+      go: "#00add8",
+      rust: "#000000",
+      php: "#777bb4",
+      ruby: "#cc342d",
+      swift: "#fa7343",
+      kotlin: "#7f52ff"
     };
 
-    return colors[language.toLowerCase()] || '#6b7280';
+    return colors[language.toLowerCase()] || "#6b7280";
   }
 
   /**
@@ -882,17 +963,17 @@ export class RelationshipService {
    */
   private getFrameworkColor(framework: string): string {
     const colors: { [key: string]: string } = {
-      react: '#61dafb',
-      vue: '#4fc08d',
-      angular: '#dd0031',
-      express: '#000000',
-      nest: '#e0234e',
-      django: '#092e20',
-      flask: '#000000',
-      spring: '#6db33f',
+      react: "#61dafb",
+      vue: "#4fc08d",
+      angular: "#dd0031",
+      express: "#000000",
+      nest: "#e0234e",
+      django: "#092e20",
+      flask: "#000000",
+      spring: "#6db33f"
     };
 
-    return colors[framework.toLowerCase()] || '#8b5cf6';
+    return colors[framework.toLowerCase()] || "#8b5cf6";
   }
 
   /**
@@ -900,22 +981,22 @@ export class RelationshipService {
    */
   private getClusterColor(index: number): string {
     const colors = [
-      '#ef4444',
-      '#f97316',
-      '#f59e0b',
-      '#eab308',
-      '#84cc16',
-      '#22c55e',
-      '#10b981',
-      '#14b8a6',
-      '#06b6d4',
-      '#0ea5e9',
-      '#3b82f6',
-      '#6366f1',
-      '#8b5cf6',
-      '#a855f7',
-      '#d946ef',
-      '#ec4899',
+      "#ef4444",
+      "#f97316",
+      "#f59e0b",
+      "#eab308",
+      "#84cc16",
+      "#22c55e",
+      "#10b981",
+      "#14b8a6",
+      "#06b6d4",
+      "#0ea5e9",
+      "#3b82f6",
+      "#6366f1",
+      "#8b5cf6",
+      "#a855f7",
+      "#d946ef",
+      "#ec4899"
     ];
 
     return colors[index % colors.length];

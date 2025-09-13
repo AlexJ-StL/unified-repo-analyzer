@@ -2,7 +2,10 @@
  * Code structure analysis utilities
  */
 
-import type { ClassInfo, FunctionInfo } from '@unified-repo-analyzer/shared/src/types/repository';
+import type {
+  ClassInfo,
+  FunctionInfo
+} from "@unified-repo-analyzer/shared/src/types/repository";
 
 /**
  * Result of code structure analysis
@@ -35,13 +38,14 @@ const STRUCTURE_PATTERNS = {
       /(?:function\s+(\w+)|(?:const|let|var)\s+(\w+)\s*=\s*function|(?:async\s+)?(?:function)?\s*(\w+)\s*\([^)]*\)\s*=>|(\w+)\s*:\s*function)/g,
 
     // Arrow functions with name: const name = (...) =>
-    arrowFunction: /(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:\([^)]*\)|[^=]+)\s*=>/g,
+    arrowFunction:
+      /(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:\([^)]*\)|[^=]+)\s*=>/g,
 
     // Class declarations: class Name or export class Name
     class: /(?:export\s+)?class\s+(\w+)/g,
 
     // Import statements
-    import: /import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from|import\s+[^;]+;/g,
+    import: /import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from|import\s+[^;]+;/g
   },
 
   // Python patterns
@@ -53,7 +57,7 @@ const STRUCTURE_PATTERNS = {
     class: /class\s+(\w+)(?:\(|:)/g,
 
     // Import statements
-    import: /(?:import|from)\s+[\w.]+\s+(?:import|as)/g,
+    import: /(?:import|from)\s+[\w.]+\s+(?:import|as)/g
   },
 
   // Java patterns
@@ -66,7 +70,7 @@ const STRUCTURE_PATTERNS = {
     class: /(?:public|private|protected|static|\s) +class +(\w+)/g,
 
     // Import statements
-    import: /import\s+[\w.]+(?:\.\*)?;/g,
+    import: /import\s+[\w.]+(?:\.\*)?;/g
   },
 
   // C# patterns
@@ -79,7 +83,7 @@ const STRUCTURE_PATTERNS = {
     class: /(?:public|private|protected|internal|static|\s) +class +(\w+)/g,
 
     // Import statements (using directives)
-    import: /using\s+[\w.]+;/g,
+    import: /using\s+[\w.]+;/g
   },
 
   // Go patterns
@@ -91,7 +95,7 @@ const STRUCTURE_PATTERNS = {
     class: /type\s+(\w+)\s+struct/g,
 
     // Import statements
-    import: /import\s+(?:"[^"]+"|(?:\([^)]+\)))/g,
+    import: /import\s+(?:"[^"]+"|(?:\([^)]+\)))/g
   },
 
   // Ruby patterns
@@ -103,7 +107,7 @@ const STRUCTURE_PATTERNS = {
     class: /class\s+(\w+)/g,
 
     // Import statements (require)
-    import: /require\s+['"][^'"]+['"]/g,
+    import: /require\s+['"][^'"]+['"]/g
   },
 
   // PHP patterns
@@ -115,7 +119,7 @@ const STRUCTURE_PATTERNS = {
     class: /(?:abstract\s+)?class\s+(\w+)/g,
 
     // Import statements (use statements)
-    import: /use\s+[\w\\]+(?:\s+as\s+\w+)?;/g,
+    import: /use\s+[\w\\]+(?:\s+as\s+\w+)?;/g
   },
 
   // Rust patterns
@@ -127,31 +131,34 @@ const STRUCTURE_PATTERNS = {
     class: /(?:pub\s+)?(?:struct|trait|enum)\s+(\w+)/g,
 
     // Import statements (use statements)
-    import: /use\s+[\w:]+(?:::\{[^}]*\})?;/g,
+    import: /use\s+[\w:]+(?:::\{[^}]*\})?;/g
   },
 
   // Swift patterns
   swift: {
     // Function declarations: func name(...) or public func name(...)
-    function: /(?:public|private|internal|fileprivate|open|\s)*func\s+(\w+)\s*(?:<[^>]*>)?\s*\(/g,
+    function:
+      /(?:public|private|internal|fileprivate|open|\s)*func\s+(\w+)\s*(?:<[^>]*>)?\s*\(/g,
 
     // Class declarations: class Name or public class Name
     class: /(?:public|private|internal|fileprivate|open|\s)*class\s+(\w+)/g,
 
     // Import statements
-    import: /import\s+\w+/g,
+    import: /import\s+\w+/g
   },
 
   // Kotlin patterns
   kotlin: {
     // Function declarations: fun name(...) or public fun name(...)
-    function: /(?:public|private|protected|internal|inline|\s)*fun\s+(\w+)\s*(?:<[^>]*>)?\s*\(/g,
+    function:
+      /(?:public|private|protected|internal|inline|\s)*fun\s+(\w+)\s*(?:<[^>]*>)?\s*\(/g,
 
     // Class declarations: class Name or data class Name
-    class: /(?:public|private|protected|internal|\s)*(?:data\s+)?class\s+(\w+)/g,
+    class:
+      /(?:public|private|protected|internal|\s)*(?:data\s+)?class\s+(\w+)/g,
 
     // Import statements
-    import: /import\s+[\w.]+(?:\.\*)?/g,
+    import: /import\s+[\w.]+(?:\.\*)?/g
   },
 
   // Generic patterns for other languages
@@ -163,8 +170,8 @@ const STRUCTURE_PATTERNS = {
     class: /(?:class|struct|interface|trait|enum)\s+(\w+)/g,
 
     // Generic import pattern (simple)
-    import: /(?:import|include|require|use|using)\s+[\w."']+/g,
-  },
+    import: /(?:import|include|require|use|using)\s+[\w."']+/g
+  }
 };
 
 /**
@@ -174,52 +181,34 @@ const STRUCTURE_PATTERNS = {
  * @param language - Programming language
  * @returns Code structure analysis
  */
-export function analyzeCodeStructure(content: string, language: string): CodeStructureAnalysis {
+export function analyzeCodeStructure(
+  content: string,
+  language: string
+): CodeStructureAnalysis {
   // Initialize result
   const result: CodeStructureAnalysis = {
     functions: [],
     classes: [],
-    importCount: 0,
+    importCount: 0
   };
 
   // Get patterns for the language
   const patterns = getLanguagePatterns(language);
 
   // Split content into lines for line number tracking
-  const _lines = content.split('\n');
+  const _lines = content.split("\n");
 
   // Find functions
   const functionMatches = new Set<string>();
-  let match: RegExpExecArray | null;
 
   // Reset regex lastIndex
   patterns.function.lastIndex = 0;
 
-  while ((match = patterns.function.exec(content)) !== null) {
-    // Find the first non-null capturing group (function name)
-    const name = match.slice(1).find((group) => group !== undefined);
-
-    if (name && !functionMatches.has(name)) {
-      functionMatches.add(name);
-
-      // Find line number
-      const lineNumber = getLineNumber(content, match.index);
-
-      // Add function info
-      result.functions.push({
-        name,
-        lineNumber,
-        parameters: [], // Parameter extraction would require more complex parsing
-      });
-    }
-  }
-
-  // For JavaScript/TypeScript, also check for arrow functions
-  if ((language === 'JavaScript' || language === 'TypeScript') && patterns.arrowFunction) {
-    patterns.arrowFunction.lastIndex = 0;
-
-    while ((match = patterns.arrowFunction.exec(content)) !== null) {
-      const name = match[1];
+  {
+    let match: RegExpExecArray | null;
+    while ((match = patterns.function.exec(content)) !== null) {
+      // Find the first non-null capturing group (function name)
+      const name = match.slice(1).find((group) => group !== undefined);
 
       if (name && !functionMatches.has(name)) {
         functionMatches.add(name);
@@ -231,8 +220,37 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
         result.functions.push({
           name,
           lineNumber,
-          parameters: [],
+          parameters: [] // Parameter extraction would require more complex parsing
         });
+      }
+    }
+  }
+
+  // For JavaScript/TypeScript, also check for arrow functions
+  if (
+    (language === "JavaScript" || language === "TypeScript") &&
+    patterns.arrowFunction
+  ) {
+    patterns.arrowFunction.lastIndex = 0;
+
+    {
+      let match: RegExpExecArray | null;
+      while ((match = patterns.arrowFunction.exec(content)) !== null) {
+        const name = match[1];
+
+        if (name && !functionMatches.has(name)) {
+          functionMatches.add(name);
+
+          // Find line number
+          const lineNumber = getLineNumber(content, match.index);
+
+          // Add function info
+          result.functions.push({
+            name,
+            lineNumber,
+            parameters: []
+          });
+        }
       }
     }
   }
@@ -240,27 +258,33 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
   // Find classes
   patterns.class.lastIndex = 0;
 
-  while ((match = patterns.class.exec(content)) !== null) {
-    const name = match[1];
+  {
+    let match: RegExpExecArray | null;
+    while ((match = patterns.class.exec(content)) !== null) {
+      const name = match[1];
 
-    if (name) {
-      // Find line number
-      const lineNumber = getLineNumber(content, match.index);
+      if (name) {
+        // Find line number
+        const lineNumber = getLineNumber(content, match.index);
 
-      // Add class info
-      result.classes.push({
-        name,
-        lineNumber,
-        methods: [], // Method extraction would require more complex parsing
-      });
+        // Add class info
+        result.classes.push({
+          name,
+          lineNumber,
+          methods: [] // Method extraction would require more complex parsing
+        });
+      }
     }
   }
 
   // Count imports
   patterns.import.lastIndex = 0;
 
-  while ((match = patterns.import.exec(content)) !== null) {
-    result.importCount++;
+  {
+    let match: RegExpExecArray | null;
+    while ((match = patterns.import.exec(content)) !== null) {
+      result.importCount++;
+    }
   }
 
   return result;
@@ -285,62 +309,65 @@ function getLanguagePatterns(language: string): {
   let patternKey: keyof typeof STRUCTURE_PATTERNS;
 
   switch (normalizedLanguage) {
-    case 'javascript':
-    case 'typescript':
-    case 'jsx':
-    case 'tsx':
-      patternKey = 'javascript';
+    case "javascript":
+    case "typescript":
+    case "jsx":
+    case "tsx":
+      patternKey = "javascript";
       break;
 
-    case 'python':
-      patternKey = 'python';
+    case "python":
+      patternKey = "python";
       break;
 
-    case 'java':
-      patternKey = 'java';
+    case "java":
+      patternKey = "java";
       break;
 
-    case 'c#':
-    case 'csharp':
-      patternKey = 'csharp';
+    case "c#":
+    case "csharp":
+      patternKey = "csharp";
       break;
 
-    case 'go':
-      patternKey = 'go';
+    case "go":
+      patternKey = "go";
       break;
 
-    case 'ruby':
-      patternKey = 'ruby';
+    case "ruby":
+      patternKey = "ruby";
       break;
 
-    case 'php':
-      patternKey = 'php';
+    case "php":
+      patternKey = "php";
       break;
 
-    case 'rust':
-      patternKey = 'rust';
+    case "rust":
+      patternKey = "rust";
       break;
 
-    case 'swift':
-      patternKey = 'swift';
+    case "swift":
+      patternKey = "swift";
       break;
 
-    case 'kotlin':
-      patternKey = 'kotlin';
+    case "kotlin":
+      patternKey = "kotlin";
       break;
 
     default:
-      patternKey = 'generic';
+      patternKey = "generic";
   }
 
   // Clone the patterns to avoid modifying the originals
   return {
-    function: new RegExp(STRUCTURE_PATTERNS[patternKey].function.source, 'g'),
-    class: new RegExp(STRUCTURE_PATTERNS[patternKey].class.source, 'g'),
-    import: new RegExp(STRUCTURE_PATTERNS[patternKey].import.source, 'g'),
-    ...(patternKey === 'javascript' && {
-      arrowFunction: new RegExp(STRUCTURE_PATTERNS.javascript.arrowFunction.source, 'g'),
-    }),
+    function: new RegExp(STRUCTURE_PATTERNS[patternKey].function.source, "g"),
+    class: new RegExp(STRUCTURE_PATTERNS[patternKey].class.source, "g"),
+    import: new RegExp(STRUCTURE_PATTERNS[patternKey].import.source, "g"),
+    ...(patternKey === "javascript" && {
+      arrowFunction: new RegExp(
+        STRUCTURE_PATTERNS.javascript.arrowFunction.source,
+        "g"
+      )
+    })
   };
 }
 
@@ -354,6 +381,6 @@ function getLanguagePatterns(language: string): {
 function getLineNumber(text: string, position: number): number {
   // Count newlines before the position
   const textBefore = text.substring(0, position);
-  const lines = textBefore.split('\n');
+  const lines = textBefore.split("\n");
   return lines.length;
 }

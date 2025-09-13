@@ -2,9 +2,9 @@
  * Language detection utilities for repository analysis
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { promisify } from 'node:util';
+import fs from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
 
 const readFile = promisify(fs.readFile);
 
@@ -47,285 +47,290 @@ export interface LanguageInfo {
  */
 export const LANGUAGES: LanguageInfo[] = [
   {
-    name: 'JavaScript',
-    extensions: ['.js', '.mjs', '.cjs'],
-    filenames: ['package.json', '.babelrc', 'webpack.config.js', 'biome.json'],
+    name: "JavaScript",
+    extensions: [".js", ".mjs", ".cjs"],
+    filenames: ["package.json", ".babelrc", "webpack.config.js", "biome.json"],
     frameworks: [
       {
-        name: 'React',
-        files: ['jsx', 'tsx', 'react'],
-        dependencies: ['react', 'react-dom'],
+        name: "React",
+        files: ["jsx", "tsx", "react"],
+        dependencies: ["react", "react-dom"]
       },
       {
-        name: 'Vue',
-        files: ['vue'],
-        dependencies: ['vue'],
+        name: "Vue",
+        files: ["vue"],
+        dependencies: ["vue"]
       },
       {
-        name: 'Angular',
-        files: ['component.ts', 'module.ts', 'service.ts'],
-        dependencies: ['@angular/core'],
+        name: "Angular",
+        files: ["component.ts", "module.ts", "service.ts"],
+        dependencies: ["@angular/core"]
       },
       {
-        name: 'Express',
-        files: ['app.js', 'server.js', 'index.js'],
-        dependencies: ['express'],
+        name: "Express",
+        files: ["app.js", "server.js", "index.js"],
+        dependencies: ["express"]
       },
       {
-        name: 'Next.js',
-        files: ['next.config.js', 'pages', '_app.js'],
-        dependencies: ['next'],
-      },
-    ],
+        name: "Next.js",
+        files: ["next.config.js", "pages", "_app.js"],
+        dependencies: ["next"]
+      }
+    ]
   },
   {
-    name: 'TypeScript',
-    extensions: ['.ts', '.tsx', '.d.ts'],
-    filenames: ['tsconfig.json', 'biome.json'],
+    name: "TypeScript",
+    extensions: [".ts", ".tsx", ".d.ts"],
+    filenames: ["tsconfig.json", "biome.json"],
     frameworks: [
       {
-        name: 'React',
-        files: ['tsx', 'react'],
-        dependencies: ['react', 'react-dom', '@types/react'],
+        name: "React",
+        files: ["tsx", "react"],
+        dependencies: ["react", "react-dom", "@types/react"]
       },
       {
-        name: 'NestJS',
-        files: ['module.ts', 'controller.ts', 'service.ts', 'entity.ts'],
-        dependencies: ['@nestjs/core', '@nestjs/common'],
+        name: "NestJS",
+        files: ["module.ts", "controller.ts", "service.ts", "entity.ts"],
+        dependencies: ["@nestjs/core", "@nestjs/common"]
       },
       {
-        name: 'Angular',
-        files: ['component.ts', 'module.ts', 'service.ts'],
-        dependencies: ['@angular/core'],
-      },
-    ],
+        name: "Angular",
+        files: ["component.ts", "module.ts", "service.ts"],
+        dependencies: ["@angular/core"]
+      }
+    ]
   },
   {
-    name: 'Python',
-    extensions: ['.py', '.pyw', '.pyc', '.pyo', '.pyd'],
-    filenames: ['requirements.txt', 'setup.py', 'Pipfile', 'pyproject.toml'],
-    shebangs: ['python', 'python3'],
+    name: "Python",
+    extensions: [".py", ".pyw", ".pyc", ".pyo", ".pyd"],
+    filenames: ["requirements.txt", "setup.py", "Pipfile", "pyproject.toml"],
+    shebangs: ["python", "python3"],
     frameworks: [
       {
-        name: 'Django',
-        files: ['settings.py', 'urls.py', 'views.py', 'models.py'],
-        dependencies: ['django'],
+        name: "Django",
+        files: ["settings.py", "urls.py", "views.py", "models.py"],
+        dependencies: ["django"]
       },
       {
-        name: 'Flask',
-        files: ['app.py', 'wsgi.py'],
-        dependencies: ['flask'],
+        name: "Flask",
+        files: ["app.py", "wsgi.py"],
+        dependencies: ["flask"]
       },
       {
-        name: 'FastAPI',
-        files: ['main.py', 'app.py'],
-        dependencies: ['fastapi'],
-      },
-    ],
+        name: "FastAPI",
+        files: ["main.py", "app.py"],
+        dependencies: ["fastapi"]
+      }
+    ]
   },
   {
-    name: 'Java',
-    extensions: ['.java', '.class', '.jar'],
-    filenames: ['pom.xml', 'build.gradle', 'gradle.properties'],
+    name: "Java",
+    extensions: [".java", ".class", ".jar"],
+    filenames: ["pom.xml", "build.gradle", "gradle.properties"],
     frameworks: [
       {
-        name: 'Spring',
-        files: ['Application.java', 'Controller.java', 'Service.java', 'Repository.java'],
-        dependencies: ['org.springframework'],
+        name: "Spring",
+        files: [
+          "Application.java",
+          "Controller.java",
+          "Service.java",
+          "Repository.java"
+        ],
+        dependencies: ["org.springframework"]
       },
       {
-        name: 'Android',
-        files: ['AndroidManifest.xml', 'Activity.java', 'Fragment.java'],
-        dependencies: ['android'],
-      },
-    ],
+        name: "Android",
+        files: ["AndroidManifest.xml", "Activity.java", "Fragment.java"],
+        dependencies: ["android"]
+      }
+    ]
   },
   {
-    name: 'C#',
-    extensions: ['.cs', '.csx', '.csproj'],
-    filenames: ['packages.config', 'App.config', 'Web.config'],
+    name: "C#",
+    extensions: [".cs", ".csx", ".csproj"],
+    filenames: ["packages.config", "App.config", "Web.config"],
     frameworks: [
       {
-        name: 'ASP.NET',
-        files: ['Startup.cs', 'Program.cs', 'Controller.cs'],
-        dependencies: ['Microsoft.AspNetCore'],
+        name: "ASP.NET",
+        files: ["Startup.cs", "Program.cs", "Controller.cs"],
+        dependencies: ["Microsoft.AspNetCore"]
       },
       {
-        name: 'WPF',
-        files: ['App.xaml', 'Window.xaml', 'MainWindow.xaml'],
-        dependencies: ['PresentationFramework'],
-      },
-    ],
+        name: "WPF",
+        files: ["App.xaml", "Window.xaml", "MainWindow.xaml"],
+        dependencies: ["PresentationFramework"]
+      }
+    ]
   },
   {
-    name: 'PHP',
-    extensions: ['.php', '.phtml', '.php3', '.php4', '.php5', '.php7', '.phps'],
-    filenames: ['composer.json', '.htaccess'],
-    shebangs: ['php'],
+    name: "PHP",
+    extensions: [".php", ".phtml", ".php3", ".php4", ".php5", ".php7", ".phps"],
+    filenames: ["composer.json", ".htaccess"],
+    shebangs: ["php"],
     frameworks: [
       {
-        name: 'Laravel',
-        files: ['artisan', 'routes/web.php', 'app/Http/Controllers'],
-        dependencies: ['laravel/framework'],
+        name: "Laravel",
+        files: ["artisan", "routes/web.php", "app/Http/Controllers"],
+        dependencies: ["laravel/framework"]
       },
       {
-        name: 'Symfony',
-        files: ['symfony.lock', 'config/bundles.php'],
-        dependencies: ['symfony/symfony'],
+        name: "Symfony",
+        files: ["symfony.lock", "config/bundles.php"],
+        dependencies: ["symfony/symfony"]
       },
       {
-        name: 'WordPress',
-        files: ['wp-config.php', 'wp-content'],
-        dependencies: ['wordpress'],
-      },
-    ],
+        name: "WordPress",
+        files: ["wp-config.php", "wp-content"],
+        dependencies: ["wordpress"]
+      }
+    ]
   },
   {
-    name: 'Ruby',
-    extensions: ['.rb', '.erb', '.gemspec'],
-    filenames: ['Gemfile', 'Rakefile', 'config.ru'],
-    shebangs: ['ruby'],
+    name: "Ruby",
+    extensions: [".rb", ".erb", ".gemspec"],
+    filenames: ["Gemfile", "Rakefile", "config.ru"],
+    shebangs: ["ruby"],
     frameworks: [
       {
-        name: 'Rails',
-        files: ['config/routes.rb', 'app/controllers', 'app/models'],
-        dependencies: ['rails'],
+        name: "Rails",
+        files: ["config/routes.rb", "app/controllers", "app/models"],
+        dependencies: ["rails"]
       },
       {
-        name: 'Sinatra',
-        files: ['app.rb', 'config.ru'],
-        dependencies: ['sinatra'],
-      },
-    ],
+        name: "Sinatra",
+        files: ["app.rb", "config.ru"],
+        dependencies: ["sinatra"]
+      }
+    ]
   },
   {
-    name: 'Go',
-    extensions: ['.go'],
-    filenames: ['go.mod', 'go.sum'],
+    name: "Go",
+    extensions: [".go"],
+    filenames: ["go.mod", "go.sum"],
     frameworks: [
       {
-        name: 'Gin',
-        files: ['gin.go'],
-        dependencies: ['github.com/gin-gonic/gin'],
+        name: "Gin",
+        files: ["gin.go"],
+        dependencies: ["github.com/gin-gonic/gin"]
       },
       {
-        name: 'Echo',
-        files: ['echo.go'],
-        dependencies: ['github.com/labstack/echo'],
-      },
-    ],
+        name: "Echo",
+        files: ["echo.go"],
+        dependencies: ["github.com/labstack/echo"]
+      }
+    ]
   },
   {
-    name: 'Rust',
-    extensions: ['.rs'],
-    filenames: ['Cargo.toml', 'Cargo.lock'],
+    name: "Rust",
+    extensions: [".rs"],
+    filenames: ["Cargo.toml", "Cargo.lock"],
     frameworks: [
       {
-        name: 'Actix',
-        files: ['actix'],
-        dependencies: ['actix-web'],
+        name: "Actix",
+        files: ["actix"],
+        dependencies: ["actix-web"]
       },
       {
-        name: 'Rocket',
-        files: ['rocket'],
-        dependencies: ['rocket'],
-      },
-    ],
+        name: "Rocket",
+        files: ["rocket"],
+        dependencies: ["rocket"]
+      }
+    ]
   },
   {
-    name: 'Swift',
-    extensions: ['.swift'],
-    filenames: ['Package.swift'],
+    name: "Swift",
+    extensions: [".swift"],
+    filenames: ["Package.swift"],
     frameworks: [
       {
-        name: 'SwiftUI',
-        files: ['View.swift', 'App.swift'],
-        dependencies: ['SwiftUI'],
+        name: "SwiftUI",
+        files: ["View.swift", "App.swift"],
+        dependencies: ["SwiftUI"]
       },
       {
-        name: 'Vapor',
-        files: ['configure.swift', 'routes.swift'],
-        dependencies: ['vapor'],
-      },
-    ],
+        name: "Vapor",
+        files: ["configure.swift", "routes.swift"],
+        dependencies: ["vapor"]
+      }
+    ]
   },
   {
-    name: 'Kotlin',
-    extensions: ['.kt', '.kts'],
-    filenames: ['build.gradle.kts'],
+    name: "Kotlin",
+    extensions: [".kt", ".kts"],
+    filenames: ["build.gradle.kts"],
     frameworks: [
       {
-        name: 'Spring Boot',
-        files: ['Application.kt', 'Controller.kt', 'Service.kt'],
-        dependencies: ['org.springframework.boot'],
+        name: "Spring Boot",
+        files: ["Application.kt", "Controller.kt", "Service.kt"],
+        dependencies: ["org.springframework.boot"]
       },
       {
-        name: 'Android',
-        files: ['AndroidManifest.xml', 'Activity.kt', 'Fragment.kt'],
-        dependencies: ['android'],
-      },
-    ],
+        name: "Android",
+        files: ["AndroidManifest.xml", "Activity.kt", "Fragment.kt"],
+        dependencies: ["android"]
+      }
+    ]
   },
   {
-    name: 'HTML',
-    extensions: ['.html', '.htm', '.xhtml'],
+    name: "HTML",
+    extensions: [".html", ".htm", ".xhtml"],
     frameworks: [
       {
-        name: 'Bootstrap',
-        files: ['bootstrap.min.css', 'bootstrap.min.js'],
-        dependencies: ['bootstrap'],
-      },
-    ],
+        name: "Bootstrap",
+        files: ["bootstrap.min.css", "bootstrap.min.js"],
+        dependencies: ["bootstrap"]
+      }
+    ]
   },
   {
-    name: 'CSS',
-    extensions: ['.css', '.scss', '.sass', '.less', '.styl'],
+    name: "CSS",
+    extensions: [".css", ".scss", ".sass", ".less", ".styl"],
     frameworks: [
       {
-        name: 'Tailwind',
-        files: ['tailwind.config.js'],
-        dependencies: ['tailwindcss'],
+        name: "Tailwind",
+        files: ["tailwind.config.js"],
+        dependencies: ["tailwindcss"]
       },
       {
-        name: 'Bootstrap',
-        files: ['bootstrap'],
-        dependencies: ['bootstrap'],
-      },
-    ],
+        name: "Bootstrap",
+        files: ["bootstrap"],
+        dependencies: ["bootstrap"]
+      }
+    ]
   },
   {
-    name: 'Shell',
-    extensions: ['.sh', '.bash', '.zsh', '.fish'],
-    shebangs: ['sh', 'bash', 'zsh', 'fish'],
+    name: "Shell",
+    extensions: [".sh", ".bash", ".zsh", ".fish"],
+    shebangs: ["sh", "bash", "zsh", "fish"]
   },
   {
-    name: 'Markdown',
-    extensions: ['.md', '.markdown'],
+    name: "Markdown",
+    extensions: [".md", ".markdown"]
   },
   {
-    name: 'JSON',
-    extensions: ['.json'],
+    name: "JSON",
+    extensions: [".json"]
   },
   {
-    name: 'YAML',
-    extensions: ['.yml', '.yaml'],
+    name: "YAML",
+    extensions: [".yml", ".yaml"]
   },
   {
-    name: 'XML',
-    extensions: ['.xml', '.svg', '.xsl', '.xsd'],
+    name: "XML",
+    extensions: [".xml", ".svg", ".xsl", ".xsd"]
   },
   {
-    name: 'SQL',
-    extensions: ['.sql'],
+    name: "SQL",
+    extensions: [".sql"]
   },
   {
-    name: 'C',
-    extensions: ['.c', '.h'],
+    name: "C",
+    extensions: [".c", ".h"]
   },
   {
-    name: 'C++',
-    extensions: ['.cpp', '.cc', '.cxx', '.hpp', '.hxx', '.h++'],
-  },
+    name: "C++",
+    extensions: [".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".h++"]
+  }
 ];
 
 /**
@@ -352,7 +357,7 @@ export function detectLanguageFromPath(filePath: string): string {
     }
   }
 
-  return 'Unknown';
+  return "Unknown";
 }
 
 /**
@@ -362,9 +367,9 @@ export function detectLanguageFromPath(filePath: string): string {
  * @returns Detected language name or null if not detected
  */
 export function detectLanguageFromShebang(content: string): string | null {
-  const firstLine = content.split('\n')[0];
+  const firstLine = content.split("\n")[0];
 
-  if (firstLine?.startsWith('#!')) {
+  if (firstLine?.startsWith("#!")) {
     const shebangLine = firstLine.substring(2).trim();
 
     for (const lang of LANGUAGES) {
@@ -388,31 +393,35 @@ export function detectLanguageFromShebang(content: string): string | null {
  * @param content - Optional file content
  * @returns Promise resolving to detected language name
  */
-export async function detectLanguage(filePath: string, content?: string): Promise<string> {
+export async function detectLanguage(
+  filePath: string,
+  content?: string
+): Promise<string> {
   // First try to detect by path
   const langByPath = detectLanguageFromPath(filePath);
-  if (langByPath !== 'Unknown') {
+  if (langByPath !== "Unknown") {
     return langByPath;
   }
 
   // If content is not provided, try to read the file
-  if (!content) {
+  let fileContent = content;
+  if (!fileContent) {
     try {
-      content = await readFile(filePath, 'utf8');
+      fileContent = await readFile(filePath, "utf8");
     } catch {
       // If we can't read the file, return Unknown
-      return 'Unknown';
+      return "Unknown";
     }
   }
 
   // Try to detect by shebang
-  const langByShebang = detectLanguageFromShebang(content);
+  const langByShebang = detectLanguageFromShebang(fileContent);
   if (langByShebang) {
     return langByShebang;
   }
 
   // If all else fails, return Unknown
-  return 'Unknown';
+  return "Unknown";
 }
 
 /**
@@ -445,7 +454,10 @@ export async function detectFrameworks(
         }
 
         if (matches > 0) {
-          frameworks.set(framework.name, (frameworks.get(framework.name) || 0) + matches * 0.5);
+          frameworks.set(
+            framework.name,
+            (frameworks.get(framework.name) || 0) + matches * 0.5
+          );
         }
       }
     }
@@ -454,12 +466,12 @@ export async function detectFrameworks(
   // Check package.json for Node.js projects
   if (packageJsonPath) {
     try {
-      const packageJsonContent = await readFile(packageJsonPath, 'utf8');
+      const packageJsonContent = await readFile(packageJsonPath, "utf8");
       const packageJson = JSON.parse(packageJsonContent);
 
       const dependencies = {
         ...packageJson.dependencies,
-        ...packageJson.devDependencies,
+        ...packageJson.devDependencies
       };
 
       for (const lang of LANGUAGES) {
@@ -468,7 +480,10 @@ export async function detectFrameworks(
             if (framework.dependencies) {
               for (const dep of framework.dependencies) {
                 if (dependencies[dep]) {
-                  frameworks.set(framework.name, (frameworks.get(framework.name) || 0) + 1);
+                  frameworks.set(
+                    framework.name,
+                    (frameworks.get(framework.name) || 0) + 1
+                  );
                 }
               }
             }
@@ -484,7 +499,7 @@ export async function detectFrameworks(
   return Array.from(frameworks.entries())
     .map(([name, score]) => ({
       name,
-      confidence: Math.min(score / 3, 1), // Normalize to 0-1
+      confidence: Math.min(score / 3, 1) // Normalize to 0-1
     }))
     .filter((f) => f.confidence > 0.2) // Filter out low confidence
     .sort((a, b) => b.confidence - a.confidence);

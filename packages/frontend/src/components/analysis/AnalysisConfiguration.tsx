@@ -1,6 +1,7 @@
 import type { OutputFormat } from '@unified-repo-analyzer/shared';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { useId } from 'react';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { useProviders } from '../../hooks/useProviders';
 import { useToast } from '../../hooks/useToast';
@@ -26,6 +27,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
   const { handleError, handleAsyncError } = useErrorHandler();
   const { showSuccess, showWarning } = useToast();
+  const componentId = useId();
   const {
     providers,
     loading: providersLoading,
@@ -329,11 +331,11 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
       <div className="space-y-4" style={{ opacity: isLoading || providersLoading ? 0.6 : 1 }}>
         <div>
-          <label htmlFor="analysis-mode" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor={`analysis-mode-${componentId}`} className="block text-sm font-medium text-gray-700 mb-1">
             Analysis Mode
           </label>
           <select
-            id="analysis-mode"
+            id={`analysis-mode-${componentId}`}
             name="mode"
             value={options.mode}
             onChange={handleModeChange}
@@ -363,11 +365,11 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           onRetry={refreshProviders}
         >
           <div>
-            <label htmlFor="llm-provider" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor={`llm-provider-${componentId}`} className="block text-sm font-medium text-gray-700 mb-1">
               LLM Provider
             </label>
             <select
-              id="llm-provider"
+              id={`llm-provider-${componentId}`}
               name="llmProvider"
               value={options.llmProvider}
               onChange={handleProviderChange}
@@ -427,12 +429,12 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="max-files" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor={`max-files-${componentId}`} className="block text-sm font-medium text-gray-700 mb-1">
               Max Files to Process
             </label>
             <input
               type="number"
-              id="max-files"
+              id={`max-files-${componentId}`}
               name="maxFiles"
               min="1"
               value={options.maxFiles}
@@ -443,12 +445,12 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
           </div>
 
           <div>
-            <label htmlFor="max-lines" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor={`max-lines-${componentId}`} className="block text-sm font-medium text-gray-700 mb-1">
               Max Lines Per File
             </label>
             <input
               type="number"
-              id="max-lines"
+              id={`max-lines-${componentId}`}
               name="maxLinesPerFile"
               min="1"
               value={options.maxLinesPerFile}
@@ -482,7 +484,7 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
         <div className="space-y-2">
           <div className="flex items-center">
             <input
-              id="include-llm"
+              id={`include-llm-${componentId}`}
               name="includeLLMAnalysis"
               type="checkbox"
               checked={options.includeLLMAnalysis}
@@ -490,14 +492,14 @@ const AnalysisConfiguration: React.FC<AnalysisConfigurationProps> = ({
               disabled={isLoading || providersLoading}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
             />
-            <label htmlFor="include-llm" className="ml-2 block text-sm text-gray-700">
+            <label htmlFor={`include-llm-${componentId}`} className="ml-2 block text-sm text-gray-700">
               Include LLM Analysis
             </label>
           </div>
 
           <div className="flex items-center">
             <input
-              id="include-tree"
+              id={`include-tree-${componentId}`}
               name="includeTree"
               type="checkbox"
               checked={options.includeTree}
