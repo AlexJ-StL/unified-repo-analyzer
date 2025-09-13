@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: packages/backend/Dockerfile
-    container_name:unified-repo-analyzer-backend
+    container_name: unified-repo-analyzer-backend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -31,13 +31,13 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      -unified-repo-analyzer-network
+      - unified-repo-analyzer-network
 
   frontend:
     build:
       context: .
       dockerfile: packages/frontend/Dockerfile
-    container_name:unified-repo-analyzer-frontend
+    container_name: unified-repo-analyzer-frontend
     restart: unless-stopped
     ports:
       - '80:80'
@@ -51,7 +51,7 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      -unified-repo-analyzer-network
+      - unified-repo-analyzer-network
 
 volumes:
   backend_data:
