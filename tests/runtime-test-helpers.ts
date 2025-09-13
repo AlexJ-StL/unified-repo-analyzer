@@ -2,12 +2,8 @@
  * Runtime-specific test helpers for cross-platform compatibility
  */
 
-import { vi } from "vitest";
-import {
-  CIErrorReporter,
-  CITimeoutManager,
-  EnvironmentDetector
-} from "./ci-test-utils";
+import { vi } from 'vitest';
+import { CIErrorReporter, CITimeoutManager, EnvironmentDetector } from './ci-test-utils';
 
 /**
  * Runtime-aware test utilities
@@ -19,18 +15,14 @@ export function createRuntimeTestHelper() {
   /**
    * Get runtime-appropriate timeout for test operations
    */
-  const getTimeout = (
-    operation: "fast" | "normal" | "slow" | "very-slow" = "normal"
-  ): number => {
+  const getTimeout = (operation: 'fast' | 'normal' | 'slow' | 'very-slow' = 'normal'): number => {
     return CITimeoutManager.getTimeout(operation);
   };
 
   /**
    * Get runtime-appropriate retry count
    */
-  const getRetryCount = (
-    operation: "fast" | "normal" | "slow" = "normal"
-  ): number => {
+  const getRetryCount = (operation: 'fast' | 'normal' | 'slow' = 'normal'): number => {
     return CITimeoutManager.getRetryCount(operation);
   };
 
@@ -65,10 +57,7 @@ export function createRuntimeTestHelper() {
           // Add consistent small delay for async operations
           if (result instanceof Promise) {
             return new Promise((resolve) => {
-              setTimeout(
-                () => resolve(result),
-                EnvironmentDetector.isBun() ? 1 : 2
-              );
+              setTimeout(() => resolve(result), EnvironmentDetector.isBun() ? 1 : 2);
             });
           }
           return result;
@@ -87,13 +76,13 @@ export function createRuntimeTestHelper() {
     testFn: () => Promise<T>,
     testName: string,
     options: {
-      timeout?: "fast" | "normal" | "slow" | "very-slow";
-      retries?: "fast" | "normal" | "slow";
+      timeout?: 'fast' | 'normal' | 'slow' | 'very-slow';
+      retries?: 'fast' | 'normal' | 'slow';
       expectRuntimeDifferences?: boolean;
     } = {}
   ): Promise<T> => {
-    const timeout = getTimeout(options.timeout || "normal");
-    const retries = getRetryCount(options.retries || "normal");
+    const timeout = getTimeout(options.timeout || 'normal');
+    const retries = getRetryCount(options.retries || 'normal');
 
     let lastError: Error | undefined;
 
@@ -103,11 +92,9 @@ export function createRuntimeTestHelper() {
           testFn(),
           new Promise<never>((_, reject) => {
             setTimeout(() => {
-              reject(
-                new Error(`Test "${testName}" timed out after ${timeout}ms`)
-              );
+              reject(new Error(`Test "${testName}" timed out after ${timeout}ms`));
             }, timeout);
-          })
+          }),
         ]);
       } catch (error) {
         lastError = error as Error;
@@ -120,51 +107,41 @@ export function createRuntimeTestHelper() {
     }
 
     // Report the final error with context
-    CIErrorReporter.reportError(lastError ?? new Error("No error captured"), {
+    CIErrorReporter.reportError(lastError ?? new Error('No error captured'), {
       testName,
-      runtime: EnvironmentDetector.isBun() ? "Bun" : "Node.js",
-      platform: EnvironmentDetector.getPlatform()
+      runtime: EnvironmentDetector.isBun() ? 'Bun' : 'Node.js',
+      platform: EnvironmentDetector.getPlatform(),
     });
 
-    throw lastError ?? new Error("No error captured");
+    throw lastError ?? new Error('No error captured');
   };
 
   /**
    * Skip test based on runtime conditions
    */
   const skipIf = (condition: {
-    runtime?: "bun" | "node";
+    runtime?: 'bun' | 'node';
     platform?: string;
     ci?: boolean;
     reason?: string;
   }): boolean => {
-    if (condition.runtime === "bun" && EnvironmentDetector.isBun()) {
-      console.log(`Skipping test: ${condition.reason || "Bun runtime"}`);
+    if (condition.runtime === 'bun' && EnvironmentDetector.isBun()) {
+      console.log(`Skipping test: ${condition.reason || 'Bun runtime'}`);
       return true;
     }
 
-    if (condition.runtime === "node" && !EnvironmentDetector.isBun()) {
-      console.log(`Skipping test: ${condition.reason || "Node.js runtime"}`);
+    if (condition.runtime === 'node' && !EnvironmentDetector.isBun()) {
+      console.log(`Skipping test: ${condition.reason || 'Node.js runtime'}`);
       return true;
     }
 
-    if (
-      condition.platform &&
-      EnvironmentDetector.getPlatform() === condition.platform
-    ) {
-      console.log(
-        `Skipping test: ${condition.reason || `Platform ${condition.platform}`}`
-      );
+    if (condition.platform && EnvironmentDetector.getPlatform() === condition.platform) {
+      console.log(`Skipping test: ${condition.reason || `Platform ${condition.platform}`}`);
       return true;
     }
 
-    if (
-      condition.ci !== undefined &&
-      EnvironmentDetector.isCI() !== condition.ci
-    ) {
-      console.log(
-        `Skipping test: ${condition.reason || `CI environment: ${condition.ci}`}`
-      );
+    if (condition.ci !== undefined && EnvironmentDetector.isCI() !== condition.ci) {
+      console.log(`Skipping test: ${condition.reason || `CI environment: ${condition.ci}`}`);
       return true;
     }
 
@@ -176,31 +153,29 @@ export function createRuntimeTestHelper() {
    */
   const getTestConfig = () => {
     return {
-      runtime: EnvironmentDetector.isBun() ? "bun" : "node",
+      runtime: EnvironmentDetector.isBun() ? 'bun' : 'node',
       platform: EnvironmentDetector.getPlatform(),
       isCI: EnvironmentDetector.isCI(),
       ciProvider: EnvironmentDetector.getCIProvider(),
-      version:
-        EnvironmentDetector.getBunVersion() ||
-        EnvironmentDetector.getNodeVersion(),
+      version: EnvironmentDetector.getBunVersion() || EnvironmentDetector.getNodeVersion(),
 
       // Timeouts
-      fastTimeout: getTimeout("fast"),
-      normalTimeout: getTimeout("normal"),
-      slowTimeout: getTimeout("slow"),
-      verySlowTimeout: getTimeout("very-slow"),
+      fastTimeout: getTimeout('fast'),
+      normalTimeout: getTimeout('normal'),
+      slowTimeout: getTimeout('slow'),
+      verySlowTimeout: getTimeout('very-slow'),
 
       // Retries
-      fastRetries: getRetryCount("fast"),
-      normalRetries: getRetryCount("normal"),
-      slowRetries: getRetryCount("slow"),
+      fastRetries: getRetryCount('fast'),
+      normalRetries: getRetryCount('normal'),
+      slowRetries: getRetryCount('slow'),
 
       // Memory settings
       memoryLimit: EnvironmentDetector.isBun()
         ? undefined // Bun manages memory automatically
-        : process.env.NODE_OPTIONS?.includes("max-old-space-size")
+        : process.env.NODE_OPTIONS?.includes('max-old-space-size')
           ? process.env.NODE_OPTIONS
-          : "--max-old-space-size=4096"
+          : '--max-old-space-size=4096',
     };
   };
 
@@ -211,10 +186,10 @@ export function createRuntimeTestHelper() {
     testName: string,
     testFn: T,
     options: {
-      timeout?: "fast" | "normal" | "slow" | "very-slow";
-      retries?: "fast" | "normal" | "slow";
+      timeout?: 'fast' | 'normal' | 'slow' | 'very-slow';
+      retries?: 'fast' | 'normal' | 'slow';
       skipIf?: {
-        runtime?: "bun" | "node";
+        runtime?: 'bun' | 'node';
         platform?: string;
         ci?: boolean;
         reason?: string;
@@ -229,15 +204,11 @@ export function createRuntimeTestHelper() {
       }
 
       // Execute with runtime-specific error handling
-      return await executeWithErrorHandling(
-        async () => testFn(...args),
-        testName,
-        {
-          timeout: options.timeout,
-          retries: options.retries,
-          expectRuntimeDifferences: options.expectRuntimeDifferences
-        }
-      );
+      return await executeWithErrorHandling(async () => testFn(...args), testName, {
+        timeout: options.timeout,
+        retries: options.retries,
+        expectRuntimeDifferences: options.expectRuntimeDifferences,
+      });
     }) as T;
   };
 
@@ -248,7 +219,7 @@ export function createRuntimeTestHelper() {
     executeWithErrorHandling,
     skipIf,
     getTestConfig,
-    createRuntimeTest
+    createRuntimeTest,
   };
 }
 
@@ -275,7 +246,7 @@ export function assertRuntime() {
     if (diff > actualTolerance) {
       throw new Error(
         message ||
-          `Expected ${actual} to be within ${actualTolerance} of ${expected}, but difference was ${diff} (Runtime: ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"})`
+          `Expected ${actual} to be within ${actualTolerance} of ${expected}, but difference was ${diff} (Runtime: ${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'})`
       );
     }
   };
@@ -283,25 +254,19 @@ export function assertRuntime() {
   /**
    * Assert timing with runtime-specific expectations
    */
-  const assertTiming = (
-    actualMs: number,
-    expectedMs: number,
-    operation = "operation"
-  ): void => {
+  const assertTiming = (actualMs: number, expectedMs: number, operation = 'operation'): void => {
     // Bun is generally faster, so we adjust expectations
     const runtimeMultiplier = EnvironmentDetector.isBun() ? 0.8 : 1.2;
     const adjustedExpected = expectedMs * runtimeMultiplier;
 
     // Allow for more variance in CI environments
-    const tolerance = EnvironmentDetector.isCI()
-      ? adjustedExpected * 0.5
-      : adjustedExpected * 0.3;
+    const tolerance = EnvironmentDetector.isCI() ? adjustedExpected * 0.5 : adjustedExpected * 0.3;
 
     assertWithTolerance(
       actualMs,
       adjustedExpected,
       tolerance,
-      `${operation} timing assertion failed (Runtime: ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"}, CI: ${EnvironmentDetector.isCI()})`
+      `${operation} timing assertion failed (Runtime: ${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'}, CI: ${EnvironmentDetector.isCI()})`
     );
   };
 
@@ -311,7 +276,7 @@ export function assertRuntime() {
   const assertMemoryUsage = (
     actualMB: number,
     expectedMB: number,
-    operation = "operation"
+    operation = 'operation'
   ): void => {
     // Bun typically uses less memory
     const runtimeMultiplier = EnvironmentDetector.isBun() ? 0.7 : 1.0;
@@ -324,14 +289,14 @@ export function assertRuntime() {
       actualMB,
       adjustedExpected,
       tolerance,
-      `${operation} memory usage assertion failed (Runtime: ${EnvironmentDetector.isBun() ? "Bun" : "Node.js"})`
+      `${operation} memory usage assertion failed (Runtime: ${EnvironmentDetector.isBun() ? 'Bun' : 'Node.js'})`
     );
   };
 
   return {
     assertWithTolerance,
     assertTiming,
-    assertMemoryUsage
+    assertMemoryUsage,
   };
 }
 
@@ -345,8 +310,7 @@ export const {
   executeWithErrorHandling,
   skipIf,
   getTestConfig,
-  createRuntimeTest
+  createRuntimeTest,
 } = createRuntimeTestHelper();
 
-export const { assertWithTolerance, assertTiming, assertMemoryUsage } =
-  assertRuntime();
+export const { assertWithTolerance, assertTiming, assertMemoryUsage } = assertRuntime();

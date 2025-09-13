@@ -3,9 +3,9 @@
  * Utilities for tests that need custom cleanup beyond the standard cleanup
  */
 
-import { promises as fs } from 'node:fs';
-import * as path from 'node:path';
-import { registerCleanupTask } from './cleanup-manager';
+import { promises as fs } from "node:fs";
+import * as path from "node:path";
+import { registerCleanupTask } from "./cleanup-manager";
 
 /**
  * Cleanup helper for tests that create temporary files
@@ -31,8 +31,8 @@ export class TempFileCleanup {
   /**
    * Create a temporary file and register it for cleanup
    */
-  async createTempFile(fileName: string, content = ''): Promise<string> {
-    const tempPath = path.join(process.cwd(), 'test-temp', fileName);
+  async createTempFile(fileName: string, content = ""): Promise<string> {
+    const tempPath = path.join(process.cwd(), "test-temp", fileName);
     await fs.mkdir(path.dirname(tempPath), { recursive: true });
     await fs.writeFile(tempPath, content);
     this.addTempFile(tempPath);
@@ -43,7 +43,7 @@ export class TempFileCleanup {
    * Create a temporary directory and register it for cleanup
    */
   async createTempDir(dirName: string): Promise<string> {
-    const tempPath = path.join(process.cwd(), 'test-temp', dirName);
+    const tempPath = path.join(process.cwd(), "test-temp", dirName);
     await fs.mkdir(tempPath, { recursive: true });
     this.addTempDir(tempPath);
     return tempPath;
@@ -213,8 +213,12 @@ export class TimerCleanup {
    * Clear all registered timers and intervals
    */
   cleanup(): void {
-    this.timers.forEach((timer) => clearTimeout(timer));
-    this.intervals.forEach((interval) => clearInterval(interval));
+    this.timers.forEach((timer) => {
+      clearTimeout(timer);
+    });
+    this.intervals.forEach((interval) => {
+      clearInterval(interval);
+    });
     this.timers = [];
     this.intervals = [];
   }
@@ -255,7 +259,7 @@ export function createTestCleanupContext(testName: string) {
       await Promise.all([tempFiles.cleanup(), network.cleanup()]);
       env.restore();
       timers.cleanup();
-    },
+    }
   };
 }
 
@@ -275,12 +279,12 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
       // If the test function returns a promise, add cleanup to the chain
       if (
         result &&
-        typeof result === 'object' &&
+        typeof result === "object" &&
         result !== null &&
-        'then' in result &&
-        typeof (result as Promise<unknown>).then === 'function' &&
-        'finally' in result &&
-        typeof (result as Promise<unknown>).finally === 'function'
+        "then" in result &&
+        typeof (result as Promise<unknown>).then === "function" &&
+        "finally" in result &&
+        typeof (result as Promise<unknown>).finally === "function"
       ) {
         return (result as Promise<unknown>).finally(() => cleanup.cleanup());
       }
@@ -302,7 +306,9 @@ export function withCleanup<T extends (...args: unknown[]) => unknown>(
 /**
  * Utility to wait for all pending operations to complete
  */
-export async function waitForPendingOperations(timeoutMs = 1000): Promise<void> {
+export async function waitForPendingOperations(
+  timeoutMs = 1000
+): Promise<void> {
   return new Promise((resolve) => {
     // Wait for next tick to allow pending operations to complete
     setImmediate(() => {

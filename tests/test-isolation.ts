@@ -4,7 +4,7 @@
  * Enhanced with comprehensive module cache clearing and global state management
  */
 
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
 /**
  * Enhanced Test Isolation Manager
@@ -59,15 +59,15 @@ export class IsolationManager {
   private storeGlobalState(): void {
     // Store global variables that might be modified by tests
     const globalVarsToTrack = [
-      "process",
-      "Buffer",
-      "global",
-      "globalThis",
-      "__dirname",
-      "__filename",
-      "require",
-      "module",
-      "exports"
+      'process',
+      'Buffer',
+      'global',
+      'globalThis',
+      '__dirname',
+      '__filename',
+      'require',
+      'module',
+      'exports',
     ];
 
     globalVarsToTrack.forEach((varName) => {
@@ -77,7 +77,7 @@ export class IsolationManager {
     });
 
     // Store process.env separately for detailed tracking
-    this.globalVariables.set("process.env", { ...process.env });
+    this.globalVariables.set('process.env', { ...process.env });
   }
 
   /**
@@ -86,7 +86,7 @@ export class IsolationManager {
   private async restoreGlobalState(): Promise<void> {
     // Restore global variables
     this.globalVariables.forEach((value, key) => {
-      if (key === "process.env") {
+      if (key === 'process.env') {
         // Restore environment variables
         const originalEnv = value as Record<string, string>;
         Object.keys(process.env).forEach((key) => {
@@ -110,7 +110,7 @@ export class IsolationManager {
   private clearModuleCache(): void {
     try {
       // Clear Vitest module cache if available
-      if (typeof vi !== "undefined" && typeof vi.resetModules === "function") {
+      if (typeof vi !== 'undefined' && typeof vi.resetModules === 'function') {
         vi.resetModules();
       }
 
@@ -118,23 +118,16 @@ export class IsolationManager {
       if (require?.cache) {
         Object.keys(require.cache).forEach((key) => {
           // Only clear test-related modules, preserve core Node modules
-          if (
-            !key.includes("node_modules") ||
-            key.includes("vitest") ||
-            key.includes("test")
-          ) {
+          if (!key.includes('node_modules') || key.includes('vitest') || key.includes('test')) {
             delete require.cache[key];
           }
         });
       }
 
       // Clear dynamic import cache (if supported)
-      if (
-        typeof globalThis !== "undefined" &&
-        (globalThis as any).__vitest_mocker__
-      ) {
+      if (typeof globalThis !== 'undefined' && (globalThis as any).__vitest_mocker__) {
         const mocker = (globalThis as any).__vitest_mocker__;
-        if (typeof mocker.resetCache === "function") {
+        if (typeof mocker.resetCache === 'function') {
           mocker.resetCache();
         }
       }
@@ -146,11 +139,11 @@ export class IsolationManager {
    */
   private async setupCleanEnvironment(): Promise<void> {
     // Reset process.env.NODE_ENV
-    process.env.NODE_ENV = "test";
+    process.env.NODE_ENV = 'test';
 
     // Clear any test-specific environment variables
     const testEnvVars = Object.keys(process.env).filter(
-      (key) => key.startsWith("TEST_") || key.startsWith("VITEST_")
+      (key) => key.startsWith('TEST_') || key.startsWith('VITEST_')
     );
     testEnvVars.forEach((key) => {
       if (!this.globalVariables.has(`process.env.${key}`)) {
@@ -159,7 +152,7 @@ export class IsolationManager {
     });
 
     // Reset console to prevent test output pollution
-    if (process.env.NODE_ENV === "test") {
+    if (process.env.NODE_ENV === 'test') {
       console.log = vi?.fn?.() || (() => {});
       console.warn = vi?.fn?.() || (() => {});
       console.error = vi?.fn?.() || (() => {});
@@ -270,7 +263,7 @@ export class IsolationManager {
       activeTests: this.isolationTasks.size,
       globalTasks: this.globalCleanupTasks.length,
       cachedModules: this.moduleCache.size,
-      trackedGlobals: this.globalVariables.size
+      trackedGlobals: this.globalVariables.size,
     };
   }
 }
@@ -377,10 +370,10 @@ export namespace EnvironmentIsolation {
   export function clearTestEnv(): void {
     const testKeys = Object.keys(process.env).filter(
       (key) =>
-        key.startsWith("TEST_") ||
-        key.startsWith("VITEST_") ||
-        key.startsWith("NODE_TEST_") ||
-        key.includes("_TEST")
+        key.startsWith('TEST_') ||
+        key.startsWith('VITEST_') ||
+        key.startsWith('NODE_TEST_') ||
+        key.includes('_TEST')
     );
 
     testKeys.forEach((key) => {
@@ -436,10 +429,10 @@ export namespace ModuleIsolation {
         if (!patterns || patterns.length === 0) {
           // Clear test-related modules by default
           return (
-            key.includes("test") ||
-            key.includes("spec") ||
-            key.includes("mock") ||
-            !key.includes("node_modules")
+            key.includes('test') ||
+            key.includes('spec') ||
+            key.includes('mock') ||
+            !key.includes('node_modules')
           );
         }
 
@@ -452,7 +445,7 @@ export namespace ModuleIsolation {
     }
 
     // Clear Vitest module cache
-    if (typeof vi !== "undefined" && typeof vi.resetModules === "function") {
+    if (typeof vi !== 'undefined' && typeof vi.resetModules === 'function') {
       vi.resetModules();
     }
   }
@@ -460,15 +453,12 @@ export namespace ModuleIsolation {
   /**
    * Mock a module with cleanup tracking
    */
-  export function mockModule(
-    modulePath: string,
-    _factory?: () => unknown
-  ): void {
+  export function mockModule(modulePath: string, _factory?: () => unknown): void {
     mockedModules.add(modulePath);
 
     // Store original module if it exists
     try {
-      if (typeof require !== "undefined") {
+      if (typeof require !== 'undefined') {
         const resolved = require.resolve(modulePath);
         if (require.cache[resolved] && !moduleSnapshots.has(modulePath)) {
           moduleSnapshots.set(modulePath, require.cache[resolved]);
@@ -488,7 +478,7 @@ export namespace ModuleIsolation {
     mockedModules.delete(modulePath);
 
     const snapshot = moduleSnapshots.get(modulePath);
-    if (snapshot && typeof require !== "undefined") {
+    if (snapshot && typeof require !== 'undefined') {
       try {
         const resolved = require.resolve(modulePath);
         require.cache[resolved] = snapshot as NodeJS.Module;
@@ -519,7 +509,7 @@ export namespace ModuleIsolation {
     moduleSnapshots.clear();
 
     // Clear Vitest module cache
-    if (typeof vi !== "undefined" && typeof vi.resetModules === "function") {
+    if (typeof vi !== 'undefined' && typeof vi.resetModules === 'function') {
       vi.resetModules();
     }
   }
@@ -536,7 +526,7 @@ export namespace ModuleIsolation {
     }
 
     // Clear Vitest cache
-    if (typeof vi !== "undefined" && typeof vi.resetModules === "function") {
+    if (typeof vi !== 'undefined' && typeof vi.resetModules === 'function') {
       vi.resetModules();
     }
 
@@ -557,7 +547,7 @@ export namespace ModuleIsolation {
     return {
       requireCacheSize: require?.cache ? Object.keys(require.cache).length : 0,
       mockedModulesCount: mockedModules.size,
-      snapshotsCount: moduleSnapshots.size
+      snapshotsCount: moduleSnapshots.size,
     };
   }
 }
@@ -569,19 +559,16 @@ export namespace DOMIsolation {
   let originalDocument: Document | null = null;
   let _originalWindow: Window | null = null;
   const addedElements: Set<Element> = new Set();
-  const modifiedAttributes: Map<
-    Element,
-    Map<string, string | null>
-  > = new Map();
+  const modifiedAttributes: Map<Element, Map<string, string | null>> = new Map();
 
   /**
    * Create DOM snapshot for restoration
    */
   export function createSnapshot(): void {
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
       originalDocument = document.cloneNode(true) as Document;
     }
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       _originalWindow = { ...window } as Window;
     }
   }
@@ -590,24 +577,22 @@ export namespace DOMIsolation {
    * Setup clean DOM state
    */
   export function setupCleanDOM(): void {
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
       // Clear document body
-      document.body.innerHTML = "";
+      document.body.innerHTML = '';
 
       // Reset document title
-      document.title = "Test";
+      document.title = 'Test';
 
       // Clear any event listeners by replacing body
-      const newBody = document.createElement("body");
+      const newBody = document.createElement('body');
       if (document.body.parentNode) {
         document.body.parentNode.replaceChild(newBody, document.body);
       }
 
       // Reset document head to minimal state
       const head = document.head;
-      const elementsToRemove = head.querySelectorAll(
-        'style, link[rel="stylesheet"], script[src]'
-      );
+      const elementsToRemove = head.querySelectorAll('style, link[rel="stylesheet"], script[src]');
       elementsToRemove.forEach((element) => {
         if (element.parentNode) {
           element.parentNode.removeChild(element);
@@ -617,15 +602,15 @@ export namespace DOMIsolation {
       // Reset viewport meta tag
       let viewport = document.querySelector('meta[name="viewport"]');
       if (!viewport) {
-        viewport = document.createElement("meta");
-        viewport.setAttribute("name", "viewport");
+        viewport = document.createElement('meta');
+        viewport.setAttribute('name', 'viewport');
         head.appendChild(viewport);
       }
-      viewport.setAttribute("content", "width=device-width, initial-scale=1");
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1');
     }
 
     // Setup global DOM objects if in jsdom environment
-    if (typeof global !== "undefined" && typeof window !== "undefined") {
+    if (typeof global !== 'undefined' && typeof window !== 'undefined') {
       setupGlobalDOMObjects();
     }
   }
@@ -635,7 +620,7 @@ export namespace DOMIsolation {
    */
   function setupGlobalDOMObjects(): void {
     // Mock common DOM APIs that might be missing in jsdom
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // ResizeObserver
       if (!window.ResizeObserver) {
         window.ResizeObserver = class ResizeObserver {
@@ -664,17 +649,14 @@ export namespace DOMIsolation {
           removeListener: () => {},
           addEventListener: () => {},
           removeEventListener: () => {},
-          dispatchEvent: () => false
+          dispatchEvent: () => false,
         });
       }
 
       // requestAnimationFrame
       if (!window.requestAnimationFrame) {
         window.requestAnimationFrame = (callback: FrameRequestCallback) => {
-          return setTimeout(
-            () => callback(Date.now()),
-            16
-          ) as unknown as number;
+          return setTimeout(() => callback(Date.now()), 16) as unknown as number;
         };
       }
 
@@ -689,7 +671,7 @@ export namespace DOMIsolation {
       if (!window.getComputedStyle) {
         window.getComputedStyle = () =>
           ({
-            getPropertyValue: () => ""
+            getPropertyValue: () => '',
           }) as unknown as CSSStyleDeclaration;
       }
     }
@@ -723,7 +705,7 @@ export namespace DOMIsolation {
    * Cleanup DOM modifications
    */
   export function cleanupDOM(): void {
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
       // Remove tracked elements
       addedElements.forEach((element) => {
         if (element.parentNode) {
@@ -745,34 +727,34 @@ export namespace DOMIsolation {
       modifiedAttributes.clear();
 
       // Clear document body
-      document.body.innerHTML = "";
+      document.body.innerHTML = '';
 
       // Remove any added stylesheets and scripts
       const elementsToRemove = document.querySelectorAll(
         'style, link[rel="stylesheet"], script[src]'
       );
       elementsToRemove.forEach((element) => {
-        if (element.parentNode && !element.hasAttribute("data-keep")) {
+        if (element.parentNode && !element.hasAttribute('data-keep')) {
           element.parentNode.removeChild(element);
         }
       });
 
       // Reset document title
-      document.title = "Test";
+      document.title = 'Test';
 
       // Clear any custom properties on document
       Object.keys(document).forEach((key) => {
-        if (key.startsWith("test") || key.startsWith("mock")) {
+        if (key.startsWith('test') || key.startsWith('mock')) {
           delete (document as any)[key];
         }
       });
     }
 
     // Clean up window object if available
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Remove test-related properties
       Object.keys(window).forEach((key) => {
-        if (key.startsWith("test") || key.startsWith("mock")) {
+        if (key.startsWith('test') || key.startsWith('mock')) {
           delete (window as any)[key];
         }
       });
@@ -783,7 +765,7 @@ export namespace DOMIsolation {
    * Restore DOM from snapshot
    */
   export function restoreFromSnapshot(): void {
-    if (originalDocument && typeof document !== "undefined") {
+    if (originalDocument && typeof document !== 'undefined') {
       // This is a simplified restoration - in practice, full DOM restoration is complex
       document.body.innerHTML = originalDocument.body.innerHTML;
       document.title = originalDocument.title;
@@ -798,9 +780,9 @@ export namespace DOMIsolation {
     modifiedAttributes.clear();
     cleanupDOM();
 
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
       // Nuclear option - replace entire body
-      const newBody = document.createElement("body");
+      const newBody = document.createElement('body');
       if (document.body?.parentNode) {
         document.body.parentNode.replaceChild(newBody, document.body);
       }
@@ -842,10 +824,7 @@ export namespace TimerIsolation {
   /**
    * Set timeout with cleanup tracking
    */
-  export function setTimeout(
-    callback: () => void,
-    delay: number
-  ): NodeJS.Timeout {
+  export function setTimeout(callback: () => void, delay: number): NodeJS.Timeout {
     const timer = globalThis.setTimeout(() => {
       activeTimers.delete(timer);
       callback();
@@ -861,10 +840,7 @@ export namespace TimerIsolation {
   /**
    * Set interval with cleanup tracking
    */
-  export function setInterval(
-    callback: () => void,
-    delay: number
-  ): NodeJS.Timeout {
+  export function setInterval(callback: () => void, delay: number): NodeJS.Timeout {
     const interval = globalThis.setInterval(callback, delay);
 
     if (isTimerTrackingActive) {
@@ -922,7 +898,7 @@ export namespace TimerIsolation {
       activeTimers: activeTimers.size,
       activeIntervals: activeIntervals.size,
       activeImmediates: activeImmediates.size,
-      isMockingActive: isTimerTrackingActive
+      isMockingActive: isTimerTrackingActive,
     };
   }
 
@@ -933,9 +909,7 @@ export namespace TimerIsolation {
     const startTime = Date.now();
 
     while (
-      (activeTimers.size > 0 ||
-        activeIntervals.size > 0 ||
-        activeImmediates.size > 0) &&
+      (activeTimers.size > 0 || activeIntervals.size > 0 || activeImmediates.size > 0) &&
       Date.now() - startTime < timeout
     ) {
       await new Promise((resolve) => globalThis.setTimeout(resolve, 10));
@@ -1002,7 +976,7 @@ export async function setupTestIsolation(testId: string): Promise<void> {
   EnvironmentIsolation.clearTestEnv();
 
   // Enable timer tracking if requested
-  if (process.env.TRACK_TIMERS === "true") {
+  if (process.env.TRACK_TIMERS === 'true') {
     TimerIsolation.enableMocking();
   }
 }
@@ -1058,7 +1032,7 @@ export async function emergencyIsolationReset(): Promise<void> {
  * Get comprehensive isolation statistics
  */
 export function getIsolationStats(): {
-  manager: ReturnType<IsolationManager["getStats"]>;
+  manager: ReturnType<IsolationManager['getStats']>;
   modules: ReturnType<typeof ModuleIsolation.getCacheStats>;
   timers: ReturnType<typeof TimerIsolation.getStats>;
 } {
@@ -1067,17 +1041,14 @@ export function getIsolationStats(): {
   return {
     manager: manager.getStats(),
     modules: ModuleIsolation.getCacheStats(),
-    timers: TimerIsolation.getStats()
+    timers: TimerIsolation.getStats(),
   };
 }
 
 /**
  * Utility function to run a test with complete isolation
  */
-export async function withIsolation<T>(
-  testId: string,
-  testFn: () => Promise<T> | T
-): Promise<T> {
+export async function withIsolation<T>(testId: string, testFn: () => Promise<T> | T): Promise<T> {
   await setupTestIsolation(testId);
 
   try {
@@ -1119,7 +1090,7 @@ export function createIsolatedContext(testId: string) {
 
     getStats() {
       return getIsolationStats();
-    }
+    },
   };
 }
 
