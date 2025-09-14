@@ -236,7 +236,7 @@ describe("Comprehensive Test Infrastructure Validation", () => {
         expect(1).toBe(2);
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
-        expect((error as Error).message).toContain("Expected");
+        expect((error as Error).message).toContain("expected");
       }
     });
   });
