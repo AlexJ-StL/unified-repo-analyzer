@@ -8,7 +8,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "npm run build:clean && npm run build:types",
+    "build": "bun run build:clean && bun run build:bundle",
     "build:clean": "bunx rimraf dist",
     "build:types": "bunx tsc",
     "build:bundle": "bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap",
