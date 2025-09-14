@@ -31,7 +31,7 @@ describe("End-to-End User Workflow Tests", () => {
         {
           type: "file",
           config: {
-            path: path.join(testDir, "workflow.log"),
+            path: path.join(testDir, "combined.log"),
             maxSize: "10MB",
             maxFiles: 5,
             rotateDaily: false
@@ -58,6 +58,9 @@ describe("End-to-End User Workflow Tests", () => {
         errorRate: 10
       }
     });
+
+    // Start the log management service
+    await logManagement.start();
   });
 
   afterEach(async () => {
@@ -977,7 +980,7 @@ describe("End-to-End User Workflow Tests", () => {
     expectedComponents: string[]
   ): Promise<void> {
     const logContent = await fs.readFile(
-      path.join(testDir, "workflow.log"),
+      path.join(testDir, "combined.log"),
       "utf-8"
     );
     const logLines = logContent

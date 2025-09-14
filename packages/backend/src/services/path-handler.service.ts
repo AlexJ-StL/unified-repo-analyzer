@@ -1,9 +1,9 @@
-import fs from 'node:fs/promises';
-import { platform } from 'node:os';
-import path from 'node:path';
-import { CacheService } from './cache.service.js';
-import logger from './logger.service.js';
-import { performanceMonitor } from './performance-monitor.service.js';
+import fs from "node:fs/promises";
+import { platform } from "node:os";
+import path from "node:path";
+import { CacheService } from "./cache.service.js";
+import logger from "./logger.service.js";
+import { performanceMonitor } from "./performance-monitor.service.js";
 
 /**
  * Path validation result interface
@@ -126,28 +126,28 @@ export class PathHandler {
 
   // Windows reserved names
   private readonly windowsReservedNames = new Set([
-    'CON',
-    'PRN',
-    'AUX',
-    'NUL',
-    'COM1',
-    'COM2',
-    'COM3',
-    'COM4',
-    'COM5',
-    'COM6',
-    'COM7',
-    'COM8',
-    'COM9',
-    'LPT1',
-    'LPT2',
-    'LPT3',
-    'LPT4',
-    'LPT5',
-    'LPT6',
-    'LPT7',
-    'LPT8',
-    'LPT9',
+    "CON",
+    "PRN",
+    "AUX",
+    "NUL",
+    "COM1",
+    "COM2",
+    "COM3",
+    "COM4",
+    "COM5",
+    "COM6",
+    "COM7",
+    "COM8",
+    "COM9",
+    "LPT1",
+    "LPT2",
+    "LPT3",
+    "LPT4",
+    "LPT5",
+    "LPT6",
+    "LPT7",
+    "LPT8",
+    "LPT9"
   ]);
 
   // Windows path length limits
@@ -158,9 +158,12 @@ export class PathHandler {
   private readonly defaultTimeoutMs = 5000; // 5 seconds
   pathSeparator: string;
 
-  constructor(platformOverride?: string, cacheConfig?: Partial<PathCacheConfig>) {
-    this.isWindows = (platformOverride || platform()) === 'win32';
-    this.pathSeparator = this.isWindows ? '\\' : '/';
+  constructor(
+    platformOverride?: string,
+    cacheConfig?: Partial<PathCacheConfig>
+  ) {
+    this.isWindows = (platformOverride || platform()) === "win32";
+    this.pathSeparator = this.isWindows ? "\\" : "/";
 
     // Initialize cache configuration
     this.cacheConfig = {
@@ -168,14 +171,14 @@ export class PathHandler {
       ttl: 5 * 60 * 1000, // 5 minutes default TTL
       maxEntries: 1000,
       invalidateOnChange: true,
-      ...cacheConfig,
+      ...cacheConfig
     };
 
     // Initialize path validation cache
     this.pathCache = new CacheService<PathValidationResult>({
       ttl: this.cacheConfig.ttl,
       max: this.cacheConfig.maxEntries,
-      updateAgeOnGet: true,
+      updateAgeOnGet: true
     });
 
     // Initialize cache statistics
@@ -187,7 +190,7 @@ export class PathHandler {
       maxSize: this.cacheConfig.maxEntries,
       evictions: 0,
       averageValidationTime: 0,
-      cacheMemoryUsage: 0,
+      cacheMemoryUsage: 0
     };
   }
 
@@ -205,8 +208,8 @@ export class PathHandler {
    * Normalize path for cross-platform compatibility
    */
   public normalizePath(inputPath: string): string {
-    if (!inputPath || typeof inputPath !== 'string') {
-      throw new Error('Path must be a non-empty string');
+    if (!inputPath || typeof inputPath !== "string") {
+      throw new Error("Path must be a non-empty string");
     }
 
     try {
@@ -219,12 +222,12 @@ export class PathHandler {
 
       if (this.isWindows) {
         // Convert forward slashes to backslashes on Windows
-        normalizedPath = inputPath.replace(/\//g, '\\');
+        normalizedPath = inputPath.replace(/\//g, "\\");
         // Use Node.js path.normalize for basic normalization
         normalizedPath = path.normalize(normalizedPath);
       } else {
         // Convert backslashes to forward slashes on Unix-like systems
-        normalizedPath = inputPath.replace(/\\/g, '/');
+        normalizedPath = inputPath.replace(/\\/g, "/");
         // Use path.posix.normalize for Unix-like systems to avoid Windows path conversion
         normalizedPath = path.posix.normalize(normalizedPath);
       }
@@ -234,20 +237,21 @@ export class PathHandler {
         normalizedPath = this.normalizeDriveLetter(normalizedPath);
       }
 
-      logger.debug('Path normalized', {
+      logger.debug("Path normalized", {
         original: inputPath,
         normalized: normalizedPath,
-        platform: platform(),
+        platform: platform()
       });
 
       return normalizedPath;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       logger.error(
-        'Path normalization failed',
+        "Path normalization failed",
         error instanceof Error ? error : new Error(errorMessage),
         {
-          inputPath: inputPath,
+          inputPath: inputPath
         }
       );
       throw error;
@@ -258,22 +262,25 @@ export class PathHandler {
    * Resolve relative path to absolute path
    */
   public resolveRelativePath(inputPath: string, basePath?: string): string {
-    if (!inputPath || typeof inputPath !== 'string') {
-      throw new Error('Path must be a non-empty string');
+    if (!inputPath || typeof inputPath !== "string") {
+      throw new Error("Path must be a non-empty string");
     }
 
     try {
-      const resolvedPath = basePath ? path.resolve(basePath, inputPath) : path.resolve(inputPath);
+      const resolvedPath = basePath
+        ? path.resolve(basePath, inputPath)
+        : path.resolve(inputPath);
 
       return this.normalizePath(resolvedPath);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       logger.error(
-        'Path resolution failed',
+        "Path resolution failed",
         error instanceof Error ? error : new Error(errorMessage),
         {
           inputPath: inputPath,
-          basePath: basePath,
+          basePath: basePath
         }
       );
       throw error;
@@ -289,14 +296,17 @@ export class PathHandler {
   ): Promise<PathValidationResult> {
     const startTime = Date.now();
     const operationId = `path-validation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const timeoutMs = Math.max(options?.timeoutMs || this.defaultTimeoutMs, 100); // Minimum 100ms timeout
+    const timeoutMs = Math.max(
+      options?.timeoutMs || this.defaultTimeoutMs,
+      100
+    ); // Minimum 100ms timeout
     const onProgress = options?.onProgress;
     const signal = options?.signal;
 
     // Start performance monitoring
-    performanceMonitor.startOperation(operationId, 'path-validation', {
+    performanceMonitor.startOperation(operationId, "path-validation", {
       path: inputPath,
-      timeout: timeoutMs,
+      timeout: timeoutMs
     });
 
     // Check cache first if enabled
@@ -310,20 +320,25 @@ export class PathHandler {
 
         const cacheHitTime = Date.now() - startTime;
 
-        logger.debug('Path validation cache hit', {
+        logger.debug("Path validation cache hit", {
           path: inputPath,
           cacheKey,
-          validationTime: cacheHitTime,
+          validationTime: cacheHitTime
         });
 
         // End performance monitoring for cache hit
         performanceMonitor.endOperation(operationId, cachedResult.isValid);
 
         // Record cache hit metrics
-        performanceMonitor.recordMetric('path-validation.duration', cacheHitTime, 'ms', {
-          platform: this.isWindows ? 'windows' : 'unix',
-          cached: 'true',
-        });
+        performanceMonitor.recordMetric(
+          "path-validation.duration",
+          cacheHitTime,
+          "ms",
+          {
+            platform: this.isWindows ? "windows" : "unix",
+            cached: "true"
+          }
+        );
 
         return cachedResult;
       }
@@ -332,25 +347,66 @@ export class PathHandler {
     }
 
     // Perform validation with timeout
-    const result = await this.withTimeout(
-      this.validatePathInternal(inputPath, onProgress, signal),
-      timeoutMs,
-      `Path validation timed out after ${timeoutMs}ms`,
-      signal
-    );
+    let result: PathValidationResult;
+    try {
+      result = await this.withTimeout(
+        this.validatePathInternal(inputPath, onProgress, signal),
+        timeoutMs,
+        `Path validation timed out after ${timeoutMs}ms`,
+        signal
+      );
+    } catch (error) {
+      // Handle timeout and other errors gracefully
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const errorName = error instanceof Error ? error.name : "UnknownError";
+
+      result = {
+        isValid: false,
+        errors: [
+          {
+            code:
+              errorName === "TimeoutError"
+                ? "TIMEOUT_ERROR"
+                : "VALIDATION_ERROR",
+            message: errorMessage,
+            details:
+              errorName === "TimeoutError"
+                ? `Operation exceeded the ${timeoutMs}ms timeout limit`
+                : "Path validation failed due to an unexpected error"
+          }
+        ],
+        warnings: [],
+        metadata: {
+          exists: false,
+          isDirectory: false,
+          permissions: { read: false, write: false, execute: false }
+        }
+      };
+
+      logger.warn("Path validation failed", {
+        inputPath,
+        error: errorMessage,
+        errorType: errorName
+      });
+    }
 
     // Cache the result if enabled and path format is valid (even if permissions fail)
     // This allows us to cache paths that exist but have permission issues
-    if (this.cacheConfig.enabled && result.normalizedPath && result.metadata.exists) {
+    if (
+      this.cacheConfig.enabled &&
+      result.normalizedPath &&
+      result.metadata.exists
+    ) {
       const cacheKey = this.generatePathCacheKey(inputPath, options);
       this.pathCache.set(cacheKey, result);
 
-      logger.debug('Path validation result cached', {
+      logger.debug("Path validation result cached", {
         path: inputPath,
         cacheKey,
         isValid: result.isValid,
         exists: result.metadata.exists,
-        validationTime: Date.now() - startTime,
+        validationTime: Date.now() - startTime
       });
     }
 
@@ -363,10 +419,15 @@ export class PathHandler {
     performanceMonitor.endOperation(operationId, result.isValid);
 
     // Record additional metrics
-    performanceMonitor.recordMetric('path-validation.duration', validationTime, 'ms', {
-      platform: this.isWindows ? 'windows' : 'unix',
-      cached: 'false',
-    });
+    performanceMonitor.recordMetric(
+      "path-validation.duration",
+      validationTime,
+      "ms",
+      {
+        platform: this.isWindows ? "windows" : "unix",
+        cached: "false"
+      }
+    );
 
     return result;
   }
@@ -386,8 +447,8 @@ export class PathHandler {
       metadata: {
         exists: false,
         isDirectory: false,
-        permissions: { read: false, write: false, execute: false },
-      },
+        permissions: { read: false, write: false, execute: false }
+      }
     };
 
     try {
@@ -396,9 +457,9 @@ export class PathHandler {
 
       // Stage 1: Format validation (20%)
       onProgress?.({
-        stage: 'format_validation',
+        stage: "format_validation",
         percentage: 10,
-        message: 'Validating path format...',
+        message: "Validating path format..."
       });
 
       const formatValidation = this.validatePathFormat(inputPath);
@@ -406,9 +467,9 @@ export class PathHandler {
       result.warnings.push(...formatValidation.warnings);
 
       onProgress?.({
-        stage: 'format_validation',
+        stage: "format_validation",
         percentage: 20,
-        message: 'Path format validation completed',
+        message: "Path format validation completed"
       });
 
       if (!formatValidation.isValid) {
@@ -419,27 +480,27 @@ export class PathHandler {
 
       // Stage 2: Path normalization (40%)
       onProgress?.({
-        stage: 'normalization',
+        stage: "normalization",
         percentage: 30,
-        message: 'Normalizing path...',
+        message: "Normalizing path..."
       });
 
       const normalizedPath = this.normalizePath(inputPath);
       result.normalizedPath = normalizedPath;
 
       onProgress?.({
-        stage: 'normalization',
+        stage: "normalization",
         percentage: 40,
-        message: 'Path normalization completed',
+        message: "Path normalization completed"
       });
 
       this.checkCancellation(signal);
 
       // Stage 3: Path existence check (60%)
       onProgress?.({
-        stage: 'existence_check',
+        stage: "existence_check",
         percentage: 50,
-        message: 'Checking path existence...',
+        message: "Checking path existence..."
       });
 
       const existsResult = await this.checkPathExists(normalizedPath);
@@ -448,9 +509,9 @@ export class PathHandler {
       result.metadata.size = existsResult.size;
 
       onProgress?.({
-        stage: 'existence_check',
+        stage: "existence_check",
         percentage: 60,
-        message: 'Path existence check completed',
+        message: "Path existence check completed"
       });
 
       this.checkCancellation(signal);
@@ -458,23 +519,23 @@ export class PathHandler {
       // Stage 4: Permission check (80%)
       if (existsResult.exists) {
         onProgress?.({
-          stage: 'permission_check',
+          stage: "permission_check",
           percentage: 70,
-          message: 'Checking permissions...',
+          message: "Checking permissions..."
         });
 
         const permissionResult = await this.checkPermissions(normalizedPath);
         result.metadata.permissions = {
           read: permissionResult.canRead,
           write: permissionResult.canWrite,
-          execute: permissionResult.canExecute,
+          execute: permissionResult.canExecute
         };
         result.errors.push(...permissionResult.errors);
 
         onProgress?.({
-          stage: 'permission_check',
+          stage: "permission_check",
           percentage: 80,
-          message: 'Permission check completed',
+          message: "Permission check completed"
         });
       }
 
@@ -482,49 +543,50 @@ export class PathHandler {
 
       // Stage 5: Finalization (100%)
       onProgress?.({
-        stage: 'finalization',
+        stage: "finalization",
         percentage: 90,
-        message: 'Finalizing validation...',
+        message: "Finalizing validation..."
       });
 
       // Path is valid if no errors occurred
       result.isValid = result.errors.length === 0;
 
       onProgress?.({
-        stage: 'completed',
+        stage: "completed",
         percentage: 100,
-        message: 'Path validation completed',
+        message: "Path validation completed"
       });
 
-      logger.debug('Path validation completed', {
+      logger.debug("Path validation completed", {
         path: inputPath,
         normalized: normalizedPath,
         isValid: result.isValid,
         exists: result.metadata.exists,
-        errorCount: result.errors.length,
+        errorCount: result.errors.length
       });
 
       return result;
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (error instanceof Error && error.name === "AbortError") {
         const cancelledResult = { ...result };
         cancelledResult.errors.push({
-          code: 'OPERATION_CANCELLED',
-          message: 'Path validation was cancelled',
-          details: 'The operation was cancelled by user request',
+          code: "OPERATION_CANCELLED",
+          message: "Path validation was cancelled",
+          details: "The operation was cancelled by user request"
         });
         return cancelledResult;
       }
 
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       result.errors.push({
-        code: 'VALIDATION_ERROR',
-        message: 'Path validation failed',
-        details: errorMessage,
+        code: "VALIDATION_ERROR",
+        message: "Path validation failed",
+        details: errorMessage
       });
 
-      logger.error('Path validation failed', new Error(errorMessage), {
-        inputPath: inputPath,
+      logger.error("Path validation failed", new Error(errorMessage), {
+        inputPath: inputPath
       });
 
       return result;
@@ -538,15 +600,54 @@ export class PathHandler {
     pathToCheck: string,
     options?: TimeoutOptions
   ): Promise<PermissionResult> {
-    const timeoutMs = Math.max(options?.timeoutMs || this.defaultTimeoutMs, 100); // Minimum 100ms timeout
+    const timeoutMs = Math.max(
+      options?.timeoutMs || this.defaultTimeoutMs,
+      100
+    ); // Minimum 100ms timeout
     const signal = options?.signal;
 
-    return this.withTimeout(
-      this.checkPermissionsInternal(pathToCheck, signal),
-      timeoutMs,
-      `Permission check timed out after ${timeoutMs}ms`,
-      signal
-    );
+    let result: PermissionResult;
+    try {
+      result = await this.withTimeout(
+        this.checkPermissionsInternal(pathToCheck, signal),
+        timeoutMs,
+        `Permission check timed out after ${timeoutMs}ms`,
+        signal
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const errorName = error instanceof Error ? error.name : "UnknownError";
+
+      result = {
+        canRead: false,
+        canWrite: false,
+        canExecute: false,
+        owner: "",
+        group: "",
+        errors: [
+          {
+            code:
+              errorName === "TimeoutError"
+                ? "TIMEOUT_ERROR"
+                : "PERMISSION_ERROR",
+            message: errorMessage,
+            details:
+              errorName === "TimeoutError"
+                ? `Permission check exceeded the ${timeoutMs}ms timeout limit`
+                : "Permission check failed due to an unexpected error"
+          }
+        ]
+      };
+
+      logger.warn("Permission check failed", {
+        pathToCheck,
+        error: errorMessage,
+        errorType: errorName
+      });
+    }
+
+    return result;
   }
 
   /**
@@ -560,9 +661,9 @@ export class PathHandler {
       canRead: false,
       canWrite: false,
       canExecute: false,
-      owner: '',
-      group: '',
-      errors: [],
+      owner: "",
+      group: "",
+      errors: []
     };
 
     try {
@@ -571,16 +672,16 @@ export class PathHandler {
 
       // First check if the path exists
       let pathExists = false;
-      let stats: import('fs').Stats | null = null;
+      let stats: import("fs").Stats | null = null;
 
       try {
         stats = await fs.stat(pathToCheck);
         pathExists = true;
       } catch (_error) {
         result.errors.push({
-          code: 'PATH_NOT_FOUND',
-          message: 'Path does not exist',
-          details: `Cannot check permissions for non-existent path: ${pathToCheck}`,
+          code: "PATH_NOT_FOUND",
+          message: "Path does not exist",
+          details: `Cannot check permissions for non-existent path: ${pathToCheck}`
         });
         return result;
       }
@@ -604,30 +705,31 @@ export class PathHandler {
         }
       }
 
-      logger.debug('Permission check completed', {
+      logger.debug("Permission check completed", {
         path: pathToCheck,
         canRead: result.canRead,
         canWrite: result.canWrite,
         canExecute: result.canExecute,
         owner: result.owner,
         group: result.group,
-        errorCount: result.errors.length,
+        errorCount: result.errors.length
       });
 
       return result;
     } catch (error) {
       result.errors.push({
-        code: 'PERMISSION_CHECK_ERROR',
-        message: 'Permission check failed',
-        details: error instanceof Error ? error.message : String(error),
+        code: "PERMISSION_CHECK_ERROR",
+        message: "Permission check failed",
+        details: error instanceof Error ? error.message : String(error)
       });
 
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       logger.error(
-        'Permission check failed',
+        "Permission check failed",
         error instanceof Error ? error : new Error(errorMessage),
         {
-          pathToCheck: pathToCheck,
+          pathToCheck: pathToCheck
         }
       );
 
@@ -650,9 +752,9 @@ export class PathHandler {
       result.canRead = false;
       if (this.isWindows) {
         result.errors.push({
-          code: 'READ_PERMISSION_DENIED',
-          message: 'Read access denied',
-          details: 'You do not have permission to read this file or directory',
+          code: "READ_PERMISSION_DENIED",
+          message: "Read access denied",
+          details: "You do not have permission to read this file or directory"
         });
       }
     }
@@ -665,9 +767,9 @@ export class PathHandler {
       result.canWrite = false;
       if (this.isWindows) {
         result.errors.push({
-          code: 'WRITE_PERMISSION_DENIED',
-          message: 'Write access denied',
-          details: 'You do not have permission to modify this file or directory',
+          code: "WRITE_PERMISSION_DENIED",
+          message: "Write access denied",
+          details: "You do not have permission to modify this file or directory"
         });
       }
     }
@@ -686,25 +788,25 @@ export class PathHandler {
    * Get file ownership information
    */
   private async getFileOwnership(
-    stats: import('fs').Stats,
+    stats: import("fs").Stats,
     result: PermissionResult
   ): Promise<void> {
     try {
       if (this.isWindows) {
         // On Windows, try to get owner information if available
         // Note: Node.js fs.stat on Windows may not provide meaningful uid/gid
-        result.owner = 'Windows User';
-        result.group = 'Windows Group';
+        result.owner = "Windows User";
+        result.group = "Windows Group";
       } else {
         // Unix-like systems
-        result.owner = stats.uid?.toString() || 'unknown';
-        result.group = stats.gid?.toString() || 'unknown';
+        result.owner = stats.uid?.toString() || "unknown";
+        result.group = stats.gid?.toString() || "unknown";
       }
     } catch (error) {
       result.errors.push({
-        code: 'OWNERSHIP_INFO_ERROR',
-        message: 'Could not retrieve file ownership information',
-        details: error instanceof Error ? error.message : String(error),
+        code: "OWNERSHIP_INFO_ERROR",
+        message: "Could not retrieve file ownership information",
+        details: error instanceof Error ? error.message : String(error)
       });
     }
   }
@@ -714,16 +816,16 @@ export class PathHandler {
    */
   private async checkWindowsPermissions(
     pathToCheck: string,
-    stats: import('fs').Stats,
+    stats: import("fs").Stats,
     result: PermissionResult
   ): Promise<void> {
     try {
       // Check if it's a system file or directory
       if (this.isSystemPath(pathToCheck)) {
         result.errors.push({
-          code: 'SYSTEM_PATH_ACCESS',
-          message: 'Attempting to access system path',
-          details: 'This path may require administrator privileges',
+          code: "SYSTEM_PATH_ACCESS",
+          message: "Attempting to access system path",
+          details: "This path may require administrator privileges"
         });
       }
 
@@ -731,22 +833,22 @@ export class PathHandler {
       if (stats.mode && this.isReadOnlyFile(stats.mode)) {
         result.canWrite = false;
         result.errors.push({
-          code: 'READ_ONLY_FILE',
-          message: 'File is marked as read-only',
-          details: 'Remove the read-only attribute to enable write access',
+          code: "READ_ONLY_FILE",
+          message: "File is marked as read-only",
+          details: "Remove the read-only attribute to enable write access"
         });
       }
 
       // Check for hidden or system attributes that might affect access
       if (this.isHiddenOrSystemFile(pathToCheck)) {
         // This is just informational, not necessarily an error
-        logger.debug('Accessing hidden or system file', { path: pathToCheck });
+        logger.debug("Accessing hidden or system file", { path: pathToCheck });
       }
     } catch (error) {
       result.errors.push({
-        code: 'WINDOWS_PERMISSION_CHECK_ERROR',
-        message: 'Windows-specific permission check failed',
-        details: error instanceof Error ? error.message : String(error),
+        code: "WINDOWS_PERMISSION_CHECK_ERROR",
+        message: "Windows-specific permission check failed",
+        details: error instanceof Error ? error.message : String(error)
       });
     }
   }
@@ -759,11 +861,11 @@ export class PathHandler {
 
     const normalizedPath = pathToCheck.toLowerCase();
     const systemPaths = [
-      'c:\\windows',
-      'c:\\program files',
-      'c:\\program files (x86)',
-      'c:\\system volume information',
-      'c:\\$recycle.bin',
+      "c:\\windows",
+      "c:\\program files",
+      "c:\\program files (x86)",
+      "c:\\system volume information",
+      "c:\\$recycle.bin"
     ];
 
     return systemPaths.some((sysPath) => normalizedPath.startsWith(sysPath));
@@ -787,7 +889,7 @@ export class PathHandler {
     if (!this.isWindows) return false;
 
     const fileName = path.basename(pathToCheck);
-    return fileName.startsWith('.') || fileName.startsWith('$');
+    return fileName.startsWith(".") || fileName.startsWith("$");
   }
 
   /**
@@ -808,7 +910,7 @@ export class PathHandler {
         if (!isResolved) {
           isResolved = true;
           const timeoutError = new Error(timeoutMessage);
-          timeoutError.name = 'TimeoutError';
+          timeoutError.name = "TimeoutError";
           reject(timeoutError);
         }
       }, timeoutMs);
@@ -818,8 +920,8 @@ export class PathHandler {
         if (!isResolved) {
           isResolved = true;
           clearTimeout(timeoutId);
-          const abortError = new Error('Operation was aborted');
-          abortError.name = 'AbortError';
+          const abortError = new Error("Operation was aborted");
+          abortError.name = "AbortError";
           reject(abortError);
         }
       };
@@ -829,7 +931,7 @@ export class PathHandler {
           onAbort();
           return;
         }
-        signal.addEventListener('abort', onAbort);
+        signal.addEventListener("abort", onAbort);
       }
 
       // Execute the operation
@@ -839,7 +941,7 @@ export class PathHandler {
             isResolved = true;
             clearTimeout(timeoutId);
             if (signal) {
-              signal.removeEventListener('abort', onAbort);
+              signal.removeEventListener("abort", onAbort);
             }
             resolve(result);
           }
@@ -849,7 +951,7 @@ export class PathHandler {
             isResolved = true;
             clearTimeout(timeoutId);
             if (signal) {
-              signal.removeEventListener('abort', onAbort);
+              signal.removeEventListener("abort", onAbort);
             }
             reject(error);
           }
@@ -862,8 +964,8 @@ export class PathHandler {
    */
   private checkCancellation(signal?: AbortSignal): void {
     if (signal?.aborted) {
-      const error = new Error('Operation was cancelled');
-      error.name = 'AbortError';
+      const error = new Error("Operation was cancelled");
+      error.name = "AbortError";
       throw error;
     }
   }
@@ -887,21 +989,21 @@ export class PathHandler {
     const warnings: PathWarning[] = [];
 
     // Check for empty or invalid input
-    if (!inputPath || typeof inputPath !== 'string') {
+    if (!inputPath || typeof inputPath !== "string") {
       errors.push({
-        code: 'INVALID_INPUT',
-        message: 'Path must be a non-empty string',
+        code: "INVALID_INPUT",
+        message: "Path must be a non-empty string"
       });
       return { isValid: false, errors, warnings };
     }
 
     // Check for null bytes (security issue)
-    if (inputPath.includes('\0')) {
+    if (inputPath.includes("\0")) {
       errors.push({
-        code: 'NULL_BYTE_IN_PATH',
-        message: 'Path contains null bytes',
-        details: 'Null bytes in paths can be a security vulnerability',
-        suggestions: ['Remove null bytes from the path'],
+        code: "NULL_BYTE_IN_PATH",
+        message: "Path contains null bytes",
+        details: "Null bytes in paths can be a security vulnerability",
+        suggestions: ["Remove null bytes from the path"]
       });
     }
 
@@ -910,14 +1012,14 @@ export class PathHandler {
       // Check path length
       if (inputPath.length > this.windowsMaxPathLength) {
         errors.push({
-          code: 'PATH_TOO_LONG',
+          code: "PATH_TOO_LONG",
           message: `Path exceeds Windows maximum length of ${this.windowsMaxPathLength} characters`,
           details: `Current length: ${inputPath.length}`,
           suggestions: [
-            'Use shorter directory names',
-            'Move files closer to root directory',
-            'Enable long path support in Windows',
-          ],
+            "Use shorter directory names",
+            "Move files closer to root directory",
+            "Enable long path support in Windows"
+          ]
         });
       }
 
@@ -926,32 +1028,37 @@ export class PathHandler {
       for (const component of pathComponents) {
         if (!component) continue; // Skip empty components
 
-        const baseName = component.split('.')[0].toUpperCase();
+        const baseName = component.split(".")[0].toUpperCase();
         if (this.windowsReservedNames.has(baseName)) {
           errors.push({
-            code: 'RESERVED_NAME',
+            code: "RESERVED_NAME",
             message: `Path contains Windows reserved name: ${component}`,
-            details: `Reserved names: ${Array.from(this.windowsReservedNames).join(', ')}`,
-            suggestions: ['Rename the file or directory to avoid reserved names'],
+            details: `Reserved names: ${Array.from(this.windowsReservedNames).join(", ")}`,
+            suggestions: [
+              "Rename the file or directory to avoid reserved names"
+            ]
           });
         }
 
         // Check component length
         if (component.length > this.windowsMaxComponentLength) {
           warnings.push({
-            code: 'COMPONENT_TOO_LONG',
+            code: "COMPONENT_TOO_LONG",
             message: `Path component "${component}" exceeds recommended length`,
-            details: `Component length: ${component.length}, recommended max: ${this.windowsMaxComponentLength}`,
+            details: `Component length: ${component.length}, recommended max: ${this.windowsMaxComponentLength}`
           });
         }
 
         // Check for trailing spaces or dots (Windows issue)
-        if (component.endsWith(' ') || component.endsWith('.')) {
+        if (component.endsWith(" ") || component.endsWith(".")) {
           errors.push({
-            code: 'INVALID_COMPONENT_ENDING',
+            code: "INVALID_COMPONENT_ENDING",
             message: `Path component "${component}" ends with space or dot`,
-            details: 'Windows does not allow file/folder names ending with spaces or dots',
-            suggestions: ['Remove trailing spaces or dots from the component name'],
+            details:
+              "Windows does not allow file/folder names ending with spaces or dots",
+            suggestions: [
+              "Remove trailing spaces or dots from the component name"
+            ]
           });
         }
       }
@@ -960,19 +1067,19 @@ export class PathHandler {
       if (this.hasDriveLetter(inputPath)) {
         if (!this.isValidDriveLetter(inputPath)) {
           errors.push({
-            code: 'INVALID_DRIVE_LETTER',
-            message: 'Invalid drive letter format',
-            details: 'Drive letter must be A-Z followed by a colon',
-            suggestions: ['Use format like C:\\ or D:\\'],
+            code: "INVALID_DRIVE_LETTER",
+            message: "Invalid drive letter format",
+            details: "Drive letter must be A-Z followed by a colon",
+            suggestions: ["Use format like C:\\ or D:\\"]
           });
         }
       } else if (/^[^A-Za-z]:/.test(inputPath)) {
         // Check for invalid drive letter patterns like "1:\"
         errors.push({
-          code: 'INVALID_DRIVE_LETTER',
-          message: 'Invalid drive letter format',
-          details: 'Drive letter must be A-Z followed by a colon',
-          suggestions: ['Use format like C:\\ or D:\\'],
+          code: "INVALID_DRIVE_LETTER",
+          message: "Invalid drive letter format",
+          details: "Drive letter must be A-Z followed by a colon",
+          suggestions: ["Use format like C:\\ or D:\\"]
         });
       }
 
@@ -980,7 +1087,10 @@ export class PathHandler {
       let pathToCheck = inputPath;
 
       // If path has a valid drive letter, temporarily remove it for character validation
-      if (this.hasDriveLetter(inputPath) && this.isValidDriveLetter(inputPath)) {
+      if (
+        this.hasDriveLetter(inputPath) &&
+        this.isValidDriveLetter(inputPath)
+      ) {
         pathToCheck = inputPath.substring(2); // Remove "C:" part
       }
 
@@ -988,24 +1098,27 @@ export class PathHandler {
       if (invalidChars.test(pathToCheck)) {
         const foundChars = pathToCheck.match(/[<>:"|?*]/g);
         errors.push({
-          code: 'INVALID_CHARACTERS',
-          message: 'Path contains invalid characters for Windows',
-          details: `Invalid characters found: ${foundChars?.join(', ')}. Forbidden: < > : " | ? *`,
-          suggestions: ['Remove or replace invalid characters with valid alternatives'],
+          code: "INVALID_CHARACTERS",
+          message: "Path contains invalid characters for Windows",
+          details: `Invalid characters found: ${foundChars?.join(", ")}. Forbidden: < > : " | ? *`,
+          suggestions: [
+            "Remove or replace invalid characters with valid alternatives"
+          ]
         });
       }
 
       // Check for control characters (ASCII 0-31)
-      const hasControlChars = inputPath.split('').some((char) => {
+      const hasControlChars = inputPath.split("").some((char) => {
         const code = char.charCodeAt(0);
         return code >= 0 && code <= 31;
       });
       if (hasControlChars) {
         errors.push({
-          code: 'CONTROL_CHARACTERS',
-          message: 'Path contains control characters',
-          details: 'Control characters (ASCII 0-31) are not allowed in Windows paths',
-          suggestions: ['Remove control characters from the path'],
+          code: "CONTROL_CHARACTERS",
+          message: "Path contains control characters",
+          details:
+            "Control characters (ASCII 0-31) are not allowed in Windows paths",
+          suggestions: ["Remove control characters from the path"]
         });
       }
 
@@ -1013,10 +1126,10 @@ export class PathHandler {
       if (this.isUNCPath(inputPath)) {
         if (!this.isValidUNCPath(inputPath)) {
           errors.push({
-            code: 'INVALID_UNC_PATH',
-            message: 'Invalid UNC path format',
-            details: 'UNC paths must follow the format \\\\server\\share\\path',
-            suggestions: ['Use proper UNC format: \\\\server\\share\\path'],
+            code: "INVALID_UNC_PATH",
+            message: "Invalid UNC path format",
+            details: "UNC paths must follow the format \\\\server\\share\\path",
+            suggestions: ["Use proper UNC format: \\\\server\\share\\path"]
           });
         }
       }
@@ -1027,9 +1140,9 @@ export class PathHandler {
       // Warn about very long paths even on Unix systems
       if (inputPath.length > 4096) {
         warnings.push({
-          code: 'VERY_LONG_PATH',
-          message: 'Path is very long and may cause issues',
-          details: `Path length: ${inputPath.length} characters`,
+          code: "VERY_LONG_PATH",
+          message: "Path is very long and may cause issues",
+          details: `Path length: ${inputPath.length} characters`
         });
       }
     }
@@ -1048,12 +1161,12 @@ export class PathHandler {
       return {
         exists: true,
         isDirectory: stats.isDirectory(),
-        size: stats.isDirectory() ? undefined : stats.size,
+        size: stats.isDirectory() ? undefined : stats.size
       };
     } catch {
       return {
         exists: false,
-        isDirectory: false,
+        isDirectory: false
       };
     }
   }
@@ -1062,7 +1175,7 @@ export class PathHandler {
    * Check if path is a UNC path (Windows)
    */
   private isUNCPath(inputPath: string): boolean {
-    return this.isWindows && inputPath.startsWith('\\\\');
+    return this.isWindows && inputPath.startsWith("\\\\");
   }
 
   /**
@@ -1083,7 +1196,7 @@ export class PathHandler {
    */
   private normalizeUNCPath(inputPath: string): string {
     // Ensure UNC path starts with exactly two backslashes
-    return inputPath.replace(/^\\+/, '\\\\');
+    return inputPath.replace(/^\\+/, "\\\\");
   }
 
   /**
@@ -1091,11 +1204,11 @@ export class PathHandler {
    */
   private hasDriveLetter(inputPath: string): boolean {
     const result = this.isWindows && /^[A-Za-z]:/.test(inputPath);
-    logger.debug('hasDriveLetter check', {
+    logger.debug("hasDriveLetter check", {
       path: inputPath,
       isWindows: this.isWindows,
       regexMatch: /^[A-Za-z]:/.test(inputPath),
-      result,
+      result
     });
     return result;
   }
@@ -1105,10 +1218,10 @@ export class PathHandler {
    */
   private isValidDriveLetter(inputPath: string): boolean {
     const result = /^[A-Za-z]:([\\/]|$)/.test(inputPath);
-    logger.debug('isValidDriveLetter check', {
+    logger.debug("isValidDriveLetter check", {
       path: inputPath,
       regexMatch: result,
-      result,
+      result
     });
     return result;
   }
@@ -1117,22 +1230,28 @@ export class PathHandler {
    * Normalize drive letter to uppercase
    */
   private normalizeDriveLetter(inputPath: string): string {
-    return inputPath.replace(/^([A-Za-z]):/, (_match, letter) => `${letter.toUpperCase()}:`);
+    return inputPath.replace(
+      /^([A-Za-z]):/,
+      (_match, letter) => `${letter.toUpperCase()}:`
+    );
   }
 
   /**
    * Generate cache key for path validation
    */
-  private generatePathCacheKey(inputPath: string, options?: TimeoutOptions): string {
+  private generatePathCacheKey(
+    inputPath: string,
+    options?: TimeoutOptions
+  ): string {
     // Include relevant options that affect validation result
     const keyData = {
       path: inputPath,
-      platform: this.isWindows ? 'win32' : 'unix',
+      platform: this.isWindows ? "win32" : "unix",
       // Don't include progress callback or signal in cache key
-      timeoutMs: options?.timeoutMs || this.defaultTimeoutMs,
+      timeoutMs: options?.timeoutMs || this.defaultTimeoutMs
     };
 
-    return this.pathCache.generateKey('path-validation', keyData);
+    return this.pathCache.generateKey("path-validation", keyData);
   }
 
   /**
@@ -1156,7 +1275,9 @@ export class PathHandler {
 
     // Calculate running average
     this.cacheStats.averageValidationTime =
-      total === 1 ? validationTime : (currentAvg * (total - 1) + validationTime) / total;
+      total === 1
+        ? validationTime
+        : (currentAvg * (total - 1) + validationTime) / total;
   }
 
   /**
@@ -1177,7 +1298,7 @@ export class PathHandler {
     this.cacheStats.hitRate = 0;
     this.cacheStats.evictions = 0;
 
-    logger.info('Path validation cache cleared');
+    logger.info("Path validation cache cleared");
   }
 
   /**
@@ -1186,9 +1307,9 @@ export class PathHandler {
   public invalidateCachePattern(pathPattern: string): number {
     const invalidated = this.pathCache.invalidatePattern(pathPattern);
 
-    logger.info('Path validation cache invalidated by pattern', {
+    logger.info("Path validation cache invalidated by pattern", {
       pattern: pathPattern,
-      invalidatedCount: invalidated,
+      invalidatedCount: invalidated
     });
 
     return invalidated;
@@ -1202,9 +1323,9 @@ export class PathHandler {
     const deleted = this.pathCache.delete(cacheKey);
 
     if (deleted) {
-      logger.debug('Path validation cache entry invalidated', {
+      logger.debug("Path validation cache entry invalidated", {
         path: inputPath,
-        cacheKey,
+        cacheKey
       });
     }
 
@@ -1222,8 +1343,8 @@ export class PathHandler {
       this.clearCache();
     }
 
-    logger.info('Path validation cache configuration updated', {
-      config: this.cacheConfig,
+    logger.info("Path validation cache configuration updated", {
+      config: this.cacheConfig
     });
   }
 
@@ -1232,29 +1353,29 @@ export class PathHandler {
    */
   public async warmUpCache(paths: string[]): Promise<void> {
     if (!this.cacheConfig.enabled) {
-      logger.warn('Cache warm-up skipped: caching is disabled');
+      logger.warn("Cache warm-up skipped: caching is disabled");
       return;
     }
 
-    logger.info('Starting path validation cache warm-up', {
-      pathCount: paths.length,
+    logger.info("Starting path validation cache warm-up", {
+      pathCount: paths.length
     });
 
     const warmUpPromises = paths.map(async (path) => {
       try {
         await this.validatePath(path);
       } catch (error) {
-        logger.warn('Cache warm-up failed for path', {
+        logger.warn("Cache warm-up failed for path", {
           path,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? error.message : String(error)
         });
       }
     });
 
     await Promise.allSettled(warmUpPromises);
 
-    logger.info('Path validation cache warm-up completed', {
-      cacheSize: this.pathCache.getStats().size,
+    logger.info("Path validation cache warm-up completed", {
+      cacheSize: this.pathCache.getStats().size
     });
   }
 
@@ -1265,27 +1386,27 @@ export class PathHandler {
     const stats = this.getCacheStats();
 
     // Log cache performance metrics
-    logger.debug('Path validation cache performance', {
+    logger.debug("Path validation cache performance", {
       hitRate: stats.hitRate,
       size: stats.size,
       averageValidationTime: stats.averageValidationTime,
-      memoryUsage: stats.cacheMemoryUsage,
+      memoryUsage: stats.cacheMemoryUsage
     });
 
     // Trigger cache cleanup if hit rate is too low
     if (stats.hitRate < 0.1 && stats.size > 100) {
-      logger.warn('Low cache hit rate detected, consider cache tuning', {
+      logger.warn("Low cache hit rate detected, consider cache tuning", {
         hitRate: stats.hitRate,
-        size: stats.size,
+        size: stats.size
       });
     }
 
     // Warn if cache is getting full
     if (stats.size > stats.maxSize * 0.9) {
-      logger.warn('Path validation cache is nearly full', {
+      logger.warn("Path validation cache is nearly full", {
         size: stats.size,
         maxSize: stats.maxSize,
-        utilization: stats.size / stats.maxSize,
+        utilization: stats.size / stats.maxSize
       });
     }
   }
