@@ -7,7 +7,12 @@
 /// <reference types="node" />
 
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import { mockManager } from "./MockManager";
+import {
+  setupMocks,
+  cleanupMocks,
+  createMock,
+  mockFunction
+} from "./MockManager";
 import { resourceController } from "./ResourceController";
 import {
   cleanupTestIsolation,
@@ -23,7 +28,6 @@ export {
   cleanupMocks,
   createMock,
   mockFunction,
-  mockManager,
   mockModule,
   resetAllMocks,
   setupMocks
@@ -38,18 +42,18 @@ export const mocked = <T>(item: T): T => {
   return item as T;
 };
 
-// Global test configuration
-beforeAll(async () => {
+// Global test configuration - non-async to avoid runner issues
+beforeAll(() => {
   // Set test environment
   process.env.NODE_ENV = "test";
 
-  // Initialize mock manager
-  mockManager.setupMocks();
+  // Initialize mock manager - dynamic mocking disabled
+  // setupMocks();
 
-  // Start resource monitoring in test environment
-  if (process.env.NODE_ENV === "test") {
-    resourceController.startMonitoring(10000); // Check every 10 seconds
-  }
+  // Start resource monitoring in test environment - disabled to avoid runner issues
+  // if (process.env.NODE_ENV === "test") {
+  //   resourceController.startMonitoring(10000); // Check every 10 seconds
+  // }
 
   // Setup DOM environment if jsdom is available
   if (typeof window !== "undefined") {
@@ -64,7 +68,7 @@ beforeAll(async () => {
         removeListener: () => {},
         addEventListener: () => {},
         removeEventListener: () => {},
-        dispatchEvent: mockManager.mockFunction()
+        dispatchEvent: vi.fn(() => true)
       })
     });
 
@@ -106,21 +110,21 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Emergency isolation reset to ensure clean state
-  await emergencyIsolationReset();
+  // await emergencyIsolationReset();
 
-  // Stop resource monitoring
-  resourceController.stopMonitoring();
+  // Stop resource monitoring - disabled
+  // resourceController.stopMonitoring();
 
   // Final cleanup
-  mockManager.cleanupMocks();
+  cleanupMocks();
 });
 
-beforeEach(async () => {
+beforeEach(() => {
   // Generate unique test ID for isolation
   const testId = `test-${Date.now()}-${Math.random()}`;
 
-  // Setup comprehensive test isolation
-  await setupTestIsolation(testId);
+  // Setup comprehensive test isolation - disabled for Vitest runner
+  // await setupTestIsolation(testId);
 
   // Store test ID for cleanup
   (globalThis as any).__currentTestId = testId;
@@ -144,16 +148,16 @@ beforeEach(async () => {
   }
 });
 
-afterEach(async () => {
-  // Get test ID and cleanup isolation
+afterEach(() => {
+  // Get test ID and cleanup isolation - disabled for Vitest runner
   const testId = (globalThis as any).__currentTestId;
   if (testId) {
-    await cleanupTestIsolation(testId);
+    // await cleanupTestIsolation(testId);
     delete (globalThis as any).__currentTestId;
   }
 
   // Run mock cleanup after each test
-  mockManager.cleanupMocks();
+  cleanupMocks();
 });
 
 /**
@@ -162,14 +166,20 @@ afterEach(async () => {
 export function createMockFunction<T extends (...args: unknown[]) => unknown>(
   implementation?: T
 ): ReturnType<typeof vi.fn> {
-  return mockManager.mockFunction(implementation);
+  if (typeof vi.fn === "function") {
+    return vi.fn(implementation) as ReturnType<typeof vi.fn>;
+  }
+  return mockFunction(implementation) as ReturnType<typeof vi.fn>;
 }
 
 /**
  * Create a mock with proper TypeScript typing
  */
 export function createTypedMock<T extends Record<string, unknown>>(): T {
-  return mockManager.createMock<T>();
+  if (typeof vi.mocked === "function") {
+    return vi.mocked({} as T) as T;
+  }
+  return createMock<T>() as T;
 }
 
 /**

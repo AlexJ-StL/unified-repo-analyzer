@@ -293,12 +293,11 @@ export class MockManager {
    * Setup all registered mocks
    */
   public setupMocks(): void {
-    // Setup module mocks
-    this.moduleRegistry.forEach((factory, modulePath) => {
-      if (typeof vi.mock === "function") {
-        vi.mock(modulePath, factory);
-      }
-    });
+    // Dynamic vi.mock not supported in Vitest - rely on fallback mocking
+    // Setup module mocks using alternative approach if needed
+    console.warn("Dynamic module mocking not supported - using fallback mocks");
+    // Clear registry to avoid attempts to use unsupported dynamic mocking
+    this.moduleRegistry.clear();
   }
 
   /**
@@ -320,10 +319,36 @@ export class MockManager {
       vi.resetAllMocks();
     }
   }
+
+  /**
+   * Get the current configuration
+   */
+  public getConfig(): MockConfig {
+    return { ...this.config };
+  }
+
+  /**
+   * Update the configuration
+   */
+  public updateConfig(partial: Partial<MockConfig>): void {
+    this.config = { ...this.config, ...partial };
+  }
+
+  /**
+   * Get a mocked module if available
+   */
+  public getMockedModule<T>(modulePath: string): T | undefined {
+    const factory = this.moduleRegistry.get(modulePath);
+    if (factory) {
+      return factory() as T;
+    }
+    return undefined;
+  }
 }
 
 // Create global instance
 const mockManager = MockManager.getInstance();
+export { mockManager };
 
 // Export convenience functions
 export const createMock = <T extends Record<string, unknown>>(

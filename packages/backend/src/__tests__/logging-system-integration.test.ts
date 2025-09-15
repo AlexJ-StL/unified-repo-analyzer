@@ -383,6 +383,8 @@ describe("Logging System Integration Tests", () => {
 
       logger.info("Processing user data", sensitiveData);
 
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const logContent = await fs.readFile(
         path.join(testLogDir, "test.log"),
         "utf-8"

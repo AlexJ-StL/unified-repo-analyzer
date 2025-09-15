@@ -59,15 +59,15 @@ const DEFAULT_USER_PREFERENCES = {
 vi.mock("node:fs/promises");
 const mockFs = vi.mocked(fs);
 
-const mockUuidV4 = vi.fn(() => "mock-uuid-123");
 vi.mock("uuid", () => ({
-  v4: mockUuidV4
+  v4: vi.fn()
 }));
+const mockUuidV4 = vi.mocked(uuidModule).v4;
 
-const mockOsHomedir = vi.fn(() => "/mock/home");
 vi.mock("node:os", () => ({
-  homedir: mockOsHomedir
+  homedir: vi.fn(() => mockHomeDir)
 }));
+const mockOsHomedir = vi.mocked(osModule).homedir;
 
 const mockLoggerInfo = vi.fn();
 const mockLoggerWarn = vi.fn();
