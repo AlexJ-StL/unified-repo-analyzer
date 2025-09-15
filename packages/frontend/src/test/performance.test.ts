@@ -2,31 +2,35 @@
  * Frontend performance tests
  */
 
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useLazyLoading, useVirtualScrolling } from '../hooks/useLazyLoading';
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useLazyLoading, useVirtualScrolling } from "../hooks/useLazyLoading";
 import {
   useDebounce,
   useRenderPerformance,
-  useThrottle,
-} from '../hooks/usePerformanceOptimization';
-import { performanceService } from '../services/performance.service';
+  useThrottle
+} from "../hooks/usePerformanceOptimization";
+import { performanceService } from "../services/performance.service";
 
-describe('Frontend Performance Tests', () => {
+describe("Frontend Performance Tests", () => {
   beforeEach(() => {
     performanceService.clear();
     vi.clearAllMocks();
   });
 
-  describe('Performance Service', () => {
-    it('should record metrics without significant overhead', () => {
+  describe("Performance Service", () => {
+    it("should record metrics without significant overhead", () => {
       const iterations = 10000;
       const startTime = performance.now();
 
       for (let i = 0; i < iterations; i++) {
-        performanceService.recordMetric(`test.metric.${i % 100}`, Math.random() * 1000, {
-          iteration: i.toString(),
-        });
+        performanceService.recordMetric(
+          `test.metric.${i % 100}`,
+          Math.random() * 1000,
+          {
+            iteration: i.toString()
+          }
+        );
       }
 
       const duration = performance.now() - startTime;
@@ -38,20 +42,35 @@ describe('Frontend Performance Tests', () => {
       expect(metricsPerSecond).toBeGreaterThan(50000); // Should handle 50k+ metrics/sec
     });
 
-    it('should collect navigation timing correctly', () => {
-      // Mock performance.timing
-      Object.defineProperty(window, 'performance', {
-        value: {
-          timing: {
+    it("should collect navigation timing correctly", () => {
+      // Ensure window.performance exists and has timing data
+      if (!window.performance) {
+        Object.defineProperty(window, "performance", {
+          value: {
+            timing: {
+              navigationStart: 1000,
+              domContentLoadedEventEnd: 2000,
+              loadEventEnd: 3000,
+              domInteractive: 1800,
+              domComplete: 2800
+            }
+          },
+          writable: true,
+          configurable: true
+        });
+      } else if (!window.performance.timing) {
+        Object.defineProperty(window.performance, "timing", {
+          value: {
             navigationStart: 1000,
             domContentLoadedEventEnd: 2000,
             loadEventEnd: 3000,
             domInteractive: 1800,
-            domComplete: 2800,
+            domComplete: 2800
           },
-        },
-        writable: true,
-      });
+          writable: true,
+          configurable: true
+        });
+      }
 
       performanceService.clear();
       const stats = performanceService.getStats();
@@ -63,9 +82,9 @@ describe('Frontend Performance Tests', () => {
       }
     });
 
-    it('should track component render performance', () => {
-      const componentName = 'TestComponent';
-      const props = { id: 1, name: 'test' };
+    it("should track component render performance", () => {
+      const componentName = "TestComponent";
+      const props = { id: 1, name: "test" };
 
       performanceService.recordComponentRender(componentName, 16.7, props);
 
@@ -74,8 +93,8 @@ describe('Frontend Performance Tests', () => {
     });
   });
 
-  describe('Lazy Loading Performance', () => {
-    it('should handle large datasets efficiently', async () => {
+  describe("Lazy Loading Performance", () => {
+    it("should handle large datasets efficiently", async () => {
       const totalItems = 10000;
       const pageSize = 50;
       let loadCallCount = 0;
@@ -86,12 +105,12 @@ describe('Frontend Performance Tests', () => {
         const end = Math.min(start + size, totalItems);
         const items = Array.from({ length: end - start }, (_, i) => ({
           id: start + i,
-          name: `Item ${start + i}`,
+          name: `Item ${start + i}`
         }));
 
         return {
           items,
-          hasMore: end < totalItems,
+          hasMore: end < totalItems
         };
       });
 
@@ -116,20 +135,24 @@ describe('Frontend Performance Tests', () => {
       }
       const duration = performance.now() - startTime;
 
-      console.log(`Loaded ${result.current.items.length} items in ${duration.toFixed(2)}ms`);
+      console.log(
+        `Loaded ${result.current.items.length} items in ${duration.toFixed(2)}ms`
+      );
       console.log(`Load calls: ${loadCallCount}`);
 
       expect(duration).toBeLessThan(1000); // Should complete within 1 second
       expect(loadCallCount).toBe(11); // Initial + 10 more loads
     });
 
-    it('should handle virtual scrolling efficiently', () => {
+    it("should handle virtual scrolling efficiently", () => {
       const items = Array.from({ length: 10000 }, (_, i) => ({
         id: i,
-        name: `Item ${i}`,
+        name: `Item ${i}`
       }));
 
-      const { result } = renderHook(() => useVirtualScrolling(items, 50, 500, 5));
+      const { result } = renderHook(() =>
+        useVirtualScrolling(items, 50, 500, 5)
+      );
 
       const startTime = performance.now();
 
@@ -147,8 +170,8 @@ describe('Frontend Performance Tests', () => {
     });
   });
 
-  describe('Performance Optimization Hooks', () => {
-    it('should debounce function calls effectively', async () => {
+  describe("Performance Optimization Hooks", () => {
+    it("should debounce function calls effectively", async () => {
       let callCount = 0;
       const mockFunction = vi.fn(() => {
         callCount++;
@@ -178,7 +201,7 @@ describe('Frontend Performance Tests', () => {
       console.log(`Debounce test completed in ${duration.toFixed(2)}ms`);
     });
 
-    it('should throttle function calls effectively', async () => {
+    it("should throttle function calls effectively", async () => {
       let callCount = 0;
       const mockFunction = vi.fn(() => {
         callCount++;
@@ -202,14 +225,18 @@ describe('Frontend Performance Tests', () => {
       expect(callCount).toBeLessThan(10);
       expect(callCount).toBeGreaterThan(0);
 
-      console.log(`Throttle test: ${callCount} calls in ${duration.toFixed(2)}ms`);
+      console.log(
+        `Throttle test: ${callCount} calls in ${duration.toFixed(2)}ms`
+      );
     });
 
-    it('should measure render performance accurately', () => {
-      const componentName = 'TestComponent';
+    it("should measure render performance accurately", () => {
+      const componentName = "TestComponent";
       const props = { test: true };
 
-      const { result } = renderHook(() => useRenderPerformance(componentName, props));
+      const { result } = renderHook(() =>
+        useRenderPerformance(componentName, props)
+      );
 
       const startTime = performance.now();
 
@@ -227,23 +254,27 @@ describe('Frontend Performance Tests', () => {
       });
 
       const totalDuration = performance.now() - startTime;
-      console.log(`Render performance test completed in ${totalDuration.toFixed(2)}ms`);
+      console.log(
+        `Render performance test completed in ${totalDuration.toFixed(2)}ms`
+      );
     });
   });
 
-  describe('Bundle Size and Code Splitting', () => {
-    it('should load chunks efficiently', async () => {
+  describe("Bundle Size and Code Splitting", () => {
+    it("should load chunks efficiently", async () => {
       // Mock dynamic import
       const mockImport = vi.fn().mockResolvedValue({
-        default: () => 'Lazy Component',
+        default: () => "Lazy Component"
       });
 
-      global.import = mockImport;
+      (global as any).import = mockImport;
 
       const startTime = performance.now();
 
       // Simulate lazy loading a component (mock since the actual component may not exist)
-      const _LazyComponent = await Promise.resolve({ default: () => 'Mock Component' });
+      const _LazyComponent = await Promise.resolve({
+        default: () => "Mock Component"
+      });
 
       const duration = performance.now() - startTime;
 
@@ -251,11 +282,11 @@ describe('Frontend Performance Tests', () => {
       expect(duration).toBeLessThan(100); // Should load quickly
     });
 
-    it('should handle multiple concurrent chunk loads', async () => {
+    it("should handle multiple concurrent chunk loads", async () => {
       const chunkCount = 5;
       const mockImports = Array.from({ length: chunkCount }, (_, i) =>
         vi.fn().mockResolvedValue({
-          default: () => `Lazy Component ${i}`,
+          default: () => `Lazy Component ${i}`
         })
       );
 
@@ -270,27 +301,29 @@ describe('Frontend Performance Tests', () => {
       const duration = performance.now() - startTime;
 
       expect(results).toHaveLength(chunkCount);
-      console.log(`${chunkCount} chunks loaded concurrently in ${duration.toFixed(2)}ms`);
+      console.log(
+        `${chunkCount} chunks loaded concurrently in ${duration.toFixed(2)}ms`
+      );
       expect(duration).toBeLessThan(200); // Should handle concurrent loads efficiently
     });
   });
 
-  describe('Memory Usage', () => {
-    it('should not leak memory during repeated operations', () => {
+  describe("Memory Usage", () => {
+    it("should not leak memory during repeated operations", () => {
       const initialMemory =
-        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
-          ?.usedJSHeapSize || 0;
+        (performance as unknown as { memory?: { usedJSHeapSize: number } })
+          .memory?.usedJSHeapSize || 0;
 
       // Perform memory-intensive operations
       for (let i = 0; i < 1000; i++) {
         const largeArray = new Array(1000).fill(0).map((_, j) => ({
           id: j,
-          data: `test-data-${j}`.repeat(10),
+          data: `test-data-${j}`.repeat(10)
         }));
 
         // Simulate processing
         largeArray.forEach((item) => {
-          performanceService.recordMetric('memory.test', item.id);
+          performanceService.recordMetric("memory.test", item.id);
         });
       }
 
@@ -300,11 +333,13 @@ describe('Frontend Performance Tests', () => {
       }
 
       const finalMemory =
-        (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
-          ?.usedJSHeapSize || 0;
+        (performance as unknown as { memory?: { usedJSHeapSize: number } })
+          .memory?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
 
-      console.log(`Memory increase: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`);
+      console.log(
+        `Memory increase: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`
+      );
 
       // Memory increase should be reasonable (less than 10MB)
       if (initialMemory > 0) {
