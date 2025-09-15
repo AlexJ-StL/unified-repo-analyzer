@@ -7,10 +7,6 @@ export default defineConfig({
     environment: "node",
     pool: "threads",
     setupFiles: ["./tests/setup-minimal.ts"],
-    define: {
-      global: "globalThis",
-      "process.env.NODE_ENV": JSON.stringify("test")
-    },
     include: ["packages/**/*.test.ts", "packages/**/*.spec.ts"],
     exclude: ["**/node_modules/**", "**/dist/**"],
     coverage: {
@@ -23,6 +19,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@shared": resolve(__dirname, "packages/shared/src")
+    }
+  },
+  vite: {
+    define: {
+      "process.env.NODE_ENV": JSON.stringify("test")
     }
   }
 });

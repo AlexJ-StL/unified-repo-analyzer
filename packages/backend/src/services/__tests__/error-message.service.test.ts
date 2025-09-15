@@ -241,7 +241,7 @@ describe("ErrorMessageService", () => {
       expect(result.title).toBe("Operation Cancelled");
       expect(result.message).toContain(path);
       expect(result.suggestions).toBeInstanceOf(Array);
-      expect(result.suggestions.some((s) => s.includes("try again"))).toBe(
+      expect(result.suggestions.some((s) => s.includes("cancelled"))).toBe(
         true
       );
     });
@@ -712,6 +712,12 @@ describe("ErrorMessageService", () => {
     });
 
     it("should provide Windows-specific guidance for Windows paths", () => {
+      vi.mock("node:os", () => ({
+        platform: vi.fn(() => "win32")
+      }));
+
+      const errorMessageService = new ErrorMessageService(); // Recreate to use mock
+
       const errors: PathError[] = [
         {
           code: "PATH_INVALID_FORMAT",

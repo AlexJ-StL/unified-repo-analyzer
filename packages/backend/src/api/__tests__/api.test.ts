@@ -100,15 +100,12 @@ describe("API Integration Tests", () => {
     });
 
     // Mock the constructors to return our mock instances
-    const AnalysisEngineMock = vi.fn(() => mockAnalysisEngine as any);
-    const IndexSystemMock = vi.fn(() => mockIndexSystem as any);
-
-    // Replace the constructors
-    vi.doMock("../../core/AnalysisEngine", () => ({
-      AnalysisEngine: AnalysisEngineMock
+    // Mock the modules using factory functions
+    vi.mock("../../core/AnalysisEngine", () => ({
+      AnalysisEngine: vi.fn(() => mockAnalysisEngine as any)
     }));
-    vi.doMock("../../core/IndexSystem", () => ({
-      IndexSystem: IndexSystemMock
+    vi.mock("../../core/IndexSystem", () => ({
+      IndexSystem: vi.fn(() => mockIndexSystem as any)
     }));
   });
 

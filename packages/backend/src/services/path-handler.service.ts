@@ -361,6 +361,33 @@ export class PathHandler {
         error instanceof Error ? error.message : String(error);
       const errorName = error instanceof Error ? error.name : "UnknownError";
 
+      // If it's an AbortError or TimeoutError, handle it gracefully
+      if (errorName === "AbortError" || errorName === "TimeoutError") {
+        result = {
+          isValid: false,
+          errors: [
+            {
+              code:
+                errorName === "AbortError"
+                  ? "OPERATION_CANCELLED"
+                  : "TIMEOUT_ERROR",
+              message: errorMessage,
+              details:
+                errorName === "AbortError"
+                  ? "The operation was cancelled"
+                  : `Operation exceeded the ${timeoutMs}ms timeout limit`
+            }
+          ],
+          warnings: [],
+          metadata: {
+            exists: false,
+            isDirectory: false,
+            permissions: { read: false, write: false, execute: false }
+          }
+        };
+        return result;
+      }
+
       result = {
         isValid: false,
         errors: [
@@ -503,7 +530,7 @@ export class PathHandler {
         message: "Checking path existence..."
       });
 
-      const existsResult = await this.checkPathExists(normalizedPath);
+      const existsResult = await this.checkPathExists(normalizedPath, signal);
       result.metadata.exists = existsResult.exists;
       result.metadata.isDirectory = existsResult.isDirectory;
       result.metadata.size = existsResult.size;
@@ -675,9 +702,24 @@ export class PathHandler {
       let stats: import("fs").Stats | null = null;
 
       try {
+        // Check for cancellation before starting the operation
+        this.checkCancellation(signal);
+
         stats = await fs.stat(pathToCheck);
+
+        // Check for cancellation after the operation completes
+        this.checkCancellation(signal);
+
         pathExists = true;
-      } catch (_error) {
+      } catch (error) {
+        // If it's a cancellation error, re-throw it
+        if (
+          error instanceof Error &&
+          (error.name === "AbortError" || error.name === "TimeoutError")
+        ) {
+          throw error;
+        }
+
         result.errors.push({
           code: "PATH_NOT_FOUND",
           message: "Path does not exist",
@@ -689,7 +731,7 @@ export class PathHandler {
       this.checkCancellation(signal);
 
       // Check basic permissions using fs.access
-      await this.checkBasicPermissions(pathToCheck, result);
+      await this.checkBasicPermissions(pathToCheck, result, signal);
 
       this.checkCancellation(signal);
 
@@ -742,13 +784,29 @@ export class PathHandler {
    */
   private async checkBasicPermissions(
     pathToCheck: string,
-    result: PermissionResult
+    result: PermissionResult,
+    signal?: AbortSignal
   ): Promise<void> {
     // Check read permission
     try {
+      // Check for cancellation before starting the operation
+      this.checkCancellation(signal);
+
       await fs.access(pathToCheck, fs.constants.R_OK);
+
+      // Check for cancellation after the operation completes
+      this.checkCancellation(signal);
+
       result.canRead = true;
-    } catch (_error) {
+    } catch (error) {
+      // If it's a cancellation error, re-throw it
+      if (
+        error instanceof Error &&
+        (error.name === "AbortError" || error.name === "TimeoutError")
+      ) {
+        throw error;
+      }
+
       result.canRead = false;
       if (this.isWindows) {
         result.errors.push({
@@ -761,9 +819,24 @@ export class PathHandler {
 
     // Check write permission
     try {
+      // Check for cancellation before starting the operation
+      this.checkCancellation(signal);
+
       await fs.access(pathToCheck, fs.constants.W_OK);
+
+      // Check for cancellation after the operation completes
+      this.checkCancellation(signal);
+
       result.canWrite = true;
-    } catch (_error) {
+    } catch (error) {
+      // If it's a cancellation error, re-throw it
+      if (
+        error instanceof Error &&
+        (error.name === "AbortError" || error.name === "TimeoutError")
+      ) {
+        throw error;
+      }
+
       result.canWrite = false;
       if (this.isWindows) {
         result.errors.push({
@@ -776,9 +849,24 @@ export class PathHandler {
 
     // Check execute permission
     try {
+      // Check for cancellation before starting the operation
+      this.checkCancellation(signal);
+
       await fs.access(pathToCheck, fs.constants.X_OK);
+
+      // Check for cancellation after the operation completes
+      this.checkCancellation(signal);
+
       result.canExecute = true;
-    } catch (_error) {
+    } catch (error) {
+      // If it's a cancellation error, re-throw it
+      if (
+        error instanceof Error &&
+        (error.name === "AbortError" || error.name === "TimeoutError")
+      ) {
+        throw error;
+      }
+
       result.canExecute = false;
       // Execute permission is less critical, so we don't add it as an error
     }
@@ -964,7 +1052,7 @@ export class PathHandler {
    */
   private checkCancellation(signal?: AbortSignal): void {
     if (signal?.aborted) {
-      const error = new Error("Operation was cancelled");
+      const error = new Error("Operation was aborted");
       error.name = "AbortError";
       throw error;
     }
@@ -1151,19 +1239,36 @@ export class PathHandler {
   }
 
   /**
-   * Check if path exists and get basic metadata
+   * Check if path exists and get basic metadata with timeout support
    */
   private async checkPathExists(
-    pathToCheck: string
+    pathToCheck: string,
+    signal?: AbortSignal
   ): Promise<{ exists: boolean; isDirectory: boolean; size?: number }> {
     try {
+      // Check for cancellation before starting the operation
+      this.checkCancellation(signal);
+
       const stats = await fs.stat(pathToCheck);
+
+      // Check for cancellation after the operation completes
+      this.checkCancellation(signal);
+
       return {
         exists: true,
         isDirectory: stats.isDirectory(),
         size: stats.isDirectory() ? undefined : stats.size
       };
-    } catch {
+    } catch (error) {
+      // If it's a cancellation error, re-throw it
+      if (
+        error instanceof Error &&
+        (error.name === "AbortError" || error.name === "TimeoutError")
+      ) {
+        throw error;
+      }
+
+      // Otherwise, path doesn't exist
       return {
         exists: false,
         isDirectory: false

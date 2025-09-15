@@ -4,7 +4,8 @@
 
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockManager, mockModule } from "../../../../../tests/setup-minimal.js";
+import { mockModule } from "../../../../../tests/setup-minimal-simple.js";
+import { mockManager } from "../../../../../tests/MockManager.js";
 
 // Mock the modules before importing the app
 mockModule("../../core/AnalysisEngine", () => ({
@@ -32,7 +33,26 @@ mockModule("../../core/IndexSystem", () => ({
 vi.mock("node:http", () => ({
   createServer: vi.fn(() => ({
     listen: vi.fn(),
-    close: vi.fn()
+    close: vi.fn(),
+    on: vi.fn(),
+    once: vi.fn(),
+    listeners: vi.fn(() => []),
+    removeAllListeners: vi.fn()
+  }))
+}));
+
+// Mock socket.io to prevent WebSocket initialization issues
+vi.mock("socket.io", () => ({
+  Server: vi.fn().mockImplementation(() => ({
+    on: vi.fn(),
+    emit: vi.fn(),
+    close: vi.fn(),
+    attach: vi.fn(),
+    of: vi.fn().mockReturnThis(),
+    use: vi.fn(),
+    engine: {
+      on: vi.fn()
+    }
   }))
 }));
 
