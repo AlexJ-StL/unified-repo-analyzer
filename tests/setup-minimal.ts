@@ -43,85 +43,22 @@ export const mocked = <T>(item: T): T => {
 };
 
 // Global test configuration - non-async to avoid runner issues
-// beforeAll(() => {
-//   // Set test environment
-//   if (typeof process !== "undefined") {
-//     process.env.NODE_ENV = "test";
-//   }
-
-//   // Initialize mock manager - dynamic mocking disabled
-//   // setupMocks();
-
-//   // Start resource monitoring in test environment - disabled to avoid runner issues
-//   // if (process.env.NODE_ENV === "test") {
-//   //   resourceController.startMonitoring(10000); // Check every 10 seconds
-//   // }
-
-//   // Setup DOM environment if jsdom is available
-//   if (typeof window !== "undefined") {
-//     // Mock window.matchMedia for frontend tests
-//     Object.defineProperty(window, "matchMedia", {
-//       writable: true,
-//       value: (query: string): MediaQueryList => ({
-//         matches: false,
-//         media: query,
-//         onchange: null,
-//         addListener: () => {},
-//         removeListener: () => {},
-//         addEventListener: () => {},
-//         removeEventListener: () => {},
-//         dispatchEvent: vi.fn(() => true)
-//       })
-//     });
-
-//     // Mock ResizeObserver
-//     global.ResizeObserver = class ResizeObserver {
-//       observe() {}
-//       unobserve() {}
-//       disconnect() {}
-//     } as unknown as typeof ResizeObserver;
-
-//     // Mock IntersectionObserver
-//     global.IntersectionObserver = class IntersectionObserver {
-//       observe() {}
-//       unobserve = () => {};
-//       disconnect = () => {};
-//     } as unknown as typeof IntersectionObserver;
-
-//     // Mock requestAnimationFrame
-//     global.requestAnimationFrame = (callback: FrameRequestCallback) => {
-//       return setTimeout(() => callback(16), 16) as unknown as number;
-//     };
-
-//     global.cancelAnimationFrame = (id: number) => {
-//       clearTimeout(id);
-//     };
-//   }
-
-//   // Setup global error handlers for better test debugging
-//   if (
-//     typeof process !== "undefined" &&
-//     process &&
-//     typeof process.on === "function"
-//   ) {
-//     process.on("unhandledRejection", (_reason, _promise) => {
-//       // Silent handling in tests
-//     });
-
-//     process.on("uncaughtException", (_error) => {
-//       // Silent handling in tests
-//     });
-//   }
-// });
+beforeAll(() => {
+  if (typeof process !== "undefined") {
+    process.env.NODE_ENV = "test";
+  }
+  setupMocks();
+  if (
+    typeof process !== "undefined" &&
+    process &&
+    typeof process.on === "function"
+  ) {
+    process.on("unhandledRejection", (_reason, _promise) => {});
+    process.on("uncaughtException", (_error) => {});
+  }
+});
 
 afterAll(async () => {
-  // Emergency isolation reset to ensure clean state
-  // await emergencyIsolationReset();
-
-  // Stop resource monitoring - disabled
-  // resourceController.stopMonitoring();
-
-  // Final cleanup
   cleanupMocks();
 });
 

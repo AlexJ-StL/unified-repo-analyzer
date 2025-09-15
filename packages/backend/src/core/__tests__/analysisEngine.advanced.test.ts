@@ -199,7 +199,7 @@ vi.mock("../advancedAnalyzer", () => ({
       }
     })
   })
-});
+}));
 
 describe("AnalysisEngine Advanced Features Integration", () => {
   let engine: AnalysisEngine;
