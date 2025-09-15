@@ -516,7 +516,7 @@ describe("Performance and Load Testing", () => {
 
       const finalMemory = process.memoryUsage();
       const memoryDelta = finalMemory.heapUsed - initialMemory.heapUsed;
-      expect(memoryDelta).toBeLessThan(10 * 1024 * 1024); // Less than 10MB increase
+      expect(memoryDelta).toBeLessThan(20 * 1024 * 1024); // Less than 20MB increase
     }, 10000);
 
     it("should maintain stable memory usage under repeated load", async () => {

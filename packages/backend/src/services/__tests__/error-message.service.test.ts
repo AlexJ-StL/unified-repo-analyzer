@@ -2,9 +2,10 @@
  * Tests for error message service
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ErrorMessageService } from "../error-message.service";
 import type { PathError, PathWarning } from "../path-handler.service";
+import os from "os";
 
 describe("ErrorMessageService", () => {
   let errorMessageService: ErrorMessageService;
@@ -712,11 +713,9 @@ describe("ErrorMessageService", () => {
     });
 
     it("should provide Windows-specific guidance for Windows paths", () => {
-      vi.mock("node:os", () => ({
-        platform: vi.fn(() => "win32")
-      }));
+      const platformSpy = vi.spyOn(os, "platform").mockReturnValue("win32");
 
-      const errorMessageService = new ErrorMessageService(); // Recreate to use mock
+      const errorMessageService = new ErrorMessageService(); // Recreate to use spy
 
       const errors: PathError[] = [
         {
@@ -736,6 +735,8 @@ describe("ErrorMessageService", () => {
       const allSuggestions = result.suggestions.join(" ").toLowerCase();
       expect(allSuggestions).toContain("backslash");
       expect(allSuggestions).toContain("drive letter");
+
+      platformSpy.mockRestore();
     });
 
     it("should include specific examples in suggestions", () => {
