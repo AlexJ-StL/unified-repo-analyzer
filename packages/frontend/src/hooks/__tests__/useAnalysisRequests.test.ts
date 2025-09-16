@@ -60,7 +60,10 @@ describe('useAnalysisRequests', () => {
     // Wait for initial fetch
     await waitFor(() => expect(result.current.requests).toEqual(mockRequests));
 
-    const newMockRequests = [...mockRequests, { id: '3', path: '/test/path3', status: 'queued', progress: 0 }];
+    const newMockRequests = [
+      ...mockRequests,
+      { id: '3', path: '/test/path3', status: 'queued', progress: 0 },
+    ];
     vi.mocked(apiService.getAnalysisRequests).mockResolvedValue({ data: newMockRequests } as any);
 
     // Refresh requests

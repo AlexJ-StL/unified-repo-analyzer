@@ -84,7 +84,7 @@ export interface RepositoryAnalysis {
     potentialIssues: string[];
   };
 
-    metadata: {
+  metadata: {
     analysisMode: AnalysisMode;
     llmProvider?: string;
     analysisTime: number;

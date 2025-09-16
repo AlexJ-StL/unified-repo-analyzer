@@ -1,6 +1,5 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { useAnalysisStore } from '../../store/useAnalysisStore';
 import websocketService from '../websocket';
 
 // --- Mocks ---

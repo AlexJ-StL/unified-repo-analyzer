@@ -2,10 +2,10 @@
  * Simple API integration tests without complex mocking
  */
 
+import fs from 'node:fs/promises';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { getTestApp, setupTestServer } from '../../test-setup.js';
-import fs from 'node:fs/promises';
 
 vi.mock('node:fs/promises');
 

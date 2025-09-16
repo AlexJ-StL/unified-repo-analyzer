@@ -345,7 +345,7 @@ export class PerformanceService {
         : 0;
 
     // Interaction statistics
-    const interactionMetrics = this.metrics.filter((m) => m.tags?.type === 'user-interaction');
+    const interactionMetrics = this.metrics.filter((m) => m.tags?.type === 'user-interaction' || m.tags?.type === 'component-render');
     const totalInteractions = interactionMetrics.length;
     const averageInteractionDuration =
       totalInteractions > 0

@@ -2,11 +2,11 @@
  * Fixed API integration tests using MockManager
  */
 
+import fs from 'node:fs/promises';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockManager } from '../../../../../tests/MockManager.js';
 import { mockModule } from '../../../../../tests/setup-minimal-simple.js';
-import fs from 'node:fs/promises';
 
 // Mock the modules before importing the app
 vi.mock('node:fs/promises');

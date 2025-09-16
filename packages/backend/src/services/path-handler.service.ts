@@ -455,7 +455,7 @@ export class PathHandler {
       onProgress?.({
         stage: 'format_validation',
         percentage: 10,
-        message: 'Validating path format...', 
+        message: 'Validating path format...',
       });
 
       const formatValidation = this.validatePathFormat(inputPath);
@@ -478,7 +478,7 @@ export class PathHandler {
       onProgress?.({
         stage: 'normalization',
         percentage: 30,
-        message: 'Normalizing path...', 
+        message: 'Normalizing path...',
       });
 
       const normalizedPath = this.normalizePath(inputPath);
@@ -496,7 +496,7 @@ export class PathHandler {
       onProgress?.({
         stage: 'existence_check',
         percentage: 50,
-        message: 'Checking path existence...', 
+        message: 'Checking path existence...',
       });
 
       const existsResult = await this.checkPathExists(normalizedPath, signal);
@@ -517,7 +517,7 @@ export class PathHandler {
         onProgress?.({
           stage: 'permission_check',
           percentage: 70,
-          message: 'Checking permissions...', 
+          message: 'Checking permissions...',
         });
 
         const permissionResult = await this.checkPermissions(normalizedPath);
@@ -541,7 +541,7 @@ export class PathHandler {
       onProgress?.({
         stage: 'finalization',
         percentage: 90,
-        message: 'Finalizing validation...', 
+        message: 'Finalizing validation...',
       });
 
       // Path is valid if no errors occurred

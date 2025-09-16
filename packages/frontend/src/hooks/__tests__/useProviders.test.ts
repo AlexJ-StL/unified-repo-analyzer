@@ -1,13 +1,13 @@
-import React from 'react';
 import { act, renderHook } from '@testing-library/react';
+import type React from 'react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import * as apiModule from '../../services/api';
 import { useProviders } from '../useProviders';
-import { ToastProvider } from '../useToast';
+import type { ToastProvider } from '../useToast';
 
 // Create a wrapper component that includes the ToastProvider
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <ToastProvider>{children}</ToastProvider>;
+  return <ToastProvider>{ children } < /;;>PTadeioorrstv;
 };
 
 // Mock the apiService
