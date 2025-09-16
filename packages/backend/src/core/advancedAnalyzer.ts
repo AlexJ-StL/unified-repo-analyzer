@@ -100,6 +100,13 @@ export interface AdvancedAnalysisResult {
 /**
  * Advanced analyzer for code quality, security, and architectural analysis
  */
+export interface FunctionInfo {
+  name: string;
+}
+
+export interface ClassInfo {
+  name: string;
+}
 export class AdvancedAnalyzer {
   /**
    * Performs comprehensive advanced analysis on a repository
@@ -998,7 +1005,7 @@ export class AdvancedAnalyzer {
 
     // Microservices
     const hasMicroservices =
-      directories.filter((d: string) => d.includes('service')).length > 3 ||
+      directories.filter((d) => d.includes('service')).length > 3 ||
       files.some((f: string) => f.includes('docker')) ||
       files.some((f: string) => f.includes('kubernetes'));
 
@@ -1013,7 +1020,7 @@ export class AdvancedAnalyzer {
     // Component-Based (React/Vue/Angular)
     const hasComponents =
       directories.some((d) => d.includes('component')) ||
-      files.some((f) => f.includes('.component.'));
+      files.some((f: string) => f.includes('.component.'));
 
     if (hasComponents) {
       patterns.push({
@@ -1027,7 +1034,7 @@ export class AdvancedAnalyzer {
     const hasPlugins =
       directories.some((d) => d.includes('plugin')) ||
       directories.some((d) => d.includes('extension')) ||
-      files.some((f) => f.includes('plugin'));
+      files.some((f: string) => f.includes('plugin'));
 
     if (hasPlugins) {
       patterns.push({
@@ -1061,7 +1068,11 @@ export class AdvancedAnalyzer {
     }
 
     // Single Page Application
-    if (frameworks.some((f) => f.includes('react') || f.includes('vue') || f.includes('angular'))) {
+    if (
+      frameworks.some(
+        (f: string) => f.includes('react') || f.includes('vue') || f.includes('angular')
+      )
+    ) {
       patterns.push({
         name: 'Single Page Application (SPA)',
         confidence: 0.9,
@@ -1070,7 +1081,11 @@ export class AdvancedAnalyzer {
     }
 
     // Server-Side Rendering
-    if (frameworks.some((f) => f.includes('next') || f.includes('nuxt') || f.includes('gatsby'))) {
+    if (
+      frameworks.some(
+        (f: string) => f.includes('next') || f.includes('nuxt') || f.includes('gatsby')
+      )
+    ) {
       patterns.push({
         name: 'Server-Side Rendering (SSR)',
         confidence: 0.8,
@@ -1079,7 +1094,7 @@ export class AdvancedAnalyzer {
     }
 
     // GraphQL
-    if (frameworks.some((f) => f.includes('graphql') || f.includes('apollo'))) {
+    if (frameworks.some((f: string) => f.includes('graphql') || f.includes('apollo'))) {
       patterns.push({
         name: 'GraphQL API',
         confidence: 0.9,
@@ -1232,8 +1247,8 @@ export class AdvancedAnalyzer {
 
     // Bonus for modern frameworks
     const modernFrameworks = ['react', 'vue', 'angular', 'next', 'express'];
-    const hasModernFramework = analysis.frameworks.some((f) =>
-      modernFrameworks.some((mf) => f.toLowerCase().includes(mf))
+    const hasModernFramework = analysis.frameworks.some((f: string) =>
+      modernFrameworks.some((mf: string) => f.toLowerCase().includes(mf))
     );
     if (hasModernFramework) {
       score += 10;
@@ -1272,8 +1287,8 @@ export class AdvancedAnalyzer {
           classCount: file.classes?.length || 0,
           importCount: 0, // This isn't available in FileInfo
           comments: [], // This isn't available in FileInfo
-          functions: file.functions?.map((f) => f.name) || [],
-          classes: file.classes?.map((c) => c.name) || [],
+          functions: file.functions?.map((f: FunctionInfo) => f.name) || [],
+          classes: file.classes?.map((c: ClassInfo) => c.name) || [],
           sample: '', // We don't have file content in the analysis object
         })),
         keyFiles: analysis.structure.keyFiles.map((file: FileInfo) => file.path),

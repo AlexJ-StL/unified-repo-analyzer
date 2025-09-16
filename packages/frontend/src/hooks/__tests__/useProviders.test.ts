@@ -50,7 +50,7 @@ interface GetProviderModelsResponse {
 
 // Create a wrapper component that includes the ToastProvider
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <ToastProvider>{ children } < /;;>PTadeioorrstv;
+  return <ToastProvider>{ children } < /;;;>PTadeioorrstv;
 };
 
 // Mock the apiService

@@ -4,14 +4,14 @@
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { promisify } from 'node:util';
-import type { ErrorContext } from '@unified-repo-analyzer/shared';
-import { errorClassifier } from '@unified-repo-analyzer/shared';
-import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository.js';
-import * as ignore from 'ignore';
-import { logger, logPerformance } from '../services/logger.service.js';
+import fs from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
+import type { ErrorContext } from "@unified-repo-analyzer/shared";
+import { errorClassifier } from "@unified-repo-analyzer/shared";
+import type { DirectoryInfo } from "@unified-repo-analyzer/shared/src/types/repository.js";
+import * as ignore from "ignore";
+import { logger, logPerformance } from "../services/logger.service.js";
 
 // Promisify fs functions
 const readdir = promisify(fs.readdir);
@@ -72,11 +72,11 @@ export interface TraversalResult {
  * Error types for file system operations
  */
 export enum FileSystemErrorType {
-  PERMISSION_DENIED = 'PERMISSION_DENIED',
-  NOT_FOUND = 'NOT_FOUND',
-  INVALID_PATH = 'INVALID_PATH',
-  READ_ERROR = 'READ_ERROR',
-  UNKNOWN = 'UNKNOWN',
+  PERMISSION_DENIED = "PERMISSION_DENIED",
+  NOT_FOUND = "NOT_FOUND",
+  INVALID_PATH = "INVALID_PATH",
+  READ_ERROR = "READ_ERROR",
+  UNKNOWN = "UNKNOWN"
 }
 
 /**
@@ -88,7 +88,7 @@ export class FileSystemError extends Error {
 
   constructor(message: string, type: FileSystemErrorType, filePath: string) {
     super(message);
-    this.name = 'FileSystemError';
+    this.name = "FileSystemError";
     this.type = type;
     this.path = filePath;
   }
@@ -109,43 +109,48 @@ export async function traverseDirectory(
   const requestId = logger.getRequestId();
 
   logger.info(
-    'Starting directory traversal',
+    "Starting directory traversal",
     {
       path: dirPath,
       options: {
         maxDepth: options.maxDepth || 0,
         maxFiles: options.maxFiles || 0,
         ignorePatterns: options.ignorePatterns?.length || 0,
-        hasFileFilter: !!options.fileFilter,
-      },
+        hasFileFilter: !!options.fileFilter
+      }
     },
-    'filesystem',
+    "filesystem",
     requestId
   );
 
-  const { maxDepth = 0, maxFiles = 0, ignorePatterns = [], fileFilter = () => true } = options;
+  const {
+    maxDepth = 0,
+    maxFiles = 0,
+    ignorePatterns = [],
+    fileFilter = () => true
+  } = options;
 
   // Normalize and resolve the directory path
   const normalizedPath = path.resolve(dirPath);
 
   logger.debug(
-    'Path normalized',
+    "Path normalized",
     {
       originalPath: dirPath,
-      normalizedPath,
+      normalizedPath
     },
-    'filesystem',
+    "filesystem",
     requestId
   );
 
   // Check if the directory exists
   try {
     logger.debug(
-      'Checking directory existence and permissions',
+      "Checking directory existence and permissions",
       {
-        path: normalizedPath,
+        path: normalizedPath
       },
-      'filesystem',
+      "filesystem",
       requestId
     );
 
@@ -161,17 +166,17 @@ export async function traverseDirectory(
       const context: Partial<ErrorContext> = {
         path: normalizedPath,
         requestId,
-        metadata: { operation: 'directory_traversal' },
+        metadata: { operation: "directory_traversal" }
       };
       const classifiedError = errorClassifier.classifyError(error, context);
       logger.error(
-        'Directory traversal failed - not a directory',
+        "Directory traversal failed - not a directory",
         classifiedError.originalError,
         {
           path: normalizedPath,
-          errorId: classifiedError.id,
+          errorId: classifiedError.id
         },
-        'filesystem',
+        "filesystem",
         requestId
       );
 
@@ -179,23 +184,23 @@ export async function traverseDirectory(
     }
 
     logger.debug(
-      'Directory validation successful',
+      "Directory validation successful",
       {
         path: normalizedPath,
         isDirectory: true,
-        size: dirStats.size,
+        size: dirStats.size
       },
-      'filesystem',
+      "filesystem",
       requestId
     );
   } catch (error) {
     const context: Partial<ErrorContext> = {
       path: normalizedPath,
       requestId,
-      metadata: { operation: 'directory_traversal' },
+      metadata: { operation: "directory_traversal" }
     };
 
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       const fsError = new FileSystemError(
         `Directory not found: ${normalizedPath}`,
         FileSystemErrorType.NOT_FOUND,
@@ -203,18 +208,18 @@ export async function traverseDirectory(
       );
       const classifiedError = errorClassifier.classifyError(fsError, context);
       logger.error(
-        'Directory traversal failed - directory not found',
+        "Directory traversal failed - directory not found",
         classifiedError.originalError,
         {
           path: normalizedPath,
-          errorId: classifiedError.id,
+          errorId: classifiedError.id
         },
-        'filesystem',
+        "filesystem",
         requestId
       );
       throw fsError;
     }
-    if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+    if ((error as NodeJS.ErrnoException).code === "EACCES") {
       const fsError = new FileSystemError(
         `Permission denied: ${normalizedPath}`,
         FileSystemErrorType.PERMISSION_DENIED,
@@ -222,13 +227,13 @@ export async function traverseDirectory(
       );
       const classifiedError = errorClassifier.classifyError(fsError, context);
       logger.error(
-        'Directory traversal failed - permission denied',
+        "Directory traversal failed - permission denied",
         classifiedError.originalError,
         {
           path: normalizedPath,
-          errorId: classifiedError.id,
+          errorId: classifiedError.id
         },
-        'filesystem',
+        "filesystem",
         requestId
       );
       throw fsError;
@@ -246,35 +251,36 @@ export async function traverseDirectory(
     );
     const classifiedError = errorClassifier.classifyError(fsError, context);
     logger.error(
-      'Directory traversal failed - unknown error',
+      "Directory traversal failed - unknown error",
       classifiedError.originalError,
       {
         path: normalizedPath,
         errorId: classifiedError.id,
-        originalError: error instanceof Error ? error.message : String(error),
+        originalError: error instanceof Error ? error.message : String(error)
       },
-      'filesystem',
+      "filesystem",
       requestId
     );
     throw fsError;
   }
 
   // Set up ignore filter if ignore patterns are provided
-  const ignoreFilter = ignorePatterns.length > 0 ? ignore.default().add(ignorePatterns) : null;
+  const ignoreFilter =
+    ignorePatterns.length > 0 ? ignore.default().add(ignorePatterns) : null;
 
   // Initialize result
   const result: TraversalResult = {
     files: [],
     directories: [],
     totalSize: 0,
-    skippedFiles: [],
+    skippedFiles: []
   };
 
   // Internal recursive traversal function
   async function traverse(
     currentPath: string,
     currentDepth: number,
-    relativePath = ''
+    relativePath = ""
   ): Promise<void> {
     // Check if we've reached the maximum number of files
     if (maxFiles > 0 && result.files.length >= maxFiles) {
@@ -324,27 +330,27 @@ export async function traverseDirectory(
             result.totalSize += fileStat.size;
           }
         } catch (error) {
-          let errorMessage = 'Unknown error';
+          let errorMessage = "Unknown error";
           if (error instanceof Error) {
             errorMessage = error.message;
           }
 
           result.skippedFiles.push({
             path: entryPath,
-            error: errorMessage,
+            error: errorMessage
           });
         }
       }
     } catch (error) {
-      let errorMessage = 'Unknown error';
+      let errorMessage = "Unknown error";
       let errorType = FileSystemErrorType.UNKNOWN;
 
       if (error instanceof Error) {
         errorMessage = error.message;
 
-        if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+        if ((error as NodeJS.ErrnoException).code === "EACCES") {
           errorType = FileSystemErrorType.PERMISSION_DENIED;
-        } else if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        } else if ((error as NodeJS.ErrnoException).code === "ENOENT") {
           errorType = FileSystemErrorType.NOT_FOUND;
         }
       }
@@ -359,13 +365,13 @@ export async function traverseDirectory(
 
   // Start traversal from the root directory
   logger.debug(
-    'Starting recursive traversal',
+    "Starting recursive traversal",
     {
       path: normalizedPath,
       maxDepth,
-      maxFiles,
+      maxFiles
     },
-    'filesystem',
+    "filesystem",
     requestId
   );
 
@@ -374,30 +380,30 @@ export async function traverseDirectory(
   const duration = Date.now() - startTime;
 
   logger.info(
-    'Directory traversal completed',
+    "Directory traversal completed",
     {
       path: normalizedPath,
       filesFound: result.files.length,
       directoriesFound: result.directories.length,
       totalSize: result.totalSize,
       skippedFiles: result.skippedFiles.length,
-      duration: `${duration}ms`,
+      duration: `${duration}ms`
     },
-    'filesystem',
+    "filesystem",
     requestId
   );
 
   // Log performance metrics
   logPerformance(
-    'directory_traversal',
+    "directory_traversal",
     duration,
     {
       path: normalizedPath,
       filesCount: result.files.length,
       directoriesCount: result.directories.length,
-      totalSizeBytes: result.totalSize,
+      totalSizeBytes: result.totalSize
     },
-    'filesystem'
+    "filesystem"
   );
 
   return result;
@@ -412,18 +418,18 @@ export async function traverseDirectory(
  */
 export async function readFileWithErrorHandling(
   filePath: string,
-  encoding: BufferEncoding = 'utf8'
+  encoding: BufferEncoding = "utf8"
 ): Promise<string> {
   const startTime = Date.now();
   const requestId = logger.getRequestId();
 
   logger.debug(
-    'Reading file',
+    "Reading file",
     {
       path: filePath,
-      encoding,
+      encoding
     },
-    'filesystem',
+    "filesystem",
     requestId
   );
 
@@ -432,13 +438,13 @@ export async function readFileWithErrorHandling(
     const duration = Date.now() - startTime;
 
     logger.debug(
-      'File read successfully',
+      "File read successfully",
       {
         path: filePath,
         contentLength: content.length,
-        duration: `${duration}ms`,
+        duration: `${duration}ms`
       },
-      'filesystem',
+      "filesystem",
       requestId
     );
 
@@ -446,14 +452,14 @@ export async function readFileWithErrorHandling(
     if (content.length > 100000) {
       // > 100KB
       logPerformance(
-        'file_read_large',
+        "file_read_large",
         duration,
         {
           path: filePath,
           sizeBytes: content.length,
-          encoding,
+          encoding
         },
-        'filesystem'
+        "filesystem"
       );
     }
 
@@ -465,12 +471,12 @@ export async function readFileWithErrorHandling(
       requestId,
       duration,
       metadata: {
-        operation: 'file_read',
-        encoding,
-      },
+        operation: "file_read",
+        encoding
+      }
     };
 
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       const fsError = new FileSystemError(
         `File not found: ${filePath}`,
         FileSystemErrorType.NOT_FOUND,
@@ -478,19 +484,19 @@ export async function readFileWithErrorHandling(
       );
       const classifiedError = errorClassifier.classifyError(fsError, context);
       logger.error(
-        'File read failed - file not found',
+        "File read failed - file not found",
         classifiedError.originalError,
         {
           path: filePath,
           errorId: classifiedError.id,
-          duration: `${duration}ms`,
+          duration: `${duration}ms`
         },
-        'filesystem',
+        "filesystem",
         requestId
       );
       throw fsError;
     }
-    if ((error as NodeJS.ErrnoException).code === 'EACCES') {
+    if ((error as NodeJS.ErrnoException).code === "EACCES") {
       const fsError = new FileSystemError(
         `Permission denied: ${filePath}`,
         FileSystemErrorType.PERMISSION_DENIED,
@@ -498,14 +504,14 @@ export async function readFileWithErrorHandling(
       );
       const classifiedError = errorClassifier.classifyError(fsError, context);
       logger.error(
-        'File read failed - permission denied',
+        "File read failed - permission denied",
         classifiedError.originalError,
         {
           path: filePath,
           errorId: classifiedError.id,
-          duration: `${duration}ms`,
+          duration: `${duration}ms`
         },
-        'filesystem',
+        "filesystem",
         requestId
       );
       throw fsError;
@@ -518,15 +524,15 @@ export async function readFileWithErrorHandling(
     );
     const classifiedError = errorClassifier.classifyError(fsError, context);
     logger.error(
-      'File read failed - read error',
+      "File read failed - read error",
       classifiedError.originalError,
       {
         path: filePath,
         errorId: classifiedError.id,
         duration: `${duration}ms`,
-        originalError: error instanceof Error ? error.message : String(error),
+        originalError: error instanceof Error ? error.message : String(error)
       },
-      'filesystem',
+      "filesystem",
       requestId
     );
     throw fsError;
@@ -541,66 +547,66 @@ export async function readFileWithErrorHandling(
 export function getCommonIgnorePatterns(): string[] {
   return [
     // Version control
-    '.git/**',
-    '.svn/**',
-    '.hg/**',
+    ".git/**",
+    ".svn/**",
+    ".hg/**",
 
     // Build artifacts
-    'node_modules/**',
-    'dist/**',
-    'build/**',
-    'out/**',
-    'target/**',
-    'bin/**',
-    'obj/**',
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "out/**",
+    "target/**",
+    "bin/**",
+    "obj/**",
 
     // Package manager files
-    'package-lock.json',
-    'yarn.lock',
-    'pnpm-lock.yaml',
+    "package-lock.json",
+    // 'yarn.lock',
+    // 'pnpm-lock.yaml',
 
     // Logs
-    '*.log',
-    'logs/**',
+    "*.log",
+    "logs/**",
 
     // Cache
-    '.cache/**',
-    '.npm/**',
+    ".cache/**",
+    ".npm/**",
 
     // IDE files
-    '.idea/**',
-    '.vscode/**',
-    '*.iml',
+    ".idea/**",
+    ".vscode/**",
+    "*.iml",
 
     // Test coverage
-    'coverage/**',
-    '.nyc_output/**',
+    "coverage/**",
+    ".nyc_output/**",
 
     // Temporary files
-    'tmp/**',
-    'temp/**',
-    '*.tmp',
+    "tmp/**",
+    "temp/**",
+    "*.tmp",
 
     // OS files
-    '.DS_Store',
-    'Thumbs.db',
+    ".DS_Store",
+    "Thumbs.db",
 
     // Large media files
-    '*.mp4',
-    '*.mov',
-    '*.avi',
-    '*.wmv',
-    '*.flv',
-    '*.mp3',
-    '*.wav',
-    '*.flac',
+    "*.mp4",
+    "*.mov",
+    "*.avi",
+    "*.wmv",
+    "*.flv",
+    "*.mp3",
+    "*.wav",
+    "*.flac",
 
     // Archives
-    '*.zip',
-    '*.tar',
-    '*.gz',
-    '*.rar',
-    '*.7z',
+    "*.zip",
+    "*.tar",
+    "*.gz",
+    "*.rar",
+    "*.7z"
 
     // Images (optional, can be commented out if needed)
     // '*.jpg',
@@ -627,14 +633,14 @@ export function getCommonIgnorePatterns(): string[] {
  * @returns Promise resolving to array of ignore patterns
  */
 export async function readGitignore(repoPath: string): Promise<string[]> {
-  const gitignorePath = path.join(repoPath, '.gitignore');
+  const gitignorePath = path.join(repoPath, ".gitignore");
 
   try {
-    const content = await readFile(gitignorePath, 'utf8');
+    const content = await readFile(gitignorePath, "utf8");
     return content
-      .split('\n')
+      .split("\n")
       .map((line) => line.trim())
-      .filter((line) => line && !line.startsWith('#'));
+      .filter((line) => line && !line.startsWith("#"));
   } catch (_error) {
     // If .gitignore doesn't exist, return empty array
     return [];
@@ -655,7 +661,9 @@ export async function getCombinedIgnorePatterns(
   const gitignorePatterns = await readGitignore(repoPath);
   const commonPatterns = getCommonIgnorePatterns();
 
-  return [...new Set([...gitignorePatterns, ...commonPatterns, ...customPatterns])];
+  return [
+    ...new Set([...gitignorePatterns, ...commonPatterns, ...customPatterns])
+  ];
 }
 
 /**
@@ -673,9 +681,9 @@ export function extractDirectoryInfo(
 
   // Initialize with root directory
   dirMap.set(basePath, {
-    path: '/',
+    path: "/",
     files: 0,
-    subdirectories: 0,
+    subdirectories: 0
   });
 
   // Process all directories
@@ -689,7 +697,7 @@ export function extractDirectoryInfo(
     dirMap.set(dirPath, {
       path: relativePath,
       files: 0,
-      subdirectories: 0,
+      subdirectories: 0
     });
 
     // Update parent directory

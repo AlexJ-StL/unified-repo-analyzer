@@ -11,7 +11,7 @@ disable = false
 
 [install.lockfile]
 # Use binary lock file format
-save = true
+save = false
 print = "yarn"
 
 [run]

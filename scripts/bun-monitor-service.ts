@@ -1,4 +1,9 @@
 #!/usr/bin/env bun
+declare global {
+  interface ImportMeta {
+    main: boolean;
+  }
+}
 /**
  * Background Bun Process Monitor Service
  * Runs continuously to prevent runaway processes

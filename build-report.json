@@ -1,94 +1,109 @@
 {
-  "timestamp": "2025-09-11T06:49:54.274Z",
-  "success": true,
-  "duration": 48864.5488,
+  "timestamp": "2025-09-16T16:39:42.332Z",
+  "success": false,
+  "duration": 12936.5458,
   "packages": 4,
   "results": {
     "@unified-repo-analyzer/shared": {
       "success": true,
       "exitCode": 0,
-      "duration": 13099.516500000002,
-      "stdout": "\n> @unified-repo-analyzer/shared@1.0.0 build\n> npm run build:clean && npm run build:types\n\n\n> @unified-repo-analyzer/shared@1.0.0 build:clean\n> npx rimraf dist\n\n\n> @unified-repo-analyzer/shared@1.0.0 build:types\n> tsc\n\n"
+      "duration": 2010.9729000000002,
+      "stdout": "\n> @unified-repo-analyzer/shared@1.0.0 build\n> bun run build:clean && bun run build:bundle\n\nBundled 30 modules in 74ms\n\n  index.js      0.30 MB  (entry point)\n  index.js.map  0.60 MB  (source map)\n\nBundled 18 modules in 63ms\n\n  browser.js      147.56 KB  (entry point)\n  browser.js.map  0.30 MB    (source map)\n\n",
+      "stderr": "$ bunx rimraf dist\n$ bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap\n"
     },
     "@unified-repo-analyzer/backend": {
-      "success": true,
-      "exitCode": 0,
-      "duration": 9761.204700000002,
-      "stdout": "\n> @unified-repo-analyzer/backend@1.0.0 build\n> bunx rimraf dist && bunx tsc --project tsconfig.json\n\n"
+      "success": false,
+      "exitCode": 2,
+      "duration": 0,
+      "stdout": "\n> @unified-repo-analyzer/backend@1.0.0 build\n> bunx rimraf dist && bunx tsc --project tsconfig.json\n\nsrc/api/controllers/analyze.controller.ts(6,58): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/api/controllers/analyze.controller.ts(728,5): error TS2304: Cannot find name 'io'.\r\nsrc/api/controllers/analyze.controller.ts(732,5): error TS2304: Cannot find name 'io'.\r\nsrc/api/controllers/analyze.controller.ts(760,9): error TS2304: Cannot find name 'io'.\r\nsrc/api/controllers/analyze.controller.ts(777,5): error TS2304: Cannot find name 'io'.\r\nsrc/api/controllers/repositories.controller.ts(5,34): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(14,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1015,25): error TS7006: Parameter 'd' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1016,19): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1028,25): error TS7006: Parameter 'd' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1029,25): error TS7006: Parameter 'd' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1030,19): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1064,26): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1073,26): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1082,26): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1235,58): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1275,43): error TS7006: Parameter 'f' implicitly has an 'any' type.\r\nsrc/core/advancedAnalyzer.ts(1276,39): error TS7006: Parameter 'c' implicitly has an 'any' type.\r\nsrc/core/AnalysisEngine.ts(15,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/core/AnalysisEngine.ts(16,52): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/ClaudeProvider.ts(7,63): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/ClaudeProvider.ts(8,52): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/GeminiProvider.ts(5,63): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/LLMProvider.ts(5,63): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/MockProvider.ts(5,63): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/OpenRouterProvider.ts(5,63): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/providers/ProviderRegistry.ts(5,37): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/services/config.service.ts(19,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/services/config.service.ts(97,58): error TS7006: Parameter 'e' implicitly has an 'any' type.\r\nsrc/services/export.service.ts(12,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/services/provider-initialization.service.ts(28,19): error TS18046: 'providerConfig' is of type 'unknown'.\r\nsrc/services/provider-initialization.service.ts(29,18): error TS18046: 'providerConfig' is of type 'unknown'.\r\nsrc/services/provider-initialization.service.ts(30,22): error TS18046: 'providerConfig' is of type 'unknown'.\r\nsrc/services/provider-initialization.service.ts(31,24): error TS18046: 'providerConfig' is of type 'unknown'.\r\nsrc/services/relationship.service.ts(6,64): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/test-shared-import.ts(2,38): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/utils/fileSystem.ts(10,35): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\nsrc/utils/fileSystem.ts(11,33): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n",
+      "stderr": "npm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\nnpm error workspace @unified-repo-analyzer/backend@1.0.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c bunx rimraf dist && bunx tsc --project tsconfig.json\n",
+      "error": "npm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\nnpm error workspace @unified-repo-analyzer/backend@1.0.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c bunx rimraf dist && bunx tsc --project tsconfig.json\n",
+      "suggestions": [
+        "Check build logs for detailed error information"
+      ]
     },
     "@unified-repo-analyzer/cli": {
-      "success": true,
-      "exitCode": 0,
-      "duration": 12827.520999999997,
-      "stdout": "\n> @unified-repo-analyzer/cli@1.0.0 build\n> npm run build:clean && npm run build:types && npm run build:shebang\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:clean\n> npx rimraf dist\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:types\n> ..\\..\\node_modules\\.bin\\tsc --project tsconfig.json\n\n\n> @unified-repo-analyzer/cli@1.0.0 build:shebang\n> node ../../scripts/insert-shebang.js\n\nInserted shebang and copied to C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\\dist\\bin\\repo-analyzer.js\n"
+      "success": false,
+      "exitCode": 2,
+      "duration": 0,
+      "stdout": "\n> @unified-repo-analyzer/cli@1.0.0 build\n> bun run build:clean && bun run build:types && bun run build:shebang\n\nsrc/commands/analyze.ts(6,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\nsrc/commands/batch.ts(9,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\nsrc/commands/export.ts(3,35): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\nsrc/commands/search.ts(1,35): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\nsrc/commands/search.ts(98,47): error TS7006: Parameter 'match' implicitly has an 'any' type.\r\nsrc/utils/api-client.ts(6,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\nsrc/utils/config.ts(5,8): error TS7016: Could not find a declaration file for module '@unified-repo-analyzer/shared'. 'C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/shared/dist/index.js' implicitly has an 'any' type.\r\n  Try `npm i --save-dev @types/unified-repo-analyzer__shared` if it exists or add a new declaration (.d.ts) file containing `declare module '@unified-repo-analyzer/shared';`\r\n",
+      "stderr": "$ bunx rimraf dist\n$ bunx tsc --project tsconfig.json\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\nnpm error workspace @unified-repo-analyzer/cli@1.0.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c bun run build:clean && bun run build:types && bun run build:shebang\n",
+      "error": "$ bunx rimraf dist\n$ bunx tsc --project tsconfig.json\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\nnpm error workspace @unified-repo-analyzer/cli@1.0.0\nnpm error location C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\cli\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c bun run build:clean && bun run build:types && bun run build:shebang\n",
+      "suggestions": [
+        "Check build logs for detailed error information"
+      ]
     },
     "@unified-repo-analyzer/frontend": {
       "success": true,
       "exitCode": 0,
-      "duration": 13176.306599999996,
-      "stdout": "\n> @unified-repo-analyzer/frontend@1.0.0 build\n> npx vite build\n\n\u001b[36mvite v7.0.4 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1327 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-C_F5ag-d.js   \u001b[39m\u001b[1m\u001b[2m  0.65 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-BCX6114c.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-B19M5LAm.js       \u001b[39m\u001b[1m\u001b[2m  7.11 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-DKrPLKA6.js     \u001b[39m\u001b[1m\u001b[2m  7.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  3.37 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-CSRltLFx.js   \u001b[39m\u001b[1m\u001b[2m 22.76 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.42 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-BaDS38dW.js  \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.49 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-D9fI6xYV.js         \u001b[39m\u001b[1m\u001b[2m 37.63 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.75 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-CBq_O2jQ.js                \u001b[39m\u001b[1m\u001b[2m 43.77 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.69 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CcSnB3RH.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-DMePki_D.js          \u001b[39m\u001b[1m\u001b[2m 95.55 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 23.05 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-D86hg577.js              \u001b[39m\u001b[1m\u001b[2m177.46 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.68 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-BecQaL0S.js        \u001b[39m\u001b[1m\u001b[2m244.48 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 69.02 kB\u001b[22m\n\u001b[32m✓ built in 8.41s\u001b[39m\n"
+      "duration": 10925.5729,
+      "stdout": "\n> @unified-repo-analyzer/frontend@1.0.0 build\n> bun vite build\n\n\u001b[36mvite v7.1.5 \u001b[32mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m✓\u001b[39m 1310 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                            \u001b[39m\u001b[1m\u001b[2m  0.49 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.32 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/style-CAS5-KG2.css             \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  6.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/useAnalysisStore-CClNo6Ks.js   \u001b[39m\u001b[1m\u001b[2m  0.65 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.38 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/HomePage-pEKttbzK.js           \u001b[39m\u001b[1m\u001b[2m  1.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  0.72 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/SettingsPage-xub5WUGD.js       \u001b[39m\u001b[1m\u001b[2m  7.11 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  2.12 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/pathValidation-Bb1AUeap.js     \u001b[39m\u001b[1m\u001b[2m  7.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  3.36 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RepositoriesPage-B7qsg8LC.js   \u001b[39m\u001b[1m\u001b[2m 22.76 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  5.42 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/RelationshipsPage-D0FpiDV4.js  \u001b[39m\u001b[1m\u001b[2m 37.26 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  9.49 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/MainLayout-QyS08yrU.js         \u001b[39m\u001b[1m\u001b[2m 37.64 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 12.75 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/api-CSlJlutH.js                \u001b[39m\u001b[1m\u001b[2m 43.81 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 16.70 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/transform-CwekbDbc.js          \u001b[39m\u001b[1m\u001b[2m 52.38 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 18.18 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/PathInput-DJslzONK.js          \u001b[39m\u001b[1m\u001b[2m103.15 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 25.10 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-CgsPab6h.js              \u001b[39m\u001b[1m\u001b[2m177.46 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 57.68 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/AnalyzePage-BhbcUAwo.js        \u001b[39m\u001b[1m\u001b[2m244.56 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 69.04 kB\u001b[22m\n\u001b[32m✓ built in 7.72s\u001b[39m\n"
     }
   },
   "buildLog": [
     {
-      "timestamp": "2025-09-11T06:49:04.961Z",
+      "timestamp": "2025-09-16T16:39:04.567Z",
       "level": "info",
       "message": "Discovered 4 packages"
     },
     {
-      "timestamp": "2025-09-11T06:49:05.406Z",
+      "timestamp": "2025-09-16T16:39:04.797Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-11T06:49:18.505Z",
+      "timestamp": "2025-09-16T16:39:06.808Z",
       "level": "success",
-      "message": "Command completed successfully in 13100ms",
+      "message": "Command completed successfully in 2011ms",
       "package": "@unified-repo-analyzer/shared"
     },
     {
-      "timestamp": "2025-09-11T06:49:18.507Z",
+      "timestamp": "2025-09-16T16:39:06.809Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-11T06:49:28.268Z",
-      "level": "success",
-      "message": "Command completed successfully in 9761ms",
+      "timestamp": "2025-09-16T16:39:14.240Z",
+      "level": "warning",
+      "message": "Command failed, retrying (1/1)",
       "package": "@unified-repo-analyzer/backend"
     },
     {
-      "timestamp": "2025-09-11T06:49:28.269Z",
+      "timestamp": "2025-09-16T16:39:22.490Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-11T06:49:41.096Z",
-      "level": "success",
-      "message": "Command completed successfully in 12828ms",
+      "timestamp": "2025-09-16T16:39:26.527Z",
+      "level": "warning",
+      "message": "Command failed, retrying (1/1)",
       "package": "@unified-repo-analyzer/cli"
     },
     {
-      "timestamp": "2025-09-11T06:49:41.097Z",
+      "timestamp": "2025-09-16T16:39:31.405Z",
       "level": "info",
       "message": "Executing: npm run build",
       "package": "@unified-repo-analyzer/frontend"
     },
     {
-      "timestamp": "2025-09-11T06:49:54.273Z",
+      "timestamp": "2025-09-16T16:39:42.330Z",
       "level": "success",
-      "message": "Command completed successfully in 13176ms",
+      "message": "Command completed successfully in 10926ms",
       "package": "@unified-repo-analyzer/frontend"
     }
   ],
   "environment": {
-    "nodeVersion": "v24.6.0",
+    "nodeVersion": "v24.3.0",
     "platform": "win32",
     "arch": "x64",
     "cwd": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer"
   },
-  "suggestions": []
+  "suggestions": [
+    "Review failed package build logs for specific errors",
+    "Run `bun install --force` to refresh dependencies",
+    "Check TypeScript configuration in failed packages"
+  ]
 }
