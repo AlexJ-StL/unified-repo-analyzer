@@ -3,8 +3,11 @@
  */
 
 import request from 'supertest';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { getTestApp, setupTestServer } from '../../test-setup.js';
+import fs from 'node:fs/promises';
+
+vi.mock('node:fs/promises');
 
 describe('API Simple Integration Tests', () => {
   beforeAll(async () => {
@@ -17,11 +20,14 @@ describe('API Simple Integration Tests', () => {
 
   describe('Health Check', () => {
     it('should return health status', async () => {
+      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.unlink).mockResolvedValue(undefined);
+      vi.mocked(fs.stat).mockResolvedValue({} as any);
+
       const app = getTestApp();
       const response = await request(app).get('/health').expect(200);
 
-      expect(response.body).toHaveProperty('status');
-      expect(['healthy', 'degraded']).toContain(response.body.status);
+      expect(response.body).toHaveProperty('status', 'healthy');
     });
   });
 

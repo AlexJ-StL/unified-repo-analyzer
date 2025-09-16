@@ -239,6 +239,7 @@ export async function discoverRepository(
     language: primaryLanguage,
     languages,
     frameworks: frameworks.map((f) => f.name),
+    files: fileInfos,
     fileCount: traversalResult.files.length,
     directoryCount: traversalResult.directories.length,
     totalSize: traversalResult.totalSize,
@@ -282,7 +283,7 @@ export async function discoverRepository(
 
     metadata: {
       analysisMode: 'standard',
-      processingTime,
+      analysisTime: processingTime,
     },
   };
 

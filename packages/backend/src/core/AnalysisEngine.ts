@@ -280,7 +280,7 @@ export class AnalysisEngine {
         }
 
         const processingTime = Date.now() - startTime;
-        analysis.metadata.processingTime = processingTime;
+        analysis.metadata.analysisTime = processingTime;
 
         // Cache the result
         logger.debug(

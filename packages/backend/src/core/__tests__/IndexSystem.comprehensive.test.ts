@@ -6,6 +6,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared/src/types/analysis';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('node:fs');
 import { IndexSystem } from '../IndexSystem.js';
 
 describe('IndexSystem Comprehensive Tests', () => {

@@ -159,6 +159,7 @@ describe('ClaudeProvider', () => {
             'X-API-Key': 'test-key',
             'Anthropic-Version': '2023-06-01',
           },
+          timeout: 60000,
         }
       );
 

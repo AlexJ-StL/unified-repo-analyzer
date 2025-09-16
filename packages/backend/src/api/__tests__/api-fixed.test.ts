@@ -6,8 +6,11 @@ import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockManager } from '../../../../../tests/MockManager.js';
 import { mockModule } from '../../../../../tests/setup-minimal-simple.js';
+import fs from 'node:fs/promises';
 
 // Mock the modules before importing the app
+vi.mock('node:fs/promises');
+
 mockModule('../../core/AnalysisEngine', () => ({
   AnalysisEngine: class MockAnalysisEngine {
     analyzeRepository = mockManager.mockFunction();
@@ -156,9 +159,13 @@ describe('Fixed API Integration Tests', () => {
 
   describe('Health Check', () => {
     it('should return status ok', async () => {
+      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.unlink).mockResolvedValue(undefined);
+      vi.mocked(fs.stat).mockResolvedValue({} as any);
+
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('status');
+      expect(response.body).toHaveProperty('status', 'healthy');
     });
   });
 

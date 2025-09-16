@@ -46,7 +46,7 @@ describe('Platform-Specific Integration Tests', () => {
       const result = await pathHandler.validatePath(testPath);
 
       expect(result.normalizedPath).toBe('C:\\Users\\TestUser\\Documents\\Project');
-      expect(result.isValid).toBe(false); // Path doesn't exist, but format should be valid
+      expect(result.isValid).toBe(true); // Path format is valid, even if it doesn't exist
       expect(result.errors.length).toBe(0); // No format errors
     });
 

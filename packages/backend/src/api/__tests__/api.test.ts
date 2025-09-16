@@ -7,6 +7,8 @@ import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock } from 'vitest-mock-extended';
 
+vi.mock('node:fs/promises');
+
 // Import types for proper typing
 import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
 import type { IndexSystem } from '../../core/IndexSystem.js';

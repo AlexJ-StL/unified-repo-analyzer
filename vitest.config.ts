@@ -4,7 +4,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node',
+    environmentMatchGlobs: [
+      ['packages/frontend/**', 'jsdom'],
+      ['packages/**', 'node'],
+    ],
     pool: 'threads',
     setupFiles: ['./tests/setup-minimal.ts'],
     include: ['packages/**/*.test.ts', 'packages/**/*.spec.ts'],

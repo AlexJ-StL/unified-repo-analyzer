@@ -50,6 +50,7 @@ export interface RepositoryAnalysis {
   language: string;
   languages: string[];
   frameworks: string[];
+  files: FileInfo[];
   fileCount: number;
   directoryCount: number;
   totalSize: number;
@@ -83,10 +84,10 @@ export interface RepositoryAnalysis {
     potentialIssues: string[];
   };
 
-  metadata: {
+    metadata: {
     analysisMode: AnalysisMode;
     llmProvider?: string;
-    processingTime: number;
+    analysisTime: number;
     tokenUsage?: TokenUsage;
   };
 }

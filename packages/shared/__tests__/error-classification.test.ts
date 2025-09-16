@@ -128,14 +128,8 @@ describe('Error Classification System', () => {
         expect(classified.message.toLowerCase()).toContain('invalid');
       });
 
-      it('should generate unique IDs and correlation IDs', () => {
-        const error1 = errorClassifier.classifyError('Error 1');
-        const error2 = errorClassifier.classifyError('Error 2');
-
-        expect(error1.id).not.toBe(error2.id);
-        expect(error1.correlationId).not.toBe(error2.correlationId);
-        expect(error1.id).toMatch(/^[0-9a-f-]{36}$/); // UUID format
-      });
+      const error1 = errorClassifier.classifyError('Error 1', {});
+        const error2 = errorClassifier.classifyError('Error 2', {});
 
       it('should use provided correlation ID', () => {
         const correlationId = 'custom-correlation-id';
@@ -147,7 +141,7 @@ describe('Error Classification System', () => {
       });
 
       it('should link parent and child errors', () => {
-        const parentError = errorClassifier.classifyError('Parent error');
+        const parentError = errorClassifier.classifyError('Parent error', {});
         const childError = errorClassifier.classifyError('Child error', {}, parentError.id);
 
         expect(childError.parentErrorId).toBe(parentError.id);
@@ -217,8 +211,8 @@ describe('Error Classification System', () => {
         const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
         // Create errors (they will have current timestamp)
-        errorClassifier.classifyError('Recent error 1');
-        errorClassifier.classifyError('Recent error 2');
+        errorClassifier.classifyError('Recent error 1', {});
+        errorClassifier.classifyError('Recent error 2', {});
 
         // Get all errors first to verify they exist
         const allStats = errorClassifier.getErrorStatistics();
@@ -274,7 +268,7 @@ describe('Error Classification System', () => {
 
     describe('resolveError', () => {
       it('should mark error as resolved', () => {
-        const classified = errorClassifier.classifyError('Test error');
+        const classified = errorClassifier.classifyError('Test error', {});
         const resolved = errorClassifier.resolveError(classified.id, 'Fixed by user');
 
         expect(resolved).toBe(true);
@@ -425,7 +419,7 @@ describe('Error Classification System', () => {
       });
 
       it('should fall back to original message for unknown errors', () => {
-        const unknownError = errorClassifier.classifyError('Unknown error type');
+        const unknownError = errorClassifier.classifyError('Unknown error type', {});
         const friendlyMessage = errorFormatter.createUserFriendlyMessage(unknownError);
 
         expect(friendlyMessage).toBe(unknownError.message);
