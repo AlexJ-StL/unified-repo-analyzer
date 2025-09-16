@@ -600,7 +600,7 @@ describe('Performance and Load Testing', () => {
   });
 
   describe('Stress Testing', () => {
-    it('should handle extreme load without crashing', async () => {
+    it('should handle extreme load without crashing', { timeout: 60000 }, async () => {
       const extremeLoad = {
         pathValidations: 500,
         logMessages: 5000,

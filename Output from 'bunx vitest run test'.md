@@ -3,849 +3,1808 @@
 *This is what I could copy from the terminal. It is incomplete because the terminal only saves the last 1000 lines or something like that. If you need the first part of the tests I can change the setting to capture more lines and re-run the tests.*
 
 ```Bash
-etadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","fileCount":5,"totalSize":931,"languageCount":3,"duration":"37ms"}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Metrics Collection Performance > should collect metrics without significant overhead
-{"timestamp":"2025-09-15 22:48:12.639","level":"INFO","component":"analysis-engine","requestId":"e0d3ebed-ed03-4145-aa16-7d25001c1dfc","message":"Repository analysis completed successfully","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","fileCount":5,"totalSize":931,"processingTime":"43ms","analysisMode":"standard","cacheHit":false}}
-{"timestamp":"2025-09-15 22:48:12.640","level":"INFO","component":"analysis-engine","requestId":"e31c5ed5-e3a4-474a-b654-a7563c727bb1","message":"Analysis completed: C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","metadata":{"fileCount":5,"totalSize":931,"duration":43,"cacheHit":false,"requestId":"e0d3ebed-ed03-4145-aa16-7d25001c1dfc"}}
-{"timestamp":"2025-09-15 22:48:12.641","level":"INFO","component":"analysis-engine","requestId":"49cc8102-aed1-4e71-9aa9-6024da83dc70","message":"Performance: repository_analysis","metadata":{"duration":"43ms","repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","fileCount":5,"totalSizeBytes":931,"analysisMode":"standard","languageCount":3}}
-
-
-stdout | packages/backend/src/__tests__/logging-system-integration.test.ts > Logging System Integration Tests > Log Format and Content Validation > should include proper error details in error logs
-{"timestamp":"2025-09-15 22:48:12.696","level":"ERROR","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Error occurred during test","metadata":{"context":"unit-test","operation":"error-logging"},"error":{"name":"TestError","message":"Test error message","stack":"TestError: Test error message\n    at test location"}}
-
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts (7 tests | 7 failed) 57ms
-   × useProviders > should initialize with empty providers and no loading/error state 35ms
-     → document is not defined
-   × useProviders > should fetch providers successfully 5ms
-     → document is not defined
-   × useProviders > should handle fetch providers error 2ms
-     → document is not defined
-   × useProviders > should test provider successfully 3ms
-     → document is not defined
-   × useProviders > should handle test provider error 2ms
-     → document is not defined
-   × useProviders > should fetch provider models successfully 2ms
-     → document is not defined
-   × useProviders > should handle fetch provider models error 2ms
-     → document is not defined
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Metrics Collection Performance > should collect metrics without significant overhead
-{"timestamp":"2025-09-15 22:48:12.797","level":"INFO","component":"analysis-engine","requestId":"05fb7da6-03f5-41c5-9d4e-731edddde5ea","message":"Analysis started: C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","metadata":{"mode":"standard","requestId":"588f8ab7-af45-4f72-b8b5-f645cbe2155b"}}
-{"timestamp":"2025-09-15 22:48:12.798","level":"INFO","component":"analysis-engine","requestId":"588f8ab7-af45-4f72-b8b5-f645cbe2155b","message":"Starting repository analysis","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","analysisMode":"standard","options":{"maxFiles":100,"maxLinesPerFile":1000,"includeTree":true}}}
-info: New analysis request for: C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\backend\src\__tests__\test-repo-perf {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:12.801Z"}
-{"timestamp":"2025-09-15 22:48:12.802","level":"INFO","component":"analysis-engine","requestId":"588f8ab7-af45-4f72-b8b5-f645cbe2155b","message":"Analysis completed from cache","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","fileCount":5,"totalSize":931,"duration":"6ms","cacheHit":true}}
-{"timestamp":"2025-09-15 22:48:12.803","level":"INFO","component":"analysis-engine","requestId":"cf405223-cdc8-404e-93b6-bb2935287194","message":"Analysis completed: C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\test-repo-perf","metadata":{"fileCount":5,"totalSize":931,"duration":6,"cacheHit":true,"requestId":"588f8ab7-af45-4f72-b8b5-f645cbe2155b"}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Metrics Collection Performance > should collect metrics without significant overhead
-Without metrics: 45.67ms
-With metrics: 7.39ms
-Overhead: -83.81%
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Metrics Collection Performance > should handle high-frequency metric recording   
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:12.806Z"}
-info: All pending requests cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:12.806Z"}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Metrics Collection Performance > should handle high-frequency metric recording   
-Recorded 10000 metrics in 29.98ms
-Rate: 333590 metrics/second
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:12.838Z"}
-info: All pending requests cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:12.839Z"}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.844","level":"INFO","component":"log-management","requestId":"3ec849ec-7d95-4577-aa53-8364d353410a","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-
-stdout | packages/backend/src/__tests__/logging-system-integration.test.ts > Logging System Integration Tests > Log Format and Content Validation > should handle special characters and unicode in logs
-{"timestamp":"2025-09-15 22:48:12.889","level":"INFO","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Special characters test","metadata":{"unicode":"🚀 Unicode test with émojis and spëcial chars","quotes":"String with \"quotes\" and 'apostrophes'","newlines":"String with\nnewlines\nand\ttabs","backslashes":"Path\\with\\backslashes","nullValue":null}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.899","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-success-001","message":"Starting repository analysis workflow","metadata":{"repoPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo","workflow":"complete-analysis"}}
-{"timestamp":"2025-09-15 22:48:12.900","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Validating repository path","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo"}}
-{"timestamp":"2025-09-15 22:48:12.906","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"format_validation","percentage":10,"message":"Validating path format..."}}
-{"timestamp":"2025-09-15 22:48:12.910","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"format_validation","percentage":20,"message":"Path format validation completed"}}
-{"timestamp":"2025-09-15 22:48:12.910","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"normalization","percentage":30,"message":"Normalizing path..."}}
-{"timestamp":"2025-09-15 22:48:12.911","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"normalization","percentage":40,"message":"Path normalization completed"}}
-{"timestamp":"2025-09-15 22:48:12.912","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"existence_check","percentage":50,"message":"Checking path existence..."}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.914","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"existence_check","percentage":60,"message":"Path existence check completed"}}
-{"timestamp":"2025-09-15 22:48:12.915","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"permission_check","percentage":70,"message":"Checking permissions..."}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.919","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"permission_check","percentage":80,"message":"Permission check completed"}}
-{"timestamp":"2025-09-15 22:48:12.920","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"finalization","percentage":90,"message":"Finalizing validation..."}}
-{"timestamp":"2025-09-15 22:48:12.920","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Path validation progress","metadata":{"stage":"completed","percentage":100,"message":"Path validation completed"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.936","level":"INFO","component":"path-handler","requestId":"repo-analysis-success-001","message":"Repository path validated successfully","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo","isValid":true,"isDirectory":true}}
-{"timestamp":"2025-09-15 22:48:12.936","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-success-001","message":"Checking repository permissions","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.941","level":"INFO","component":"path-handler","requestId":"repo-analysis-success-001","message":"Repository permissions verified","metadata":{"canRead":true,"canWrite":true,"canExecute":true}}
-{"timestamp":"2025-09-15 22:48:12.941","level":"DEBUG","component":"analysis-engine","requestId":"repo-analysis-success-001","message":"Analyzing repository structure","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.954","level":"INFO","component":"analysis-engine","requestId":"repo-analysis-success-001","message":"Repository structure analyzed","metadata":{"totalFiles":9,"totalDirectories":4,"languages":["Markdown","JSON","JavaScript"]}}
-{"timestamp":"2025-09-15 22:48:12.954","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"Processing file","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\.gitignore"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.961","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"File processed successfully","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\.gitignore","size":24,"type":"unknown"}}
-{"timestamp":"2025-09-15 22:48:12.962","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"Processing file","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\docs\\API.md"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.967","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"File processed successfully","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\docs\\API.md","size":19,"type":".md"}}
-{"timestamp":"2025-09-15 22:48:12.967","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"Processing file","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\package.json"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:12.972","level":"DEBUG","component":"file-processor","requestId":"repo-analysis-success-001","message":"File processed successfully","metadata":{"file":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo\\package.json","size":99,"type":".json"}}
-{"timestamp":"2025-09-15 22:48:12.973","level":"DEBUG","component":"report-generator","requestId":"repo-analysis-success-001","message":"Generating analysis report"}
-{"timestamp":"2025-09-15 22:48:12.974","level":"INFO","component":"report-generator","requestId":"repo-analysis-success-001","message":"Analysis report generated","metadata":{"repoPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\sample-repo","totalFiles":9,"totalDirectories":4,"languages":["Markdown","JSON","JavaScript"],"analysisTime":"2025-09-16T03:48:12.973Z","status":"completed"}}
-{"timestamp":"2025-09-15 22:48:12.974","level":"DEBUG","component":"cleanup-service","requestId":"repo-analysis-success-001","message":"Performing cleanup"}       
-{"timestamp":"2025-09-15 22:48:12.974","level":"INFO","component":"log-management","requestId":"repo-analysis-success-001","message":"Starting log cleanup","metadata":{"retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1}}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:13.015","level":"INFO","component":"log-management","requestId":"repo-analysis-success-001","message":"Log cleanup completed","metadata":{"filesRemoved":0,"spaceFreed":0,"errors":[],"duration":"40ms","totalFiles":1,"filesChecked":1}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:13.017","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-success-001","message":"Repository analysis workflow completed successfully","metadata":{"requestId":"repo-analysis-success-001","duration":"< 1s","filesAnalyzed":9,"cleanupResult":{"filesRemoved":0,"spaceFreed":0}}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish
-{"timestamp":"2025-09-15 22:48:13.037","level":"INFO","component":"log-management","requestId":"repo-analysis-success-001","message":"Log management service stopped"}
-
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle repository analysis with path validation errors
-{"timestamp":"2025-09-15 22:48:13.153","level":"INFO","component":"log-management","requestId":"repo-analysis-success-001","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle repository analysis with path validation errors
-{"timestamp":"2025-09-15 22:48:13.154","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-error-002","message":"Starting repository analysis with invalid path","metadata":{"repoPath":"C:\\invalid\\path\\with\\reserved\\CON\\name","workflow":"error-handling"}}
-{"timestamp":"2025-09-15 22:48:13.155","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-error-002","message":"Validating repository path","metadata":{"path":"C:\\invalid\\path\\with\\reserved\\CON\\name"}}
-
-stdout | packages/backend/src/__tests__/logging-system-integration.test.ts > Logging System Integration Tests > Log Format and Content Validation > should validate log entry structure consistency
-{"timestamp":"2025-09-15 22:48:13.166","level":"DEBUG","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Debug message","metadata":{"debugData":true}}
-{"timestamp":"2025-09-15 22:48:13.167","level":"INFO","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Info message","metadata":{"infoData":"value"}}
-{"timestamp":"2025-09-15 22:48:13.167","level":"WARN","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Warning message","metadata":{"warnData":123}}
-{"timestamp":"2025-09-15 22:48:13.168","level":"ERROR","component":"unified-repo-analyzer","requestId":"error-correlation-789","message":"Error message","metadata":{"errorData":false},"error":{"name":"Error","message":"Test","stack":"Error: Test\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\logging-system-integration.test.ts:757:37\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle repository analysis with path validation errors
-{"timestamp":"2025-09-15 22:48:13.159","level":"WARN","component":"path-handler","requestId":"repo-analysis-error-002","message":"Repository path validation failed","metadata":{"path":"C:\\invalid\\path\\with\\reserved\\CON\\name","errors":[{"code":"RESERVED_NAME","message":"Path contains Windows reserved name: CON","suggestions":["Rename the file or directory to avoid reserved names"]}]}}
-{"timestamp":"2025-09-15 22:48:13.165","level":"DEBUG","component":"error-handler","requestId":"repo-analysis-error-002","message":"Processing validation errors","metadata":{"errorCount":1}}
-{"timestamp":"2025-09-15 22:48:13.167","level":"INFO","component":"error-handler","requestId":"repo-analysis-error-002","message":"User-friendly error messages generated","metadata":{"errorCount":1,"errorTypes":["RESERVED_NAME"]}}
-{"timestamp":"2025-09-15 22:48:13.190","level":"ERROR","component":"workflow-manager","requestId":"repo-analysis-error-002","message":"Repository analysis workflow terminated due to path validation errors","metadata":{"requestId":"repo-analysis-error-002","originalPath":"C:\\invalid\\path\\with\\reserved\\CON\\name","errorCount":1,"userErrors":[{"type":"path_validation_error","code":"RESERVED_NAME","message":"Path contains Windows reserved name: CON","details":"Reserved names: CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9, LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, LPT9","suggestions":["Rename the file or directory to avoid reserved names"],"userMessage":"The path contains a reserved Windows name. Please rename the file or folder."}]},"error":{"name":"Error","message":"Path validation failed","stack":"Error: Path validation failed\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\end-to-end-workflows.test.ts:312:9\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle repository analysis with path validation errors
-{"timestamp":"2025-09-15 22:48:13.201","level":"INFO","component":"log-management","requestId":"repo-analysis-error-002","message":"Log management service stopped"}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.220","level":"INFO","component":"log-management","requestId":"repo-analysis-error-002","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.251","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-timeout-003","message":"Starting repository analysis with timeout testing","metadata":{"repoPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\timeout-test-repo","workflow":"timeout-handling"}}
-{"timestamp":"2025-09-15 22:48:13.260","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Validating repository path with timeout","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\timeout-test-repo","timeoutMs":500}}
-{"timestamp":"2025-09-15 22:48:13.262","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"format_validation","percentage":10}}
-{"timestamp":"2025-09-15 22:48:13.266","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"format_validation","percentage":20}}
-{"timestamp":"2025-09-15 22:48:13.266","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"normalization","percentage":30}}
-{"timestamp":"2025-09-15 22:48:13.267","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"normalization","percentage":40}}
-{"timestamp":"2025-09-15 22:48:13.268","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"existence_check","percentage":50}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.270","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"existence_check","percentage":60}}
-{"timestamp":"2025-09-15 22:48:13.270","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"permission_check","percentage":70}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.277","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"permission_check","percentage":80}}
-{"timestamp":"2025-09-15 22:48:13.279","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"finalization","percentage":90}}
-{"timestamp":"2025-09-15 22:48:13.280","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation progress (timeout test)","metadata":{"stage":"completed","percentage":100}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.282","level":"INFO","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation completed within timeout","metadata":{"isValid":true,"timeoutMs":500}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.293","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Testing timeout scenario","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\timeout-test-repo\\slow-file.txt","timeoutMs":100}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.407","level":"WARN","component":"path-handler","requestId":"repo-analysis-timeout-003","message":"Path validation timed out as expected","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\timeout-test-repo\\slow-file.txt","timeoutMs":100,"errors":["Path validation timed out after 100ms"]}}
-{"timestamp":"2025-09-15 22:48:13.408","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-timeout-003","message":"Timeout handling test completed","metadata":{"requestId":"repo-analysis-timeout-003","workflow":"timeout-handling"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle timeout scenarios gracefully
-{"timestamp":"2025-09-15 22:48:13.409","level":"INFO","component":"log-management","requestId":"repo-analysis-timeout-003","message":"Log management service stopped"}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.489","level":"INFO","component":"log-management","requestId":"repo-analysis-timeout-003","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.516","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-cancel-004","message":"Starting repository analysis with cancellation testing","metadata":{"repoPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\cancel-test-repo","workflow":"cancellation-handling"}}
-{"timestamp":"2025-09-15 22:48:13.516","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Starting path validation with cancellation support","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\cancel-test-repo"}}
-{"timestamp":"2025-09-15 22:48:13.517","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"format_validation","percentage":10}}
-{"timestamp":"2025-09-15 22:48:13.517","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"format_validation","percentage":20}}
-{"timestamp":"2025-09-15 22:48:13.518","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"normalization","percentage":30}}
-{"timestamp":"2025-09-15 22:48:13.518","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"normalization","percentage":40}}
-{"timestamp":"2025-09-15 22:48:13.518","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"existence_check","percentage":50}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.519","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"existence_check","percentage":60}}
-{"timestamp":"2025-09-15 22:48:13.519","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"permission_check","percentage":70}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.521","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"permission_check","percentage":80}}
-{"timestamp":"2025-09-15 22:48:13.521","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"finalization","percentage":90}}
-{"timestamp":"2025-09-15 22:48:13.521","level":"DEBUG","component":"path-handler","requestId":"repo-analysis-cancel-004","message":"Path validation progress (cancellation test)","metadata":{"stage":"completed","percentage":100}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.524","level":"INFO","component":"workflow-manager","requestId":"repo-analysis-cancel-004","message":"Cancellation handling test completed","metadata":{"requestId":"repo-analysis-cancel-004","wasCancelled":false}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.525","level":"INFO","component":"log-management","requestId":"repo-analysis-cancel-004","message":"Log management service stopped"}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle cancellation scenarios
-{"timestamp":"2025-09-15 22:48:13.571","level":"DEBUG","component":"workflow-manager","requestId":"repo-analysis-cancel-004","message":"Cancelling path validation"}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Settings Tab Path Input Workflow > should simulate settings tab path validation workflow
-{"timestamp":"2025-09-15 22:48:13.621","level":"INFO","component":"log-management","requestId":"repo-analysis-cancel-004","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Settings Tab Path Input Workflow > should simulate settings tab path validation workflow
-{"timestamp":"2025-09-15 22:48:13.622","level":"INFO","component":"frontend","requestId":"settings-workflow-001","message":"User entered path in settings tab","metadata":{"userInput":"C:\\Users\\TestUser\\Documents\\Projects","source":"settings-tab"}}
-{"timestamp":"2025-09-15 22:48:13.623","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Performing real-time path validation","metadata":{"path":"C:\\Users\\TestUser\\Documents\\Projects"}}
-{"timestamp":"2025-09-15 22:48:13.625","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"format_validation","percentage":10}}
-{"timestamp":"2025-09-15 22:48:13.626","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"format_validation","percentage":20}}
-{"timestamp":"2025-09-15 22:48:13.626","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"normalization","percentage":30}}
-{"timestamp":"2025-09-15 22:48:13.627","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"normalization","percentage":40}}
-{"timestamp":"2025-09-15 22:48:13.627","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"existence_check","percentage":50}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Settings Tab Path Input Workflow > should simulate settings tab path validation workflow
-{"timestamp":"2025-09-15 22:48:13.629","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"existence_check","percentage":60}}
-{"timestamp":"2025-09-15 22:48:13.629","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"finalization","percentage":90}}
-{"timestamp":"2025-09-15 22:48:13.629","level":"DEBUG","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation progress","metadata":{"stage":"completed","percentage":100}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Settings Tab Path Input Workflow > should simulate settings tab path validation workflow
-{"timestamp":"2025-09-15 22:48:13.630","level":"INFO","component":"settings-validator","requestId":"settings-workflow-001","message":"Real-time validation feedback generated","metadata":{"isValid":true,"exists":false,"canRead":false,"errors":[],"warnings":[]}}
-{"timestamp":"2025-09-15 22:48:13.630","level":"WARN","component":"settings-manager","requestId":"settings-workflow-001","message":"User attempted to save invalid path","metadata":{"path":"C:\\Users\\TestUser\\Documents\\Projects","errors":[]}}
-{"timestamp":"2025-09-15 22:48:13.630","level":"INFO","component":"settings-tab","requestId":"settings-workflow-001","message":"Settings tab workflow completed","metadata":{"requestId":"settings-workflow-001","finalPath":"C:\\Users\\TestUser\\Documents\\Projects","wasValid":true}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Settings Tab Path Input Workflow > should simulate settings tab path validation workflow
-{"timestamp":"2025-09-15 22:48:13.631","level":"INFO","component":"log-management","requestId":"settings-workflow-001","message":"Log management service stopped"} 
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.670","level":"INFO","component":"log-management","requestId":"settings-workflow-001","message":"Log management service started","metadata":{"logDirectory":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows","retentionPolicy":{"maxAge":7,"maxSize":"50MB","maxFiles":10,"cleanupInterval":1},"monitoringEnabled":true}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.746","level":"INFO","component":"frontend","requestId":"analyze-workflow-001","message":"User initiated repository analysis","metadata":{"selectedPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\analyze-repo","source":"analyze-tab"}}
-{"timestamp":"2025-09-15 22:48:13.746","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Performing pre-analysis validation","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\analyze-repo"}}
-{"timestamp":"2025-09-15 22:48:13.747","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"format_validation","percentage":10,"message":"Validating path format..."}}
-{"timestamp":"2025-09-15 22:48:13.747","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"format_validation","percentage":20,"message":"Path format validation completed"}}
-{"timestamp":"2025-09-15 22:48:13.747","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"normalization","percentage":30,"message":"Normalizing path..."}}
-{"timestamp":"2025-09-15 22:48:13.748","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"normalization","percentage":40,"message":"Path normalization completed"}}
-{"timestamp":"2025-09-15 22:48:13.748","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"existence_check","percentage":50,"message":"Checking path existence..."}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.749","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"existence_check","percentage":60,"message":"Path existence check completed"}}
-{"timestamp":"2025-09-15 22:48:13.749","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"permission_check","percentage":70,"message":"Checking permissions..."}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.751","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"permission_check","percentage":80,"message":"Permission check completed"}}
-{"timestamp":"2025-09-15 22:48:13.751","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"finalization","percentage":90,"message":"Finalizing validation..."}}
-{"timestamp":"2025-09-15 22:48:13.751","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation progress","metadata":{"stage":"completed","percentage":100,"message":"Path validation completed"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.752","level":"DEBUG","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Verifying analysis permissions","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\analyze-repo"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.755","level":"INFO","component":"analyze-validator","requestId":"analyze-workflow-001","message":"Pre-analysis validation completed","metadata":{"isValid":true,"canRead":true}}
-{"timestamp":"2025-09-15 22:48:13.755","level":"INFO","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Starting repository analysis process","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\analyze-repo","analysisId":"analyze-workflow-001"}}
-{"timestamp":"2025-09-15 22:48:13.756","level":"DEBUG","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Analysis progress update","metadata":{"step":"File Discovery","percentage":20,"analysisId":"analyze-workflow-001"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.776","level":"DEBUG","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Analysis progress update","metadata":{"step":"Language Detection","percentage":40,"analysisId":"analyze-workflow-001"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.794","level":"DEBUG","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Analysis progress update","metadata":{"step":"Dependency Analysis","percentage":60,"analysisId":"analyze-workflow-001"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.822","level":"DEBUG","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Analysis progress update","metadata":{"step":"Code Structure Analysis","percentage":80,"analysisId":"analyze-workflow-001"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.849","level":"DEBUG","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Analysis progress update","metadata":{"step":"Report Generation","percentage":100,"analysisId":"analyze-workflow-001"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.871","level":"INFO","component":"analysis-engine","requestId":"analyze-workflow-001","message":"Repository analysis completed successfully","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\test-e2e-workflows\\analyze-repo","totalFiles":15,"languages":["JavaScript","TypeScript","JSON"],"linesOfCode":1250,"dependencies":8,"analysisTime":"2025-09-16T03:48:13.870Z","status":"completed"}}
-{"timestamp":"2025-09-15 22:48:13.871","level":"INFO","component":"frontend","requestId":"analyze-workflow-001","message":"Analysis results presented to user","metadata":{"analysisId":"analyze-workflow-001","resultsSummary":{"files":15,"languages":3,"loc":1250}}}
-{"timestamp":"2025-09-15 22:48:13.871","level":"INFO","component":"analyze-tab","requestId":"analyze-workflow-001","message":"Analyze tab workflow completed","metadata":{"requestId":"analyze-workflow-001","success":true,"duration":"< 1s"}}
-
-stdout | packages/backend/src/__tests__/end-to-end-workflows.test.ts > End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow
-{"timestamp":"2025-09-15 22:48:13.872","level":"INFO","component":"log-management","requestId":"analyze-workflow-001","message":"Log management service stopped"}  
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-{"timestamp":"2025-09-15 22:48:13.632","level":"INFO","component":"analysis-engine","requestId":"a92b91c1-0f7e-4246-b120-3766f35c5cf9","message":"Analysis started: C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","metadata":{"mode":"standard","requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9"}}
-{"timestamp":"2025-09-15 22:48:13.633","level":"INFO","component":"analysis-engine","requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9","message":"Starting repository analysis","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","analysisMode":"standard","options":{"maxFiles":1000,"maxLinesPerFile":5000,"includeTree":true}}}
-info: New analysis request for: C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\backend\src\__tests__\large-test-repo {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:13.633Z"}
-{"timestamp":"2025-09-15 22:48:13.634","level":"INFO","component":"analysis-engine","requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9","message":"Starting repository discovery","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","discoveryOptions":{"maxFiles":1000,"maxLinesPerFile":5000,"includeTree":true}}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-{"timestamp":"2025-09-15 22:48:13.639","level":"INFO","component":"filesystem","requestId":"b6135d05-6a9b-464d-9c15-648684858439","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","options":{"maxDepth":0,"maxFiles":1000,"ignorePatterns":40,"hasFileFilter":false}}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-{"timestamp":"2025-09-15 22:48:13.721","level":"INFO","component":"filesystem","requestId":"b6135d05-6a9b-464d-9c15-648684858439","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","filesFound":122,"directoriesFound":6,"totalSize":193672,"skippedFiles":0,"duration":"83ms"}}
-{"timestamp":"2025-09-15 22:48:13.721","level":"INFO","component":"filesystem","requestId":"ca350938-6dff-4c7d-8007-1a4dc5528733","message":"Performance: directory_traversal","metadata":{"duration":"83ms","path":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","filesCount":122,"directoriesCount":6,"totalSizeBytes":193672}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-{"timestamp":"2025-09-15 22:48:13.838","level":"INFO","component":"analysis-engine","requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9","message":"Repository discovery completed","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","fileCount":122,"totalSize":193672,"languageCount":2,"duration":"202ms"}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently      
-{"timestamp":"2025-09-15 22:48:13.875","level":"INFO","component":"analysis-engine","requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9","message":"Repository analysis completed successfully","metadata":{"repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","fileCount":122,"totalSize":193672,"processingTime":"240ms","analysisMode":"standard","cacheHit":false}}
-{"timestamp":"2025-09-15 22:48:13.879","level":"INFO","component":"analysis-engine","requestId":"878ff739-797b-430d-819d-78a19e82d8a6","message":"Analysis completed: C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","metadata":{"fileCount":122,"totalSize":193672,"duration":240,"cacheHit":false,"requestId":"5cb625af-d613-4b81-a0ca-a2f5012c88e9"}}
-{"timestamp":"2025-09-15 22:48:13.879","level":"INFO","component":"analysis-engine","requestId":"03612f34-d7f4-4343-bda1-00dc9eb46e86","message":"Performance: repository_analysis","metadata":{"duration":"240ms","repositoryPath":"C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\__tests__\\large-test-repo","fileCount":122,"totalSizeBytes":193672,"analysisMode":"standard","languageCount":2}}
-
-stdout | packages/backend/src/__tests__/performance.test.ts > Performance Tests > Large Repository Performance > should handle large repositories efficiently
-Large repository analysis completed in: 247.67ms
-Files analyzed: 122
-Performance: 492.58 files/second
-
- ✓ packages/backend/src/providers/__tests__/ProviderRegistry.models.test.ts (5 tests) 870ms
-   ✓ ProviderRegistry Model Selection > fetchProviderModels > should handle OpenRouter provider  826ms
- ✓ packages/backend/src/__tests__/end-to-end-workflows.test.ts (6 tests) 1578ms
-   ✓ End-to-End User Workflow Tests > Complete Repository Analysis Workflow > should handle successful repository analysis from start to finish  332ms
-   ✓ End-to-End User Workflow Tests > Analyze Tab Path Input Workflow > should simulate analyze tab repository selection workflow  727ms
- ✓ packages/backend/src/__tests__/performance.test.ts (12 tests) 3720ms
-   ✓ Performance Tests > Cache Performance > should respect TTL settings  335ms
-   ✓ Performance Tests > Batch Processing Performance > should process multiple repositories efficiently  657ms
-   ✓ Performance Tests > Large Repository Performance > should handle large repositories efficiently  1542ms
- ✓ packages/backend/src/__tests__/logging-system-integration.test.ts (14 tests) 3827ms
-   ✓ Logging System Integration Tests > Logging Performance Under Load > should handle high-volume logging without blocking  738ms
-   ✓ Logging System Integration Tests > Logging Performance Under Load > should handle concurrent logging from multiple components  627ms
-   ✓ Logging System Integration Tests > Log Format and Content Validation > should validate log entry structure consistency  592ms
-   ✓ Logging System Integration Tests > HTTP Request/Response Logging Integration > should log HTTP requests with proper correlation  647ms
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should traverse a directory and return files and directories
-{"timestamp":"2025-09-15 22:48:14.888","level":"INFO","component":"filesystem","requestId":"02d26976-5d47-4034-ba7f-bbf2895a2933","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994494767","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should traverse a directory and return files and directories
-{"timestamp":"2025-09-15 22:48:14.918","level":"INFO","component":"filesystem","requestId":"02d26976-5d47-4034-ba7f-bbf2895a2933","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994494767","filesFound":7,"directoriesFound":6,"totalSize":141,"skippedFiles":0,"duration":"30ms"}}
-{"timestamp":"2025-09-15 22:48:14.936","level":"INFO","component":"filesystem","requestId":"2f533db6-c024-41e3-962d-032395570034","message":"Performance: directory_traversal","metadata":{"duration":"30ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994494767","filesCount":7,"directoriesCount":6,"totalSizeBytes":141}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect maxDepth option
-{"timestamp":"2025-09-15 22:48:15.171","level":"INFO","component":"filesystem","requestId":"89750908-7c84-47cc-bf94-0c6de12e6020","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495046","options":{"maxDepth":1,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect maxDepth option
-{"timestamp":"2025-09-15 22:48:15.199","level":"INFO","component":"filesystem","requestId":"89750908-7c84-47cc-bf94-0c6de12e6020","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495046","filesFound":3,"directoriesFound":4,"totalSize":54,"skippedFiles":0,"duration":"27ms"}}
-{"timestamp":"2025-09-15 22:48:15.219","level":"INFO","component":"filesystem","requestId":"fbb37062-76e4-4734-8700-bf84d52051c8","message":"Performance: directory_traversal","metadata":{"duration":"27ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495046","filesCount":3,"directoriesCount":4,"totalSizeBytes":54}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect maxFiles option
-{"timestamp":"2025-09-15 22:48:15.318","level":"INFO","component":"filesystem","requestId":"76617aaa-8193-48d2-921d-4756ab9164c3","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495301","options":{"maxDepth":0,"maxFiles":2,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect maxFiles option
-{"timestamp":"2025-09-15 22:48:15.327","level":"INFO","component":"filesystem","requestId":"76617aaa-8193-48d2-921d-4756ab9164c3","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495301","filesFound":2,"directoriesFound":2,"totalSize":22,"skippedFiles":0,"duration":"9ms"}}
-{"timestamp":"2025-09-15 22:48:15.328","level":"INFO","component":"filesystem","requestId":"752ca52b-8772-4f94-a199-453b3f7feeca","message":"Performance: directory_traversal","metadata":{"duration":"9ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495301","filesCount":2,"directoriesCount":2,"totalSizeBytes":22}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect ignorePatterns option
-{"timestamp":"2025-09-15 22:48:15.372","level":"INFO","component":"filesystem","requestId":"1db4ce91-239f-4d73-9732-4d6495115cab","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495337","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":3,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect ignorePatterns option
-{"timestamp":"2025-09-15 22:48:15.398","level":"INFO","component":"filesystem","requestId":"1db4ce91-239f-4d73-9732-4d6495115cab","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495337","filesFound":6,"directoriesFound":4,"totalSize":124,"skippedFiles":0,"duration":"26ms"}}
-{"timestamp":"2025-09-15 22:48:15.399","level":"INFO","component":"filesystem","requestId":"f2c5553b-6b16-4b0e-804a-1712307993d7","message":"Performance: directory_traversal","metadata":{"duration":"26ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495337","filesCount":6,"directoriesCount":4,"totalSizeBytes":124}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect fileFilter option
-{"timestamp":"2025-09-15 22:48:15.433","level":"INFO","component":"filesystem","requestId":"4f460202-202f-4dac-9b09-b59e144f4187","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495414","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":true}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should respect fileFilter option
-{"timestamp":"2025-09-15 22:48:15.442","level":"INFO","component":"filesystem","requestId":"4f460202-202f-4dac-9b09-b59e144f4187","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495414","filesFound":4,"directoriesFound":6,"totalSize":87,"skippedFiles":0,"duration":"9ms"}}
-{"timestamp":"2025-09-15 22:48:15.443","level":"INFO","component":"filesystem","requestId":"19998bb3-ba7e-42cd-b482-1d93ce44ad49","message":"Performance: directory_traversal","metadata":{"duration":"9ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495414","filesCount":4,"directoriesCount":6,"totalSizeBytes":87}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for non-existent directory 
-{"timestamp":"2025-09-15 22:48:15.549","level":"INFO","component":"filesystem","requestId":"b326ca6f-1f78-4d64-bf7a-c1b09c1535af","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for non-existent directory
-{"timestamp":"2025-09-15 22:48:15.612","level":"ERROR","component":"filesystem","requestId":"b326ca6f-1f78-4d64-bf7a-c1b09c1535af","message":"Directory traversal failed - directory not found","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","errorId":"3d06e28d-d297-40fb-9d4b-31229583b5df"},"error":{"name":"FileSystemError","message":"Directory not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","stack":"FileSystemError: Directory not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent\n    at traverseDirectory (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:199:23)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:121:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for non-existent directory 
-{"timestamp":"2025-09-15 22:48:15.617","level":"INFO","component":"filesystem","requestId":"97450f33-d351-44e8-b6f3-657173d5f077","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for non-existent directory 
-{"timestamp":"2025-09-15 22:48:15.621","level":"ERROR","component":"filesystem","requestId":"97450f33-d351-44e8-b6f3-657173d5f077","message":"Directory traversal failed - directory not found","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","errorId":"1216650a-fb26-47ad-af90-229fbb51d1fd"},"error":{"name":"FileSystemError","message":"Directory not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent","stack":"FileSystemError: Directory not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495457\\non-existent\n    at traverseDirectory (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:199:23)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:122:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for invalid path
-{"timestamp":"2025-09-15 22:48:15.657","level":"INFO","component":"filesystem","requestId":"4c91a835-3a1e-4a67-a656-119b94beda5f","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for invalid path
-{"timestamp":"2025-09-15 22:48:15.661","level":"ERROR","component":"filesystem","requestId":"4c91a835-3a1e-4a67-a656-119b94beda5f","message":"Directory traversal failed - not a directory","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","errorId":"93381e3a-8560-4dbd-896e-772d66b2c696"},"error":{"name":"FileSystemError","message":"Path is not a directory: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","stack":"FileSystemError: Path is not a directory: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json\n    at traverseDirectory (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:154:21)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:130:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}      
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for invalid path
-{"timestamp":"2025-09-15 22:48:15.662","level":"INFO","component":"filesystem","requestId":"0975dc6d-98af-405f-8ece-400b0e38d3bb","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > traverseDirectory > should throw FileSystemError for invalid path
-{"timestamp":"2025-09-15 22:48:15.664","level":"ERROR","component":"filesystem","requestId":"0975dc6d-98af-405f-8ece-400b0e38d3bb","message":"Directory traversal failed - not a directory","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","errorId":"e1c98b8c-c741-43dd-bfc2-47a5ce871173"},"error":{"name":"FileSystemError","message":"Path is not a directory: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json","stack":"FileSystemError: Path is not a directory: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495642\\package.json\n    at traverseDirectory (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:154:21)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:131:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}      
-
- ✓ packages/backend/__tests__/utils/languageDetection.test.ts (13 tests) 517ms
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > readFileWithErrorHandling > should throw FileSystemError for non-existent file
-{"timestamp":"2025-09-15 22:48:16.133","level":"ERROR","component":"filesystem","requestId":"ef02a02c-87bb-434f-9410-739e58df90dd","message":"File read failed - file not found","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt","errorId":"82dd6f26-8090-4ca9-8879-4dbca4509168","duration":"2ms"},"error":{"name":"FileSystemError","message":"File not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt","stack":"FileSystemError: File not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt\n    at readFileWithErrorHandling (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:474:23)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:148:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > readFileWithErrorHandling > should throw FileSystemError for non-existent file
-{"timestamp":"2025-09-15 22:48:16.136","level":"ERROR","component":"filesystem","requestId":"a98d6902-a994-4f92-a87f-d0d8667db146","message":"File read failed - file not found","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt","errorId":"018e89c2-2775-4903-a918-b0c3c07f4002","duration":"1ms"},"error":{"name":"FileSystemError","message":"File not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt","stack":"FileSystemError: File not found: C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994495847\\non-existent.txt\n    at readFileWithErrorHandling (C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\utils\\fileSystem.ts:474:23)\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\__tests__\\utils\\fileSystem.test.ts:149:7\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"}}
-
-stdout | packages/backend/src/api/__tests__/websocket.test.ts > WebSocket Tests
-Client connected: RE9vG-ZcCPS3P2aLAAAB
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > extractDirectoryInfo > should extract directory information from traversal result
-{"timestamp":"2025-09-15 22:48:16.530","level":"INFO","component":"filesystem","requestId":"60cb9f85-783b-4b3f-832d-5a72ccb4b01f","message":"Starting directory traversal","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994496484","options":{"maxDepth":0,"maxFiles":0,"ignorePatterns":0,"hasFileFilter":false}}}
-
-stdout | packages/backend/__tests__/utils/fileSystem.test.ts > File System Utilities > extractDirectoryInfo > should extract directory information from traversal result
-{"timestamp":"2025-09-15 22:48:16.566","level":"INFO","component":"filesystem","requestId":"60cb9f85-783b-4b3f-832d-5a72ccb4b01f","message":"Directory traversal completed","metadata":{"path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994496484","filesFound":7,"directoriesFound":6,"totalSize":141,"skippedFiles":0,"duration":"36ms"}}
-{"timestamp":"2025-09-15 22:48:16.566","level":"INFO","component":"filesystem","requestId":"d5beec15-1cfb-42a1-82aa-778909a20899","message":"Performance: directory_traversal","metadata":{"duration":"36ms","path":"C:\\Users\\AlexJ\\AppData\\Local\\Temp\\repo-analyzer-test-1757994496484","filesCount":7,"directoriesCount":6,"totalSizeBytes":141}}
-
-stdout | packages/backend/src/api/__tests__/websocket.test.ts > WebSocket Tests > should register for analysis updates
-Client RE9vG-ZcCPS3P2aLAAAB registered for analysis test-analysis
-
- ✓ packages/backend/__tests__/utils/fileSystem.test.ts (14 tests) 1831ms
-   ✓ File System Utilities > readFileWithErrorHandling > should throw FileSystemError for non-existent file  404ms
-stdout | packages/backend/src/api/__tests__/websocket.test.ts > WebSocket Tests > should receive analysis progress updates
-Client RE9vG-ZcCPS3P2aLAAAB registered for analysis test-analysis
-
-stdout | packages/backend/src/api/__tests__/websocket.test.ts > WebSocket Tests > should receive analysis completion notification
-Client RE9vG-ZcCPS3P2aLAAAB registered for analysis test-analysis
-
-stdout | packages/backend/src/api/__tests__/websocket.test.ts > WebSocket Tests
-Client disconnected: RE9vG-ZcCPS3P2aLAAAB
-
- ✓ packages/backend/src/core/__tests__/IndexSystem.relationship.test.ts (13 tests) 516ms
-   ✓ IndexSystem Relationship Functionality > suggestCombinations > should limit suggestions to top 10  448ms
- ✓ packages/backend/src/api/__tests__/websocket.test.ts (4 tests) 777ms
- ✓ packages/backend/src/services/__tests__/path-handler.service.test.ts (55 tests) 500ms
- ✓ packages/backend/src/api/__tests__/path-integration.test.ts (26 tests) 719ms
- ✓ packages/backend/src/providers/__tests__/ProviderRegistry.test.ts (23 tests) 380ms
- ✓ packages/backend/src/api/routes/__tests__/providers.models.test.ts (11 tests) 361ms
-stdout | packages/backend/src/core/__tests__/IndexSystem.test.ts > IndexSystem > searchRepositories > should search repositories by language
-[DEBUG] Starting search with query: {
-  "languages": [
-    "TypeScript"
-  ]
-}
-[DEBUG] Total repositories in index: 4
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'JavaScript', 'TypeScript' ],
-  frameworks: [ 'React', 'Redux' ],
-  tags: [
-    'lang:JavaScript',
-    'lang:TypeScript',
-    'framework:React',
-    'framework:Redux',
-    'complexity:high'
-  ]
-}
-
-stdout | packages/backend/src/core/__tests__/IndexSystem.test.ts > IndexSystem > searchRepositories > should search repositories by framework
-[DEBUG] Starting search with query: {
-  "frameworks": [
-    "React"
-  ]
-}
-[DEBUG] Total repositories in index: 4
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'JavaScript', 'TypeScript' ],
-  frameworks: [ 'React', 'Redux' ],
-  tags: [
-    'lang:JavaScript',
-    'lang:TypeScript',
-    'framework:React',
-    'framework:Redux',
-    'complexity:high'
-  ]
-}
-
-stdout | packages/backend/src/core/__tests__/IndexSystem.test.ts > IndexSystem > searchRepositories > should search repositories by keyword
-[DEBUG] Starting search with query: {
-  "keywords": [
-    "api"
-  ]
-}
-[DEBUG] Total repositories in index: 4
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'JavaScript', 'TypeScript' ],
-  frameworks: [ 'React', 'Redux' ],
-  tags: [
-    'lang:JavaScript',
-    'lang:TypeScript',
-    'framework:React',
-    'framework:Redux',
-    'complexity:high'
-  ]
-}
-
-stdout | packages/backend/src/core/__tests__/IndexSystem.test.ts > IndexSystem > searchRepositories > should combine multiple search criteria
-[DEBUG] Starting search with query: {
-  "languages": [
-    "JavaScript"
-  ],
-  "frameworks": [
-    "Express"
-  ]
-}
-[DEBUG] Total repositories in index: 4
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'JavaScript', 'TypeScript' ],
-  frameworks: [ 'React', 'Redux' ],
-  tags: [
-    'lang:JavaScript',
-    'lang:TypeScript',
-    'framework:React',
-    'framework:Redux',
-    'complexity:high'
-  ]
-}
-
- ✓ packages/backend/src/core/__tests__/IndexSystem.test.ts (17 tests) 197ms
- ✓ packages/backend/src/services/__tests__/logger-http.service.test.ts (11 tests) 73ms
- ✓ packages/backend/src/providers/__tests__/MockProvider.test.ts (11 tests) 140ms
- ✓ packages/backend/src/providers/__tests__/ProviderRegistry.enhanced.test.ts (21 tests) 258ms
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Configuration > should initialize with default cache configuration
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.807Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Configuration > should allow custom cache configuration  
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.825Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Configuration > should disable caching when configured   
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.830Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Configuration > should disable caching when configured   
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.831Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Operations > should cache path validations for existing paths
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.862Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Operations > should not cache failed validations
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.864Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Operations > should generate different cache keys for different paths
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.870Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Operations > should generate same cache key for same path with same options
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.874Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Invalidation > should clear all cache entries
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.880Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Invalidation > should clear all cache entries
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.881Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Invalidation > should invalidate specific path
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.885Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Invalidation > should invalidate paths by pattern        
-info: Invalidated 3 cache entries matching pattern: .* {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.892Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Invalidation > should invalidate paths by pattern        
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.893Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Performance Monitoring > should track hit rate correctly 
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.897Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Performance Monitoring > should track average validation time
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.932Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Performance Monitoring > should perform cache maintenance
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.936Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Warm-up > should warm up cache with provided paths       
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.942Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Warm-up > should handle warm-up failures gracefully      
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.948Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Warm-up > should skip warm-up when caching is disabled   
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.950Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Warm-up > should skip warm-up when caching is disabled   
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.950Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Memory Management > should estimate memory usage
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.953Z"}
-
-stdout | packages/backend/src/services/__tests__/path-handler-cache.test.ts > PathHandler Caching > Cache Memory Management > should respect maximum cache size    
-info: Cache cleared {"service":"unified-repo-analyzer-backend","timestamp":"2025-09-16T03:48:20.969Z"}
-
- ✓ packages/backend/src/services/__tests__/path-handler-cache.test.ts (18 tests) 184ms
- ✓ packages/backend/src/api/routes/__tests__/openrouter-integration.test.ts (7 tests) 259ms
- ✓ packages/backend/src/services/__tests__/relationship.service.test.ts (11 tests) 123ms
- ✓ packages/shared/__tests__/configuration-manager.test.ts (29 tests) 83ms
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Logging Methods > should log debug messages with structured format      
-{"timestamp":"2025-09-15 22:48:22.194","level":"DEBUG","component":"test-component","requestId":"test-request-id","message":"Debug message","metadata":{"key":"value"}}
-
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Logging Methods > should log info messages with metadata
-{"timestamp":"2025-09-15 22:48:22.200","level":"INFO","component":"test-component","requestId":"test-request-123","message":"Info message","metadata":{"operation":"test","duration":100}}
-
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Logging Methods > should log warning messages
-{"timestamp":"2025-09-15 22:48:22.204","level":"WARN","component":"test-component","requestId":"test-request-123","message":"Warning message","metadata":{"warning":"test warning"}}
-
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Logging Methods > should log error messages with error objects
-{"timestamp":"2025-09-15 22:48:22.224","level":"ERROR","component":"test-component","requestId":"test-request-123","message":"Error message","metadata":{"context":"test"},"error":{"name":"Error","message":"Test error","stack":"Error: Test error\n    at C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer\\packages\\backend\\src\\services\\__tests__\\logger.service.test.ts:114:21\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"}}
-
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Data Sanitization > should redact sensitive data when enabled
-{"timestamp":"2025-09-15 22:48:22.232","level":"INFO","component":"unified-repo-analyzer","requestId":"test-request-123","message":"Test message","metadata":{"username":"testuser","password":"[REDACTED]","apiKey":"[REDACTED]","token":"[REDACTED]","normalData":"normal-value"}}
-
-stdout | packages/backend/src/services/__tests__/logger.service.test.ts > Logger Service > Data Sanitization > should not redact data when disabled
-{"timestamp":"2025-09-15 22:48:22.237","level":"INFO","component":"unified-repo-analyzer","requestId":"test-request-123","message":"Test message","metadata":{"password":"secret123","normalData":"normal-value"}}
-
-(node:3040) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 uncaughtException listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:3040) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 unhandledRejection listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
- ✓ packages/backend/src/services/__tests__/logger.service.test.ts (13 tests) 117ms
- ✓ packages/backend/src/core/__tests__/AnalysisEngine.batch.fixed.test.ts (17 tests) 156ms
- ✓ packages/backend/src/core/__tests__/advancedAnalyzer.test.ts (20 tests) 104ms
-stdout | packages/backend/src/services/__tests__/logger-outputs.service.test.ts > Logger Output Destinations > Multiple Outputs > should log to multiple destinations
-{"timestamp":"2025-09-15 22:48:22.505","level":"INFO","component":"unified-repo-analyzer","requestId":"5141ef48-2cfb-4a03-a180-f215fa82026a","message":"Test message for multiple outputs","metadata":{"test":"data"}}
-{"timestamp":"2025-09-15 22:48:22.507","level":"\u001b[32MINFO\u001b[39M","component":"unified-repo-analyzer","requestId":"93ecb39a-b022-44f1-9d3d-58af80dd7ac3","message":"Test message for multiple outputs","metadata":{"test":"data"}}
-
-stdout | packages/backend/src/services/__tests__/logger-outputs.service.test.ts > Logger Output Destinations > Format Configuration > should log in different formats
-{"timestamp":"2025-09-15 22:48:22.528","level":"INFO","component":"unified-repo-analyzer","requestId":"fbe9af92-3bc0-421f-b67f-b082ad00cf62","message":"JSON format test"}
-2025-09-15 22:48:22.529 [INFO] [unified-repo-analyzer] [72321a79-3f09-4860-9e5f-64700c104c9e]: TEXT format test
-
-stdout | packages/backend/src/services/__tests__/logger-outputs.service.test.ts > Logger Output Destinations > Log Level Configuration > should log at appropriate levels
-{"timestamp":"2025-09-15 22:48:22.537","level":"WARN","component":"unified-repo-analyzer","requestId":"4c26b7b4-e2e3-4720-b3c9-d32c569f4186","message":"Warning message"}
-{"timestamp":"2025-09-15 22:48:22.537","level":"ERROR","component":"unified-repo-analyzer","requestId":"52075fb6-049d-43fa-b347-03b6cb1eb03f","message":"Error message"}
-
-(node:3040) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 uncaughtException listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:3040) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 unhandledRejection listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
- ✓ packages/backend/src/services/__tests__/logger-outputs.service.test.ts (14 tests) 85ms
- ✓ packages/backend/src/core/__tests__/codeStructureAnalyzer.test.ts (10 tests) 71ms
- ✓ packages/cli/src/__tests__/cli-integration.test.ts (4 tests) 21ms
- ✓ packages/frontend/src/services/__tests__/errorMessages.test.ts (33 tests) 75ms
- ✓ packages/backend/src/services/__tests__/export.service.test.ts (12 tests) 101ms
- ✓ packages/backend/src/services/__tests__/error-message.service.test.ts (33 tests) 104ms
- ✓ packages/backend/src/services/__tests__/config.service.basic.test.ts (5 tests) 42ms
-stderr | packages/cli/src/__tests__/utils.test.ts > CLI Utilities Tests > Mock Function Behavior > should create and use mock functions
-Promise returned by `expect(actual).resolves.toBe(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in Vitest 3. Please remember to await the assertion.
-    at C:/Users/AlexJ/Documents/Coding/Repos/my-repos/myRepoAnalyzer/unified-repo-analyzer/packages/cli/src/__tests__/utils.test.ts:71:31
-
- ✓ packages/cli/src/__tests__/utils.test.ts (7 tests) 69ms
- ✓ packages/backend/src/core/__tests__/analysisEngine.advanced.fixed.test.ts (22 tests) 57ms
- ✓ packages/frontend/src/utils/__tests__/errorHandling.test.ts (27 tests) 36ms
- ✓ packages/backend/__tests__/utils/fileImportance.test.ts (15 tests) 33ms
- ✓ packages/shared/__tests__/validation/schemas.test.ts (9 tests) 37ms
- ✓ packages/backend/src/services/__tests__/error-message.service.fixed.test.ts (11 tests) 46ms
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should find repositories with .js files
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".js"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.js' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo python-api. Languages: [ 'python' ]
-[DEBUG] Repositories after file type filter: 2
-[DEBUG] Adding file type matches for react-app: [ '.js' ]
-[DEBUG] Adding file type matches for node-server: [ '.js' ]
-
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should find repositories with .ts files
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".ts"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.ts' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo python-api. Languages: [ 'python' ]
-[DEBUG] No file type match for repo node-server. Languages: [ 'javascript' ]
-[DEBUG] Repositories after file type filter: 1
-[DEBUG] Adding file type matches for react-app: [ '.ts' ]
-
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should find repositories with .py files
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".py"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.py' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo react-app. Languages: [ 'javascript', 'typescript' ]
-[DEBUG] No file type match for repo node-server. Languages: [ 'javascript' ]
-[DEBUG] Repositories after file type filter: 1
-[DEBUG] Adding file type matches for python-api: [ '.py' ]
-
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should find repositories with .jsx files
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".jsx"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.jsx' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo python-api. Languages: [ 'python' ]
-[DEBUG] Repositories after file type filter: 2
-[DEBUG] Adding file type matches for react-app: [ '.jsx' ]
-[DEBUG] Adding file type matches for node-server: [ '.jsx' ]
-
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should find repositories with multiple file types
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".js",
-    ".ts"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.js', '.ts' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo python-api. Languages: [ 'python' ]
-[DEBUG] Repositories after file type filter: 2
-[DEBUG] Adding file type matches for react-app: [ '.js', '.ts' ]
-[DEBUG] Adding file type matches for node-server: [ '.js' ]
-
-stdout | packages/backend/src/__tests__/file-type-filtering.test.ts > File Type Filtering > should assign correct scores for file type matches
-[DEBUG] Starting search with query: {
-  "fileTypes": [
-    ".js",
-    ".ts"
-  ]
-}
-[DEBUG] Total repositories in index: 3
-[DEBUG] Sample repository structure: {
-  name: 'react-app',
-  languages: [ 'javascript', 'typescript' ],
-  frameworks: [ 'react' ],
-  tags: [ 'react', 'javascript', 'typescript', 'frontend', 'jsx', 'tsx' ]
-}
-[DEBUG] Filtering by file types: [ '.js', '.ts' ]
-[DEBUG] Available repositories: 3
-[DEBUG] No file type match for repo python-api. Languages: [ 'python' ]
-[DEBUG] Repositories after file type filter: 2
-[DEBUG] Adding file type matches for react-app: [ '.js', '.ts' ]
-[DEBUG] Adding file type matches for node-server: [ '.js' ]
-
- ✓ packages/backend/src/__tests__/file-type-filtering.test.ts (6 tests) 87ms
- ✓ packages/shared/__tests__/validation/validators.test.ts (7 tests) 47ms
- ✓ packages/backend/src/core/__tests__/advancedAnalyzer.fixed.test.ts (14 tests) 48ms
- ✓ packages/backend/src/providers/__tests__/GeminiProvider.test.ts (11 tests) 41ms
- ✓ packages/backend/src/core/__tests__/tokenAnalyzer.test.ts (10 tests) 37ms
- ✓ packages/backend/src/services/__tests__/config.service.simple.test.ts (5 tests) 50ms
- ✓ packages/backend/src/providers/__tests__/LLMProvider.test.ts (7 tests) 20ms
- ✓ packages/cli/src/utils/__tests__/config.test.ts (5 tests) 31ms
- ✓ packages/backend/src/__tests__/test-simple.test.ts (1 test) 10ms
+ timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4789'
+} stress-test
+Stress test message 4790 {
+  messageIndex: 4790,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4790'
+} stress-test
+Stress test message 4791 {
+  messageIndex: 4791,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4791'
+} stress-test
+Stress test message 4792 {
+  messageIndex: 4792,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4792'
+} stress-test
+Stress test message 4793 {
+  messageIndex: 4793,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4793'
+} stress-test
+Stress test message 4794 {
+  messageIndex: 4794,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4794'
+} stress-test
+Stress test message 4795 {
+  messageIndex: 4795,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4795'
+} stress-test
+Stress test message 4796 {
+  messageIndex: 4796,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4796'
+} stress-test
+Stress test message 4797 {
+  messageIndex: 4797,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4797'
+} stress-test
+Stress test message 4798 {
+  messageIndex: 4798,
+  timestamp: '2025-09-16T04:42:37.005Z',
+  data: 'Stress test data 4798'
+} stress-test
+Stress test message 4799 {
+  messageIndex: 4799,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4799'
+} stress-test
+Stress test message 4800 {
+  messageIndex: 4800,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4800'
+} stress-test
+Stress test message 4801 {
+  messageIndex: 4801,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4801'
+} stress-test
+Stress test message 4802 {
+  messageIndex: 4802,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4802'
+} stress-test
+Stress test message 4803 {
+  messageIndex: 4803,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4803'
+} stress-test
+Stress test message 4804 {
+  messageIndex: 4804,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4804'
+} stress-test
+Stress test message 4805 {
+  messageIndex: 4805,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4805'
+} stress-test
+Stress test message 4806 {
+  messageIndex: 4806,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4806'
+} stress-test
+Stress test message 4807 {
+  messageIndex: 4807,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4807'
+} stress-test
+Stress test message 4808 {
+  messageIndex: 4808,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4808'
+} stress-test
+Stress test message 4809 {
+  messageIndex: 4809,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4809'
+} stress-test
+Stress test message 4810 {
+  messageIndex: 4810,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4810'
+} stress-test
+Stress test message 4811 {
+  messageIndex: 4811,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4811'
+} stress-test
+Stress test message 4812 {
+  messageIndex: 4812,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4812'
+} stress-test
+Stress test message 4813 {
+  messageIndex: 4813,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4813'
+} stress-test
+Stress test message 4814 {
+  messageIndex: 4814,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4814'
+} stress-test
+Stress test message 4815 {
+  messageIndex: 4815,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4815'
+} stress-test
+Stress test message 4816 {
+  messageIndex: 4816,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4816'
+} stress-test
+Stress test message 4817 {
+  messageIndex: 4817,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4817'
+} stress-test
+Stress test message 4818 {
+  messageIndex: 4818,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4818'
+} stress-test
+Stress test message 4819 {
+  messageIndex: 4819,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4819'
+} stress-test
+Stress test message 4820 {
+  messageIndex: 4820,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4820'
+} stress-test
+Stress test message 4821 {
+  messageIndex: 4821,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4821'
+} stress-test
+Stress test message 4822 {
+  messageIndex: 4822,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4822'
+} stress-test
+Stress test message 4823 {
+  messageIndex: 4823,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4823'
+} stress-test
+Stress test message 4824 {
+  messageIndex: 4824,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4824'
+} stress-test
+Stress test message 4825 {
+  messageIndex: 4825,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4825'
+} stress-test
+Stress test message 4826 {
+  messageIndex: 4826,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4826'
+} stress-test
+Stress test message 4827 {
+  messageIndex: 4827,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4827'
+} stress-test
+Stress test message 4828 {
+  messageIndex: 4828,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4828'
+} stress-test
+Stress test message 4829 {
+  messageIndex: 4829,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4829'
+} stress-test
+Stress test message 4830 {
+  messageIndex: 4830,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4830'
+} stress-test
+Stress test message 4831 {
+  messageIndex: 4831,
+  timestamp: '2025-09-16T04:42:37.006Z',
+  data: 'Stress test data 4831'
+} stress-test
+Stress test message 4832 {
+  messageIndex: 4832,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4832'
+} stress-test
+Stress test message 4833 {
+  messageIndex: 4833,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4833'
+} stress-test
+Stress test message 4834 {
+  messageIndex: 4834,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4834'
+} stress-test
+Stress test message 4835 {
+  messageIndex: 4835,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4835'
+} stress-test
+Stress test message 4836 {
+  messageIndex: 4836,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4836'
+} stress-test
+Stress test message 4837 {
+  messageIndex: 4837,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4837'
+} stress-test
+Stress test message 4838 {
+  messageIndex: 4838,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4838'
+} stress-test
+Stress test message 4839 {
+  messageIndex: 4839,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4839'
+} stress-test
+Stress test message 4840 {
+  messageIndex: 4840,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4840'
+} stress-test
+Stress test message 4841 {
+  messageIndex: 4841,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4841'
+} stress-test
+Stress test message 4842 {
+  messageIndex: 4842,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4842'
+} stress-test
+Stress test message 4843 {
+  messageIndex: 4843,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4843'
+} stress-test
+Stress test message 4844 {
+  messageIndex: 4844,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4844'
+} stress-test
+Stress test message 4845 {
+  messageIndex: 4845,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4845'
+} stress-test
+Stress test message 4846 {
+  messageIndex: 4846,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4846'
+} stress-test
+Stress test message 4847 {
+  messageIndex: 4847,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4847'
+} stress-test
+Stress test message 4848 {
+  messageIndex: 4848,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4848'
+} stress-test
+Stress test message 4849 {
+  messageIndex: 4849,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4849'
+} stress-test
+Stress test message 4850 {
+  messageIndex: 4850,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4850'
+} stress-test
+Stress test message 4851 {
+  messageIndex: 4851,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4851'
+} stress-test
+Stress test message 4852 {
+  messageIndex: 4852,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4852'
+} stress-test
+Stress test message 4853 {
+  messageIndex: 4853,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4853'
+} stress-test
+Stress test message 4854 {
+  messageIndex: 4854,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4854'
+} stress-test
+Stress test message 4855 {
+  messageIndex: 4855,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4855'
+} stress-test
+Stress test message 4856 {
+  messageIndex: 4856,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4856'
+} stress-test
+Stress test message 4857 {
+  messageIndex: 4857,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4857'
+} stress-test
+Stress test message 4858 {
+  messageIndex: 4858,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4858'
+} stress-test
+Stress test message 4859 {
+  messageIndex: 4859,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4859'
+} stress-test
+Stress test message 4860 {
+  messageIndex: 4860,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4860'
+} stress-test
+Stress test message 4861 {
+  messageIndex: 4861,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4861'
+} stress-test
+Stress test message 4862 {
+  messageIndex: 4862,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4862'
+} stress-test
+Stress test message 4863 {
+  messageIndex: 4863,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4863'
+} stress-test
+Stress test message 4864 {
+  messageIndex: 4864,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4864'
+} stress-test
+Stress test message 4865 {
+  messageIndex: 4865,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4865'
+} stress-test
+Stress test message 4866 {
+  messageIndex: 4866,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4866'
+} stress-test
+Stress test message 4867 {
+  messageIndex: 4867,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4867'
+} stress-test
+Stress test message 4868 {
+  messageIndex: 4868,
+  timestamp: '2025-09-16T04:42:37.007Z',
+  data: 'Stress test data 4868'
+} stress-test
+Stress test message 4869 {
+  messageIndex: 4869,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4869'
+} stress-test
+Stress test message 4870 {
+  messageIndex: 4870,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4870'
+} stress-test
+Stress test message 4871 {
+  messageIndex: 4871,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4871'
+} stress-test
+Stress test message 4872 {
+  messageIndex: 4872,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4872'
+} stress-test
+Stress test message 4873 {
+  messageIndex: 4873,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4873'
+} stress-test
+Stress test message 4874 {
+  messageIndex: 4874,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4874'
+} stress-test
+Stress test message 4875 {
+  messageIndex: 4875,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4875'
+} stress-test
+Stress test message 4876 {
+  messageIndex: 4876,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4876'
+} stress-test
+Stress test message 4877 {
+  messageIndex: 4877,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4877'
+} stress-test
+Stress test message 4878 {
+  messageIndex: 4878,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4878'
+} stress-test
+Stress test message 4879 {
+  messageIndex: 4879,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4879'
+} stress-test
+Stress test message 4880 {
+  messageIndex: 4880,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4880'
+} stress-test
+Stress test message 4881 {
+  messageIndex: 4881,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4881'
+} stress-test
+Stress test message 4882 {
+  messageIndex: 4882,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4882'
+} stress-test
+Stress test message 4883 {
+  messageIndex: 4883,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4883'
+} stress-test
+Stress test message 4884 {
+  messageIndex: 4884,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4884'
+} stress-test
+Stress test message 4885 {
+  messageIndex: 4885,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4885'
+} stress-test
+Stress test message 4886 {
+  messageIndex: 4886,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4886'
+} stress-test
+Stress test message 4887 {
+  messageIndex: 4887,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4887'
+} stress-test
+Stress test message 4888 {
+  messageIndex: 4888,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4888'
+} stress-test
+Stress test message 4889 {
+  messageIndex: 4889,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4889'
+} stress-test
+Stress test message 4890 {
+  messageIndex: 4890,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4890'
+} stress-test
+Stress test message 4891 {
+  messageIndex: 4891,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4891'
+} stress-test
+Stress test message 4892 {
+  messageIndex: 4892,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4892'
+} stress-test
+Stress test message 4893 {
+  messageIndex: 4893,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4893'
+} stress-test
+Stress test message 4894 {
+  messageIndex: 4894,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4894'
+} stress-test
+Stress test message 4895 {
+  messageIndex: 4895,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4895'
+} stress-test
+Stress test message 4896 {
+  messageIndex: 4896,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4896'
+} stress-test
+Stress test message 4897 {
+  messageIndex: 4897,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4897'
+} stress-test
+Stress test message 4898 {
+  messageIndex: 4898,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4898'
+} stress-test
+Stress test message 4899 {
+  messageIndex: 4899,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4899'
+} stress-test
+Stress test message 4900 {
+  messageIndex: 4900,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4900'
+} stress-test
+Stress test message 4901 {
+  messageIndex: 4901,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4901'
+} stress-test
+Stress test message 4902 {
+  messageIndex: 4902,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4902'
+} stress-test
+Stress test message 4903 {
+  messageIndex: 4903,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4903'
+} stress-test
+Stress test message 4904 {
+  messageIndex: 4904,
+  timestamp: '2025-09-16T04:42:37.008Z',
+  data: 'Stress test data 4904'
+} stress-test
+Stress test message 4905 {
+  messageIndex: 4905,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4905'
+} stress-test
+Stress test message 4906 {
+  messageIndex: 4906,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4906'
+} stress-test
+Stress test message 4907 {
+  messageIndex: 4907,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4907'
+} stress-test
+Stress test message 4908 {
+  messageIndex: 4908,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4908'
+} stress-test
+Stress test message 4909 {
+  messageIndex: 4909,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4909'
+} stress-test
+Stress test message 4910 {
+  messageIndex: 4910,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4910'
+} stress-test
+Stress test message 4911 {
+  messageIndex: 4911,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4911'
+} stress-test
+Stress test message 4912 {
+  messageIndex: 4912,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4912'
+} stress-test
+Stress test message 4913 {
+  messageIndex: 4913,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4913'
+} stress-test
+Stress test message 4914 {
+  messageIndex: 4914,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4914'
+} stress-test
+Stress test message 4915 {
+  messageIndex: 4915,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4915'
+} stress-test
+Stress test message 4916 {
+  messageIndex: 4916,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4916'
+} stress-test
+Stress test message 4917 {
+  messageIndex: 4917,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4917'
+} stress-test
+Stress test message 4918 {
+  messageIndex: 4918,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4918'
+} stress-test
+Stress test message 4919 {
+  messageIndex: 4919,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4919'
+} stress-test
+Stress test message 4920 {
+  messageIndex: 4920,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4920'
+} stress-test
+Stress test message 4921 {
+  messageIndex: 4921,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4921'
+} stress-test
+Stress test message 4922 {
+  messageIndex: 4922,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4922'
+} stress-test
+Stress test message 4923 {
+  messageIndex: 4923,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4923'
+} stress-test
+Stress test message 4924 {
+  messageIndex: 4924,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4924'
+} stress-test
+Stress test message 4925 {
+  messageIndex: 4925,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4925'
+} stress-test
+Stress test message 4926 {
+  messageIndex: 4926,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4926'
+} stress-test
+Stress test message 4927 {
+  messageIndex: 4927,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4927'
+} stress-test
+Stress test message 4928 {
+  messageIndex: 4928,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4928'
+} stress-test
+Stress test message 4929 {
+  messageIndex: 4929,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4929'
+} stress-test
+Stress test message 4930 {
+  messageIndex: 4930,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4930'
+} stress-test
+Stress test message 4931 {
+  messageIndex: 4931,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4931'
+} stress-test
+Stress test message 4932 {
+  messageIndex: 4932,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4932'
+} stress-test
+Stress test message 4933 {
+  messageIndex: 4933,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4933'
+} stress-test
+Stress test message 4934 {
+  messageIndex: 4934,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4934'
+} stress-test
+Stress test message 4935 {
+  messageIndex: 4935,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4935'
+} stress-test
+Stress test message 4936 {
+  messageIndex: 4936,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4936'
+} stress-test
+Stress test message 4937 {
+  messageIndex: 4937,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4937'
+} stress-test
+Stress test message 4938 {
+  messageIndex: 4938,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4938'
+} stress-test
+Stress test message 4939 {
+  messageIndex: 4939,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4939'
+} stress-test
+Stress test message 4940 {
+  messageIndex: 4940,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4940'
+} stress-test
+Stress test message 4941 {
+  messageIndex: 4941,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4941'
+} stress-test
+Stress test message 4942 {
+  messageIndex: 4942,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4942'
+} stress-test
+Stress test message 4943 {
+  messageIndex: 4943,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4943'
+} stress-test
+Stress test message 4944 {
+  messageIndex: 4944,
+  timestamp: '2025-09-16T04:42:37.009Z',
+  data: 'Stress test data 4944'
+} stress-test
+Stress test message 4945 {
+  messageIndex: 4945,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4945'
+} stress-test
+Stress test message 4946 {
+  messageIndex: 4946,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4946'
+} stress-test
+Stress test message 4947 {
+  messageIndex: 4947,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4947'
+} stress-test
+Stress test message 4948 {
+  messageIndex: 4948,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4948'
+} stress-test
+Stress test message 4949 {
+  messageIndex: 4949,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4949'
+} stress-test
+Stress test message 4950 {
+  messageIndex: 4950,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4950'
+} stress-test
+Stress test message 4951 {
+  messageIndex: 4951,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4951'
+} stress-test
+Stress test message 4952 {
+  messageIndex: 4952,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4952'
+} stress-test
+Stress test message 4953 {
+  messageIndex: 4953,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4953'
+} stress-test
+Stress test message 4954 {
+  messageIndex: 4954,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4954'
+} stress-test
+Stress test message 4955 {
+  messageIndex: 4955,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4955'
+} stress-test
+Stress test message 4956 {
+  messageIndex: 4956,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4956'
+} stress-test
+Stress test message 4957 {
+  messageIndex: 4957,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4957'
+} stress-test
+Stress test message 4958 {
+  messageIndex: 4958,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4958'
+} stress-test
+Stress test message 4959 {
+  messageIndex: 4959,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4959'
+} stress-test
+Stress test message 4960 {
+  messageIndex: 4960,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4960'
+} stress-test
+Stress test message 4961 {
+  messageIndex: 4961,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4961'
+} stress-test
+Stress test message 4962 {
+  messageIndex: 4962,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4962'
+} stress-test
+Stress test message 4963 {
+  messageIndex: 4963,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4963'
+} stress-test
+Stress test message 4964 {
+  messageIndex: 4964,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4964'
+} stress-test
+Stress test message 4965 {
+  messageIndex: 4965,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4965'
+} stress-test
+Stress test message 4966 {
+  messageIndex: 4966,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4966'
+} stress-test
+Stress test message 4967 {
+  messageIndex: 4967,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4967'
+} stress-test
+Stress test message 4968 {
+  messageIndex: 4968,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4968'
+} stress-test
+Stress test message 4969 {
+  messageIndex: 4969,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4969'
+} stress-test
+Stress test message 4970 {
+  messageIndex: 4970,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4970'
+} stress-test
+Stress test message 4971 {
+  messageIndex: 4971,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4971'
+} stress-test
+Stress test message 4972 {
+  messageIndex: 4972,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4972'
+} stress-test
+Stress test message 4973 {
+  messageIndex: 4973,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4973'
+} stress-test
+Stress test message 4974 {
+  messageIndex: 4974,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4974'
+} stress-test
+Stress test message 4975 {
+  messageIndex: 4975,
+  timestamp: '2025-09-16T04:42:37.010Z',
+  data: 'Stress test data 4975'
+} stress-test
+Stress test message 4976 {
+  messageIndex: 4976,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4976'
+} stress-test
+Stress test message 4977 {
+  messageIndex: 4977,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4977'
+} stress-test
+Stress test message 4978 {
+  messageIndex: 4978,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4978'
+} stress-test
+Stress test message 4979 {
+  messageIndex: 4979,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4979'
+} stress-test
+Stress test message 4980 {
+  messageIndex: 4980,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4980'
+} stress-test
+Stress test message 4981 {
+  messageIndex: 4981,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4981'
+} stress-test
+Stress test message 4982 {
+  messageIndex: 4982,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4982'
+} stress-test
+Stress test message 4983 {
+  messageIndex: 4983,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4983'
+} stress-test
+Stress test message 4984 {
+  messageIndex: 4984,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4984'
+} stress-test
+Stress test message 4985 {
+  messageIndex: 4985,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4985'
+} stress-test
+Stress test message 4986 {
+  messageIndex: 4986,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4986'
+} stress-test
+Stress test message 4987 {
+  messageIndex: 4987,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4987'
+} stress-test
+Stress test message 4988 {
+  messageIndex: 4988,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4988'
+} stress-test
+Stress test message 4989 {
+  messageIndex: 4989,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4989'
+} stress-test
+Stress test message 4990 {
+  messageIndex: 4990,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4990'
+} stress-test
+Stress test message 4991 {
+  messageIndex: 4991,
+  timestamp: '2025-09-16T04:42:37.011Z',
+  data: 'Stress test data 4991'
+} stress-test
+Stress test message 4992 {
+  messageIndex: 4992,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4992'
+} stress-test
+Stress test message 4993 {
+  messageIndex: 4993,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4993'
+} stress-test
+Stress test message 4994 {
+  messageIndex: 4994,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4994'
+} stress-test
+Stress test message 4995 {
+  messageIndex: 4995,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4995'
+} stress-test
+Stress test message 4996 {
+  messageIndex: 4996,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4996'
+} stress-test
+Stress test message 4997 {
+  messageIndex: 4997,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4997'
+} stress-test
+Stress test message 4998 {
+  messageIndex: 4998,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4998'
+} stress-test
+Stress test message 4999 {
+  messageIndex: 4999,
+  timestamp: '2025-09-16T04:42:37.012Z',
+  data: 'Stress test data 4999'
+} stress-test
+
+ ✓ packages/backend/src/providers/__tests__/LLMProvider.test.ts (7 tests) 28ms
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.229","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1579,"baselineAverage":241.18479364850253,"regressionPercentage":554.6847237397562,"timestamp":1757997757229}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.231","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1580,"baselineAverage":375.0663142836523,"regressionPercentage":321.2588387250074,"timestamp":1757997757231}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.232","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1573,"baselineAverage":494.8596828552871,"regressionPercentage":217.867883462229,"timestamp":1757997757232}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.234","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1572,"baselineAverage":602.5737145697584,"regressionPercentage":160.880944852103,"timestamp":1757997757234}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.236","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1573,"baselineAverage":699.6163431127825,"regressionPercentage":124.83751494444758,"timestamp":1757997757236}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.247","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1585,"baselineAverage":788.1547088015043,"regressionPercentage":101.10264930221717,"timestamp":1757997757247}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.249","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1576,"baselineAverage":866.9392379213539,"regressionPercentage":81.78898024949817,"timestamp":1757997757249}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.252","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1576,"baselineAverage":937.8453141292185,"regressionPercentage":68.04476988439214,"timestamp":1757997757251}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+{"timestamp":"2025-09-15 23:42:37.257","level":"WARN","component":"unified-repo-analyzer","requestId":"load-test-logging","message":"Performance regression detected","metadata":{"operation":"path-validation","currentDuration":1579,"baselineAverage":1001.9607827162966,"regressionPercentage":57.59099829430061,"timestamp":1757997757257}}
+
+stdout | packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+Stress test completed:
+          Path validations: 500
+          Log messages: 5000
+          Concurrent operations: 50
+          Total time: 5547.31ms
+          Operations per second: 991
+
+ ❯ packages/backend/src/__tests__/performance-load.test.ts (11 tests | 1 failed) 18722ms
+   ✓ Performance and Load Testing > Path Validation Performance > should validate single paths within acceptable time limits 274ms
+   ✓ Performance and Load Testing > Path Validation Performance > should handle concurrent path validations efficiently  315ms
+   ✓ Performance and Load Testing > Path Validation Performance > should handle large directory structures efficiently  4605ms
+   ✓ Performance and Load Testing > Path Validation Performance > should maintain performance with path caching 210ms
+   ✓ Performance and Load Testing > Logging Performance Under Load > should handle high-volume logging without significant performance degradation  711ms
+   ✓ Performance and Load Testing > Logging Performance Under Load > should handle concurrent logging from multiple components efficiently  416ms
+   ✓ Performance and Load Testing > Logging Performance Under Load > should maintain performance during log rotation under load  537ms
+   ✓ Performance and Load Testing > Memory Usage and Resource Management > should not leak memory during extended operations  3132ms
+   ✓ Performance and Load Testing > Memory Usage and Resource Management > should maintain stable memory usage under repeated load  2529ms
+   ✓ Performance and Load Testing > Memory Usage and Resource Management > should handle resource cleanup properly  381ms
+   × Performance and Load Testing > Stress Testing > should handle extreme load without crashing 5607ms       
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ packages/backend/src/__tests__/simple-test.test.ts (1 test) 11ms
+ ✓ packages/backend/src/__tests__/test-simple.test.ts (1 test) 11ms
+ ✓ packages/backend/src/api/routes/__tests__/providers-integration.test.ts (6 tests) 43ms
+ ❯ packages/frontend/src/services/__tests__/websocket.test.ts (9 tests | 8 failed) 113ms
+   ✓ WebSocketService > should connect to WebSocket server 63ms
+   × WebSocketService > should disconnect from WebSocket server 19ms
+     → expected "spy" to be called at least once
+   × WebSocketService > should subscribe to analysis progress 7ms
+     → expected "spy" to be called with arguments: [ 'register-analysis', …(1) ]
+
+Number of calls: 0
+
+   × WebSocketService > should handle connect event 2ms
+     → Cannot read properties of undefined (reading '1')
+   × WebSocketService > should handle disconnect event 4ms
+     → Cannot read properties of undefined (reading '1')
+   × WebSocketService > should handle analysis progress event 6ms
+     → Cannot read properties of undefined (reading '1')
+   × WebSocketService > should handle analysis complete event 2ms
+     → Cannot read properties of undefined (reading '1')
+   × WebSocketService > should handle batch analysis progress event 2ms
+     → Cannot read properties of undefined (reading '1')
+   × WebSocketService > should handle batch analysis complete event 4ms
+     → Cannot read properties of undefined (reading '1')
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Service > should record metrics without significant overhead
+Recorded 10000 metrics in 63.76ms
+Rate: 156843 metrics/second
+
+ ✓ packages/frontend/src/services/__tests__/errorMessages.test.ts (33 tests) 65ms
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Lazy Loading Performance > should handle large datasets efficiently
+Loaded 550 items in 785.42ms
+Load calls: 11
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > fetchProviderModels > should return empty array when API call fails                                             
+Warning: An update to TestComponent inside a test was not wrapped in act(...).                                
+                                                                                                              
+When testing, code that causes React state updates should be wrapped into act(...):                           
+                                                                                                              
+act(() => {                                                                                                   
+  /* fire events that update state */                                                                         
+});                                                                                                           
+/* assert on the output */                                                                                    
+                                                                                                              
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act                                                                                 
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should handle API errors gracefully
+Warning: An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > getModelRecommendations > should return empty object when API call fails
+Warning: An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should initialize with empty providers and no loading/error state
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:22:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:22:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should fetch providers successfully
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:61:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:61:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle fetch providers error
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:76:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:76:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should test provider successfully
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:118:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:118:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle test provider error
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:158:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:158:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should fetch provider models successfully
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:218:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:218:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should debounce function calls effectively
+Debounce test completed in 157.60ms
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests                                                                                                  
+Error: AggregateError                                                                                         
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)                                                
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)                                      
+    at Request.emit (node:events:520:35)                                                                      
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)                                   
+    at ClientRequest.emit (node:events:508:28)                                                                
+    at emitErrorEvent (node:_http_client:107:11)                                                              
+    at Socket.socketErrorListener (node:_http_client:574:5)                                                   
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle fetch provider models error
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:256:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+Error: Uncaught [Error: useToast must be used within a ToastProvider]
+    at reportException (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:353:9)
+    at invokeEventListeners (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\generated\EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4213:16)
+    at invokeGuardedCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4277:31)
+    at beginWork$1 (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:27490:7)
+    at performUnitOfWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:26599:12) Error: useToast must be used within a ToastProvider
+    at useToast (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useToast.tsx:107:11)
+    at useErrorHandler (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useErrorHandler.ts:13:25)
+    at useApi (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useApi.ts:55:27)
+    at useProviders (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\useProviders.ts:62:7)
+    at C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\packages\frontend\src\hooks\__tests__\useProviders.test.ts:256:41
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:309:27)
+    at renderWithHooks (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+The above error occurred in the <TestComponent> component:
+
+    at TestComponent (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\@testing-library\react\dist\pure.js:307:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should fetch a specific request
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should fetch a specific request
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+stderr | packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should fetch a specific request
+Error: AggregateError
+    at Object.dispatchError (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:62:19)
+    at Request.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Request.emit (node:events:520:35)
+    at ClientRequest.<anonymous> (C:\Users\AlexJ\Documents\Coding\Repos\my-repos\myRepoAnalyzer\unified-repo-analyzer\node_modules\jsdom\lib\jsdom\living\helpers\http-request.js:127:14)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:107:11)
+    at Socket.socketErrorListener (node:_http_client:574:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3) undefined
+
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts (12 tests | 4 failed) 155ms              
+   × useProviders Model Selection > fetchProviderModels > should fetch models for OpenRouter provider 63ms    
+     → expected undefined to deeply equal [ { id: 'openai/gpt-4', …(5) }, …(1) ]                              
+   ✓ useProviders Model Selection > fetchProviderModels > should return empty array when API call fails 14ms  
+   ✓ useProviders Model Selection > fetchProviderModels > should return empty array when response is null 5ms 
+   × useProviders Model Selection > validateProviderModel > should validate model successfully 14ms           
+     → expected { valid: undefined, …(2) } to deeply equal { valid: true, model: { …(3) }, …(1) }             
+   × useProviders Model Selection > validateProviderModel > should handle validation failure 7ms              
+     → expected { valid: undefined, …(2) } to deeply equal { Object (valid, model, ...) }                     
+   ✓ useProviders Model Selection > validateProviderModel > should handle API errors gracefully 11ms          
+   ✓ useProviders Model Selection > validateProviderModel > should handle null response 4ms                   
+   × useProviders Model Selection > getModelRecommendations > should get model recommendations successfully 7ms
+     → expected undefined to deeply equal { maxTokens: 4000, temperature: 0.7 }
+   ✓ useProviders Model Selection > getModelRecommendations > should return empty object when API call fails 7ms
+   ✓ useProviders Model Selection > getModelRecommendations > should return empty object when response is null 5ms
+   ✓ useProviders Model Selection > loading states > should include model validation loading in overall loading state 3ms
+   ✓ useProviders Model Selection > error handling > should aggregate errors from all API calls 7ms
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts (7 tests | 7 failed) 150ms
+   × useProviders > should initialize with empty providers and no loading/error state 83ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should fetch providers successfully 12ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should handle fetch providers error 10ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should test provider successfully 9ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should handle test provider error 10ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should fetch provider models successfully 10ms
+     → useToast must be used within a ToastProvider
+   × useProviders > should handle fetch provider models error 11ms
+     → useToast must be used within a ToastProvider
+ ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts (4 tests | 4 failed) 303ms
+   × useAnalysisRequests > should fetch requests and stats on mount 168ms
+     → expected true to be false // Object.is equality
+   × useAnalysisRequests > should handle fetch errors 21ms
+     → expected null to be 'Failed to fetch' // Object.is equality
+   × useAnalysisRequests > should refresh requests 69ms
+     → expected [] to deeply equal [ Array(2) ]
+   × useAnalysisRequests > should fetch a specific request 40ms
+     → expected null to deeply equal { id: '1', path: '/test/path1', …(6) }
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should throttle function calls effectively
+Throttle test: 4 calls in 311.05ms
+
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should measure render performance accurately
+Render performance test completed in 0.77ms
+
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Bundle Size and Code Splitting > should load chunks efficiently
+Lazy component loaded in 0.01ms
+
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Bundle Size and Code Splitting > should handle multiple concurrent chunk loads
+5 chunks loaded concurrently in 0.46ms
+
+ ✓ packages/frontend/src/utils/__tests__/errorHandling.test.ts (27 tests) 28ms
 stdout | packages/frontend/src/components/analysis/__tests__/environment.test.ts > Environment Test > should show current environment
 Environment check:
-typeof document: undefined
-typeof window: undefined
+typeof document: object
+typeof window: object
 typeof globalThis: object
 process.env.NODE_ENV: test
-document is NOT available
-window is NOT available
+document is available
+window is available
 
- ✓ packages/frontend/src/components/analysis/__tests__/environment.test.ts (1 test) 13ms
- ✓ packages/backend/src/core/__tests__/AnalysisEngine.fixed.test.ts (13 tests) 42ms
- ✓ packages/backend/src/__tests__/simple-test.test.ts (1 test) 9ms
- ✓ packages/backend/src/api/routes/__tests__/providers-integration.test.ts (6 tests) 19ms
- ✓ packages/frontend/src/components/analysis/__tests__/simple.test.ts (2 tests) 10ms
+ ✓ packages/frontend/src/components/analysis/__tests__/environment.test.ts (1 test) 10ms
+ ❯ packages/frontend/src/test/performance/benchmarks.test.ts (11 tests | 8 failed) 7167ms
+   ✓ Performance Benchmarks > Component Rendering Performance > should render large repository lists within performance budget 9ms
+   × Performance Benchmarks > Component Rendering Performance > should handle rapid state updates efficiently 1698ms
+     → actual value must be number or bigint, received "undefined"
+   ✓ Performance Benchmarks > Component Rendering Performance > should optimize bundle size and loading 5ms   
+   × Performance Benchmarks > API Performance > should handle concurrent API requests efficiently 102ms       
+     → actual value must be number or bigint, received "undefined"
+   × Performance Benchmarks > API Performance > should implement effective caching strategy 105ms
+     → actual value must be number or bigint, received "undefined"
+   ✓ Performance Benchmarks > Memory Management > should not leak memory during repeated operations 3ms       
+   × Performance Benchmarks > Memory Management > should handle large file processing efficiently 3ms
+     → actual value must be number or bigint, received "undefined"
+   × Performance Benchmarks > User Interaction Performance > should respond to user interactions within 16ms (60fps) 103ms
+     → actual value must be number or bigint, received "undefined"
+   × Performance Benchmarks > User Interaction Performance > should implement smooth scrolling and virtualization 2ms
+     → actual value must be number or bigint, received "undefined"
+   × Performance Benchmarks > Network Performance > should implement request deduplication 110ms
+     → actual value must be number or bigint, received "undefined"
+   × Performance Benchmarks > Network Performance > should handle request timeouts gracefully 5013ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+stdout | packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Memory Usage > should not leak memory during repeated operations
+Memory increase: 0.00MB
+
+ ❯ packages/frontend/src/test/performance.test.ts (11 tests | 2 failed) 5793ms
+   ✓ Frontend Performance Tests > Performance Service > should record metrics without significant overhead 71ms
+   × Frontend Performance Tests > Performance Service > should collect navigation timing correctly 20ms       
+     → expected null to be truthy
+   × Frontend Performance Tests > Performance Service > should track component render performance 2ms
+     → expected 0 to be greater than 0
+   ✓ Frontend Performance Tests > Lazy Loading Performance > should handle large datasets efficiently  908ms  
+   ✓ Frontend Performance Tests > Lazy Loading Performance > should handle virtual scrolling efficiently 7ms  
+   ✓ Frontend Performance Tests > Performance Optimization Hooks > should debounce function calls effectively 162ms
+   ✓ Frontend Performance Tests > Performance Optimization Hooks > should throttle function calls effectively  316ms
+   ✓ Frontend Performance Tests > Performance Optimization Hooks > should measure render performance accurately 5ms
+   ✓ Frontend Performance Tests > Bundle Size and Code Splitting > should load chunks efficiently 1ms
+   ✓ Frontend Performance Tests > Bundle Size and Code Splitting > should handle multiple concurrent chunk loads 6ms
+   ✓ Frontend Performance Tests > Memory Usage > should not leak memory during repeated operations  4286ms    
 stdout | packages/frontend/src/components/analysis/__tests__/setup-test.test.ts > Setup Test > should have JSDOM globals after setup
 After setup import:
 typeof document: object
 typeof window: object
 
+ ✓ packages/frontend/src/components/analysis/__tests__/simple.test.ts (2 tests) 7ms
  ✓ packages/frontend/src/components/analysis/__tests__/setup-test.test.ts (1 test) 8ms
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 142 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
- FAIL  packages/shared/__tests__/error-classification.test.ts > Error Classification System > ErrorClassifier > classifyError > should generate unique IDs and correlation IDs
-TypeError: Cannot read properties of undefined (reading 'correlationId')
- ❯ ErrorClassifier.classifyError packages/shared/src/utils/error-classifier.ts:55:31
-     53|       const originalError = typeof error === 'string' ? undefined : error;
-     54|
-     55|       // Generate unique identifiers
-       |                               ^
-     56|       const errorId = randomUUID();
-     57|       const correlationId = context.correlationId || context.requestId || randomUUID();
- ❯ packages/shared/__tests__/error-classification.test.ts:132:40
+ FAIL  packages/shared/__tests__/error-classification.test.ts [ packages/shared/__tests__/error-classification.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'classifyError')
+ ❯ packages/shared/__tests__/error-classification.test.ts:131:38
+    129|       });
+    130| 
+    131|       const error1 = errorClassifier.classifyError('Error 1', {});
+       |                                      ^
+    132|         const error2 = errorClassifier.classifyError('Error 2', {});
+    133|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/101]⎯
 
- FAIL  packages/shared/__tests__/error-classification.test.ts > Error Classification System > ErrorClassifier > classifyError > should link parent and child errors
-TypeError: Cannot read properties of undefined (reading 'correlationId')
- ❯ ErrorClassifier.classifyError packages/shared/src/utils/error-classifier.ts:55:31
-     53|       const originalError = typeof error === 'string' ? undefined : error;
-     54|
-     55|       // Generate unique identifiers
-       |                               ^
-     56|       const errorId = randomUUID();
-     57|       const correlationId = context.correlationId || context.requestId || randomUUID();
- ❯ packages/shared/__tests__/error-classification.test.ts:150:45
+ FAIL  packages/backend/src/services/__tests__/config.service.test.ts [ packages/backend/src/services/__tests__/config.service.test.ts ]
+ReferenceError: Cannot access 'mockHomeDir' before initialization
+ ❯ Object.<anonymous> packages/backend/src/services/__tests__/config.service.test.ts:72:26
+     70| vi.mock('node:os', () => ({
+     71|   default: {
+     72|     homedir: vi.fn(() => mockHomeDir),
+       |                          ^
+     73|     platform: vi.fn(() => 'win32'),
+     74|   },
+ ❯ new ConfigurationService packages/backend/src/services/config.service.ts:32:35
+ ❯ packages/backend/src/services/config.service.ts:606:37
+ ❯ packages/backend/src/services/__tests__/config.service.test.ts:14:1
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/101]⎯
 
- FAIL  packages/shared/__tests__/error-classification.test.ts > Error Classification System > ErrorClassifier > getErrorStatistics > should filter statistics by time range
-TypeError: Cannot read properties of undefined (reading 'correlationId')
- ❯ ErrorClassifier.classifyError packages/shared/src/utils/error-classifier.ts:55:31
-     53|       const originalError = typeof error === 'string' ? undefined : error;
-     54|
-     55|       // Generate unique identifiers
-       |                               ^
-     56|       const errorId = randomUUID();
-     57|       const correlationId = context.correlationId || context.requestId || randomUUID();
- ❯ packages/shared/__tests__/error-classification.test.ts:220:25
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 99 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
- FAIL  packages/shared/__tests__/error-classification.test.ts > Error Classification System > ErrorClassifier > resolveError > should mark error as resolved       
-TypeError: Cannot read properties of undefined (reading 'correlationId')
- ❯ ErrorClassifier.classifyError packages/shared/src/utils/error-classifier.ts:55:31
-     53|       const originalError = typeof error === 'string' ? undefined : error;
-     54|
-     55|       // Generate unique identifiers
-       |                               ^
-     56|       const errorId = randomUUID();
-     57|       const correlationId = context.correlationId || context.requestId || randomUUID();
- ❯ packages/shared/__tests__/error-classification.test.ts:277:44
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/142]⎯
-
- FAIL  packages/shared/__tests__/error-classification.test.ts > Error Classification System > ErrorFormatter > createUserFriendlyMessage > should fall back to original message for unknown errors
-TypeError: Cannot read properties of undefined (reading 'correlationId')
- ❯ ErrorClassifier.classifyError packages/shared/src/utils/error-classifier.ts:55:31
-     53|       const originalError = typeof error === 'string' ? undefined : error;
-     54|
-     55|       // Generate unique identifiers
-       |                               ^
-     56|       const errorId = randomUUID();
-     57|       const correlationId = context.correlationId || context.requestId || randomUUID();
- ❯ packages/shared/__tests__/error-classification.test.ts:428:46
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/142]⎯
-
- FAIL  packages/backend/src/__tests__/logging-integration.test.ts > Logging Integration Tests > LLM Provider Logging > should log LLM provider interactions        
+ FAIL  packages/backend/src/__tests__/logging-integration.test.ts > Logging Integration Tests > LLM Provider Logging > should log LLM provider interactions
 AssertionError: expected "info" to be called with arguments: [ Array(4) ]
 
 Number of calls: 0
@@ -858,7 +1817,7 @@ Number of calls: 0
     354|         'Starting Claude LLM analysis',
     355|         expect.objectContaining({
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/101]⎯
 
  FAIL  packages/backend/src/__tests__/logging-integration.test.ts > Logging Integration Tests > LLM Provider Logging > should log LLM provider errors with classification
 AssertionError: expected "error" to be called with arguments: [ …(5) ]
@@ -873,26 +1832,20 @@ Number of calls: 0
     427|         'Claude API authentication failed',
     428|         expect.objectContaining({
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/101]⎯
 
- FAIL  packages/backend/src/__tests__/platform-integration.test.ts > Platform-Specific Integration Tests > Windows Path Handling > should handle Windows backslash paths correctly
-AssertionError: expected true to be false // Object.is equality
+ FAIL  packages/backend/src/__tests__/performance-load.test.ts > Performance and Load Testing > Stress Testing > should handle extreme load without crashing
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/backend/src/__tests__/performance-load.test.ts:603:5
+    601| 
+    602|   describe('Stress Testing', () => {
+    603|     it('should handle extreme load without crashing', async () => {
+       |     ^
+    604|       const extremeLoad = {
+    605|         pathValidations: 500,
 
-- Expected
-+ Received
-
-- false
-+ true
-
- ❯ packages/backend/src/__tests__/platform-integration.test.ts:49:30
-     47|
-     48|       expect(result.normalizedPath).toBe('C:\\Users\\TestUser\\Documents\\Project');
-     49|       expect(result.isValid).toBe(false); // Path doesn't exist, but format should be valid
-       |                              ^
-     50|       expect(result.errors.length).toBe(0); // No format errors
-     51|     });
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/101]⎯
 
  FAIL  packages/backend/src/__tests__/platform-integration.test.ts > Platform-Specific Integration Tests > Windows Path Handling > should validate Windows drive letters correctly
 AssertionError: expected false to be true // Object.is equality
@@ -911,7 +1864,7 @@ AssertionError: expected false to be true // Object.is equality
      75|       }
      76|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/101]⎯
 
  FAIL  packages/backend/src/__tests__/platform-integration.test.ts > Platform-Specific Integration Tests > Windows Path Handling > should validate UNC paths correctly
 Error: Test timed out in 5000ms.
@@ -921,10 +1874,10 @@ If this is a long-running test, pass a timeout value as the last argument or con
      97|
      98|     it('should validate UNC paths correctly', async () => {
        |     ^
-     99|       const validUNCPaths = ['\\\\server\\share\\folder', '\\\\192.168.1.100\\shared\\documents'];
+     99|       const validUNCPaths = ['\\\\server\\share\\folder', '\\\\192.168.1.100\\shared\\documents'];   
     100|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/101]⎯
 
  FAIL  packages/backend/src/__tests__/platform-integration.test.ts > Platform-Specific Integration Tests > End-to-End User Workflow Tests > should handle network path scenarios
 AssertionError: expected undefined to be defined
@@ -936,19 +1889,26 @@ AssertionError: expected undefined to be defined
     461|
     462|         // Should not have UNC format errors for valid UNC paths
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/101]⎯
 
  FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Service > should collect navigation timing correctly
-ReferenceError: window is not defined
- ❯ packages/frontend/src/test/performance.test.ts:43:7
-     41|     it('should collect navigation timing correctly', () => {
-     42|       // Ensure window.performance exists and has timing data
-     43|       if (!window.performance) {
-       |       ^
-     44|         Object.defineProperty(window, 'performance', {
-     45|           value: {
+AssertionError: expected null to be truthy
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/142]⎯
+- Expected:
+true
+
++ Received:
+null
+
+ ❯ packages/frontend/src/test/performance.test.ts:74:32
+     72|       const stats = performanceService.getStats();
+     73|
+     74|       expect(stats.navigation).toBeTruthy();
+       |                                ^
+     75|       if (stats.navigation) {
+     76|         expect(stats.navigation.domContentLoaded).toBe(1000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/101]⎯
 
  FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Service > should track component render performance
 AssertionError: expected 0 to be greater than 0
@@ -960,114 +1920,19 @@ AssertionError: expected 0 to be greater than 0
      89|     });
      90|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/101]⎯
 
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Lazy Loading Performance > should handle large datasets efficiently
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/test/performance.test.ts:113:26
-    111|       });
-    112|
-    113|       const { result } = renderHook(() =>
-       |                          ^
-    114|         useLazyLoading(mockLoadFunction, { pageSize, initialLoad: true })
-    115|       );
+ FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Windows Path Format Analysis > should analyze repository with Windows forward slash path    
+AssertionError: expected [ 'JavaScript', 'Markdown' ] to have property "JavaScript"
+ ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:163:41
+    161|         // Should have language detection
+    162|         expect(response.body).toHaveProperty('languages');
+    163|         expect(response.body.languages).toHaveProperty('JavaScript');
+       |                                         ^
+    164|       }
+    165|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/142]⎯
-
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Lazy Loading Performance > should handle virtual scrolling efficiently        
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/test/performance.test.ts:147:26
-    145|       }));
-    146|
-    147|       const { result } = renderHook(() => useVirtualScrolling(items, 50, 500, 5));
-       |                          ^
-    148|
-    149|       const startTime = performance.now();
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/142]⎯
-
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should debounce function calls effectively   
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/test/performance.test.ts:172:26
-    170|       });
-    171|
-    172|       const { result } = renderHook(() => useDebounce(mockFunction, 100));
-       |                          ^
-    173|
-    174|       // Call multiple times rapidly
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/142]⎯
-
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should throttle function calls effectively   
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/test/performance.test.ts:202:26
-    200|       });
-    201|
-    202|       const { result } = renderHook(() => useThrottle(mockFunction, 100));
-       |                          ^
-    203|
-    204|       const startTime = performance.now();
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/142]⎯
-
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Performance Optimization Hooks > should measure render performance accurately 
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/test/performance.test.ts:227:26
-    225|       const props = { test: true };
-    226|
-    227|       const { result } = renderHook(() => useRenderPerformance(componentName, props));
-       |                          ^
-    228|
-    229|       const startTime = performance.now();
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/142]⎯
-
- FAIL  packages/frontend/src/test/performance.test.ts > Frontend Performance Tests > Memory Usage > should not leak memory during repeated operations
-Error: Test timed out in 5000ms.
-If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
- ❯ packages/frontend/src/test/performance.test.ts:296:5
-    294|
-    295|   describe('Memory Usage', () => {
-    296|     it('should not leak memory during repeated operations', () => {
-       |     ^
-    297|       const initialMemory =
-    298|         (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/142]⎯
-
- FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Windows Path Format Analysis > should analyze repository with Windows backslash path
-AssertionError: expected { …(17) } to have property "files"
- ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:122:31
-    120|         expect(response.body).toHaveProperty('name');
-    121|         expect(response.body).toHaveProperty('path');
-    122|         expect(response.body).toHaveProperty('files');
-       |                               ^
-    123|         expect(response.body.files).toBeInstanceOf(Array);
-    124|         expect(response.body.files.length).toBeGreaterThan(0);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/142]⎯
-
- FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Windows Path Format Analysis > should analyze repository with Windows forward slash path
-AssertionError: expected { …(17) } to have property "files"
- ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:155:31
-    153|       if (response.status === 200) {
-    154|         expect(response.body).toHaveProperty('id');
-    155|         expect(response.body).toHaveProperty('files');
-       |                               ^
-    156|
-    157|         // Should detect JavaScript files
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Batch Analysis with Mixed Path Formats > should handle batch analysis with mixed valid and invalid paths
 Error: expected 200 "OK", got 500 "Internal Server Error"
@@ -1085,7 +1950,7 @@ Error: expected 200 "OK", got 500 "Internal Server Error"
  ❯ localAssert node_modules/supertest/lib/test.js:138:14
  ❯ Server.<anonymous> node_modules/supertest/lib/test.js:152:11
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Batch Analysis with Mixed Path Formats > should normalize paths consistently in batch analysis
 Error: expected 200 "OK", got 500 "Internal Server Error"
@@ -1103,43 +1968,7 @@ Error: expected 200 "OK", got 500 "Internal Server Error"
  ❯ localAssert node_modules/supertest/lib/test.js:138:14
  ❯ Server.<anonymous> node_modules/supertest/lib/test.js:152:11
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/142]⎯
-
- FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Performance and Reliability > should complete analysis within reasonable time
-AssertionError: expected { analysisMode: 'quick', …(3) } to have property "analysisTime"
- ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:415:40
-    413|       if (response.status === 200) {
-    414|         expect(response.body).toHaveProperty('metadata');
-    415|         expect(response.body.metadata).toHaveProperty('analysisTime');
-       |                                        ^
-    416|         expect(response.body.metadata.analysisTime).toBeGreaterThan(0);
-    417|       }
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/142]⎯
-
- FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Performance and Reliability > should provide consistent results for same repository
-TypeError: Cannot read properties of undefined (reading 'length')
- ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:470:36
-    468|       if (request1.status === 200 && request2.status === 200) {
-    469|         // Should have same number of files
-    470|         expect(request1.body.files.length).toBe(request2.body.files.length);
-       |                                    ^
-    471|
-    472|         // Should have same languages detected
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/142]⎯
-
- FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Path Validation Integration > should validate path before starting analysis
-AssertionError: expected { …(17) } to have property "files"
- ❯ packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts:511:39
-    509|         // Analysis should succeed since validation passed
-    510|         expect(analysisResponse.body).toHaveProperty('id');
-    511|         expect(analysisResponse.body).toHaveProperty('files');
-       |                                       ^
-    512|       }
-    513|     });
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/analyze-workflow.integration.test.ts > Complete Analysis Workflow Integration Tests > Path Validation Integration > should provide consistent error messages between validation and analysis
 AssertionError: expected true to be false // Object.is equality
@@ -1158,7 +1987,7 @@ AssertionError: expected true to be false // Object.is equality
     525|
     526|       // Try to analyze the same invalid path
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api-fixed.test.ts > Fixed API Integration Tests > Health Check > should return status ok
 AssertionError: expected 503 to be 200 // Object.is equality
@@ -1169,25 +1998,25 @@ AssertionError: expected 503 to be 200 // Object.is equality
 - 200
 + 503
 
- ❯ packages/backend/src/api/__tests__/api-fixed.test.ts:160:31
-    158|     it('should return status ok', async () => {
-    159|       const response = await request(app).get('/health');
-    160|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api-fixed.test.ts:167:31
+    165|
+    166|       const response = await request(app).get('/health');
+    167|       expect(response.status).toBe(200);
        |                               ^
-    161|       expect(response.body).toHaveProperty('status');
-    162|     });
+    168|       expect(response.body).toHaveProperty('status', 'healthy');
+    169|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.simple.test.ts > API Simple Integration Tests > Health Check > should return health status
 Error: expected 200 "OK", got 503 "Service Unavailable"
- ❯ packages/backend/src/api/__tests__/api.simple.test.ts:21:58
-     19|     it('should return health status', async () => {
-     20|       const app = getTestApp();
-     21|       const response = await request(app).get('/health').expect(200);
+ ❯ packages/backend/src/api/__tests__/api.simple.test.ts:28:58
+     26|
+     27|       const app = getTestApp();
+     28|       const response = await request(app).get('/health').expect(200);
        |                                                          ^
-     22|
-     23|       expect(response.body).toHaveProperty('status');
+     29|
+     30|       expect(response.body).toHaveProperty('status', 'healthy');
  ❯ Test._assertStatus node_modules/supertest/lib/test.js:309:14
  ❯ node_modules/supertest/lib/test.js:365:13
  ❯ Test._assertFunction node_modules/supertest/lib/test.js:342:13
@@ -1195,19 +2024,26 @@ Error: expected 200 "OK", got 503 "Service Unavailable"
  ❯ localAssert node_modules/supertest/lib/test.js:138:14
  ❯ Server.<anonymous> node_modules/supertest/lib/test.js:152:11
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Health Check > should return status ok
-TypeError: vi.mocked(...).mockResolvedValue is not a function
- ❯ packages/backend/src/api/__tests__/api.test.ts:113:31
-    111|     it('should return status ok', async () => {
-    112|       // Mock fs.writeFile to succeed for health check
-    113|       vi.mocked(fs.writeFile).mockResolvedValue(undefined as any);
-       |                               ^
-    114|       vi.mocked(fs.unlink).mockResolvedValue(undefined as any);
-    115|       vi.mocked(fs.stat).mockResolvedValue({} as any);
+AssertionError: expected 503 to be 200 // Object.is equality
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/142]⎯
+- Expected
++ Received
+
+- 200
++ 503
+
+ ❯ packages/backend/src/api/__tests__/api.test.ts:120:31
+    118|
+    119|       const response = await request(app).get('/health');
+    120|       expect(response.status).toBe(200);
+       |                               ^
+    121|       expect(response.body).toHaveProperty('status', 'healthy');
+    122|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Analysis > should analyze a repository
 AssertionError: expected 404 to be 200 // Object.is equality
@@ -1218,15 +2054,15 @@ AssertionError: expected 404 to be 200 // Object.is equality
 - 200
 + 404
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:185:31
-    183|         });
-    184|
-    185|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:187:31
+    185|         });
+    186|
+    187|       expect(response.status).toBe(200);
        |                               ^
-    186|       expect(response.body).toEqual(mockAnalysis);
-    187|       expect(mockAnalysisEngine.analyzeRepository).toHaveBeenCalledWith(
+    188|       expect(response.body).toEqual(mockAnalysis);
+    189|       expect(mockAnalysisEngine.analyzeRepository).toHaveBeenCalledWith(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Analysis > should analyze multiple repositories
 AssertionError: expected 400 to be 200 // Object.is equality
@@ -1237,15 +2073,15 @@ AssertionError: expected 400 to be 200 // Object.is equality
 - 200
 + 400
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:321:31
-    319|         });
-    320|
-    321|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:323:31
+    321|         });
+    322|
+    323|       expect(response.status).toBe(200);
        |                               ^
-    322|       expect(response.body).toEqual(mockBatchResult);
-    323|       expect(mockAnalysisEngine.analyzeMultipleRepositories).toHaveBeenCalledWith(
+    324|       expect(response.body).toEqual(mockBatchResult);
+    325|       expect(mockAnalysisEngine.analyzeMultipleRepositories).toHaveBeenCalledWith(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should get all repositories
 AssertionError: expected 500 to be 200 // Object.is equality
@@ -1256,15 +2092,15 @@ AssertionError: expected 500 to be 200 // Object.is equality
 - 200
 + 500
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:372:31
-    370|       const response = await request(app).get('/api/repositories');
-    371|
-    372|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:374:31
+    372|       const response = await request(app).get('/api/repositories');
+    373|
+    374|       expect(response.status).toBe(200);
        |                               ^
-    373|       expect(response.body).toEqual(mockRepositories);
-    374|       expect(mockIndexSystem.getIndex).toHaveBeenCalled();
+    375|       expect(response.body).toEqual(mockRepositories);
+    376|       expect(mockIndexSystem.getIndex).toHaveBeenCalled();
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should get a repository by ID
 AssertionError: expected 500 to be 200 // Object.is equality
@@ -1275,15 +2111,15 @@ AssertionError: expected 500 to be 200 // Object.is equality
 - 200
 + 500
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:402:31
-    400|       const response = await request(app).get('/api/repositories/123');
-    401|
-    402|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:404:31
+    402|       const response = await request(app).get('/api/repositories/123');
+    403|
+    404|       expect(response.status).toBe(200);
        |                               ^
-    403|       expect(response.body).toEqual(mockRepository);
-    404|       expect(mockIndexSystem.getIndex).toHaveBeenCalled();
+    405|       expect(response.body).toEqual(mockRepository);
+    406|       expect(mockIndexSystem.getIndex).toHaveBeenCalled();
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should return 404 for non-existent repository
 AssertionError: expected 500 to be 404 // Object.is equality
@@ -1294,15 +2130,15 @@ AssertionError: expected 500 to be 404 // Object.is equality
 - 404
 + 500
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:418:31
-    416|       const response = await request(app).get('/api/repositories/999');
-    417|
-    418|       expect(response.status).toBe(404);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:420:31
+    418|       const response = await request(app).get('/api/repositories/999');
+    419|
+    420|       expect(response.status).toBe(404);
        |                               ^
-    419|       expect(response.body).toHaveProperty('error');
-    420|     });
+    421|       expect(response.body).toHaveProperty('error');
+    422|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should search repositories
 AssertionError: expected 400 to be 200 // Object.is equality
@@ -1313,15 +2149,15 @@ AssertionError: expected 400 to be 200 // Object.is equality
 - 200
 + 400
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:464:31
-    462|         });
-    463|
-    464|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:466:31
+    464|         });
+    465|
+    466|       expect(response.status).toBe(200);
        |                               ^
-    465|       expect(response.body).toEqual(mockSearchResults);
-    466|       expect(mockAnalysisEngine.searchRepositories).toHaveBeenCalledWith(
+    467|       expect(response.body).toEqual(mockSearchResults);
+    468|       expect(mockAnalysisEngine.searchRepositories).toHaveBeenCalledWith(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should find similar repositories
 AssertionError: expected 500 to be 200 // Object.is equality
@@ -1332,15 +2168,15 @@ AssertionError: expected 500 to be 200 // Object.is equality
 - 200
 + 500
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:500:31
-    498|       const response = await request(app).get('/api/repositories/123/similar');
-    499|
-    500|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:502:31
+    500|       const response = await request(app).get('/api/repositories/123/similar');
+    501|
+    502|       expect(response.status).toBe(200);
        |                               ^
-    501|       expect(response.body).toEqual(mockSimilarRepositories);
-    502|       expect(mockAnalysisEngine.findSimilarRepositories).toHaveBeenCalledWith('123');
+    503|       expect(response.body).toEqual(mockSimilarRepositories);
+    504|       expect(mockAnalysisEngine.findSimilarRepositories).toHaveBeenCalledWith('123');
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/api.test.ts > API Integration Tests > Repository Management > should suggest combinations
 AssertionError: expected 500 to be 200 // Object.is equality
@@ -1351,15 +2187,15 @@ AssertionError: expected 500 to be 200 // Object.is equality
 - 200
 + 500
 
- ❯ packages/backend/src/api/__tests__/api.test.ts:525:31
-    523|         });
-    524|
-    525|       expect(response.status).toBe(200);
+ ❯ packages/backend/src/api/__tests__/api.test.ts:527:31
+    525|         });
+    526|
+    527|       expect(response.status).toBe(200);
        |                               ^
-    526|       expect(response.body).toEqual(mockCombinations);
-    527|       expect(mockAnalysisEngine.suggestCombinations).toHaveBeenCalledWith(['123', '124']);
+    528|       expect(response.body).toEqual(mockCombinations);
+    529|       expect(mockAnalysisEngine.suggestCombinations).toHaveBeenCalledWith(['123', '124']);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/batch-analyze.test.ts > Batch Analysis API > should return 400 for invalid request
 Error: Test timed out in 5000ms.
@@ -1372,7 +2208,7 @@ If this is a long-running test, pass a timeout value as the last argument or con
     180|     const response = await request(app)
     181|       .post('/api/analyze/batch')
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/batch-analyze.test.ts > Batch Analysis API > should analyze multiple repositories
 AssertionError: expected 400 to be 200 // Object.is equality
@@ -1391,7 +2227,7 @@ AssertionError: expected 400 to be 200 // Object.is equality
     208|     expect(response.body).toBeDefined();
     209|     expect(response.body.repositories).toHaveLength(3);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/101]⎯
 
  FAIL  packages/backend/src/api/__tests__/batch-analyze.test.ts > Batch Analysis API > should handle errors during batch analysis
 TypeError: Cannot read properties of undefined (reading 'mockRejectedValueOnce')
@@ -1403,7 +2239,7 @@ TypeError: Cannot read properties of undefined (reading 'mockRejectedValueOnce')
     235|
     236|     const response = await request(app)
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Comprehensive Mode Analysis > should perform advanced analysis in comprehensive mode
 TypeError: Cannot read properties of undefined (reading 'metadata')
@@ -1415,7 +2251,7 @@ TypeError: Cannot read properties of undefined (reading 'metadata')
     342|
     343|       // Verify that security recommendations were added
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Comprehensive Mode Analysis > should not perform advanced analysis in quick mode
 TypeError: Cannot read properties of undefined (reading 'metadata')
@@ -1427,7 +2263,7 @@ TypeError: Cannot read properties of undefined (reading 'metadata')
     368|
     369|       // Should have fewer recommendations since advanced analysis is skipped
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Comprehensive Mode Analysis > should not perform advanced analysis in standard mode
 TypeError: Cannot read properties of undefined (reading 'metadata')
@@ -1439,7 +2275,7 @@ TypeError: Cannot read properties of undefined (reading 'metadata')
     384|
     385|       // Should have fewer recommendations since advanced analysis is skipped
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Security Integration > should add high-severity security issues to potential issues
 TypeError: Cannot read properties of undefined (reading 'insights')
@@ -1451,7 +2287,7 @@ TypeError: Cannot read properties of undefined (reading 'insights')
     403|         issue.startsWith('Security:')
     404|       );
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Security Integration > should add security recommendations
 TypeError: Cannot read properties of undefined (reading 'insights')
@@ -1461,9 +2297,9 @@ TypeError: Cannot read properties of undefined (reading 'insights')
     427|       const recommendations = result.insights.recommendations;
        |                                      ^
     428|       expect(recommendations.some((rec: string) => rec.includes('helmet.js'))).toBe(true);
-    429|       expect(recommendations.some((rec: string) => rec.includes('rate limiting'))).toBe(true);
+    429|       expect(recommendations.some((rec: string) => rec.includes('rate limiting'))).toBe(true);       
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Code Quality Integration > should add high-severity quality issues to potential issues
 TypeError: Cannot read properties of undefined (reading 'insights')
@@ -1475,19 +2311,19 @@ TypeError: Cannot read properties of undefined (reading 'insights')
     453|         issue.startsWith('Quality:')
     454|       );
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Code Quality Integration > should update complexity metrics
 TypeError: Cannot read properties of undefined (reading 'codeAnalysis')
  ❯ packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts:494:21
-    492| 
+    492|
     493|       // The complexity should be updated by the advanced analyzer
     494|       expect(result.codeAnalysis.complexity.cyclomaticComplexity).toBeGreaterThan(1);
        |                     ^
     495|       expect(result.codeAnalysis.complexity.codeQuality).toBeDefined();
     496|       expect(['excellent', 'good', 'fair', 'poor']).toContain(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Architectural Pattern Integration > should detect and add architectural patterns
 TypeError: Cannot read properties of undefined (reading 'codeAnalysis')
@@ -1496,10 +2332,10 @@ TypeError: Cannot read properties of undefined (reading 'codeAnalysis')
     569|
     570|       expect(result.codeAnalysis.patterns.length).toBeGreaterThan(0);
        |                     ^
-    571|       const patternNames = result.codeAnalysis.patterns.map((p: { name: string }) => p.name);
+    571|       const patternNames = result.codeAnalysis.patterns.map((p: { name: string }) => p.name);        
     572|       expect(patternNames).toContain('Model-View-Controller (MVC)');
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Architectural Pattern Integration > should add architectural recommendations
 TypeError: Cannot read properties of undefined (reading 'insights')
@@ -1511,7 +2347,7 @@ TypeError: Cannot read properties of undefined (reading 'insights')
     639|       expect(
     640|         recommendations.some(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Performance and Error Handling > should handle file read errors gracefully
 AssertionError: expected undefined to be defined
@@ -1523,7 +2359,7 @@ AssertionError: expected undefined to be defined
     655|       expect(result.metadata.analysisMode).toBe('comprehensive');
     656|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Performance and Error Handling > should handle malformed JSON in package.json
 AssertionError: expected undefined to be defined
@@ -1535,7 +2371,7 @@ AssertionError: expected undefined to be defined
     670|       expect(result.metadata.analysisMode).toBe('comprehensive');
     671|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Performance and Error Handling > should maintain performance with large repositories
 AssertionError: expected undefined to be defined
@@ -1547,10 +2383,9 @@ AssertionError: expected undefined to be defined
     747|       expect(result.metadata.processingTime).toBeGreaterThan(0);
     748|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/101]⎯
 
- FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Batch Analysis with Advanced Features >
- should perform advanced analysis on multiple repositories
+ FAIL  packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts > AnalysisEngine Advanced Features Integration > Batch Analysis with Advanced Features > should perform advanced analysis on multiple repositories
 TypeError: Cannot read properties of undefined (reading 'languages')
  ❯ packages/backend/src/core/AnalysisEngine.ts:610:66
     608|   }> {
@@ -1563,7 +2398,7 @@ TypeError: Cannot read properties of undefined (reading 'languages')
  ❯ AnalysisEngine.analyzeMultipleRepositories packages/backend/src/core/AnalysisEngine.ts:463:49
  ❯ packages/backend/src/core/__tests__/analysisEngine.advanced.test.ts:764:22
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts > AnalysisEngine - Batch Processing > should analyze multiple repositories
 AssertionError: expected [] to have a length of 3 but got +0
@@ -1582,7 +2417,7 @@ AssertionError: expected [] to have a length of 3 but got +0
     110|     expect(result.repositories[0].path).toBe('/path/to/repo1');
     111|     expect(result.repositories[1].path).toBe('/path/to/repo2');
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts > AnalysisEngine - Batch Processing > should handle errors in repository analysis
 AssertionError: expected [] to have a length of 2 but got +0
@@ -1594,14 +2429,14 @@ AssertionError: expected [] to have a length of 2 but got +0
 + 0
 
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts:224:33
-    222| 
+    222|
     223|     expect(result).toBeDefined();
     224|     expect(result.repositories).toHaveLength(2);
        |                                 ^
     225|     expect(result.repositories[0].path).toBe('/path/to/repo1');
     226|     expect(result.repositories[1].path).toBe('/path/to/repo3');
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts > AnalysisEngine - Batch Processing > should generate combined insights for multiple repositories
 AssertionError: expected [] to have a length of 2 but got +0
@@ -1620,9 +2455,9 @@ AssertionError: expected [] to have a length of 2 but got +0
     337|     expect(result.combinedInsights).toBeDefined();
     338|     expect(result.combinedInsights?.commonalities).toContain(
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/101]⎯
 
- FAIL  packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts > AnalysisEngine - Batch Processing > should analyze multiple repositories with queue      
+ FAIL  packages/backend/src/core/__tests__/AnalysisEngine.batch.test.ts > AnalysisEngine - Batch Processing > should analyze multiple repositories with queue
 AssertionError: expected [] to have a length of 3 but got +0
 
 - Expected
@@ -1639,7 +2474,7 @@ AssertionError: expected [] to have a length of 3 but got +0
     362|     expect(progressCallback).toHaveBeenCalled();
     363|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > analyzeRepository > should analyze a repository
 FileSystemError: Repository not found: C:\test\repo
@@ -1654,7 +2489,7 @@ FileSystemError: Repository not found: C:\test\repo
  ❯ AnalysisEngine.analyzeRepository packages/backend/src/core/AnalysisEngine.ts:86:14
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.test.ts:138:22
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > analyzeMultipleRepositories > should analyze multiple repositories
 AssertionError: expected [] to have a length of 2 but got +0
@@ -1673,7 +2508,7 @@ AssertionError: expected [] to have a length of 2 but got +0
     169|       expect(result.repositories[0].name).toBe('test-repo');
     170|       expect(result.repositories[1].name).toBe('test-repo');
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[60/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > analyzeMultipleRepositories > should handle errors in individual repositories
 TypeError: mockDiscoverRepository2.mockClear is not a function
@@ -1685,7 +2520,7 @@ TypeError: mockDiscoverRepository2.mockClear is not a function
     181|
     182|       // Make the second repository analysis fail
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[61/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > generateSynopsis > should generate JSON synopsis
 FileSystemError: Repository not found: C:\test\repo
@@ -1700,7 +2535,7 @@ FileSystemError: Repository not found: C:\test\repo
  ❯ AnalysisEngine.analyzeRepository packages/backend/src/core/AnalysisEngine.ts:86:14
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.test.ts:252:24
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[62/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > generateSynopsis > should generate Markdown synopsis
 FileSystemError: Repository not found: C:\test\repo
@@ -1715,7 +2550,7 @@ FileSystemError: Repository not found: C:\test\repo
  ❯ AnalysisEngine.analyzeRepository packages/backend/src/core/AnalysisEngine.ts:86:14
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.test.ts:273:24
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[63/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > generateSynopsis > should generate HTML synopsis
 FileSystemError: Repository not found: C:\test\repo
@@ -1730,7 +2565,7 @@ FileSystemError: Repository not found: C:\test\repo
  ❯ AnalysisEngine.analyzeRepository packages/backend/src/core/AnalysisEngine.ts:86:14
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.test.ts:292:24
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[64/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/101]⎯
 
  FAIL  packages/backend/src/core/__tests__/AnalysisEngine.test.ts > Analysis Engine > generateSynopsis > should throw error for unsupported format
 FileSystemError: Repository not found: C:\test\repo
@@ -1745,52 +2580,26 @@ FileSystemError: Repository not found: C:\test\repo
  ❯ AnalysisEngine.analyzeRepository packages/backend/src/core/AnalysisEngine.ts:86:14
  ❯ packages/backend/src/core/__tests__/AnalysisEngine.test.ts:311:24
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[65/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/101]⎯
 
- FAIL  packages/backend/src/core/__tests__/IndexSystem.comprehensive.test.ts > IndexSystem Comprehensive Tests > Persistence and File Operations > should handle file system errors during save
-TypeError: Cannot spy on export "writeFileSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
- ❯ packages/backend/src/core/__tests__/IndexSystem.comprehensive.test.ts:411:27
-    409|     it('should handle file system errors during save', async () => {
-    410|       // Mock fs.writeFileSync to throw an error
-    411|       const writeSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {
-       |                           ^
-    412|         throw new Error('File system error');
-    413|       });
+ FAIL  packages/backend/src/core/__tests__/IndexSystem.comprehensive.test.ts > IndexSystem Comprehensive Tests > Constructor and Initialization > should load valid index from disk
+AssertionError: expected +0 to be 1 // Object.is equality
 
-Caused by: TypeError: Cannot redefine property: writeFileSync
- ❯ packages/backend/src/core/__tests__/IndexSystem.comprehensive.test.ts:411:27
+- Expected
++ Received
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[66/142]⎯
+- 1
++ 0
 
- FAIL  packages/backend/src/providers/__tests__/ClaudeProvider.test.ts > ClaudeProvider > analyze > should call Claude API and return formatted response
-AssertionError: expected "wrap" to be called with arguments: [ …(3) ]
+ ❯ packages/backend/src/core/__tests__/IndexSystem.comprehensive.test.ts:132:41
+    130|       const index = newSystem.getIndex();
+    131|
+    132|       expect(index.repositories.length).toBe(1);
+       |                                         ^
+    133|       expect(index.repositories[0].name).toBe('test-repo');
+    134|     });
 
-Received:
-
-  1st wrap call:
-
-@@ -14,7 +14,8 @@
-      "headers": {
-        "Anthropic-Version": "2023-06-01",
-        "Content-Type": "application/json",
-        "X-API-Key": "test-key",
-      },
-+     "timeout": 60000,
-    },
-  ]
-
-
-Number of calls: 1
-
- ❯ packages/backend/src/providers/__tests__/ClaudeProvider.test.ts:147:32
-    145|       const response = await provider.analyze('Test prompt');
-    146|
-    147|       expect(mockedAxios.post).toHaveBeenCalledWith(
-       |                                ^
-    148|         'https://api.anthropic.com/v1/complete',
-    149|         {
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[67/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/101]⎯
 
  FAIL  packages/backend/src/providers/__tests__/OpenRouterProvider.test.ts > OpenRouterProvider Model Selection > fetchModels > should handle API errors gracefully
 AssertionError: expected [Function] to throw error including 'OpenRouter Models API error: 401' but got 'OpenRouter Models API error: [object …'
@@ -1806,10 +2615,10 @@ Received: "OpenRouter Models API error: [object Object]"
      81|         'OpenRouter Models API error: 401'
      82|       );
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[68/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/101]⎯
 
  FAIL  packages/backend/src/providers/__tests__/OpenRouterProvider.test.ts > OpenRouterProvider Model Selection > validateModel > should handle API errors during validation
-AssertionError: expected 'OpenRouter Models API error: Network …' to be 'Network error' // Object.is equality
+AssertionError: expected 'OpenRouter Models API error: Network …' to be 'Network error' // Object.is equality 
 
 Expected: "Network error"
 Received: "OpenRouter Models API error: Network error"
@@ -1822,223 +2631,7 @@ Received: "OpenRouter Models API error: Network error"
     169|     });
     170|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[69/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > initialize > should create configuration directory and default files
-TypeError: configService.initialize is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:399:27
-    397|       mockFs.access.mockRejectedValue(new Error('File not found'));
-    398|
-    399|       await configService.initialize();
-       |                           ^
-    400|
-    401|       expect(mockFs.mkdir).toHaveBeenCalledWith(mockConfigDir, {
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[70/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > initialize > should not overwrite existing files
-TypeError: configService.initialize is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:416:27
-    414|       mockFs.access.mockResolvedValue(undefined); // Files exist
-    415|
-    416|       await configService.initialize();
-       |                           ^
-    417|
-    418|       expect(mockFs.writeFile).not.toHaveBeenCalledWith(
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[71/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > getUserPreferences > should return user preferences from file       
-TypeError: configService.getUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:430:42
-    428|       mockFs.readFile.mockResolvedValue(JSON.stringify(mockPreferences));
-    429|
-    430|       const result = await configService.getUserPreferences();
-       |                                          ^
-    431|
-    432|       expect(result).toEqual(mockPreferences);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[72/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > getUserPreferences > should return defaults if file read fails      
-TypeError: configService.getUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:442:42
-    440|       mockFs.readFile.mockRejectedValue(new Error('File not found'));
-    441|
-    442|       const result = await configService.getUserPreferences();
-       |                                          ^
-    443|
-    444|       expect(result).toEqual(DEFAULT_USER_PREFERENCES);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[73/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > getUserPreferences > should merge with defaults for missing fields  
-TypeError: configService.getUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:453:42
-    451|       mockFs.readFile.mockResolvedValue(JSON.stringify(partialPreferences));
-    452|
-    453|       const result = await configService.getUserPreferences();
-       |                                          ^
-    454|
-    455|       expect(result.general.theme).toBe('dark');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[74/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > saveUserPreferences > should save valid preferences
-TypeError: configService.saveUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:465:27
-    463|       mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
-    464|
-    465|       await configService.saveUserPreferences(DEFAULT_USER_PREFERENCES);
-       |                           ^
-    466|
-    467|       expect(mockFs.writeFile).toHaveBeenCalledWith(
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[75/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > saveUserPreferences > should create backup before saving
-TypeError: configService.saveUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:476:27
-    474|       mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
-    475|
-    476|       await configService.saveUserPreferences(DEFAULT_USER_PREFERENCES);
-       |                           ^
-    477|
-    478|       // Should create backup (writeFile called twice - once for backup, once for preferences)
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[76/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > saveUserPreferences > should throw error for invalid preferences    
-TypeError: configService.saveUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:491:34
-    489|       };
-    490|
-    491|       await expect(configService.saveUserPreferences(invalidPreferences)).rejects.toThrow();
-       |                                  ^
-    492|     });
-    493|   });
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[77/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > updatePreferences > should update specific preference section       
-TypeError: configService.updatePreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:501:42
-    499|
-    500|       const updates = { theme: 'dark' as const };
-    501|       const result = await configService.updatePreferences('general', updates);
-       |                                          ^
-    502|
-    503|       expect(result.general.theme).toBe('dark');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[78/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > validateUserPreferences > should validate correct preferences       
-TypeError: configService.validateUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:510:36
-    508|   describe('validateUserPreferences', () => {
-    509|     it('should validate correct preferences', () => {
-    510|       const result = configService.validateUserPreferences(DEFAULT_USER_PREFERENCES);
-       |                                    ^
-    511|
-    512|       expect(result.isValid).toBe(true);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[79/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > validateUserPreferences > should return errors for invalid preferences
-TypeError: configService.validateUserPreferences is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:525:36
-    523|       };
-    524|
-    525|       const result = configService.validateUserPreferences(invalidPreferences);
-       |                                    ^
-    526|
-    527|       expect(result.isValid).toBe(false);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[80/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > workspace management > should save workspace configuration
-TypeError: configService.saveWorkspaceConfiguration is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:543:42
-    541|       };
-    542|
-    543|       const result = await configService.saveWorkspaceConfiguration(workspace);
-       |                                          ^
-    544|
-    545|       expect(result.name).toBe(workspace.name);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[81/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > workspace management > should update workspace configuration        
-TypeError: configService.updateWorkspaceConfiguration is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:565:42
-    563|
-    564|       const updates = { name: 'Updated Workspace' };
-    565|       const result = await configService.updateWorkspaceConfiguration('test-id', updates);
-       |                                          ^
-    566|
-    567|       expect(result.name).toBe('Updated Workspace');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[82/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > workspace management > should delete workspace configuration        
-TypeError: configService.deleteWorkspaceConfiguration is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:583:27
-    581|       mockFs.writeFile.mockResolvedValue(undefined);
-    582|
-    583|       await configService.deleteWorkspaceConfiguration('test-id');
-       |                           ^
-    584|
-    585|       expect(mockFs.writeFile).toHaveBeenCalledWith(
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[83/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > backup and restore > should create configuration backup
-TypeError: configService.createBackup is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:597:42
-    595|       mockFs.writeFile.mockResolvedValue(undefined);
-    596|
-    597|       const backup = await configService.createBackup('manual');
-       |                                          ^
-    598|
-    599|       expect(backup.id).toBeDefined();
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[84/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > backup and restore > should restore from backup
-TypeError: configService.restoreFromBackup is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:621:42
-    619|       mockFs.writeFile.mockResolvedValue(undefined);
-    620|
-    621|       const result = await configService.restoreFromBackup('backup-id');
-       |                                          ^
-    622|
-    623|       expect(result).toEqual(DEFAULT_USER_PREFERENCES);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[85/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > import and export > should export configuration
-TypeError: configService.exportConfiguration is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:632:42
-    630|       mockFs.readFile.mockResolvedValue(JSON.stringify(DEFAULT_USER_PREFERENCES));
-    631|
-    632|       const result = await configService.exportConfiguration();
-       |                                          ^
-    633|
-    634|       const exported = JSON.parse(result);
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[86/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/config.service.test.ts > ConfigurationService > import and export > should import configuration
-TypeError: configService.importConfiguration is not a function
- ❯ packages/backend/src/services/__tests__/config.service.test.ts:649:27
-    647|       mockFs.writeFile.mockResolvedValue(undefined);
-    648|
-    649|       await configService.importConfiguration(configData);
-       |                           ^
-    650|
-    651|       expect(mockFs.writeFile).toHaveBeenCalledWith(
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[87/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/logger-http-simple.service.test.ts > HTTP Request/Response Logging - Simplified > Middleware Functionality > should add request ID to request object
 AssertionError: expected undefined to be defined
@@ -2050,7 +2643,7 @@ AssertionError: expected undefined to be defined
      63|       expect(typeof mockReq.requestId).toBe('string');
      64|       expect(mockReq.requestId.length).toBeGreaterThan(0);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[88/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/logger-http-simple.service.test.ts > HTTP Request/Response Logging - Simplified > Request ID Generation > should generate unique request IDs
 AssertionError: expected undefined not to be undefined // Object.is equality
@@ -2062,7 +2655,7 @@ AssertionError: expected undefined not to be undefined // Object.is equality
     112|     });
     113|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[89/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/logger-http-simple.service.test.ts > HTTP Request/Response Logging - Simplified > Request ID Generation > should generate UUID format request IDs
 TypeError: .toMatch() expects to receive a string, but got undefined
@@ -2074,10 +2667,10 @@ TypeError: .toMatch() expects to receive a string, but got undefined
     120|     });
     121|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[90/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/path-handler-performance.test.ts > PathHandler Performance > Single Path Validation Performance > should handle timeout scenarios gracefully
-AssertionError: expected 108 to be less than 100
+AssertionError: expected 103 to be less than 100
  ❯ packages/backend/src/services/__tests__/path-handler-performance.test.ts:137:24
     135|
     136|       const duration = Date.now() - startTime;
@@ -2086,7 +2679,7 @@ AssertionError: expected 108 to be less than 100
     138|     });
     139|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[91/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/path-handler-performance.test.ts > PathHandler Performance > Concurrent Path Validation Performance > should handle concurrent validations efficiently
 AssertionError: expected +0 to be 1 // Object.is equality
@@ -2105,7 +2698,7 @@ AssertionError: expected +0 to be 1 // Object.is equality
     169|     });
     170|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[92/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[60/101]⎯
 
  FAIL  packages/backend/src/services/__tests__/path-handler-performance.test.ts > PathHandler Performance > Performance Regression Detection > should detect performance regressions in path validation
 AssertionError: expected false to be true // Object.is equality
@@ -2124,19 +2717,7 @@ AssertionError: expected false to be true // Object.is equality
     350|     });
     351|   });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[93/142]⎯
-
- FAIL  packages/backend/src/services/__tests__/performance-monitor.test.ts > PerformanceMonitor > Performance Baselines > should create and update baselines       
-AssertionError: expected 30.085900000000002 to be less than 30
- ❯ packages/backend/src/services/__tests__/performance-monitor.test.ts:179:41
-    177|       expect(baseline?.sampleCount).toBe(5);
-    178|       expect(baseline?.averageDuration).toBeGreaterThan(15);
-    179|       expect(baseline?.averageDuration).toBeLessThan(30);
-       |                                         ^
-    180|     });
-    181|   });
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[94/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[61/101]⎯
 
  FAIL  packages/backend/src/utils/__tests__/queue.test.ts > TaskQueue > should process tasks sequentially with concurrency 1
 AssertionError: expected undefined to be 2 // Object.is equality
@@ -2155,7 +2736,7 @@ undefined
      46|
      47|     expect(task2?.status).toBe(TaskStatus.COMPLETED);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[95/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[62/101]⎯
 
  FAIL  packages/backend/src/utils/__tests__/queue.test.ts > TaskQueue > should process tasks concurrently with concurrency > 1
 AssertionError: expected undefined to be 2 // Object.is equality
@@ -2174,329 +2755,384 @@ undefined
      78|
      79|     expect(task2?.status).toBe(TaskStatus.COMPLETED);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[96/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[63/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should fetch requests and stats on mount
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:77:24
-     75|     });
-     76|
-     77|     const { result } = renderHook(() => useAnalysisRequests());
-       |                        ^
-     78|
-     79|     expect(result.current.loading).toBe(true);
+AssertionError: expected true to be false // Object.is equality
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[97/142]⎯
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:86:36
+     84|     });
+     85|
+     86|     expect(result.current.loading).toBe(false);
+       |                                    ^
+     87|     expect(result.current.requests).toEqual(mockRequests);
+     88|     expect(result.current.stats).toEqual(mockStats);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[64/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should handle fetch errors
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:97:24
-     95|     mockGetAnalysisRequestStats.mockRejectedValue(new Error('Failed to fetch'));
-     96|
-     97|     const { result } = renderHook(() => useAnalysisRequests());
-       |                        ^
-     98|
-     99|     // Wait for the async operations to complete
+AssertionError: expected null to be 'Failed to fetch' // Object.is equality
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[98/142]⎯
+- Expected:
+"Failed to fetch"
+
++ Received:
+null
+
+ ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:104:34
+    102|     });
+    103|
+    104|     expect(result.current.error).toBe('Failed to fetch');
+       |                                  ^
+    105|     expect(result.current.requests).toEqual([]);
+    106|     expect(result.current.stats).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[65/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should refresh requests
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:121:24
-    119|     });
-    120|
-    121|     const { result } = renderHook(() => useAnalysisRequests());
-       |                        ^
-    122|
-    123|     // Wait for initial fetch
+AssertionError: expected [] to deeply equal [ Array(2) ]
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[99/142]⎯
+- Expected
++ Received
+
+- [
+-   {
+-     "endTime": "2023-01-01T00:01:00Z",
+-     "id": "1",
+-     "options": {},
+-     "path": "/test/path1",
+-     "processingTime": 60000,
+-     "progress": 100,
+-     "startTime": "2023-01-01T00:00:00Z",
+-     "status": "completed",
+-   },
+-   {
+-     "currentFile": "file2.js",
+-     "id": "2",
+-     "options": {},
+-     "path": "/test/path2",
+-     "progress": 50,
+-     "startTime": "2023-01-01T00:00:00Z",
+-     "status": "processing",
+-   },
+- ]
++ []
+
+ ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:135:37
+    133|     });
+    134|
+    135|     expect(result.current.requests).toEqual(mockRequests);
+       |                                     ^
+    136|     expect(mockGetAnalysisRequests).toHaveBeenCalledTimes(2);
+    137|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[66/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts > useAnalysisRequests > should fetch a specific request
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:145:24
-    143|     });
-    144|
-    145|     const { result } = renderHook(() => useAnalysisRequests());
-       |                        ^
-    146|
-    147|     let request: any;
+AssertionError: expected null to deeply equal { id: '1', path: '/test/path1', …(6) }
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[100/142]⎯
+- Expected:
+{
+  "endTime": "2023-01-01T00:01:00Z",
+  "id": "1",
+  "options": {},
+  "path": "/test/path1",
+  "processingTime": 60000,
+  "progress": 100,
+  "startTime": "2023-01-01T00:00:00Z",
+  "status": "completed",
+}
+
++ Received:
+null
+
+ ❯ packages/frontend/src/hooks/__tests__/useAnalysisRequests.test.ts:152:21
+    150|     });
+    151|
+    152|     expect(request).toEqual(mockRequest);
+       |                     ^
+    153|     expect(mockGetAnalysisRequest).toHaveBeenCalledWith('1');
+    154|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[67/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > fetchProviderModels > should fetch models for OpenRouter provider
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:56:26
-     54|       } as any);
-     55|
-     56|       const { result } = renderHook(() => useProviders());
-       |                          ^
-     57|
-     58|       const models = await result.current.fetchProviderModels('openrouter');
+AssertionError: expected undefined to deeply equal [ { id: 'openai/gpt-4', …(5) }, …(1) ]
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[101/142]⎯
+- Expected:
+[
+  {
+    "architecture": {
+      "modality": "text",
+      "tokenizer": "cl100k_base",
+    },
+    "context_length": 8192,
+    "description": "GPT-4 by OpenAI",
+    "id": "openai/gpt-4",
+    "name": "GPT-4",
+    "pricing": {
+      "completion": 0.06,
+      "prompt": 0.03,
+    },
+  },
+  {
+    "architecture": {
+      "modality": "text",
+      "tokenizer": "claude",
+    },
+    "context_length": 200000,
+    "description": "Claude 3 Haiku by Anthropic",
+    "id": "anthropic/claude-3-haiku",
+    "name": "Claude 3 Haiku",
+    "pricing": {
+      "completion": 0.00125,
+      "prompt": 0.00025,
+    },
+  },
+]
 
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > fetchProviderModels > should return empty array when API call fails
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:67:26
-     65|       mockedApiService.getProviderModels.mockRejectedValueOnce(new Error('API Error'));
-     66|
-     67|       const { result } = renderHook(() => useProviders());
-       |                          ^
-     68|
-     69|       const models = await result.current.fetchProviderModels('openrouter');
++ Received:
+undefined
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[102/142]⎯
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:61:22
+     59|
+     60|       expect(mockedApiService.getProviderModels).toHaveBeenCalledWith('openrouter');
+     61|       expect(models).toEqual(mockModels);
+       |                      ^
+     62|     });
+     63|
 
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > fetchProviderModels > should return empty array when response is null
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:77:26
-     75|       mockedApiService.getProviderModels.mockResolvedValueOnce(null as any);
-     76|
-     77|       const { result } = renderHook(() => useProviders());
-       |                          ^
-     78|
-     79|       const models = await result.current.fetchProviderModels('openrouter');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[103/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[68/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should validate model successfully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:102:26
-    100|       } as any);
-    101|
-    102|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    103|
-    104|       const validation = await result.current.validateProviderModel('openrouter', 'openai/gpt-4');
+AssertionError: expected { valid: undefined, …(2) } to deeply equal { valid: true, model: { …(3) }, …(1) }    
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[104/142]⎯
+- Expected
++ Received
 
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should handle validation failure 
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:129:26
-    127|       } as any);
-    128|
-    129|       const { result } = renderHook(() => useProviders());
+  {
+    "error": undefined,
+-   "model": {
+-     "id": "openai/gpt-4",
+-     "name": "GPT-4",
+-     "pricing": {
+-       "completion": 0.06,
+-       "prompt": 0.03,
+-     },
+-   },
+-   "valid": true,
++   "model": undefined,
++   "valid": undefined,
+  }
+
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:110:26
+    108|         'openai/gpt-4'
+    109|       );
+    110|       expect(validation).toEqual({
        |                          ^
-    130|
+    111|         valid: true,
+    112|         model: mockValidation.model,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[69/101]⎯
+
+ FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should handle validation failure
+AssertionError: expected { valid: undefined, …(2) } to deeply equal { Object (valid, model, ...) }
+
+- Expected
++ Received
+
+  {
+-   "error": "Model not found",
++   "error": undefined,
+    "model": undefined,
+-   "valid": false,
++   "valid": undefined,
+  }
+
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:133:26
     131|       const validation = await result.current.validateProviderModel('openrouter', 'invalid/model');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[105/142]⎯
-
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should handle API errors gracefully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:143:26
-    141|       mockedApiService.validateProviderModel.mockRejectedValueOnce(new Error('Network error'));
-    142|
-    143|       const { result } = renderHook(() => useProviders());
+    132|
+    133|       expect(validation).toEqual({
        |                          ^
-    144|
-    145|       const validation = await result.current.validateProviderModel('openrouter', 'openai/gpt-4');
+    134|         valid: false,
+    135|         model: undefined,
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[106/142]⎯
-
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > validateProviderModel > should handle null response      
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:154:26
-    152|       mockedApiService.validateProviderModel.mockResolvedValueOnce(null as any);
-    153|
-    154|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    155|
-    156|       const validation = await result.current.validateProviderModel('openrouter', 'openai/gpt-4');
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[107/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[70/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > getModelRecommendations > should get model recommendations successfully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:180:26
-    178|       } as any);
-    179|
-    180|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    181|
-    182|       const recommendations = await result.current.getModelRecommendations(
+AssertionError: expected undefined to deeply equal { maxTokens: 4000, temperature: 0.7 }
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[108/142]⎯
+- Expected:
+{
+  "maxTokens": 4000,
+  "temperature": 0.7,
+}
 
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > getModelRecommendations > should return empty object when API call fails
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:197:26
-    195|       mockedApiService.getModelRecommendations.mockRejectedValueOnce(new Error('API Error'));
-    196|
-    197|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    198|
-    199|       const recommendations = await result.current.getModelRecommendations(
++ Received:
+undefined
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[109/142]⎯
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:191:31
+    189|         'openai/gpt-4'
+    190|       );
+    191|       expect(recommendations).toEqual(mockRecommendations);
+       |                               ^
+    192|     });
+    193|
 
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > getModelRecommendations > should return empty object when response is null
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:210:26
-    208|       mockedApiService.getModelRecommendations.mockResolvedValueOnce(null as any);
-    209|
-    210|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    211|
-    212|       const recommendations = await result.current.getModelRecommendations(
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[110/142]⎯
-
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > loading states > should include model validation loading in overall loading state
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:225:26
-    223|       // This would require mocking the useApi hook to return loading: true
-    224|       // for the validateProviderModel API call
-    225|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    226|
-    227|       // The loading state should aggregate all API loading states
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[111/142]⎯
-
- FAIL  packages/frontend/src/hooks/__tests__/useProviders.models.test.ts > useProviders Model Selection > error handling > should aggregate errors from all API calls
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ Proxy.renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.models.test.ts:234:26
-    232|   describe('error handling', () => {
-    233|     it('should aggregate errors from all API calls', () => {
-    234|       const { result } = renderHook(() => useProviders());
-       |                          ^
-    235|
-    236|       // The error state should aggregate all API errors
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[112/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[71/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should initialize with empty providers and no loading/error state
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:22:24
-     20| 
-     21|   test('should initialize with empty providers and no loading/error state', () => {
-     22|     const { result } = renderHook(() => useProviders());
-       |                        ^
-     23|
-     24|     expect(result.current.providers).toEqual([]);
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:22:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[113/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[72/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should fetch providers successfully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:61:24
-     59|     mockGetProviders.mockResolvedValue(mockResponse);
-     60|
-     61|     const { result } = renderHook(() => useProviders());
-       |                        ^
-     62|
-     63|     await act(async () => {
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:61:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[114/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[73/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle fetch providers error
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:76:24
-     74|     mockGetProviders.mockRejectedValue(new Error('Network error'));
-     75|
-     76|     const { result } = renderHook(() => useProviders());
-       |                        ^
-     77|
-     78|     await act(async () => {
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:76:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[115/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[74/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should test provider successfully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:118:24
-    116|     mockTestProvider.mockResolvedValue(mockTestResponse);
-    117|
-    118|     const { result } = renderHook(() => useProviders());
-       |                        ^
-    119|
-    120|     // First fetch providers
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:118:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[116/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[75/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle test provider error
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:158:24
-    156|     mockTestProvider.mockRejectedValue(new Error('Test failed'));
-    157|
-    158|     const { result } = renderHook(() => useProviders());
-       |                        ^
-    159|
-    160|     // First fetch providers
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:158:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[117/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[76/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should fetch provider models successfully
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:218:24
-    216|     });
-    217|
-    218|     const { result } = renderHook(() => useProviders());
-       |                        ^
-    219|
-    220|     // First fetch providers
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:218:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[118/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[77/101]⎯
 
  FAIL  packages/frontend/src/hooks/__tests__/useProviders.test.ts > useProviders > should handle fetch provider models error
-ReferenceError: document is not defined
- ❯ render node_modules/@testing-library/react/dist/pure.js:239:5
- ❯ renderHook node_modules/@testing-library/react/dist/pure.js:318:7
- ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:256:24
-    254|     mockGetProviderModels.mockRejectedValue(new Error('Models fetch failed'));
-    255|
-    256|     const { result } = renderHook(() => useProviders());
-       |                        ^
-    257|
-    258|     // First fetch providers
+Error: useToast must be used within a ToastProvider
+ ❯ useToast packages/frontend/src/hooks/useToast.tsx:107:11
+    105|   const context = useContext(ToastContext);
+    106|   if (context === undefined) {
+    107|     throw new Error('useToast must be used within a ToastProvider');
+       |           ^
+    108|   }
+    109|   return context;
+ ❯ useErrorHandler packages/frontend/src/hooks/useErrorHandler.ts:13:25
+ ❯ useApi packages/frontend/src/hooks/useApi.ts:55:27
+ ❯ useProviders packages/frontend/src/hooks/useProviders.ts:62:7
+ ❯ packages/frontend/src/hooks/__tests__/useProviders.test.ts:256:41
+ ❯ TestComponent node_modules/@testing-library/react/dist/pure.js:309:27
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ mountIndeterminateComponent node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ❯ beginWork node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ❯ beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:27465:14
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[119/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[78/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should disconnect from WebSocket server
 AssertionError: expected "spy" to be called at least once
@@ -2508,7 +3144,7 @@ AssertionError: expected "spy" to be called at least once
      71|     expect((websocketService as any).socket).toBeNull();
      72|     expect((websocketService as any).connected).toBe(false);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[120/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[79/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should subscribe to analysis progress
 AssertionError: expected "spy" to be called with arguments: [ 'register-analysis', …(1) ]
@@ -2523,31 +3159,31 @@ Number of calls: 0
      80|   });
      81|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[121/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[80/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle connect event
 TypeError: Cannot read properties of undefined (reading '1')
  ❯ packages/frontend/src/services/__tests__/websocket.test.ts:86:89
      84|
      85|     // Simulate connect event
-     86|     const connectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'connect')[1];
+     86|     const connectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'connect')[1];        
        |                                                                                         ^
      87|     connectHandler();
      88|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[122/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[81/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle disconnect event
 TypeError: Cannot read properties of undefined (reading '1')
  ❯ packages/frontend/src/services/__tests__/websocket.test.ts:100:95
      98|
      99|     // Simulate disconnect event
-    100|     const disconnectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'disconnect')[1];
-       |                                                                                               ^
+    100|     const disconnectHandler = mockSocket.on.mock.calls.find((call) => call[0] === 'disconnect')[1];  
+       |                                                                                               ^      
     101|     disconnectHandler('test-reason');
     102|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[123/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[82/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle analysis progress event
 TypeError: Cannot read properties of undefined (reading '1')
@@ -2559,7 +3195,7 @@ TypeError: Cannot read properties of undefined (reading '1')
     116|     progressHandler({
     117|       status: 'processing',
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[124/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[83/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle analysis complete event
 TypeError: Cannot read properties of undefined (reading '1')
@@ -2571,7 +3207,7 @@ TypeError: Cannot read properties of undefined (reading '1')
     150|     const testData = { id: 'test-id', name: 'test-repo' };
     151|     completeHandler(testData);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[125/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[84/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle batch analysis progress event
 TypeError: Cannot read properties of undefined (reading '1')
@@ -2583,7 +3219,7 @@ TypeError: Cannot read properties of undefined (reading '1')
     169|     progressHandler({
     170|       status: 'processing',
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[126/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[85/101]⎯
 
  FAIL  packages/frontend/src/services/__tests__/websocket.test.ts > WebSocketService > should handle batch analysis complete event
 TypeError: Cannot read properties of undefined (reading '1')
@@ -2595,7 +3231,7 @@ TypeError: Cannot read properties of undefined (reading '1')
     200|     const testData = {
     201|       repositories: [
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[127/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[86/101]⎯
 
  FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Component Rendering Performance > should handle rapid state updates efficiently
 TypeError: actual value must be number or bigint, received "undefined"
@@ -2607,9 +3243,9 @@ TypeError: actual value must be number or bigint, received "undefined"
     118|     });
     119|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[128/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[87/101]⎯
 
- FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > API Performance > should handle concurrent API requests efficiently    
+ FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > API Performance > should handle concurrent API requests efficiently
 TypeError: actual value must be number or bigint, received "undefined"
  ❯ packages/frontend/src/test/performance/benchmarks.test.ts:177:25
     175|
@@ -2619,7 +3255,7 @@ TypeError: actual value must be number or bigint, received "undefined"
     178|       expect(results).toHaveLength(concurrentRequests);
     179|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[129/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[88/101]⎯
 
  FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > API Performance > should implement effective caching strategy
 TypeError: actual value must be number or bigint, received "undefined"
@@ -2631,9 +3267,9 @@ TypeError: actual value must be number or bigint, received "undefined"
     204|
     205|       // Second call - should use cache
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[130/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[89/101]⎯
 
- FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Memory Management > should handle large file processing efficiently    
+ FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Memory Management > should handle large file processing efficiently
 TypeError: actual value must be number or bigint, received "undefined"
  ❯ packages/frontend/src/test/performance/benchmarks.test.ts:268:30
     266|
@@ -2643,7 +3279,7 @@ TypeError: actual value must be number or bigint, received "undefined"
     269|       expect(processedContent).toBeDefined();
     270|     });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[131/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[90/101]⎯
 
  FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > User Interaction Performance > should respond to user interactions within 16ms (60fps)
 TypeError: actual value must be number or bigint, received "undefined"
@@ -2656,7 +3292,7 @@ TypeError: actual value must be number or bigint, received "undefined"
     297|     });
  ❯ packages/frontend/src/test/performance/benchmarks.test.ts:294:40
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[132/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[91/101]⎯
 
  FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > User Interaction Performance > should implement smooth scrolling and virtualization
 TypeError: actual value must be number or bigint, received "undefined"
@@ -2668,7 +3304,7 @@ TypeError: actual value must be number or bigint, received "undefined"
     324|       expect(visibleItemsArray.length).toBeLessThanOrEqual(visibleItems);
     325|       expect(visibleItemsArray.length).toBeGreaterThan(0);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[133/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[92/101]⎯
 
  FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Network Performance > should implement request deduplication
 TypeError: actual value must be number or bigint, received "undefined"
@@ -2680,9 +3316,9 @@ TypeError: actual value must be number or bigint, received "undefined"
     366|       expect(results).toHaveLength(3);
     367|       expect(results[0]).toEqual(results[1]);
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[134/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[93/101]⎯
 
- FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Network Performance > should handle request timeouts gracefully        
+ FAIL  packages/frontend/src/test/performance/benchmarks.test.ts > Performance Benchmarks > Network Performance > should handle request timeouts gracefully
 Error: Test timed out in 5000ms.
 If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
  ❯ packages/frontend/src/test/performance/benchmarks.test.ts:371:5
@@ -2693,7 +3329,7 @@ If this is a long-running test, pass a timeout value as the last argument or con
     372|       const timeoutDuration = 5000; // 5 seconds
     373|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[135/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[94/101]⎯
 
  FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > downloadExport > downloads existing export file
 AssertionError: expected "spy" to be called with arguments: [ 'Content-Type', 'application/json' ]
@@ -2703,14 +3339,14 @@ Number of calls: 0
  ❯ packages/backend/src/api/controllers/__tests__/export.controller.test.ts:283:38
     281|       await downloadExport(mockRequest as Request, mockResponse as Response);
     282|
-    283|       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+    283|       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');       
        |                                      ^
     284|       expect(mockResponse.setHeader).toHaveBeenCalledWith(
     285|         'Content-Disposition',
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[136/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[95/101]⎯
 
- FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > downloadExport > returns 404 when export file not found      
+ FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > downloadExport > returns 404 when export file not found
 AssertionError: expected "spy" to be called with arguments: [ { error: 'Export file not found' } ]
 
 Received:
@@ -2735,7 +3371,7 @@ Number of calls: 1
     300|         error: 'Export file not found',
     301|       });
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[137/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[96/101]⎯
 
  FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > deleteExport > deletes existing export
 AssertionError: expected "spy" to be called with arguments: [ 200 ]
@@ -2760,9 +3396,9 @@ Number of calls: 1
     342|       expect(mockResponse.json).toHaveBeenCalledWith({
     343|         message: 'Export deleted successfully',
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[138/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[97/101]⎯
 
- FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > deleteExport > handles file deletion errors gracefully       
+ FAIL  packages/backend/src/api/controllers/__tests__/export.controller.test.ts > Export Controller > deleteExport > handles file deletion errors gracefully
 AssertionError: expected "spy" to be called with arguments: [ 200 ]
 
 Received:
@@ -2785,7 +3421,7 @@ Number of calls: 1
     408|       expect(mockResponse.json).toHaveBeenCalledWith({
     409|         message: 'Export deleted successfully',
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[139/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[98/101]⎯
 
  FAIL  packages/backend/src/api/routes/__tests__/analysis-requests.test.ts > analysis requests routes > should define GET routes
 Error: Cannot find module '../analysis-requests'
@@ -2799,7 +3435,7 @@ Require stack:
      37|
      38|     expect(mockRouter.get).toHaveBeenCalledWith('/', expect.any(Function));
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[140/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[99/101]⎯
 
  FAIL  packages/backend/src/api/routes/__tests__/providers.test.ts > providers routes > GET /api/providers > should return all registered providers with their status
 AssertionError: expected false to be true // Object.is equality
@@ -2818,7 +3454,7 @@ AssertionError: expected false to be true // Object.is equality
      71|       expect(claudeProvider.model).toBe('claude-3-haiku-20240307');
      72|
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[141/142]⎯
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[100/101]⎯
 
  FAIL  packages/backend/src/api/routes/__tests__/providers.test.ts > providers routes > GET /api/providers > should handle errors gracefully
 AssertionError: expected "spy" to be called with arguments: [ 500 ]
@@ -2833,12 +3469,11 @@ Number of calls: 0
     107|       expect(res.json).toHaveBeenCalled();
     108|       const errorResponse = res.json.mock.calls[0][0];
 
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[142/142]⎯                                                                     
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[142/142]⎯                                    
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[101/101]⎯
 
 
- Test Files  28 failed | 53 passed (81)
-      Tests  142 failed | 898 passed (1040)
-   Start at  22:47:47
-   Duration  83.46s (transform 16.54s, setup 8.60s, collect 79.01s, tests 90.41s, environment 77ms, prepare 47.46s)
+ Test Files  27 failed | 54 passed (81)
+      Tests  99 failed | 889 passed (988)
+   Start at  23:42:06
+   Duration  80.87s (transform 11.11s, setup 9.18s, collect 67.38s, tests 83.50s, environment 24.33s, prepare 43.58s)
 ```

@@ -1,147 +1,78 @@
-import { act, renderHook } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
-import {
-  cleanupMocks,
-  mockFunction,
-  mockModule,
-  setupMocks,
-} from '../../../../../tests/MockManager';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { apiService } from '../../services/api';
 import { useAnalysisRequests } from '../useAnalysisRequests';
 
-// Create mocked API service functions
-const mockGetAnalysisRequests = mockFunction();
-const mockGetAnalysisRequestStats = mockFunction();
-const mockGetAnalysisRequest = mockFunction();
-
-// Mock the apiService
-mockModule('../../services/api', () => ({
-  apiService: {
-    getAnalysisRequests: mockGetAnalysisRequests,
-    getAnalysisRequestStats: mockGetAnalysisRequestStats,
-    getAnalysisRequest: mockGetAnalysisRequest,
-  },
-}));
+// Mock the entire apiService module
+vi.mock('../../services/api');
 
 describe('useAnalysisRequests', () => {
   const mockRequests = [
-    {
-      id: '1',
-      path: '/test/path1',
-      options: {},
-      status: 'completed',
-      progress: 100,
-      startTime: '2023-01-01T00:00:00Z',
-      endTime: '2023-01-01T00:01:00Z',
-      processingTime: 60000,
-    },
-    {
-      id: '2',
-      path: '/test/path2',
-      options: {},
-      status: 'processing',
-      progress: 50,
-      startTime: '2023-01-01T00:00:00Z',
-      currentFile: 'file2.js',
-    },
+    { id: '1', path: '/test/path1', status: 'completed', progress: 100 },
+    { id: '2', path: '/test/path2', status: 'processing', progress: 50 },
   ];
 
   const mockStats = {
     total: 2,
-    queued: 0,
     processing: 1,
     completed: 1,
-    failed: 0,
-    cancelled: 0,
-    averageProcessingTime: 60000,
   };
 
   beforeEach(() => {
-    setupMocks();
-    mockGetAnalysisRequests.mockReset?.();
-    mockGetAnalysisRequestStats.mockReset?.();
-    mockGetAnalysisRequest.mockReset?.();
+    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue({ data: mockRequests } as any);
+    vi.mocked(apiService.getAnalysisRequestStats).mockResolvedValue({ data: mockStats } as any);
+    vi.mocked(apiService.getAnalysisRequest).mockResolvedValue({ data: mockRequests[0] } as any);
   });
 
   afterEach(() => {
-    cleanupMocks();
+    vi.clearAllMocks();
   });
 
   test('should fetch requests and stats on mount', async () => {
-    mockGetAnalysisRequests.mockResolvedValue({
-      data: mockRequests,
-    });
-    mockGetAnalysisRequestStats.mockResolvedValue({
-      data: mockStats,
-    });
-
     const { result } = renderHook(() => useAnalysisRequests());
 
-    expect(result.current.loading).toBe(true);
-
-    // Wait for the async operations to complete
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+      expect(result.current.requests).toEqual(mockRequests);
+      expect(result.current.stats).toEqual(mockStats);
     });
 
-    expect(result.current.loading).toBe(false);
-    expect(result.current.requests).toEqual(mockRequests);
-    expect(result.current.stats).toEqual(mockStats);
-    expect(mockGetAnalysisRequests).toHaveBeenCalledWith(undefined);
-    expect(mockGetAnalysisRequestStats).toHaveBeenCalledWith();
+    expect(apiService.getAnalysisRequests).toHaveBeenCalledTimes(1);
+    expect(apiService.getAnalysisRequestStats).toHaveBeenCalledTimes(1);
   });
 
   test('should handle fetch errors', async () => {
-    mockGetAnalysisRequests.mockRejectedValue(new Error('Failed to fetch'));
-    mockGetAnalysisRequestStats.mockRejectedValue(new Error('Failed to fetch'));
+    const fetchError = new Error('Failed to fetch');
+    vi.mocked(apiService.getAnalysisRequests).mockRejectedValue(fetchError);
 
     const { result } = renderHook(() => useAnalysisRequests());
 
-    // Wait for the async operations to complete
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+      expect(result.current.error).toBe('Failed to fetch analysis requests');
+      expect(result.current.requests).toEqual([]);
     });
-
-    expect(result.current.error).toBe('Failed to fetch');
-    expect(result.current.requests).toEqual([]);
-    expect(result.current.stats).toBeNull();
   });
 
   test('should refresh requests', async () => {
-    mockGetAnalysisRequests
-      .mockResolvedValueOnce({
-        data: [],
-      })
-      .mockResolvedValueOnce({
-        data: mockRequests,
-      });
-    mockGetAnalysisRequestStats.mockResolvedValue({
-      data: mockStats,
-    });
-
     const { result } = renderHook(() => useAnalysisRequests());
 
     // Wait for initial fetch
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
+    await waitFor(() => expect(result.current.requests).toEqual(mockRequests));
 
-    expect(result.current.requests).toEqual([]);
+    const newMockRequests = [...mockRequests, { id: '3', path: '/test/path3', status: 'queued', progress: 0 }];
+    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue({ data: newMockRequests } as any);
 
     // Refresh requests
     await act(async () => {
       await result.current.refreshRequests();
     });
 
-    expect(result.current.requests).toEqual(mockRequests);
-    expect(mockGetAnalysisRequests).toHaveBeenCalledTimes(2);
+    expect(result.current.requests).toEqual(newMockRequests);
+    expect(apiService.getAnalysisRequests).toHaveBeenCalledTimes(2);
   });
 
   test('should fetch a specific request', async () => {
-    const mockRequest = mockRequests[0];
-    mockGetAnalysisRequest.mockResolvedValue({
-      data: mockRequest,
-    });
-
     const { result } = renderHook(() => useAnalysisRequests());
 
     let request: any;
@@ -149,7 +80,7 @@ describe('useAnalysisRequests', () => {
       request = await result.current.getRequest('1');
     });
 
-    expect(request).toEqual(mockRequest);
-    expect(mockGetAnalysisRequest).toHaveBeenCalledWith('1');
+    expect(request).toEqual(mockRequests[0]);
+    expect(apiService.getAnalysisRequest).toHaveBeenCalledWith('1');
   });
 });

@@ -160,7 +160,7 @@ module.exports = { add, multiply };`
 
         // Should have language detection
         expect(response.body).toHaveProperty('languages');
-        expect(response.body.languages).toHaveProperty('JavaScript');
+        expect(response.body.languages).toContain('JavaScript');
       }
     });
 

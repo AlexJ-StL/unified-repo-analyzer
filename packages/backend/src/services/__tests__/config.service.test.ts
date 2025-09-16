@@ -69,10 +69,10 @@ const mockUuidV4 = vi.mocked(uuidv4);
 
 vi.mock('node:os', () => ({
   default: {
-    homedir: vi.fn(() => mockHomeDir),
+    homedir: vi.fn(() => '/mock/home'),
     platform: vi.fn(() => 'win32'),
   },
-  homedir: vi.fn(() => mockHomeDir),
+  homedir: vi.fn(() => '/mock/home'),
   platform: vi.fn(() => 'win32'),
 }));
 const mockOsHomedir = vi.mocked(os.homedir);

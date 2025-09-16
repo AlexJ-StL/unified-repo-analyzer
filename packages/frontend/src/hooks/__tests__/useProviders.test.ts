@@ -1,7 +1,14 @@
+import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import * as apiModule from '../../services/api';
 import { useProviders } from '../useProviders';
+import { ToastProvider } from '../useToast';
+
+// Create a wrapper component that includes the ToastProvider
+const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+  return <ToastProvider>{children}</ToastProvider>;
+};
 
 // Mock the apiService
 const mockGetProviders = vi.fn();
@@ -19,7 +26,7 @@ describe('useProviders', () => {
   });
 
   test('should initialize with empty providers and no loading/error state', () => {
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     expect(result.current.providers).toEqual([]);
     expect(result.current.loading).toBe(false);
@@ -58,7 +65,7 @@ describe('useProviders', () => {
 
     mockGetProviders.mockResolvedValue(mockResponse);
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     await act(async () => {
       await result.current.refreshProviders();
@@ -73,7 +80,7 @@ describe('useProviders', () => {
   test('should handle fetch providers error', async () => {
     mockGetProviders.mockRejectedValue(new Error('Network error'));
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     await act(async () => {
       await result.current.refreshProviders();
@@ -115,7 +122,7 @@ describe('useProviders', () => {
 
     mockTestProvider.mockResolvedValue(mockTestResponse);
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     // First fetch providers
     await act(async () => {
@@ -155,7 +162,7 @@ describe('useProviders', () => {
     mockGetProviders.mockResolvedValue(mockResponse);
     mockTestProvider.mockRejectedValue(new Error('Test failed'));
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     // First fetch providers
     await act(async () => {
@@ -215,7 +222,7 @@ describe('useProviders', () => {
       models: mockModels,
     });
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     // First fetch providers
     await act(async () => {
@@ -253,7 +260,7 @@ describe('useProviders', () => {
     mockGetProviders.mockResolvedValue(mockResponse);
     mockGetProviderModels.mockRejectedValue(new Error('Models fetch failed'));
 
-    const { result } = renderHook(() => useProviders());
+    const { result } = renderHook(() => useProviders(), { wrapper: AllTheProviders });
 
     // First fetch providers
     await act(async () => {

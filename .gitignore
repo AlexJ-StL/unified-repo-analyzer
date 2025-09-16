@@ -254,3 +254,7 @@ tests/e2e/playwright-report/
 
 # Test Analysis Results
 analysis-results/*
+
+# Troubleshooting Test Outputs for Gemini
+Output from 'bunx vitest run test'.md
+Output from 'bunx vitest run test' round 2.md

@@ -1,0 +1,27 @@
+{
+  "repositories": [
+    {
+      "id": "mock-count-test-1757997730537",
+      "name": "count-test",
+      "path": "/path/to/count-test",
+      "languages": [
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "tags": [
+        "lang:JavaScript",
+        "framework:React",
+        "complexity:high"
+      ],
+      "summary": "count-test is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-16T04:42:10.537Z",
+      "size": 1048576,
+      "complexity": 75
+    }
+  ],
+  "relationships": [],
+  "tags": [],
+  "lastUpdated": "2025-09-16T04:42:10.537Z"
+}

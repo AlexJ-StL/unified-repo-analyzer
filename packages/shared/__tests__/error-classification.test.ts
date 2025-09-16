@@ -128,8 +128,14 @@ describe('Error Classification System', () => {
         expect(classified.message.toLowerCase()).toContain('invalid');
       });
 
-      const error1 = errorClassifier.classifyError('Error 1', {});
+      it('should generate unique IDs and correlation IDs', () => {
+        const error1 = errorClassifier.classifyError('Error 1', {});
         const error2 = errorClassifier.classifyError('Error 2', {});
+
+        expect(error1.id).not.toBe(error2.id);
+        expect(error1.correlationId).not.toBe(error2.correlationId);
+        expect(error1.id).toMatch(/^[0-9a-f-]{36}$/); // UUID format
+      });
 
       it('should use provided correlation ID', () => {
         const correlationId = 'custom-correlation-id';
