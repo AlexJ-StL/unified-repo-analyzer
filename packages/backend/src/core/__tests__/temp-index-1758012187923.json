@@ -1,9 +1,9 @@
 {
   "repositories": [
     {
-      "id": "mock-update-test-1757997730566",
-      "name": "update-test",
-      "path": "/path/to/update-test",
+      "id": "mock-concurrent-repo-1758012187923",
+      "name": "concurrent-repo",
+      "path": "/path/to/concurrent-repo",
       "languages": [
         "JavaScript"
       ],
@@ -15,13 +15,13 @@
         "framework:React",
         "complexity:high"
       ],
-      "summary": "update-test is a sample repository for testing.",
-      "lastAnalyzed": "2025-09-16T04:42:10.566Z",
+      "summary": "concurrent-repo is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-16T08:43:07.923Z",
       "size": 1048576,
       "complexity": 75
     }
   ],
   "relationships": [],
   "tags": [],
-  "lastUpdated": "2025-09-16T04:42:10.566Z"
+  "lastUpdated": "2025-09-16T08:43:07.923Z"
 }

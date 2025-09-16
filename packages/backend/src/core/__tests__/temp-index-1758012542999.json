@@ -1,9 +1,9 @@
 {
   "repositories": [
     {
-      "id": "mock-count-test-1757997730537",
-      "name": "count-test",
-      "path": "/path/to/count-test",
+      "id": "mock-concurrent-repo-1758012542999",
+      "name": "concurrent-repo",
+      "path": "/path/to/concurrent-repo",
       "languages": [
         "JavaScript"
       ],
@@ -15,13 +15,13 @@
         "framework:React",
         "complexity:high"
       ],
-      "summary": "count-test is a sample repository for testing.",
-      "lastAnalyzed": "2025-09-16T04:42:10.537Z",
+      "summary": "concurrent-repo is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-16T08:49:02.999Z",
       "size": 1048576,
       "complexity": 75
     }
   ],
   "relationships": [],
   "tags": [],
-  "lastUpdated": "2025-09-16T04:42:10.537Z"
+  "lastUpdated": "2025-09-16T08:49:02.999Z"
 }
