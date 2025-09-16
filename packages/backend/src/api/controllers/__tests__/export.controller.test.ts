@@ -3,10 +3,12 @@ import type { Request, Response } from 'express';
 import { vi } from 'vitest';
 import exportService from '../../../services/export.service';
 import {
+  clearExportMetadata,
   deleteExport,
   downloadExport,
   exportAnalysis,
   exportBatchAnalysis,
+  exportMetadata,
   getExportHistory,
 } from '../export.controller';
 
@@ -22,7 +24,12 @@ vi.mock('../../../services/export.service', () => ({
 // Mock fs
 vi.mock('fs', () => ({
   default: {
-    createReadStream: vi.fn(),
+    createReadStream: vi.fn(() => {
+      const { Readable } = require('node:stream');
+      const stream = new Readable();
+      stream.push(null);
+      return stream;
+    }),
     stat: vi.fn(),
     mkdir: vi.fn(),
     readdir: vi.fn(),
@@ -91,7 +98,6 @@ const mockBatchAnalysis = {
 describe('Export Controller', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
-  let _mockNext: any;
 
   beforeEach(() => {
     mockRequest = {
@@ -106,27 +112,10 @@ describe('Export Controller', () => {
       send: vi.fn().mockReturnThis(),
       setHeader: vi.fn().mockReturnThis(),
       sendStatus: vi.fn().mockReturnThis(),
-      links: vi.fn().mockReturnThis(),
-      append: vi.fn().mockReturnThis(),
-      attachment: vi.fn().mockReturnThis(),
-      cookie: vi.fn().mockReturnThis(),
-      clearCookie: vi.fn().mockReturnThis(),
-      download: vi.fn().mockReturnThis(),
-      end: vi.fn().mockReturnThis(),
-      format: vi.fn().mockReturnThis(),
-      get: vi.fn().mockReturnThis(),
-      jsonp: vi.fn().mockReturnThis(),
-      location: vi.fn().mockReturnThis(),
-      redirect: vi.fn().mockReturnThis(),
-      render: vi.fn().mockReturnThis(),
-      sendFile: vi.fn().mockReturnThis(),
-      set: vi.fn().mockReturnThis(),
-      type: vi.fn().mockReturnThis(),
-      vary: vi.fn().mockReturnThis(),
     } as unknown as Response;
 
-    _mockNext = vi.fn();
     vi.clearAllMocks();
+    clearExportMetadata();
   });
 
   describe('exportAnalysis', () => {
@@ -270,7 +259,8 @@ describe('Export Controller', () => {
 
   describe('downloadExport', () => {
     it('downloads existing export file', async () => {
-      mockRequest.params = { exportId: 'test-export-id' };
+      const exportId = 'test-export-id';
+      mockRequest.params = { exportId };
 
       const mockStream = {
         pipe: vi.fn(),
@@ -278,18 +268,37 @@ describe('Export Controller', () => {
       (fs.stat as any).mockResolvedValue({ size: 1024 });
       (fs.createReadStream as any).mockReturnValue(mockStream);
 
+      exportMetadata.set(exportId, {
+        id: exportId,
+        format: 'json',
+        filename: `${exportId}.json`,
+        createdAt: new Date(),
+        size: 1024,
+        type: 'single',
+      });
+
       await downloadExport(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
-        'attachment; filename="test-export-id.json"'
+        `attachment; filename="${exportId}.json"`
       );
       expect(mockStream.pipe).toHaveBeenCalledWith(mockResponse);
     });
 
     it('returns 404 when export file not found', async () => {
-      mockRequest.params = { exportId: 'nonexistent-id' };
+      const exportId = 'nonexistent-id';
+      mockRequest.params = { exportId };
+
+      exportMetadata.set(exportId, {
+        id: exportId,
+        format: 'json',
+        filename: `${exportId}.json`,
+        createdAt: new Date(),
+        size: 1024,
+        type: 'single',
+      });
 
       (fs.stat as any).mockRejectedValue(new Error('File not found'));
 
@@ -307,13 +316,11 @@ describe('Export Controller', () => {
       await getExportHistory(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(expect.any(Array));
+      expect(mockResponse.json).toHaveBeenCalledWith([]);
     });
 
     it('handles errors when getting export history', async () => {
-      // Mock an error in the controller logic
-      const originalArray = Array.from;
-      (Array as any).from = vi.fn().mockImplementation(() => {
+      vi.spyOn(Array, 'from').mockImplementation(() => {
         throw new Error('Database error');
       });
 
@@ -324,15 +331,22 @@ describe('Export Controller', () => {
         error: 'Failed to get export history',
         message: 'Database error',
       });
-
-      // Restore original Array.from
-      (Array as any).from = originalArray;
     });
   });
 
   describe('deleteExport', () => {
     it('deletes existing export', async () => {
-      mockRequest.params = { exportId: 'test-export-id' };
+      const exportId = 'test-export-id';
+      mockRequest.params = { exportId };
+
+      exportMetadata.set(exportId, {
+        id: exportId,
+        format: 'json',
+        filename: `${exportId}.json`,
+        createdAt: new Date(),
+        size: 1024,
+        type: 'single',
+      });
 
       (fs.unlink as any).mockResolvedValue(undefined);
 
@@ -356,50 +370,18 @@ describe('Export Controller', () => {
     });
 
     it('handles file deletion errors gracefully', async () => {
-      mockRequest.params = { exportId: 'test-export-id' };
+      const exportId = 'test-export-id';
+      mockRequest.params = { exportId };
 
-      // First, we need to add an item to the metadata store
-      // This is a bit tricky since the metadata store is internal
-      // We'll need to call exportAnalysis first to populate it
-      const exportRequest = {
-        body: {
-          analysis: mockAnalysis,
-          format: 'json',
-        },
-        query: {},
-      };
+      exportMetadata.set(exportId, {
+        id: exportId,
+        format: 'json',
+        filename: `${exportId}.json`,
+        createdAt: new Date(),
+        size: 1024,
+        type: 'single',
+      });
 
-      const exportResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis(),
-        send: vi.fn().mockReturnThis(),
-        setHeader: vi.fn().mockReturnThis(),
-        sendStatus: vi.fn().mockReturnThis(),
-        links: vi.fn().mockReturnThis(),
-        append: vi.fn().mockReturnThis(),
-        attachment: vi.fn().mockReturnThis(),
-        cookie: vi.fn().mockReturnThis(),
-        clearCookie: vi.fn().mockReturnThis(),
-        download: vi.fn().mockReturnThis(),
-        end: vi.fn().mockReturnThis(),
-        format: vi.fn().mockReturnThis(),
-        get: vi.fn().mockReturnThis(),
-        jsonp: vi.fn().mockReturnThis(),
-        location: vi.fn().mockReturnThis(),
-        redirect: vi.fn().mockReturnThis(),
-        render: vi.fn().mockReturnThis(),
-        sendFile: vi.fn().mockReturnThis(),
-        set: vi.fn().mockReturnThis(),
-        type: vi.fn().mockReturnThis(),
-        vary: vi.fn().mockReturnThis(),
-      } as unknown as Response;
-
-      (exportService.exportAnalysis as any).mockResolvedValue('{}');
-      (exportService.saveToFile as any).mockResolvedValue('/path/to/file');
-
-      await exportAnalysis(exportRequest as Request, exportResponse as Response);
-
-      // Now test deletion with file error
       (fs.unlink as any).mockRejectedValue(new Error('File not found'));
 
       await deleteExport(mockRequest as Request, mockResponse as Response);
@@ -412,18 +394,14 @@ describe('Export Controller', () => {
   });
 
   describe('helper functions', () => {
-    it('gets correct file extension for different formats', () => {
-      // These are tested indirectly through the main functions
-      // The helper functions are not exported, so we test their behavior
-      // through the main controller functions
-
+    it('gets correct file extension for different formats', async () => {
       const testCases = [
         { format: 'json', expectedExt: 'json' },
         { format: 'markdown', expectedExt: 'md' },
         { format: 'html', expectedExt: 'html' },
       ];
 
-      testCases.forEach(async ({ format, expectedExt }) => {
+      for (const { format, expectedExt } of testCases) {
         mockRequest.body = {
           analysis: mockAnalysis,
           format,
@@ -439,7 +417,7 @@ describe('Export Controller', () => {
             filename: `test-uuid.${expectedExt}`,
           })
         );
-      });
+      }
     });
 
     it('gets correct content type for different formats', async () => {

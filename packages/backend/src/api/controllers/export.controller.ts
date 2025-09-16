@@ -30,7 +30,11 @@ interface ExportMetadata {
   type: 'single' | 'batch';
 }
 
-const exportMetadata = new Map<string, ExportMetadata>();
+export const exportMetadata = new Map<string, ExportMetadata>();
+
+export const clearExportMetadata = () => {
+  exportMetadata.clear();
+};
 
 // Ensure export directory exists
 (async () => {

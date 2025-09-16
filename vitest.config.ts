@@ -4,14 +4,11 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     globals: true,
-    environmentMatchGlobs: [
-      ['packages/frontend/**', 'jsdom'],
-      ['packages/**', 'node'],
-    ],
+    environment: 'node',
     pool: 'threads',
     setupFiles: ['./tests/setup-minimal.ts'],
     include: ['packages/**/*.test.ts', 'packages/**/*.spec.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**'],
+    exclude: ['**/node_modules/**', '**/dist/**', 'packages/frontend/**'],
     coverage: {
       enabled: true,
       reporter: ['text', 'json', 'html'],
@@ -19,6 +16,16 @@ export default defineConfig({
       exclude: ['**/node_modules/**', '**/test/**'],
     },
   },
+  projects: [
+    {
+      name: 'frontend',
+      test: {
+        environment: 'jsdom',
+        include: ['packages/frontend/**/*.test.ts', 'packages/frontend/**/*.spec.ts'],
+        setupFiles: ['./tests/setup-minimal.ts'],
+      },
+    },
+  ],
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'packages/shared/src'),
