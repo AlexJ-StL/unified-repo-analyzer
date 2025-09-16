@@ -43,7 +43,7 @@ export declare function adaptiveRateLimitMiddleware(): (
   req: PerformanceRequest,
   res: Response,
   next: NextFunction
-) => Response<any, Record<string, unknown>> | undefined;
+) => Response<unknown, Record<string, unknown>> | undefined;
 /**
  * Middleware to add cache headers based on performance
  */

@@ -2,6 +2,7 @@
  * Fixed API integration tests using MockManager
  */
 
+import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -84,6 +85,34 @@ describe('Fixed API Integration Tests', () => {
     searchIndex = mockManager.mockFunction();
   }
 
+  const mockStats: Stats = {
+    isFile: () => true,
+    isDirectory: () => false,
+    isBlockDevice: () => false,
+    isCharacterDevice: () => false,
+    isSymbolicLink: () => false,
+    isFIFO: () => false,
+    isSocket: () => false,
+    dev: 0,
+    ino: 0,
+    mode: 0,
+    nlink: 0,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    size: 100,
+    blksize: 0,
+    blocks: 0,
+    atimeMs: 0,
+    mtimeMs: 0,
+    ctimeMs: 0,
+    birthtimeMs: 0,
+    atime: new Date(),
+    mtime: new Date(),
+    ctime: new Date(),
+    birthtime: new Date(),
+  };
+
   beforeEach(() => {
     // Create fresh mock instances
     mockAnalysisEngine = new MockAnalysisEngine();
@@ -161,7 +190,7 @@ describe('Fixed API Integration Tests', () => {
     it('should return status ok', async () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
       vi.mocked(fs.unlink).mockResolvedValue(undefined);
-      vi.mocked(fs.stat).mockResolvedValue({} as any);
+      vi.mocked(fs.stat).mockResolvedValue(mockStats);
 
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);

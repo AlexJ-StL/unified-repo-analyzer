@@ -150,15 +150,17 @@ describe('Type Checking Tests', () => {
       interface TestUtilityTypes {
         mockValidation: {
           validateMockingInfrastructure: () => void;
-          createValidatedMock: <T extends (...args: any[]) => any>(
+          createValidatedMock: <T extends (...args: unknown[]) => unknown>(
             name: string,
             implementation?: T
           ) => MockedFunction<T>;
-          validateMock: <T extends (...args: any[]) => any>(
+          validateMock: <T extends (...args: unknown[]) => unknown>(
             mock: MockedFunction<T>,
             name: string
           ) => void;
-          ensureMockCleanup: (mocks: Array<MockedFunction<(...args: any[]) => any>>) => void;
+          ensureMockCleanup: (
+            mocks: Array<MockedFunction<(...args: unknown[]) => unknown>>
+          ) => void;
         };
 
         apiValidation: {
@@ -189,7 +191,7 @@ describe('Type Checking Tests', () => {
       const utilityTypes: TestUtilityTypes = {
         mockValidation: {
           validateMockingInfrastructure: () => {},
-          createValidatedMock: <T extends (...args: any[]) => any>() =>
+          createValidatedMock: <T extends (...args: unknown[]) => unknown>() =>
             ({}) as unknown as MockedFunction<T>,
           validateMock: () => {},
           ensureMockCleanup: () => {},

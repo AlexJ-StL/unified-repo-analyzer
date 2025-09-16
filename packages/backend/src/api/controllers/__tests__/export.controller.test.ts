@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import type { Request, Response } from 'express';
-import { vi } from 'vitest';
+import { type ViMockedFunction, vi } from 'vitest';
+import type { ExportService } from '../../../services/export.service';
 import exportService from '../../../services/export.service';
 import {
   clearExportMetadata,
@@ -20,6 +21,12 @@ vi.mock('../../../services/export.service', () => ({
     saveToFile: vi.fn(),
   },
 }));
+
+const mockExportService = exportService as unknown as {
+  exportAnalysis: ViMockedFunction<ExportService['exportAnalysis']>;
+  exportBatchAnalysis: ViMockedFunction<ExportService['exportBatchAnalysis']>;
+  saveToFile: ViMockedFunction<ExportService['saveToFile']>;
+};
 
 // Mock fs
 vi.mock('fs', () => ({
@@ -127,11 +134,11 @@ describe('Export Controller', () => {
       mockRequest.query = { download: 'true' };
 
       const mockContent = JSON.stringify(mockAnalysis);
-      (exportService.exportAnalysis as any).mockResolvedValue(mockContent);
+      mockExportService.exportAnalysis.mockResolvedValue(mockContent);
 
       await exportAnalysis(mockRequest as Request, mockResponse as Response);
 
-      expect(exportService.exportAnalysis).toHaveBeenCalledWith(mockAnalysis, 'json');
+      expect(mockExportService.exportAnalysis).toHaveBeenCalledWith(mockAnalysis, 'json');
       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
@@ -147,13 +154,13 @@ describe('Export Controller', () => {
       };
 
       const mockContent = '# Test Analysis';
-      (exportService.exportAnalysis as any).mockResolvedValue(mockContent);
-      (exportService.saveToFile as any).mockResolvedValue('/path/to/file');
+      mockExportService.exportAnalysis.mockResolvedValue(mockContent);
+      mockExportService.saveToFile.mockResolvedValue('/path/to/file');
 
       await exportAnalysis(mockRequest as Request, mockResponse as Response);
 
-      expect(exportService.exportAnalysis).toHaveBeenCalledWith(mockAnalysis, 'markdown');
-      expect(exportService.saveToFile).toHaveBeenCalled();
+      expect(mockExportService.exportAnalysis).toHaveBeenCalledWith(mockAnalysis, 'markdown');
+      expect(mockExportService.saveToFile).toHaveBeenCalled();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         exportId: 'test-uuid',
@@ -206,11 +213,11 @@ describe('Export Controller', () => {
       mockRequest.query = { download: 'true' };
 
       const mockContent = '<html>Batch Analysis</html>';
-      (exportService.exportBatchAnalysis as any).mockResolvedValue(mockContent);
+      mockExportService.exportBatchAnalysis.mockResolvedValue(mockContent);
 
       await exportBatchAnalysis(mockRequest as Request, mockResponse as Response);
 
-      expect(exportService.exportBatchAnalysis).toHaveBeenCalledWith(mockBatchAnalysis, 'html');
+      expect(mockExportService.exportBatchAnalysis).toHaveBeenCalledWith(mockBatchAnalysis, 'html');
       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
@@ -226,13 +233,13 @@ describe('Export Controller', () => {
       };
 
       const mockContent = JSON.stringify(mockBatchAnalysis);
-      (exportService.exportBatchAnalysis as any).mockResolvedValue(mockContent);
-      (exportService.saveToFile as any).mockResolvedValue('/path/to/file');
+      mockExportService.exportBatchAnalysis.mockResolvedValue(mockContent);
+      mockExportService.saveToFile.mockResolvedValue('/path/to/file');
 
       await exportBatchAnalysis(mockRequest as Request, mockResponse as Response);
 
-      expect(exportService.exportBatchAnalysis).toHaveBeenCalledWith(mockBatchAnalysis, 'json');
-      expect(exportService.saveToFile).toHaveBeenCalled();
+      expect(mockExportService.exportBatchAnalysis).toHaveBeenCalledWith(mockBatchAnalysis, 'json');
+      expect(mockExportService.saveToFile).toHaveBeenCalled();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         exportId: 'test-uuid',

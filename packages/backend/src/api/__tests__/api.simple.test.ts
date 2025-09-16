@@ -2,6 +2,7 @@
  * Simple API integration tests without complex mocking
  */
 
+import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -18,11 +19,39 @@ describe('API Simple Integration Tests', () => {
     // Server teardown is handled by the test setup file
   });
 
+  const mockStats: Stats = {
+    isFile: () => true,
+    isDirectory: () => false,
+    isBlockDevice: () => false,
+    isCharacterDevice: () => false,
+    isSymbolicLink: () => false,
+    isFIFO: () => false,
+    isSocket: () => false,
+    dev: 0,
+    ino: 0,
+    mode: 0,
+    nlink: 0,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    size: 100,
+    blksize: 0,
+    blocks: 0,
+    atimeMs: 0,
+    mtimeMs: 0,
+    ctimeMs: 0,
+    birthtimeMs: 0,
+    atime: new Date(),
+    mtime: new Date(),
+    ctime: new Date(),
+    birthtime: new Date(),
+  };
+
   describe('Health Check', () => {
     it('should return health status', async () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
       vi.mocked(fs.unlink).mockResolvedValue(undefined);
-      vi.mocked(fs.stat).mockResolvedValue({} as any);
+      vi.mocked(fs.stat).mockResolvedValue(mockStats);
 
       const app = getTestApp();
       const response = await request(app).get('/health').expect(200);

@@ -5,15 +5,58 @@ import * as apiModule from '../../services/api';
 import { useProviders } from '../useProviders';
 import type { ToastProvider } from '../useToast';
 
+interface Provider {
+  id: string;
+  name: string;
+  displayName: string;
+  available: boolean;
+  configured: boolean;
+  capabilities: string[];
+  status: 'active' | 'inactive';
+  model: string;
+}
+
+interface ProviderModel {
+  id: string;
+  name: string;
+  description: string;
+  pricing: {
+    prompt: number;
+    completion: number;
+  };
+  context_length: number;
+  architecture: {
+    modality: string;
+    tokenizer: string;
+  };
+}
+
+interface GetProvidersResponse {
+  providers: Provider[];
+  defaultProvider: string | null;
+}
+
+interface TestProviderResponse {
+  provider: string;
+  working: boolean;
+  status: 'active' | 'inactive';
+  lastTested: string;
+}
+
+interface GetProviderModelsResponse {
+  provider: string;
+  models: ProviderModel[];
+}
+
 // Create a wrapper component that includes the ToastProvider
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <ToastProvider>{ children } < /;;;;;>PTadeioorrstv;
+  return <ToastProvider>{ children } < /;;>PTadeioorrstv;
 };
 
 // Mock the apiService
-const mockGetProviders = vi.fn();
-const mockTestProvider = vi.fn();
-const mockGetProviderModels = vi.fn();
+const mockGetProviders = vi.fn<[], Promise<GetProvidersResponse>>();
+const mockTestProvider = vi.fn<[string], Promise<TestProviderResponse>>();
+const mockGetProviderModels = vi.fn<[string], Promise<GetProviderModelsResponse>>();
 
 describe('useProviders', () => {
   beforeEach(() => {
@@ -230,7 +273,7 @@ describe('useProviders', () => {
     });
 
     // Then fetch models
-    let models: any[] | undefined;
+    let models: ProviderModel[] | undefined;
     await act(async () => {
       models = await result.current.fetchProviderModels('openrouter');
     });
@@ -268,7 +311,7 @@ describe('useProviders', () => {
     });
 
     // Then try to fetch models
-    let models: any[] | undefined;
+    let models: ProviderModel[] | undefined;
     await act(async () => {
       models = await result.current.fetchProviderModels('openrouter');
     });

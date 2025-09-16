@@ -2,6 +2,7 @@
  * Tests for batch analysis API endpoint
  */
 
+import type { Server as HttpServer } from 'node:http';
 import { createServer } from 'node:http';
 import express from 'express';
 import { Server } from 'socket.io';
@@ -156,7 +157,7 @@ describe('Batch Analysis API', () => {
 
     // Create Socket.IO server
     // Typecast httpServer to satisfy Server constructor's expected type for the first argument
-    _io = new Server(httpServer as any);
+    _io = new Server(httpServer as HttpServer);
 
     // Mock Socket.IO
     (global as Record<string, unknown>).io = {

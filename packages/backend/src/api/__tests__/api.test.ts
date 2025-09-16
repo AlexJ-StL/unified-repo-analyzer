@@ -2,6 +2,7 @@
  * API integration tests
  */
 
+import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -102,19 +103,47 @@ describe('API Integration Tests', () => {
     // Mock the constructors to return our mock instances
     // Mock the modules using factory functions
     vi.mock('../../core/AnalysisEngine', () => ({
-      AnalysisEngine: vi.fn(() => mockAnalysisEngine as any),
+      AnalysisEngine: vi.fn(() => mockAnalysisEngine),
     }));
     vi.mock('../../core/IndexSystem', () => ({
-      IndexSystem: vi.fn(() => mockIndexSystem as any),
+      IndexSystem: vi.fn(() => mockIndexSystem),
     }));
+
+    const _mockStats: Stats = {
+      isFile: () => true,
+      isDirectory: () => false,
+      isBlockDevice: () => false,
+      isCharacterDevice: () => false,
+      isSymbolicLink: () => false,
+      isFIFO: () => false,
+      isSocket: () => false,
+      dev: 0,
+      ino: 0,
+      mode: 0,
+      nlink: 0,
+      uid: 0,
+      gid: 0,
+      rdev: 0,
+      size: 100,
+      blksize: 0,
+      blocks: 0,
+      atimeMs: 0,
+      mtimeMs: 0,
+      ctimeMs: 0,
+      birthtimeMs: 0,
+      atime: new Date(),
+      mtime: new Date(),
+      ctime: new Date(),
+      birthtime: new Date(),
+    };
   });
 
   describe('Health Check', () => {
     it('should return status ok', async () => {
       // Mock fs.writeFile to succeed for health check
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined as any);
-      vi.mocked(fs.unlink).mockResolvedValue(undefined as any);
-      vi.mocked(fs.stat).mockResolvedValue({} as any);
+      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.unlink).mockResolvedValue(undefined);
+      vi.mocked(fs.stat).mockResolvedValue(mockStats);
 
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);

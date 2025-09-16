@@ -72,7 +72,7 @@ export class IsolationManager {
 
     globalVarsToTrack.forEach((varName) => {
       if (varName in globalThis) {
-        this.globalVariables.set(varName, (globalThis as any)[varName]);
+        this.globalVariables.set(varName, (globalThis as Record<string, unknown>)[varName]);
       }
     });
 
@@ -96,7 +96,7 @@ export class IsolationManager {
         });
         Object.assign(process.env, originalEnv);
       } else {
-        (globalThis as any)[key] = value;
+        (globalThis as Record<string, unknown>)[key] = value;
       }
     });
 
@@ -125,8 +125,11 @@ export class IsolationManager {
       }
 
       // Clear dynamic import cache (if supported)
-      if (typeof globalThis !== 'undefined' && (globalThis as any).__vitest_mocker__) {
-        const mocker = (globalThis as any).__vitest_mocker__;
+      if (
+        typeof globalThis !== 'undefined' &&
+        (globalThis as Record<string, unknown>).__vitest_mocker__
+      ) {
+        const mocker = (globalThis as Record<string, unknown>).__vitest_mocker__;
         if (typeof mocker.resetCache === 'function') {
           mocker.resetCache();
         }
@@ -745,7 +748,7 @@ export namespace DOMIsolation {
       // Clear any custom properties on document
       Object.keys(document).forEach((key) => {
         if (key.startsWith('test') || key.startsWith('mock')) {
-          delete (document as any)[key];
+          delete (document as Record<string, unknown>)[key];
         }
       });
     }
@@ -755,7 +758,7 @@ export namespace DOMIsolation {
       // Remove test-related properties
       Object.keys(window).forEach((key) => {
         if (key.startsWith('test') || key.startsWith('mock')) {
-          delete (window as any)[key];
+          delete (window as Record<string, unknown>)[key];
         }
       });
     }
