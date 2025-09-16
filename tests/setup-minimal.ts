@@ -6,13 +6,9 @@
 /// <reference types="vitest" />
 /// <reference types="node" />
 
-import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import {
-  setupMocks,
-  cleanupMocks,
-  createMock,
-  mockFunction
-} from "./MockManager";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
+import { cleanupMocks, createMock, mockFunction, setupMocks } from './MockManager';
+
 // import { resourceController } from "./ResourceController";
 // import {
 //   cleanupTestIsolation,
@@ -21,7 +17,7 @@ import {
 // } from "./test-isolation";
 
 // Export vi for tests that need it
-export { vi } from "vitest";
+export { vi } from 'vitest';
 
 // Export our mock manager utilities
 export {
@@ -30,12 +26,12 @@ export {
   mockFunction,
   mockModule,
   resetAllMocks,
-  setupMocks
-} from "./MockManager";
+  setupMocks,
+} from './MockManager';
 
 // Safe mocked function that works with both Bun and Vitest
 export const mocked = <T>(item: T): T => {
-  if (typeof vi?.mocked === "function") {
+  if (typeof vi?.mocked === 'function') {
     return vi.mocked(item) as unknown as T;
   }
   // Fallback for when vi.mocked is not available
@@ -44,17 +40,13 @@ export const mocked = <T>(item: T): T => {
 
 // Global test configuration - non-async to avoid runner issues
 beforeAll(() => {
-  if (typeof process !== "undefined") {
-    process.env.NODE_ENV = "test";
+  if (typeof process !== 'undefined') {
+    process.env.NODE_ENV = 'test';
   }
   setupMocks();
-  if (
-    typeof process !== "undefined" &&
-    process &&
-    typeof process.on === "function"
-  ) {
-    process.on("unhandledRejection", (_reason, _promise) => {});
-    process.on("uncaughtException", (_error) => {});
+  if (typeof process !== 'undefined' && process && typeof process.on === 'function') {
+    process.on('unhandledRejection', (_reason, _promise) => {});
+    process.on('uncaughtException', (_error) => {});
   }
 });
 
@@ -73,21 +65,21 @@ beforeEach(() => {
   (globalThis as any).__currentTestId = testId;
 
   // Enhanced mock cleanup for better test isolation
-  if (typeof vi?.clearAllMocks === "function") {
+  if (typeof vi?.clearAllMocks === 'function') {
     vi.clearAllMocks();
   }
-  if (typeof vi?.resetAllMocks === "function") {
+  if (typeof vi?.resetAllMocks === 'function') {
     vi.resetAllMocks();
   }
 
   // Clear module cache to ensure fresh imports in each test
-  if (typeof vi?.resetModules === "function") {
+  if (typeof vi?.resetModules === 'function') {
     vi.resetModules();
   }
 
   // Reset environment variables that might be modified by tests
-  if (process.env.NODE_ENV !== "test") {
-    process.env.NODE_ENV = "test";
+  if (process.env.NODE_ENV !== 'test') {
+    process.env.NODE_ENV = 'test';
   }
 });
 
@@ -109,7 +101,7 @@ afterEach(() => {
 export function createMockFunction<T extends (...args: unknown[]) => unknown>(
   implementation?: T
 ): ReturnType<typeof vi.fn> {
-  if (typeof vi.fn === "function") {
+  if (typeof vi.fn === 'function') {
     return vi.fn(implementation) as ReturnType<typeof vi.fn>;
   }
   return mockFunction(implementation) as ReturnType<typeof vi.fn>;
@@ -119,7 +111,7 @@ export function createMockFunction<T extends (...args: unknown[]) => unknown>(
  * Create a mock with proper TypeScript typing
  */
 export function createTypedMock<T extends Record<string, unknown>>(): T {
-  if (typeof vi.mocked === "function") {
+  if (typeof vi.mocked === 'function') {
     return vi.mocked({} as T) as T;
   }
   return createMock<T>() as T;
@@ -130,7 +122,7 @@ export function createTypedMock<T extends Record<string, unknown>>(): T {
  */
 export function mockEnv(envVars: Record<string, string>): void {
   Object.entries(envVars).forEach(([key, value]) => {
-    if (typeof vi?.stubEnv === "function") {
+    if (typeof vi?.stubEnv === 'function') {
       vi.stubEnv(key, value);
     } else {
       // Fallback - directly set environment variable
@@ -143,7 +135,7 @@ export function mockEnv(envVars: Record<string, string>): void {
  * Restore environment variables
  */
 export function restoreEnv(): void {
-  if (typeof vi?.unstubAllEnvs === "function") {
+  if (typeof vi?.unstubAllEnvs === 'function') {
     vi.unstubAllEnvs();
   }
 }

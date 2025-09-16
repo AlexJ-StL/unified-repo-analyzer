@@ -3,78 +3,78 @@
  * Tests core regression prevention functionality
  */
 
-import { describe, expect, it, vi } from "vitest";
-import { AssertionHelpers } from "./assertion-helpers";
+import { describe, expect, it, vi } from 'vitest';
+import { AssertionHelpers } from './assertion-helpers';
 import {
-  validateMockingInfrastructure,
   createValidatedMock,
+  RegressionPrevention,
   validateMock,
-  RegressionPrevention
-} from "./regression-prevention";
+  validateMockingInfrastructure,
+} from './regression-prevention';
 
-describe("Regression Prevention Validation", () => {
-  describe("Mock Infrastructure", () => {
-    it("should validate mocking infrastructure works", () => {
+describe('Regression Prevention Validation', () => {
+  describe('Mock Infrastructure', () => {
+    it('should validate mocking infrastructure works', () => {
       expect(() => {
         validateMockingInfrastructure();
       }).not.toThrow();
     });
 
-    it("should create and validate mock functions", () => {
-      const mockFn = createValidatedMock("testMock", () => "result");
+    it('should create and validate mock functions', () => {
+      const mockFn = createValidatedMock('testMock', () => 'result');
 
       expect(mockFn).toBeDefined();
-      expect(typeof mockFn).toBe("function");
+      expect(typeof mockFn).toBe('function');
       expect(mockFn.mock).toBeDefined(); // Check for mock properties instead
-      expect(mockFn()).toBe("result");
+      expect(mockFn()).toBe('result');
 
-      validateMock(mockFn, "testMock");
+      validateMock(mockFn, 'testMock');
     });
   });
 
-  describe("Assertion Helpers", () => {
-    it("should validate array structures", () => {
+  describe('Assertion Helpers', () => {
+    it('should validate array structures', () => {
       const testArray = [
-        { id: 1, name: "item1" },
-        { id: 2, name: "item2" }
+        { id: 1, name: 'item1' },
+        { id: 2, name: 'item2' },
       ];
 
       expect(() => {
         AssertionHelpers.validateArrayStructure(testArray, {
           exactLength: 2,
           itemValidator: (item) => {
-            expect(item).toHaveProperty("id");
-            expect(item).toHaveProperty("name");
-          }
+            expect(item).toHaveProperty('id');
+            expect(item).toHaveProperty('name');
+          },
         });
       }).not.toThrow();
     });
 
-    it("should validate search results", () => {
+    it('should validate search results', () => {
       const searchResults = [
-        { id: "1", name: "repo1", path: "/path1", languages: ["JavaScript"] },
-        { id: "2", name: "repo2", path: "/path2", languages: ["TypeScript"] }
+        { id: '1', name: 'repo1', path: '/path1', languages: ['JavaScript'] },
+        { id: '2', name: 'repo2', path: '/path2', languages: ['TypeScript'] },
       ];
 
       expect(() => {
         AssertionHelpers.validateSearchResults(searchResults, {
-          requiredProperties: ["id", "name", "path"],
-          optionalProperties: ["languages"],
-          maxResults: 10
+          requiredProperties: ['id', 'name', 'path'],
+          optionalProperties: ['languages'],
+          maxResults: 10,
         });
       }).not.toThrow();
     });
 
-    it("should validate repository structure", () => {
+    it('should validate repository structure', () => {
       const repository = {
-        id: "repo-1",
-        name: "Test Repository",
-        path: "/path/to/repo",
-        languages: ["JavaScript", "TypeScript"],
-        frameworks: ["React"],
-        tags: ["frontend"],
+        id: 'repo-1',
+        name: 'Test Repository',
+        path: '/path/to/repo',
+        languages: ['JavaScript', 'TypeScript'],
+        frameworks: ['React'],
+        tags: ['frontend'],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       expect(() => {
@@ -82,28 +82,28 @@ describe("Regression Prevention Validation", () => {
       }).not.toThrow();
     });
 
-    it("should validate mock function calls", () => {
+    it('should validate mock function calls', () => {
       const mockFn = vi.fn();
-      mockFn("arg1", "arg2");
-      mockFn("arg3");
+      mockFn('arg1', 'arg2');
+      mockFn('arg3');
 
       expect(() => {
         AssertionHelpers.validateMockCalls(mockFn, {
           callCount: 2,
-          calledWith: [["arg1", "arg2"], ["arg3"]]
+          calledWith: [['arg1', 'arg2'], ['arg3']],
         });
       }).not.toThrow();
     });
   });
 
-  describe("Class API Validation", () => {
-    it("should validate complete class APIs", () => {
+  describe('Class API Validation', () => {
+    it('should validate complete class APIs', () => {
       class TestClass {
-        property1 = "value";
+        property1 = 'value';
         property2 = 42;
 
         method1() {
-          return "result1";
+          return 'result1';
         }
         method2(param: string) {
           return param;
@@ -116,45 +116,42 @@ describe("Regression Prevention Validation", () => {
       expect(() => {
         RegressionPrevention.validateClassAPI(
           TestClass,
-          ["method1", "method2", "method3"],
-          ["property1", "property2"]
+          ['method1', 'method2', 'method3'],
+          ['property1', 'property2']
         );
       }).not.toThrow();
     });
 
-    it("should detect missing methods", () => {
+    it('should detect missing methods', () => {
       class IncompleteClass {
         method1() {
-          return "result";
+          return 'result';
         }
         // Missing method2
       }
 
       expect(() => {
-        RegressionPrevention.validateClassAPI(IncompleteClass, [
-          "method1",
-          "method2"
-        ]);
-      }).toThrow("Class is missing required method: method2");
+        RegressionPrevention.validateClassAPI(IncompleteClass, ['method1', 'method2']);
+      }).toThrow('Class is missing required method: method2');
     });
   });
 
-  describe("Configuration Validation", () => {
-    it("should validate configuration objects", () => {
+  describe('Configuration Validation', () => {
+    it('should validate configuration objects', () => {
       const config = {
         timeout: 5000,
         retries: 3,
         enabled: true,
-        tags: ["test", "ci"],
-        metadata: { version: "1.0.0" }
+        tags: ['test', 'ci'],
+        metadata: { version: '1.0.0' },
       };
 
       const schema = {
-        timeout: { type: "number", required: true },
-        retries: { type: "number", required: true },
-        enabled: { type: "boolean", required: true },
-        tags: { type: "array", required: false },
-        metadata: { type: "object", required: false }
+        timeout: { type: 'number', required: true },
+        retries: { type: 'number', required: true },
+        enabled: { type: 'boolean', required: true },
+        tags: { type: 'array', required: false },
+        metadata: { type: 'object', required: false },
       };
 
       expect(() => {
@@ -163,37 +160,37 @@ describe("Regression Prevention Validation", () => {
     });
   });
 
-  describe("Error Structure Validation", () => {
-    it("should validate error objects", () => {
-      const error = new Error("Test error message");
-      error.name = "TestError";
+  describe('Error Structure Validation', () => {
+    it('should validate error objects', () => {
+      const error = new Error('Test error message');
+      error.name = 'TestError';
 
       expect(() => {
-        AssertionHelpers.validateErrorStructure(error, "TestError");
+        AssertionHelpers.validateErrorStructure(error, 'TestError');
       }).not.toThrow();
     });
   });
 
-  describe("Performance Validation", () => {
-    it("should validate performance metrics", () => {
+  describe('Performance Validation', () => {
+    it('should validate performance metrics', () => {
       const metrics = {
         duration: 150,
         memoryUsage: 1024,
-        operations: 100
+        operations: 100,
       };
 
       expect(() => {
         AssertionHelpers.validatePerformanceMetrics(metrics, {
           maxDuration: 200,
           maxMemory: 2048,
-          requiredMetrics: ["duration", "operations"]
+          requiredMetrics: ['duration', 'operations'],
         });
       }).not.toThrow();
     });
   });
 
-  describe("Comprehensive Validation", () => {
-    it("should run all regression prevention checks", () => {
+  describe('Comprehensive Validation', () => {
+    it('should run all regression prevention checks', () => {
       expect(() => {
         RegressionPrevention.runAllChecks();
       }).not.toThrow();

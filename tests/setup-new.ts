@@ -8,21 +8,21 @@
 
 // Import testing library if available - conditional to avoid errors
 try {
-  await import("@testing-library/jest-dom/vitest");
+  await import('@testing-library/jest-dom/vitest');
 } catch {
   // @testing-library/jest-dom not available, skip
 }
 
-import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import { mockManager } from "./MockManager";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
+import { mockManager } from './MockManager';
 import {
   cleanupTestIsolation,
   emergencyIsolationReset,
-  setupTestIsolation
-} from "./test-isolation";
+  setupTestIsolation,
+} from './test-isolation';
 
 // Export vi for tests that need it
-export { vi } from "vitest";
+export { vi } from 'vitest';
 
 // Export our mock manager utilities
 export {
@@ -32,12 +32,12 @@ export {
   mockManager,
   mockModule,
   resetAllMocks,
-  setupMocks
-} from "./MockManager";
+  setupMocks,
+} from './MockManager';
 
 // Safe mocked function that works with both Bun and Vitest
 export const mocked = <T>(item: T): T => {
-  if (typeof vi?.mocked === "function") {
+  if (typeof vi?.mocked === 'function') {
     return vi.mocked(item) as unknown as T;
   }
   // Fallback for when vi.mocked is not available
@@ -47,15 +47,15 @@ export const mocked = <T>(item: T): T => {
 // Global test configuration
 beforeAll(async () => {
   // Set test environment
-  process.env.NODE_ENV = "test";
+  process.env.NODE_ENV = 'test';
 
   // Initialize mock manager
   mockManager.setupMocks();
 
   // Setup DOM environment if jsdom is available
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     // Mock window.matchMedia for frontend tests
-    Object.defineProperty(window, "matchMedia", {
+    Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: (query: string): MediaQueryList => ({
         matches: false,
@@ -65,8 +65,8 @@ beforeAll(async () => {
         removeListener: () => {},
         addEventListener: () => {},
         removeEventListener: () => {},
-        dispatchEvent: mockManager.mockFunction()
-      })
+        dispatchEvent: mockManager.mockFunction(),
+      }),
     });
 
     // Mock ResizeObserver
@@ -94,11 +94,11 @@ beforeAll(async () => {
   }
 
   // Setup global error handlers for better test debugging
-  process.on("unhandledRejection", (_reason, _promise) => {
+  process.on('unhandledRejection', (_reason, _promise) => {
     // Silent handling in tests
   });
 
-  process.on("uncaughtException", (_error) => {
+  process.on('uncaughtException', (_error) => {
     // Silent handling in tests
   });
 });
@@ -122,22 +122,22 @@ beforeEach(async () => {
   (globalThis as any).__currentTestId = testId;
 
   // Enhanced mock cleanup for better test isolation
-  if (typeof vi?.clearAllMocks === "function") {
+  if (typeof vi?.clearAllMocks === 'function') {
     vi.clearAllMocks();
   }
-  if (typeof vi?.resetAllMocks === "function") {
+  if (typeof vi?.resetAllMocks === 'function') {
     vi.resetAllMocks();
   }
 
   // Clear module cache to ensure fresh imports in each test
-  if (typeof vi?.resetModules === "function") {
+  if (typeof vi?.resetModules === 'function') {
     vi.resetModules();
   }
 
   // Cleanup DOM if in jsdom environment
-  if (typeof window !== "undefined" && typeof document !== "undefined") {
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
-      const { cleanup } = await import("@testing-library/react");
+      const { cleanup } = await import('@testing-library/react');
       cleanup();
     } catch {
       // @testing-library/react not available, skip
@@ -145,8 +145,8 @@ beforeEach(async () => {
   }
 
   // Reset environment variables that might be modified by tests
-  if (process.env.NODE_ENV !== "test") {
-    process.env.NODE_ENV = "test";
+  if (process.env.NODE_ENV !== 'test') {
+    process.env.NODE_ENV = 'test';
   }
 });
 
@@ -183,7 +183,7 @@ export function createTypedMock<T extends Record<string, unknown>>(): T {
  */
 export function mockEnv(envVars: Record<string, string>): void {
   Object.entries(envVars).forEach(([key, value]) => {
-    if (typeof vi?.stubEnv === "function") {
+    if (typeof vi?.stubEnv === 'function') {
       vi.stubEnv(key, value);
     } else {
       // Fallback - directly set environment variable
@@ -196,7 +196,7 @@ export function mockEnv(envVars: Record<string, string>): void {
  * Restore environment variables
  */
 export function restoreEnv(): void {
-  if (typeof vi?.unstubAllEnvs === "function") {
+  if (typeof vi?.unstubAllEnvs === 'function') {
     vi.unstubAllEnvs();
   }
 }

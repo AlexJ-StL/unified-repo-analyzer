@@ -3,16 +3,15 @@
  * Fixes broken vi.mock functionality and provides type-safe mocking
  */
 
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
 // Type definitions for our mock system
-export interface MockedFunction<T extends (...args: any[]) => any>
-  extends Function {
+export interface MockedFunction<T extends (...args: any[]) => any> extends Function {
   (...args: Parameters<T>): ReturnType<T>;
   mock: {
     calls: Parameters<T>[][];
 
-    results: Array<{ type: "return" | "throw"; value: ReturnType<T> }>;
+    results: Array<{ type: 'return' | 'throw'; value: ReturnType<T> }>;
     instances: unknown[];
     invocationCallOrder: number[];
   };
@@ -30,9 +29,7 @@ export interface MockedFunction<T extends (...args: any[]) => any>
   mockRejectedValueOnce(value: unknown): this;
 }
 export type MockedObject<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown
-    ? MockedFunction<T[K]>
-    : T[K];
+  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? MockedFunction<T[K]> : T[K];
 };
 
 export type MockFactory<T = Record<string, unknown>> = () => T;
@@ -65,7 +62,7 @@ export class MockManager {
       moduleNameMapper: {},
       mockPatterns: [],
       defaultMocks: {},
-      customMocks: {}
+      customMocks: {},
     };
   }
 
@@ -79,18 +76,14 @@ export class MockManager {
   /**
    * Create a type-safe mock object
    */
-  public createMock<T extends Record<string, unknown>>(
-    impl?: Partial<T>
-  ): MockedObject<T> {
+  public createMock<T extends Record<string, unknown>>(impl?: Partial<T>): MockedObject<T> {
     const mock: Record<string, unknown> = {};
 
     if (impl) {
       Object.keys(impl).forEach((key) => {
         const value = impl[key as keyof T];
-        if (typeof value === "function") {
-          mock[key] = this.mockFunction(
-            value as unknown as (...args: unknown[]) => unknown
-          );
+        if (typeof value === 'function') {
+          mock[key] = this.mockFunction(value as unknown as (...args: unknown[]) => unknown);
         } else {
           mock[key] = value;
         }
@@ -103,10 +96,8 @@ export class MockManager {
   /**
    * Create a type-safe mock function
    */
-  public mockFunction<T extends (...args: any[]) => any>(
-    fn?: T
-  ): MockedFunction<T> {
-    if (typeof vi !== "undefined" && vi && typeof vi.fn === "function") {
+  public mockFunction<T extends (...args: any[]) => any>(fn?: T): MockedFunction<T> {
+    if (typeof vi !== 'undefined' && vi && typeof vi.fn === 'function') {
       const mockFn = vi.fn<T>() as MockedFunction<T>;
       if (fn) {
         mockFn.mockImplementation(fn);
@@ -118,26 +109,21 @@ export class MockManager {
     let currentImpl: T | undefined = fn;
 
     const calls: Parameters<T>[] = [];
-    const results: Array<{ type: "return" | "throw"; value: unknown }> = [];
+    const results: Array<{ type: 'return' | 'throw'; value: unknown }> = [];
     const instances: unknown[] = [];
     const invocationCallOrder: number[] = [];
 
-    const fallbackMock = function (
-      this: unknown,
-      ...args: Parameters<T>
-    ): ReturnType<T> {
+    const fallbackMock = function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
       const callIndex = calls.length;
       calls.push(args);
       invocationCallOrder.push(callIndex);
 
       try {
-        const result = currentImpl
-          ? currentImpl.call(this, ...args)
-          : undefined;
-        results.push({ type: "return", value: result });
+        const result = currentImpl ? currentImpl.call(this, ...args) : undefined;
+        results.push({ type: 'return', value: result });
         return result as ReturnType<T>;
       } catch (error) {
-        results.push({ type: "throw", value: error });
+        results.push({ type: 'throw', value: error });
         throw error as ReturnType<T>;
       }
     } as unknown as MockedFunction<T>;
@@ -146,46 +132,34 @@ export class MockManager {
     fallbackMock.mock = {
       calls: calls as Parameters<T>[],
       results: results as Array<{
-        type: "return" | "throw";
+        type: 'return' | 'throw';
         value: ReturnType<T>;
       }>,
       instances,
-      invocationCallOrder
+      invocationCallOrder,
     };
 
-    fallbackMock.mockImplementation = function (impl: T): MockedFunction<T> {
+    fallbackMock.mockImplementation = (impl: T): MockedFunction<T> => {
       currentImpl = impl;
       return fallbackMock;
     };
 
-    fallbackMock.mockResolvedValue = function (
-      value: Awaited<ReturnType<T>>
-    ): MockedFunction<T> {
-      currentImpl = function (...args: Parameters<T>) {
-        return Promise.resolve(value) as ReturnType<T>;
-      } as T;
+    fallbackMock.mockResolvedValue = (value: Awaited<ReturnType<T>>): MockedFunction<T> => {
+      currentImpl = ((..._args: Parameters<T>) => Promise.resolve(value) as ReturnType<T>) as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockRejectedValue = function (
-      error: unknown
-    ): MockedFunction<T> {
-      currentImpl = function (...args: Parameters<T>) {
-        return Promise.reject(error) as ReturnType<T>;
-      } as T;
+    fallbackMock.mockRejectedValue = (error: unknown): MockedFunction<T> => {
+      currentImpl = ((..._args: Parameters<T>) => Promise.reject(error) as ReturnType<T>) as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockReturnValue = function (
-      value: ReturnType<T>
-    ): MockedFunction<T> {
-      currentImpl = function (...args: Parameters<T>) {
-        return value;
-      } as T;
+    fallbackMock.mockReturnValue = (value: ReturnType<T>): MockedFunction<T> => {
+      currentImpl = ((..._args: Parameters<T>) => value) as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockReset = function (): MockedFunction<T> {
+    fallbackMock.mockReset = (): MockedFunction<T> => {
       calls.length = 0;
       results.length = 0;
       instances.length = 0;
@@ -193,7 +167,7 @@ export class MockManager {
       return fallbackMock;
     };
 
-    fallbackMock.mockClear = function (): MockedFunction<T> {
+    fallbackMock.mockClear = (): MockedFunction<T> => {
       calls.length = 0;
       results.length = 0;
       instances.length = 0;
@@ -201,71 +175,48 @@ export class MockManager {
       return fallbackMock;
     };
 
-    fallbackMock.mockRestore = function (): void {
+    fallbackMock.mockRestore = (): void => {
       // No-op in fallback implementation
     };
 
-    fallbackMock.mockImplementationOnce = function (
-      impl: T
-    ): MockedFunction<T> {
+    fallbackMock.mockImplementationOnce = (impl: T): MockedFunction<T> => {
       const originalImpl = currentImpl;
-      currentImpl = function (
-        this: unknown,
-        ...args: Parameters<T>
-      ): ReturnType<T> {
+      currentImpl = function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
         currentImpl = originalImpl;
         return impl.call(this, ...args);
       } as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockReturnValueOnce = function (
-      value: ReturnType<T>
-    ): MockedFunction<T> {
+    fallbackMock.mockReturnValueOnce = (value: ReturnType<T>): MockedFunction<T> => {
       const originalImpl = currentImpl;
-      currentImpl = function (
-        this: unknown,
-        ...args: Parameters<T>
-      ): ReturnType<T> {
+      currentImpl = function (this: unknown, ..._args: Parameters<T>): ReturnType<T> {
         currentImpl = originalImpl;
         return value;
       } as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockResolvedValueOnce = function (
-      value: Awaited<ReturnType<T>>
-    ): MockedFunction<T> {
+    fallbackMock.mockResolvedValueOnce = (value: Awaited<ReturnType<T>>): MockedFunction<T> => {
       const originalImpl = currentImpl;
-      currentImpl = function (
-        this: unknown,
-        ...args: Parameters<T>
-      ): ReturnType<T> {
+      currentImpl = function (this: unknown, ..._args: Parameters<T>): ReturnType<T> {
         currentImpl = originalImpl;
         return Promise.resolve(value) as ReturnType<T>;
       } as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockRejectedValueOnce = function (
-      error: unknown
-    ): MockedFunction<T> {
+    fallbackMock.mockRejectedValueOnce = (error: unknown): MockedFunction<T> => {
       const originalImpl = currentImpl;
-      currentImpl = function (
-        this: unknown,
-        ...args: Parameters<T>
-      ): ReturnType<T> {
+      currentImpl = function (this: unknown, ..._args: Parameters<T>): ReturnType<T> {
         currentImpl = originalImpl;
         return Promise.reject(error) as ReturnType<T>;
       } as T;
       return fallbackMock;
     };
 
-    fallbackMock.mockReturnThis = function (): MockedFunction<T> {
-      currentImpl = function (
-        this: unknown,
-        ...args: Parameters<T>
-      ): ReturnType<T> {
+    fallbackMock.mockReturnThis = (): MockedFunction<T> => {
+      currentImpl = function (this: unknown, ..._args: Parameters<T>): ReturnType<T> {
         return this as unknown as ReturnType<T>;
       } as T;
       return fallbackMock;
@@ -293,9 +244,6 @@ export class MockManager {
    * Setup all registered mocks
    */
   public setupMocks(): void {
-    // Dynamic vi.mock not supported in Vitest - rely on fallback mocking
-    // Setup module mocks using alternative approach if needed
-    console.warn("Dynamic module mocking not supported - using fallback mocks");
     // Clear registry to avoid attempts to use unsupported dynamic mocking
     this.moduleRegistry.clear();
   }
@@ -306,7 +254,7 @@ export class MockManager {
   public cleanupMocks(): void {
     this.mockRegistry.clear();
     this.moduleRegistry.clear();
-    if (typeof vi.restoreAllMocks === "function") {
+    if (typeof vi.restoreAllMocks === 'function') {
       vi.restoreAllMocks();
     }
   }
@@ -315,7 +263,7 @@ export class MockManager {
    * Reset all mocks
    */
   public resetAllMocks(): void {
-    if (typeof vi.resetAllMocks === "function") {
+    if (typeof vi.resetAllMocks === 'function') {
       vi.resetAllMocks();
     }
   }
@@ -351,13 +299,11 @@ const mockManager = MockManager.getInstance();
 export { mockManager };
 
 // Export convenience functions
-export const createMock = <T extends Record<string, unknown>>(
-  impl?: Partial<T>
-) => mockManager.createMock<T>(impl);
+export const createMock = <T extends Record<string, unknown>>(impl?: Partial<T>) =>
+  mockManager.createMock<T>(impl);
 
-export const mockFunction = <T extends (...args: unknown[]) => unknown>(
-  fn?: T
-) => mockManager.mockFunction<T>(fn);
+export const mockFunction = <T extends (...args: unknown[]) => unknown>(fn?: T) =>
+  mockManager.mockFunction<T>(fn);
 
 export const mockModule = <T extends Record<string, unknown>>(
   path: string,
