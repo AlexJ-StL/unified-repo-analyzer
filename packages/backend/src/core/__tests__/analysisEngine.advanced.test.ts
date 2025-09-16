@@ -2,47 +2,45 @@
  * Integration tests for AnalysisEngine with advanced features
  */
 
-import type { AnalysisOptions } from "@unified-repo-analyzer/shared/src/types/analysis";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { MockedFunction } from "vitest";
-import { AnalysisEngine } from "../AnalysisEngine.js";
-
-import { readFileWithErrorHandling } from "../../utils/fileSystem";
+import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
+import type { MockedFunction } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFileWithErrorHandling } from '../../utils/fileSystem';
 import {
+  analysisOptionsToDiscoveryOptions,
   discoverRepository,
-  analysisOptionsToDiscoveryOptions
-} from "../../utils/repositoryDiscovery";
+} from '../../utils/repositoryDiscovery';
+import { AnalysisEngine } from '../AnalysisEngine.js';
 
 // Mock dependencies
-vi.mock("../../utils/fileSystem", () => ({
-  readFileWithErrorHandling: vi.fn()
+vi.mock('../../utils/fileSystem', () => ({
+  readFileWithErrorHandling: vi.fn(),
 }));
 
-vi.mock("../../services/deduplication.service", () => ({
+vi.mock('../../services/deduplication.service', () => ({
   deduplicationService: {
     deduplicateAnalysis: vi
       .fn()
       .mockImplementation(
-        async (repoPath: string, options: any, executor: () => Promise<any>) =>
-          await executor()
-      )
-  }
+        async (_repoPath: string, _options: any, executor: () => Promise<any>) => await executor()
+      ),
+  },
 }));
 
-vi.mock("../../services/cache.service", () => ({
+vi.mock('../../services/cache.service', () => ({
   cacheService: {
     getCachedAnalysis: vi.fn().mockResolvedValue(null),
-    setCachedAnalysis: vi.fn().mockResolvedValue(undefined)
-  }
+    setCachedAnalysis: vi.fn().mockResolvedValue(undefined),
+  },
 }));
-vi.mock("../../utils/repositoryDiscovery", () => ({
+vi.mock('../../utils/repositoryDiscovery', () => ({
   discoverRepository: vi.fn().mockResolvedValue({
-    id: "test-repo-id",
-    path: "/test/repo",
-    name: "test-repo",
-    language: "JavaScript",
-    languages: ["JavaScript", "TypeScript"],
-    frameworks: ["React", "Express"],
+    id: 'test-repo-id',
+    path: '/test/repo',
+    name: 'test-repo',
+    language: 'JavaScript',
+    languages: ['JavaScript', 'TypeScript'],
+    frameworks: ['React', 'Express'],
     fileCount: 25,
     directoryCount: 5,
     totalSize: 512000,
@@ -50,31 +48,31 @@ vi.mock("../../utils/repositoryDiscovery", () => ({
     updatedAt: new Date(),
     structure: {
       directories: [
-        { path: "src", files: 15, subdirectories: 2 },
-        { path: "src/components", files: 8, subdirectories: 0 },
-        { path: "src/services", files: 3, subdirectories: 0 }
+        { path: 'src', files: 15, subdirectories: 2 },
+        { path: 'src/components', files: 8, subdirectories: 0 },
+        { path: 'src/services', files: 3, subdirectories: 0 },
       ],
       keyFiles: [
         {
-          path: "src/app.js",
-          language: "JavaScript",
+          path: 'src/app.js',
+          language: 'JavaScript',
           size: 4096,
           lineCount: 150,
           importance: 0.9,
           functions: [],
-          classes: []
+          classes: [],
         },
         {
-          path: "src/config.js",
-          language: "JavaScript",
+          path: 'src/config.js',
+          language: 'JavaScript',
           size: 1024,
           lineCount: 40,
           importance: 0.7,
           functions: [],
-          classes: []
-        }
+          classes: [],
+        },
       ],
-      tree: "mock-tree-structure"
+      tree: 'mock-tree-structure',
     },
     codeAnalysis: {
       functionCount: 0,
@@ -83,58 +81,58 @@ vi.mock("../../utils/repositoryDiscovery", () => ({
       complexity: {
         cyclomaticComplexity: 1,
         maintainabilityIndex: 100,
-        technicalDebt: "None",
-        codeQuality: "excellent"
+        technicalDebt: 'None',
+        codeQuality: 'excellent',
       },
-      patterns: []
+      patterns: [],
     },
     dependencies: {
       production: [],
       development: [],
-      frameworks: []
+      frameworks: [],
     },
     insights: {
-      executiveSummary: "",
-      technicalBreakdown: "",
+      executiveSummary: '',
+      technicalBreakdown: '',
       recommendations: [],
-      potentialIssues: []
+      potentialIssues: [],
     },
     metadata: {
-      analysisMode: "comprehensive",
-      processingTime: 0
-    }
+      analysisMode: 'comprehensive',
+      processingTime: 0,
+    },
   }),
-  analysisOptionsToDiscoveryOptions: vi.fn().mockReturnValue({})
+  analysisOptionsToDiscoveryOptions: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock("../../services/metrics.service", () => ({
+vi.mock('../../services/metrics.service', () => ({
   metricsService: {
     createTimer: vi.fn().mockReturnValue(() => {}),
-    recordAnalysis: vi.fn()
-  }
+    recordAnalysis: vi.fn(),
+  },
 }));
 
-vi.mock("../codeStructureAnalyzer", () => ({
+vi.mock('../codeStructureAnalyzer', () => ({
   analyzeCodeStructure: vi.fn().mockReturnValue({
     functions: [
       {
-        name: "complexFunction",
+        name: 'complexFunction',
         lineNumber: 3,
-        parameters: []
-      }
+        parameters: [],
+      },
     ],
     classes: [
       {
-        name: "UserService",
+        name: 'UserService',
         lineNumber: 8,
-        methods: []
-      }
+        methods: [],
+      },
     ],
-    importCount: 2
-  })
+    importCount: 2,
+  }),
 }));
 
-vi.mock("../advancedAnalyzer", () => ({
+vi.mock('../advancedAnalyzer', () => ({
   AdvancedAnalyzer: vi.fn().mockImplementation(() => ({
     analyzeRepository: vi.fn().mockResolvedValue({
       codeQuality: {
@@ -142,66 +140,65 @@ vi.mock("../advancedAnalyzer", () => ({
         fileMetrics: [],
         technicalDebt: [
           {
-            type: "complexity",
-            severity: "high",
-            description: "Method complexFunction is too long (20 lines)",
-            file: "src/app.js",
+            type: 'complexity',
+            severity: 'high',
+            description: 'Method complexFunction is too long (20 lines)',
+            file: 'src/app.js',
             estimatedEffort: 2,
-            recommendation: "Break down into smaller methods"
-          }
-        ]
+            recommendation: 'Break down into smaller methods',
+          },
+        ],
       },
       security: {
         vulnerabilities: [
           {
-            severity: "high",
-            type: "hardcoded-credentials",
-            description: "Hardcoded password found in source code",
-            file: "src/app.js",
+            severity: 'high',
+            type: 'hardcoded-credentials',
+            description: 'Hardcoded password found in source code',
+            file: 'src/app.js',
             line: 1,
-            recommendation: "Move credentials to environment variables"
+            recommendation: 'Move credentials to environment variables',
           },
           {
-            severity: "critical",
-            type: "code-injection",
-            description:
-              "Use of eval() detected which can lead to code injection",
-            file: "src/app.js",
+            severity: 'critical',
+            type: 'code-injection',
+            description: 'Use of eval() detected which can lead to code injection',
+            file: 'src/app.js',
             line: 10,
-            recommendation: "Avoid using eval(), use safer alternatives"
-          }
+            recommendation: 'Avoid using eval(), use safer alternatives',
+          },
         ],
         securityScore: 45,
         recommendations: [
-          "Use environment variables for sensitive configuration like passwords and API keys",
-          "Implement input validation and sanitization to prevent XSS attacks",
-          "Use parameterized queries or prepared statements for database operations",
-          "Add rate limiting to API endpoints to prevent abuse",
-          "Consider using helmet.js for Express applications to set security headers"
-        ]
+          'Use environment variables for sensitive configuration like passwords and API keys',
+          'Implement input validation and sanitization to prevent XSS attacks',
+          'Use parameterized queries or prepared statements for database operations',
+          'Add rate limiting to API endpoints to prevent abuse',
+          'Consider using helmet.js for Express applications to set security headers',
+        ],
       },
       architecture: {
         patterns: [
           {
-            name: "Model-View-Controller (MVC)",
+            name: 'Model-View-Controller (MVC)',
             description:
-              "The codebase follows MVC architectural pattern with separate models, views, and controllers",
+              'The codebase follows MVC architectural pattern with separate models, views, and controllers',
             confidence: 0.8,
-            locations: ["src/models/", "src/views/", "src/controllers/"]
-          }
+            locations: ['src/models/', 'src/views/', 'src/controllers/'],
+          },
         ],
         recommendations: [
-          "Consider implementing a layered architecture to separate concerns more clearly",
-          "Add dependency injection to improve testability and maintainability",
-          "Implement proper error boundaries in React components for better user experience"
+          'Consider implementing a layered architecture to separate concerns more clearly',
+          'Add dependency injection to improve testability and maintainability',
+          'Implement proper error boundaries in React components for better user experience',
         ],
         maintainabilityScore: 75,
-      }
-    })
-  })
+      },
+    }),
+  })),
 }));
 
-describe("AnalysisEngine Advanced Features Integration", () => {
+describe('AnalysisEngine Advanced Features Integration', () => {
   let engine: AnalysisEngine;
   let mockAnalysisOptions: AnalysisOptions;
   let mockReadFile: MockedFunction<typeof readFileWithErrorHandling>;
@@ -214,13 +211,13 @@ describe("AnalysisEngine Advanced Features Integration", () => {
     engine = new AnalysisEngine();
 
     mockAnalysisOptions = {
-      mode: "comprehensive",
+      mode: 'comprehensive',
       maxFiles: 100,
       maxLinesPerFile: 1000,
       includeLLMAnalysis: false,
-      llmProvider: "mock",
-      outputFormats: ["json"],
-      includeTree: true
+      llmProvider: 'mock',
+      outputFormats: ['json'],
+      includeTree: true,
     };
 
     // Reset mocks
@@ -228,20 +225,18 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
     mockReadFile = vi.mocked(readFileWithErrorHandling);
     mockDiscoverRepository = vi.mocked(discoverRepository);
-    mockAnalysisOptionsToDiscoveryOptions = vi.mocked(
-      analysisOptionsToDiscoveryOptions
-    );
+    mockAnalysisOptionsToDiscoveryOptions = vi.mocked(analysisOptionsToDiscoveryOptions);
 
     // Setup default mock implementations
     mockAnalysisOptionsToDiscoveryOptions.mockReturnValue({});
 
     mockDiscoverRepository.mockResolvedValue({
-      id: "test-repo-id",
-      path: "/test/repo",
-      name: "test-repo",
-      language: "JavaScript",
-      languages: ["JavaScript", "TypeScript"],
-      frameworks: ["React", "Express"],
+      id: 'test-repo-id',
+      path: '/test/repo',
+      name: 'test-repo',
+      language: 'JavaScript',
+      languages: ['JavaScript', 'TypeScript'],
+      frameworks: ['React', 'Express'],
       fileCount: 25,
       directoryCount: 5,
       totalSize: 512000,
@@ -249,31 +244,31 @@ describe("AnalysisEngine Advanced Features Integration", () => {
       updatedAt: new Date(),
       structure: {
         directories: [
-          { path: "src", files: 15, subdirectories: 2 },
-          { path: "src/components", files: 8, subdirectories: 0 },
-          { path: "src/services", files: 3, subdirectories: 0 }
+          { path: 'src', files: 15, subdirectories: 2 },
+          { path: 'src/components', files: 8, subdirectories: 0 },
+          { path: 'src/services', files: 3, subdirectories: 0 },
         ],
         keyFiles: [
           {
-            path: "src/app.js",
-            language: "JavaScript",
+            path: 'src/app.js',
+            language: 'JavaScript',
             size: 4096,
             lineCount: 150,
             importance: 0.9,
             functions: [],
-            classes: []
+            classes: [],
           },
           {
-            path: "src/config.js",
-            language: "JavaScript",
+            path: 'src/config.js',
+            language: 'JavaScript',
             size: 1024,
             lineCount: 40,
             importance: 0.7,
             functions: [],
-            classes: []
-          }
+            classes: [],
+          },
         ],
-        tree: "mock-tree-structure"
+        tree: 'mock-tree-structure',
       },
       codeAnalysis: {
         functionCount: 0,
@@ -282,31 +277,31 @@ describe("AnalysisEngine Advanced Features Integration", () => {
         complexity: {
           cyclomaticComplexity: 1,
           maintainabilityIndex: 100,
-          technicalDebt: "None",
-          codeQuality: "excellent"
+          technicalDebt: 'None',
+          codeQuality: 'excellent',
         },
-        patterns: []
+        patterns: [],
       },
       dependencies: {
         production: [],
         development: [],
-        frameworks: []
+        frameworks: [],
       },
       insights: {
-        executiveSummary: "",
-        technicalBreakdown: "",
+        executiveSummary: '',
+        technicalBreakdown: '',
         recommendations: [],
-        potentialIssues: []
+        potentialIssues: [],
       },
       metadata: {
-        analysisMode: "comprehensive",
-        processingTime: 0
-      }
+        analysisMode: 'comprehensive',
+        processingTime: 0,
+      },
     });
   });
 
-  describe("Comprehensive Mode Analysis", () => {
-    it("should perform advanced analysis in comprehensive mode", async () => {
+  describe('Comprehensive Mode Analysis', () => {
+    it('should perform advanced analysis in comprehensive mode', async () => {
       const vulnerableContent = `
         const password = "hardcoded123";
         const apiKey = "sk-1234567890";
@@ -340,70 +335,60 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
       (mockReadFile as any).mockResolvedValue(vulnerableContent);
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       // Verify that advanced analysis was performed
-      expect(result.metadata.analysisMode).toBe("comprehensive");
+      expect(result.metadata.analysisMode).toBe('comprehensive');
 
       // Verify that security recommendations were added
       expect(result.insights.recommendations.length).toBeGreaterThan(0);
-      const recommendations = result.insights.recommendations.join(" ");
-      expect(recommendations).toContain("environment variables");
+      const recommendations = result.insights.recommendations.join(' ');
+      expect(recommendations).toContain('environment variables');
 
       // Verify that security issues were identified
       expect(result.insights.potentialIssues.length).toBeGreaterThan(0);
-      const issues = result.insights.potentialIssues.join(" ");
-      expect(issues).toContain("Security:");
+      const issues = result.insights.potentialIssues.join(' ');
+      expect(issues).toContain('Security:');
 
       // Verify that quality issues were identified
-      expect(issues).toContain("Quality:");
+      expect(issues).toContain('Quality:');
     });
 
-    it("should not perform advanced analysis in quick mode", async () => {
+    it('should not perform advanced analysis in quick mode', async () => {
       const quickOptions: AnalysisOptions = {
         ...mockAnalysisOptions,
-        mode: "quick"
+        mode: 'quick',
       };
 
-      (mockReadFile as any).mockResolvedValue(
-        'const simpleCode = "hello world";'
-      );
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "hello world";');
 
-      const result = await engine.analyzeRepository("/test/repo", quickOptions);
+      const result = await engine.analyzeRepository('/test/repo', quickOptions);
 
-      expect(result.metadata.analysisMode).toBe("quick");
+      expect(result.metadata.analysisMode).toBe('quick');
 
       // Should have fewer recommendations since advanced analysis is skipped
       expect(result.insights.recommendations.length).toBeLessThan(5);
     });
 
-    it("should not perform advanced analysis in standard mode", async () => {
+    it('should not perform advanced analysis in standard mode', async () => {
       const standardOptions: AnalysisOptions = {
         ...mockAnalysisOptions,
-        mode: "standard"
+        mode: 'standard',
       };
 
-      (mockReadFile as any).mockResolvedValue(
-        'const simpleCode = "hello world";'
-      );
+      (mockReadFile as any).mockResolvedValue('const simpleCode = "hello world";');
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        standardOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', standardOptions);
 
-      expect(result.metadata.analysisMode).toBe("standard");
+      expect(result.metadata.analysisMode).toBe('standard');
 
       // Should have fewer recommendations since advanced analysis is skipped
       expect(result.insights.recommendations.length).toBeLessThan(5);
     });
   });
 
-  describe("Security Integration", () => {
-    it("should add high-severity security issues to potential issues", async () => {
+  describe('Security Integration', () => {
+    it('should add high-severity security issues to potential issues', async () => {
       const criticalSecurityContent = `
         const query = "SELECT * FROM users WHERE id = " + userId;
         const password = "admin123";
@@ -412,22 +397,17 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
       (mockReadFile as any).mockResolvedValue(criticalSecurityContent);
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
-      const securityIssues = result.insights.potentialIssues.filter(
-        (issue: string) => issue.startsWith("Security:")
+      const securityIssues = result.insights.potentialIssues.filter((issue: string) =>
+        issue.startsWith('Security:')
       );
 
       expect(securityIssues.length).toBeGreaterThan(0);
-      expect(
-        securityIssues.some((issue: string) => issue.includes("SQL Injection"))
-      ).toBe(true);
+      expect(securityIssues.some((issue: string) => issue.includes('SQL Injection'))).toBe(true);
     });
 
-    it("should add security recommendations", async () => {
+    it('should add security recommendations', async () => {
       const reactExpressContent = `
         const express = require('express');
         const React = require('react');
@@ -442,30 +422,21 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
       (mockReadFile as any).mockResolvedValue(reactExpressContent);
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       const recommendations = result.insights.recommendations;
-      expect(
-        recommendations.some((rec: string) => rec.includes("helmet.js"))
-      ).toBe(true);
-      expect(
-        recommendations.some((rec: string) => rec.includes("rate limiting"))
-      ).toBe(true);
-      expect(recommendations.some((rec: string) => rec.includes("XSS"))).toBe(
-        true
-      );
+      expect(recommendations.some((rec: string) => rec.includes('helmet.js'))).toBe(true);
+      expect(recommendations.some((rec: string) => rec.includes('rate limiting'))).toBe(true);
+      expect(recommendations.some((rec: string) => rec.includes('XSS'))).toBe(true);
     });
   });
 
-  describe("Code Quality Integration", () => {
-    it("should add high-severity quality issues to potential issues", async () => {
+  describe('Code Quality Integration', () => {
+    it('should add high-severity quality issues to potential issues', async () => {
       const poorQualityContent = `
         // TODO: This is a critical issue that needs fixing
         function massiveFunction() {
-          ${Array(200).fill('console.log("This is a very long method");').join("\n")}
+          ${Array(200).fill('console.log("This is a very long method");').join('\n')}
         }
         
         const duplicatedCode = "this appears many times";
@@ -476,22 +447,17 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
       (mockReadFile as any).mockResolvedValue(poorQualityContent);
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
-      const qualityIssues = result.insights.potentialIssues.filter(
-        (issue: string) => issue.startsWith("Quality:")
+      const qualityIssues = result.insights.potentialIssues.filter((issue: string) =>
+        issue.startsWith('Quality:')
       );
 
       expect(qualityIssues.length).toBeGreaterThan(0);
-      expect(
-        qualityIssues.some((issue: string) => issue.includes("too long"))
-      ).toBe(true);
+      expect(qualityIssues.some((issue: string) => issue.includes('too long'))).toBe(true);
     });
 
-    it("should update complexity metrics", async () => {
+    it('should update complexity metrics', async () => {
       const complexContent = `
         function veryComplexFunction() {
           if (condition1) {
@@ -522,32 +488,27 @@ describe("AnalysisEngine Advanced Features Integration", () => {
 
       (mockReadFile as any).mockResolvedValue(complexContent);
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       // The complexity should be updated by the advanced analyzer
-      expect(
-        result.codeAnalysis.complexity.cyclomaticComplexity
-      ).toBeGreaterThan(1);
+      expect(result.codeAnalysis.complexity.cyclomaticComplexity).toBeGreaterThan(1);
       expect(result.codeAnalysis.complexity.codeQuality).toBeDefined();
-      expect(["excellent", "good", "fair", "poor"]).toContain(
+      expect(['excellent', 'good', 'fair', 'poor']).toContain(
         result.codeAnalysis.complexity.codeQuality
       );
     });
   });
 
-  describe("Architectural Pattern Integration", () => {
-    it("should detect and add architectural patterns", async () => {
+  describe('Architectural Pattern Integration', () => {
+    it('should detect and add architectural patterns', async () => {
       // Mock a repository with MVC structure
       const mvcDiscoveryResult = {
-        id: "test-repo-id",
-        path: "/test/repo",
-        name: "test-repo",
-        language: "JavaScript",
-        languages: ["JavaScript", "TypeScript"],
-        frameworks: ["React", "Express"],
+        id: 'test-repo-id',
+        path: '/test/repo',
+        name: 'test-repo',
+        language: 'JavaScript',
+        languages: ['JavaScript', 'TypeScript'],
+        frameworks: ['React', 'Express'],
         fileCount: 25,
         directoryCount: 5,
         totalSize: 512000,
@@ -555,22 +516,22 @@ describe("AnalysisEngine Advanced Features Integration", () => {
         updatedAt: new Date(),
         structure: {
           directories: [
-            { path: "models", files: 5, subdirectories: 0 },
-            { path: "views", files: 10, subdirectories: 0 },
-            { path: "controllers", files: 8, subdirectories: 0 }
+            { path: 'models', files: 5, subdirectories: 0 },
+            { path: 'views', files: 10, subdirectories: 0 },
+            { path: 'controllers', files: 8, subdirectories: 0 },
           ],
           keyFiles: [
             {
-              path: "models/User.js",
-              language: "JavaScript",
+              path: 'models/User.js',
+              language: 'JavaScript',
               size: 2048,
               lineCount: 80,
               importance: 0.8,
               functions: [],
-              classes: []
-            }
+              classes: [],
+            },
           ],
-          tree: "mvc-tree"
+          tree: 'mvc-tree',
         },
         codeAnalysis: {
           functionCount: 0,
@@ -579,73 +540,66 @@ describe("AnalysisEngine Advanced Features Integration", () => {
           complexity: {
             cyclomaticComplexity: 1,
             maintainabilityIndex: 100,
-            technicalDebt: "None",
-            codeQuality: "excellent"
+            technicalDebt: 'None',
+            codeQuality: 'excellent',
           },
-          patterns: []
+          patterns: [],
         },
         dependencies: {
           production: [],
           development: [],
-          frameworks: []
+          frameworks: [],
         },
         insights: {
-          executiveSummary: "",
-          technicalBreakdown: "",
+          executiveSummary: '',
+          technicalBreakdown: '',
           recommendations: [],
-          potentialIssues: []
+          potentialIssues: [],
         },
         metadata: {
-          analysisMode: "comprehensive",
-          processingTime: 0
-        }
+          analysisMode: 'comprehensive',
+          processingTime: 0,
+        },
       };
 
       (mockDiscoverRepository as any).mockResolvedValue(mvcDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue(
-        "class User { constructor() {} }"
-      );
+      (mockReadFile as any).mockResolvedValue('class User { constructor() {} }');
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       expect(result.codeAnalysis.patterns.length).toBeGreaterThan(0);
-      const patternNames = result.codeAnalysis.patterns.map(
-        (p: { name: string }) => p.name
-      );
-      expect(patternNames).toContain("Model-View-Controller (MVC)");
+      const patternNames = result.codeAnalysis.patterns.map((p: { name: string }) => p.name);
+      expect(patternNames).toContain('Model-View-Controller (MVC)');
     });
 
-    it("should add architectural recommendations", async () => {
+    it('should add architectural recommendations', async () => {
       // Mock a large repository without clear architecture
       const largeDiscoveryResult = {
-        id: "test-repo-id",
-        path: "/test/repo",
-        name: "test-repo",
-        language: "JavaScript",
-        languages: ["JavaScript", "TypeScript"],
-        frameworks: ["React", "Express"],
+        id: 'test-repo-id',
+        path: '/test/repo',
+        name: 'test-repo',
+        language: 'JavaScript',
+        languages: ['JavaScript', 'TypeScript'],
+        frameworks: ['React', 'Express'],
         fileCount: 25,
         directoryCount: 5,
         totalSize: 512000,
         createdAt: new Date(),
         updatedAt: new Date(),
         structure: {
-          directories: [{ path: "src", files: 150, subdirectories: 0 }],
+          directories: [{ path: 'src', files: 150, subdirectories: 0 }],
           keyFiles: Array(10)
             .fill(null)
             .map((_, i) => ({
               path: `src/file${i}.js`,
-              language: "JavaScript",
+              language: 'JavaScript',
               size: 1024,
               lineCount: 50,
               importance: 0.5,
               functions: [],
-              classes: []
+              classes: [],
             })),
-          tree: "flat-structure"
+          tree: 'flat-structure',
         },
         codeAnalysis: {
           functionCount: 0,
@@ -654,101 +608,89 @@ describe("AnalysisEngine Advanced Features Integration", () => {
           complexity: {
             cyclomaticComplexity: 1,
             maintainabilityIndex: 100,
-            technicalDebt: "None",
-            codeQuality: "excellent"
+            technicalDebt: 'None',
+            codeQuality: 'excellent',
           },
-          patterns: []
+          patterns: [],
         },
         dependencies: {
           production: [],
           development: [],
-          frameworks: []
+          frameworks: [],
         },
         insights: {
-          executiveSummary: "",
-          technicalBreakdown: "",
+          executiveSummary: '',
+          technicalBreakdown: '',
           recommendations: [],
-          potentialIssues: []
+          potentialIssues: [],
         },
         metadata: {
-          analysisMode: "comprehensive",
-          processingTime: 0
-        }
+          analysisMode: 'comprehensive',
+          processingTime: 0,
+        },
       };
 
       (mockDiscoverRepository as any).mockResolvedValue(largeDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue(
-        "function simpleFunction() { return true; }"
-      );
+      (mockReadFile as any).mockResolvedValue('function simpleFunction() { return true; }');
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       const recommendations = result.insights.recommendations;
       expect(
         recommendations.some(
-          (rec: string) =>
-            rec.includes("layered architecture") || rec.includes("component")
+          (rec: string) => rec.includes('layered architecture') || rec.includes('component')
         )
       ).toBe(true);
     });
   });
 
-  describe("Performance and Error Handling", () => {
-    it("should handle file read errors gracefully", async () => {
-      (mockReadFile as any).mockRejectedValue(new Error("Permission denied"));
+  describe('Performance and Error Handling', () => {
+    it('should handle file read errors gracefully', async () => {
+      (mockReadFile as any).mockRejectedValue(new Error('Permission denied'));
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       // Should complete successfully despite file read errors
       expect(result).toBeDefined();
-      expect(result.metadata.analysisMode).toBe("comprehensive");
+      expect(result.metadata.analysisMode).toBe('comprehensive');
     });
 
-    it("should handle malformed JSON in package.json", async () => {
+    it('should handle malformed JSON in package.json', async () => {
       (mockReadFile as any).mockImplementation((filePath: string) => {
-        if (filePath.includes("package.json")) {
-          return Promise.resolve("{ invalid json }");
+        if (filePath.includes('package.json')) {
+          return Promise.resolve('{ invalid json }');
         }
         return Promise.resolve('const code = "test";');
       });
 
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
       // Should complete successfully despite malformed package.json
       expect(result).toBeDefined();
-      expect(result.metadata.analysisMode).toBe("comprehensive");
+      expect(result.metadata.analysisMode).toBe('comprehensive');
     });
 
-    it("should maintain performance with large repositories", async () => {
+    it('should maintain performance with large repositories', async () => {
       // Mock a large repository
       const largeKeyFiles = Array(50)
         .fill(null)
         .map((_, i) => ({
           path: `src/file${i}.js`,
-          language: "JavaScript",
+          language: 'JavaScript',
           size: 2048,
           lineCount: 100,
           importance: 0.5,
           functions: [],
-          classes: []
+          classes: [],
         }));
 
       const largeDiscoveryResult = {
-        id: "test-repo-id",
-        path: "/test/repo",
-        name: "test-repo",
-        language: "JavaScript",
-        languages: ["JavaScript", "TypeScript"],
-        frameworks: ["React", "Express"],
+        id: 'test-repo-id',
+        path: '/test/repo',
+        name: 'test-repo',
+        language: 'JavaScript',
+        languages: ['JavaScript', 'TypeScript'],
+        frameworks: ['React', 'Express'],
         fileCount: 500,
         directoryCount: 5,
         totalSize: 512000,
@@ -761,47 +703,42 @@ describe("AnalysisEngine Advanced Features Integration", () => {
           complexity: {
             cyclomaticComplexity: 1,
             maintainabilityIndex: 100,
-            technicalDebt: "None",
-            codeQuality: "excellent"
+            technicalDebt: 'None',
+            codeQuality: 'excellent',
           },
-          patterns: []
+          patterns: [],
         },
         dependencies: {
           production: [],
           development: [],
-          frameworks: []
+          frameworks: [],
         },
         insights: {
-          executiveSummary: "",
-          technicalBreakdown: "",
+          executiveSummary: '',
+          technicalBreakdown: '',
           recommendations: [],
-          potentialIssues: []
+          potentialIssues: [],
         },
         metadata: {
-          analysisMode: "comprehensive",
-          processingTime: 0
+          analysisMode: 'comprehensive',
+          processingTime: 0,
         },
         structure: {
           directories: [
-            { path: "src", files: 15, subdirectories: 2 },
-            { path: "src/components", files: 8, subdirectories: 0 },
-            { path: "src/services", files: 3, subdirectories: 0 }
+            { path: 'src', files: 15, subdirectories: 2 },
+            { path: 'src/components', files: 8, subdirectories: 0 },
+            { path: 'src/services', files: 3, subdirectories: 0 },
           ],
           keyFiles: largeKeyFiles,
-          tree: "mock-tree-structure"
-        }
+          tree: 'mock-tree-structure',
+        },
       };
 
       (mockDiscoverRepository as any).mockResolvedValue(largeDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue(
-        "function test() { return true; }"
-      );
+      (mockReadFile as any).mockResolvedValue('function test() { return true; }');
 
       const startTime = Date.now();
-      const result = await engine.analyzeRepository(
-        "/test/repo",
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
       const endTime = Date.now();
 
       // Should complete in reasonable time (less than 10 seconds for this test)
@@ -811,9 +748,9 @@ describe("AnalysisEngine Advanced Features Integration", () => {
     });
   });
 
-  describe("Batch Analysis with Advanced Features", () => {
-    it("should perform advanced analysis on multiple repositories", async () => {
-      const repoPaths = ["/test/repo1", "/test/repo2"];
+  describe('Batch Analysis with Advanced Features', () => {
+    it('should perform advanced analysis on multiple repositories', async () => {
+      const repoPaths = ['/test/repo1', '/test/repo2'];
 
       (mockReadFile as any).mockResolvedValue(`
         const password = "hardcoded123";
@@ -824,16 +761,13 @@ describe("AnalysisEngine Advanced Features Integration", () => {
         }
       `);
 
-      const result = await engine.analyzeMultipleRepositories(
-        repoPaths,
-        mockAnalysisOptions
-      );
+      const result = await engine.analyzeMultipleRepositories(repoPaths, mockAnalysisOptions);
 
       expect(result.repositories.length).toBe(2);
 
       // Each repository should have advanced analysis results
       for (const repo of result.repositories) {
-        expect(repo.metadata.analysisMode).toBe("comprehensive");
+        expect(repo.metadata.analysisMode).toBe('comprehensive');
         expect(repo.insights.recommendations.length).toBeGreaterThan(0);
         expect(repo.insights.potentialIssues.length).toBeGreaterThan(0);
       }
