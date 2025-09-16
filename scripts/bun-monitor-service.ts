@@ -4,6 +4,7 @@ declare global {
     main: boolean;
   }
 }
+
 /**
  * Background Bun Process Monitor Service
  * Runs continuously to prevent runaway processes
