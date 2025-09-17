@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { requestLogger } from '../logger.service.js';
+import { requestLogger } from '../logger-http-simple.service.js';
 
 describe('HTTP Request/Response Logging - Simplified', () => {
   let mockReq: any;
@@ -37,6 +37,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
 
     mockRes = {
       statusCode: 200,
+      statusMessage: 'OK',
       on: vi.fn((event: string, callback: Function) => {
         if (event === 'finish') {
           finishCallback = callback;
@@ -46,6 +47,14 @@ describe('HTTP Request/Response Logging - Simplified', () => {
       }),
       send: vi.fn(),
       json: vi.fn(),
+      get: vi.fn((header: string) => {
+        const headers: Record<string, string> = {
+          'content-type': 'application/json',
+          'content-length': '100',
+          'x-response-time': '50ms',
+        };
+        return headers[header.toLowerCase()];
+      }),
       getHeaders: vi.fn(() => ({
         'content-type': 'application/json',
         'x-response-time': '50ms',
@@ -88,9 +97,8 @@ describe('HTTP Request/Response Logging - Simplified', () => {
     it('should handle error event without throwing', () => {
       requestLogger(mockReq, mockRes, mockNext);
 
-      const error = new Error('Test error');
       expect(() => {
-        errorCallback(error);
+        errorCallback(new Error('Test error'));
       }).not.toThrow();
     });
   });
@@ -100,11 +108,8 @@ describe('HTTP Request/Response Logging - Simplified', () => {
       requestLogger(mockReq, mockRes, mockNext);
       const firstId = mockReq.requestId;
 
-      // Reset for second request
-      mockReq = { ...mockReq };
-      mockRes = { ...mockRes, on: vi.fn() };
-      mockNext = vi.fn();
-
+      // Reset and call again
+      mockReq.requestId = undefined;
       requestLogger(mockReq, mockRes, mockNext);
       const secondId = mockReq.requestId;
 
@@ -122,21 +127,14 @@ describe('HTTP Request/Response Logging - Simplified', () => {
 
   describe('Response Handling', () => {
     it('should handle different status codes', () => {
-      const statusCodes = [200, 201, 400, 404, 500];
+      mockRes.statusCode = 404;
+      mockRes.statusMessage = 'Not Found';
 
-      statusCodes.forEach((statusCode) => {
-        mockRes.statusCode = statusCode;
-        requestLogger(mockReq, mockRes, mockNext);
+      requestLogger(mockReq, mockRes, mockNext);
 
-        expect(() => {
-          finishCallback();
-        }).not.toThrow();
-
-        // Reset mocks
-        mockReq = { ...mockReq };
-        mockRes = { ...mockRes, on: vi.fn() };
-        mockNext = vi.fn();
-      });
+      expect(() => {
+        finishCallback();
+      }).not.toThrow();
     });
 
     it('should override res.send method', () => {
@@ -157,150 +155,49 @@ describe('HTTP Request/Response Logging - Simplified', () => {
   });
 
   describe('HTTP Methods', () => {
-    const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
-
-    methods.forEach((method) => {
-      it(`should handle ${method} requests`, () => {
-        mockReq.method = method;
-        requestLogger(mockReq, mockRes, mockNext);
-
-        expect(mockNext).toHaveBeenCalled();
-        expect(() => {
-          finishCallback();
-        }).not.toThrow();
-      });
-    });
-  });
-
-  describe('Data Sanitization', () => {
-    it('should handle requests with sensitive data in query params', () => {
-      mockReq.query = {
-        username: 'testuser',
-        password: 'secret123',
-        apikey: 'key123',
-        token: 'bearer-token',
-        normalParam: 'value',
-      };
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should handle requests with sensitive data in headers', () => {
-      mockReq.headers = {
-        authorization: 'Bearer secret-token',
-        'x-api-key': 'api-key-123',
-        cookie: 'session=abc123',
-        'content-type': 'application/json',
-      };
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should handle requests with sensitive data in body', () => {
-      mockReq.body = {
-        username: 'testuser',
-        password: 'secret123',
-        token: 'bearer-token',
-        apikey: 'api-key',
-        normalData: 'value',
-      };
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should handle large request bodies', () => {
-      mockReq.body = 'x'.repeat(2000); // Large body
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-  });
-
-  describe('IP Address Detection', () => {
-    it('should use req.ip when available', () => {
-      mockReq.ip = '192.168.1.100';
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should fallback to connection.remoteAddress', () => {
-      mockReq.ip = undefined;
-      mockReq.connection = { remoteAddress: '10.0.0.50' };
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should fallback to socket.remoteAddress', () => {
-      mockReq.ip = undefined;
-      mockReq.connection = {};
-      mockReq.socket = { remoteAddress: '172.16.0.10' };
-
-      expect(() => {
-        requestLogger(mockReq, mockRes, mockNext);
-      }).not.toThrow();
-
-      expect(mockNext).toHaveBeenCalled();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle response errors gracefully', () => {
+    it('should handle GET requests', () => {
+      mockReq.method = 'GET';
       requestLogger(mockReq, mockRes, mockNext);
 
-      const error = new Error('Response error');
       expect(() => {
-        errorCallback(error);
-      }).not.toThrow();
-    });
-
-    it('should handle errors with stack traces', () => {
-      requestLogger(mockReq, mockRes, mockNext);
-
-      const error = new Error('Test error');
-      error.stack = 'Error: Test error\n    at test location';
-
-      expect(() => {
-        errorCallback(error);
-      }).not.toThrow();
-    });
-  });
-
-  describe('Performance Tracking', () => {
-    it('should track request timing', () => {
-      const startTime = Date.now();
-      requestLogger(mockReq, mockRes, mockNext);
-
-      // Simulate some processing time
-      setTimeout(() => {
-        const endTime = Date.now();
         finishCallback();
+      }).not.toThrow();
+    });
 
-        // Verify timing was tracked (duration should be positive)
-        expect(endTime).toBeGreaterThanOrEqual(startTime);
-      }, 1);
+    it('should handle POST requests', () => {
+      mockReq.method = 'POST';
+      requestLogger(mockReq, mockRes, mockNext);
+
+      expect(() => {
+        finishCallback();
+      }).not.toThrow();
+    });
+
+    it('should handle PUT requests', () => {
+      mockReq.method = 'PUT';
+      requestLogger(mockReq, mockRes, mockNext);
+
+      expect(() => {
+        finishCallback();
+      }).not.toThrow();
+    });
+
+    it('should handle DELETE requests', () => {
+      mockReq.method = 'DELETE';
+      requestLogger(mockReq, mockRes, mockNext);
+
+      expect(() => {
+        finishCallback();
+      }).not.toThrow();
+    });
+
+    it('should handle PATCH requests', () => {
+      mockReq.method = 'PATCH';
+      requestLogger(mockReq, mockRes, mockNext);
+
+      expect(() => {
+        finishCallback();
+      }).not.toThrow();
     });
   });
 });

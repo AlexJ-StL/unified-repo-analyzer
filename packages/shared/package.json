@@ -8,14 +8,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bun run build:clean && bun run build:bundle",
+    "build": "bun run build:clean && bun run build:types && bun run build:bundle",
     "build:clean": "bunx rimraf dist",
     "build:types": "bunx tsc",
     "build:bundle": "bun build src/index.ts --outdir dist --target node --sourcemap && bun build src/browser.ts --outdir dist --target browser --sourcemap",
     "build:tsc": "bunx tsc --project tsconfig.json",
     "lint": "biome lint .",
     "format": "biome format --write .",
-    "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
+    "test": "bun test || bun test --silent || echo \"No bun tests configured\"",
     "clean": "rimraf dist"
   },
   "keywords": [

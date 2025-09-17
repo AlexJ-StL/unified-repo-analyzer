@@ -3,6 +3,27 @@
  */
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+// Mock dependencies before importing the service
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => 'mock-uuid'),
+}));
+
+vi.mock('../../../services/logger.service.js', () => ({
+  default: {
+    info: vi.fn(),
+    debug: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+vi.mock('../../../services/metrics.service.js', () => ({
+  metricsService: {
+    recordAnalysisMetric: vi.fn(),
+  },
+}));
+
+// Import after mocking dependencies
 import { analysisRequestTracker } from '../../../services/analysis-request-tracker.service';
 
 // Mock express Router
@@ -31,9 +52,9 @@ describe('analysis requests routes', () => {
     mockRouter.get.mockClear();
   });
 
-  test('should define GET routes', () => {
+  test('should define GET routes', async () => {
     // Import the routes file which should register the routes
-    require('../analysis-requests');
+    await import('../analysis-requests');
 
     expect(mockRouter.get).toHaveBeenCalledWith('/', expect.any(Function));
     expect(mockRouter.get).toHaveBeenCalledWith('/:id', expect.any(Function));

@@ -41,6 +41,9 @@ const io = new Server(httpServer, {
   },
 });
 
+// Make io globally available for controllers
+(global as any).io = io;
+
 // Import API routes after app initialization to avoid circular dependency
 import apiRoutes from './api/routes/index.js';
 

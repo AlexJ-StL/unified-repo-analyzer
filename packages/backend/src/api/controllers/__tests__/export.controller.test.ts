@@ -1,7 +1,23 @@
-import fs from 'node:fs';
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  return {
+    ...actual,
+    createReadStream: vi.fn(() => {
+      const { Readable } = require('node:stream');
+      const stream = new Readable();
+      stream.push(null);
+      return stream;
+    }),
+    stat: vi.fn(),
+    mkdir: vi.fn(),
+    readdir: vi.fn(),
+    unlink: vi.fn(),
+  };
+});
+import * as fs from 'node:fs';
 import type { Request, Response } from 'express';
-import { type ViMockedFunction, vi } from 'vitest';
-import type { ExportService } from '../../../services/export.service';
+import { vi, type MockedFunction } from 'vitest';
+import type { ReadStream } from 'node:fs';
 import exportService from '../../../services/export.service';
 import {
   clearExportMetadata,
@@ -23,25 +39,23 @@ vi.mock('../../../services/export.service', () => ({
 }));
 
 const mockExportService = exportService as unknown as {
-  exportAnalysis: ViMockedFunction<ExportService['exportAnalysis']>;
-  exportBatchAnalysis: ViMockedFunction<ExportService['exportBatchAnalysis']>;
-  saveToFile: ViMockedFunction<ExportService['saveToFile']>;
+  exportAnalysis: MockedFunction<Promise<string>>;
+  exportBatchAnalysis: MockedFunction<Promise<string>>;
+  saveToFile: MockedFunction<Promise<string>>;
 };
 
 // Mock fs
-vi.mock('fs', () => ({
-  default: {
-    createReadStream: vi.fn(() => {
-      const { Readable } = require('node:stream');
-      const stream = new Readable();
-      stream.push(null);
-      return stream;
-    }),
-    stat: vi.fn(),
-    mkdir: vi.fn(),
-    readdir: vi.fn(),
-    unlink: vi.fn(),
-  },
+vi.mock('node:fs', () => ({
+  createReadStream: vi.fn(() => {
+    const { Readable } = require('node:stream');
+    const stream = new Readable();
+    stream.push(null);
+    return stream;
+  }),
+  stat: vi.fn(),
+  mkdir: vi.fn(),
+  readdir: vi.fn(),
+  unlink: vi.fn(),
 }));
 
 // Mock express-validator
@@ -191,7 +205,7 @@ describe('Export Controller', () => {
       };
 
       const mockError = new Error('Export failed');
-      (exportService.exportAnalysis as any).mockRejectedValue(mockError);
+      mockExportService.exportAnalysis.mockRejectedValue(mockError);
 
       await exportAnalysis(mockRequest as Request, mockResponse as Response);
 
@@ -272,8 +286,8 @@ describe('Export Controller', () => {
       const mockStream = {
         pipe: vi.fn(),
       };
-      (fs.stat as any).mockResolvedValue({ size: 1024 });
-      (fs.createReadStream as any).mockReturnValue(mockStream);
+      vi.mocked(fs.stat).mockResolvedValue({ size: 1024 } as Awaited<ReturnType<typeof fs.stat>>);
+      vi.mocked(fs.createReadStream).mockReturnValue(mockStream as ReadStream);
 
       exportMetadata.set(exportId, {
         id: exportId,
@@ -307,7 +321,7 @@ describe('Export Controller', () => {
         type: 'single',
       });
 
-      (fs.stat as any).mockRejectedValue(new Error('File not found'));
+      vi.mocked(fs.stat).mockRejectedValue(new Error('File not found'));
 
       await downloadExport(mockRequest as Request, mockResponse as Response);
 
@@ -355,7 +369,7 @@ describe('Export Controller', () => {
         type: 'single',
       });
 
-      (fs.unlink as any).mockResolvedValue(undefined);
+      vi.mocked(fs.unlink).mockResolvedValue(undefined);
 
       await deleteExport(mockRequest as Request, mockResponse as Response);
 
@@ -389,7 +403,7 @@ describe('Export Controller', () => {
         type: 'single',
       });
 
-      (fs.unlink as any).mockRejectedValue(new Error('File not found'));
+      vi.mocked(fs.unlink).mockRejectedValue(new Error('File not found'));
 
       await deleteExport(mockRequest as Request, mockResponse as Response);
 
@@ -414,8 +428,8 @@ describe('Export Controller', () => {
           format,
         };
 
-        (exportService.exportAnalysis as any).mockResolvedValue('test content');
-        (exportService.saveToFile as any).mockResolvedValue('/path/to/file');
+        mockExportService.exportAnalysis.mockResolvedValue('test content');
+        mockExportService.saveToFile.mockResolvedValue('/path/to/file');
 
         await exportAnalysis(mockRequest as Request, mockResponse as Response);
 
@@ -443,7 +457,7 @@ describe('Export Controller', () => {
         };
         mockRequest.query = { download: 'true' };
 
-        (exportService.exportAnalysis as any).mockResolvedValue('test content');
+        mockExportService.exportAnalysis.mockResolvedValue('test content');
 
         await exportAnalysis(mockRequest as Request, mockResponse as Response);
 

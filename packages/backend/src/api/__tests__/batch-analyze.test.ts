@@ -232,7 +232,12 @@ describe('Batch Analysis API', () => {
       AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as unknown as ReturnType<
         typeof vi.fn
       >
-    ).mockRejectedValueOnce(new Error('Batch analysis failed'));
+        // Get the mock instance from the mocked constructor
+    const mockInstance = vi.mocked(AnalysisEngine).mock.results[0]?.value;
+    if (mockInstance) {
+      mockInstance.analyzeMultipleRepositoriesWithQueue.mockRejectedValueOnce(new Error('Batch analysis failed'));
+    }</search>
+</search_and_replace>
 
     const response = await request(app)
       .post('/api/analyze/batch')

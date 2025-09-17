@@ -1,4 +1,5 @@
-/**
+ackages/backend/src/api/__tests__/api.test.ts</path>
+<content">/**
  * API integration tests
  */
 
@@ -29,6 +30,34 @@ describe('API Integration Tests', () => {
 
   let mockAnalysisEngine: MockProxy<AnalysisEngine>;
   let mockIndexSystem: MockProxy<IndexSystem>;
+
+  const _mockStats: Stats = {
+    isFile: () => true,
+    isDirectory: () => false,
+    isBlockDevice: () => false,
+    isCharacterDevice: () => false,
+    isSymbolicLink: () => false,
+    isFIFO: () => false,
+    isSocket: () => false,
+    dev: 0,
+    ino: 0,
+    mode: 0,
+    nlink: 0,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    size: 100,
+    blksize: 0,
+    blocks: 0,
+    atimeMs: 0,
+    mtimeMs: 0,
+    ctimeMs: 0,
+    birthtimeMs: 0,
+    atime: new Date(),
+    mtime: new Date(),
+    ctime: new Date(),
+    birthtime: new Date(),
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -108,34 +137,6 @@ describe('API Integration Tests', () => {
     vi.mock('../../core/IndexSystem', () => ({
       IndexSystem: vi.fn(() => mockIndexSystem),
     }));
-
-    const _mockStats: Stats = {
-      isFile: () => true,
-      isDirectory: () => false,
-      isBlockDevice: () => false,
-      isCharacterDevice: () => false,
-      isSymbolicLink: () => false,
-      isFIFO: () => false,
-      isSocket: () => false,
-      dev: 0,
-      ino: 0,
-      mode: 0,
-      nlink: 0,
-      uid: 0,
-      gid: 0,
-      rdev: 0,
-      size: 100,
-      blksize: 0,
-      blocks: 0,
-      atimeMs: 0,
-      mtimeMs: 0,
-      ctimeMs: 0,
-      birthtimeMs: 0,
-      atime: new Date(),
-      mtime: new Date(),
-      ctime: new Date(),
-      birthtime: new Date(),
-    };
   });
 
   describe('Health Check', () => {
@@ -143,7 +144,7 @@ describe('API Integration Tests', () => {
       // Mock fs.writeFile to succeed for health check
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
       vi.mocked(fs.unlink).mockResolvedValue(undefined);
-      vi.mocked(fs.stat).mockResolvedValue(mockStats);
+      vi.mocked(fs.stat).mockResolvedValue(_mockStats);
 
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);
@@ -513,13 +514,13 @@ describe('API Integration Tests', () => {
             languages: ['JavaScript'],
             frameworks: ['React'],
             tags: ['frontend'],
-            summary: 'Test repo 2',
-            lastAnalyzed: new Date('2025-09-02T13:15:22.944Z'),
-            size: 2000,
+            summary: 'Similar repo',
+            lastAnalyzed: new Date(),
+            size: 1200,
             complexity: 6,
           },
-          similarity: 0.8,
-          matchReason: 'Shares languages: JavaScript',
+          similarity: 0.85,
+          reasons: ['Same language', 'Same framework'],
         },
       ];
 
@@ -538,9 +539,9 @@ describe('API Integration Tests', () => {
       const mockCombinations = [
         {
           repositories: ['123', '124'],
-          compatibility: 0.8,
-          rationale: 'Frontend-Backend pair',
-          integrationPoints: ['API integration', 'Shared data models'],
+          synergy: 0.9,
+          benefits: ['Complementary technologies', 'Shared dependencies'],
+          risks: ['Version conflicts'],
         },
       ];
 
@@ -548,9 +549,9 @@ describe('API Integration Tests', () => {
       mockAnalysisEngine.suggestCombinations.mockResolvedValue(mockCombinations);
 
       const response = await request(app)
-        .post('/api/repositories/combinations')
-        .send({
-          repoIds: ['123', '124'],
+        .get('/api/repositories/combinations')
+        .query({
+          ids: ['123', '124'],
         });
 
       expect(response.status).toBe(200);

@@ -17,7 +17,7 @@
     "build:shebang": "bun ../../scripts/insert-shebang.js",
     "build:tsc": "bunx tsc --project tsconfig.json",
     "start": "bun dist/index.js",
-    "test": "bun test || npm test --silent || echo \"No npm tests configured\"",
+    "test": "bun test || bun test --silent || echo \"No npm tests configured\"",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "clean": "rimraf dist"

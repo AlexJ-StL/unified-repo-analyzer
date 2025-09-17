@@ -3,6 +3,9 @@
  */
 
 import path from 'node:path';
+
+// Global io declaration
+declare const io: import('socket.io').Server;
 import type { AnalysisOptions, RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import type { Request, Response } from 'express';
 import { validationResult } from 'express-validator';

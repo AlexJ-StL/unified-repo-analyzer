@@ -66,13 +66,14 @@ export async function executeAnalyze(
         language: 'JavaScript',
         languages: ['JavaScript'],
         frameworks: ['Node.js'],
+        files: [],
         fileCount: 10,
         directoryCount: 3,
         totalSize: 1024 * 50, // 50KB
         createdAt: new Date(),
         updatedAt: new Date(),
         metadata: {
-          processingTime: 100,
+          analysisTime: 100,
           analysisMode: options.mode,
         },
         description: `Test analysis of ${repoName}`,
@@ -132,7 +133,7 @@ export async function executeAnalyze(
     console.log(`- File Count: ${result.fileCount}`);
     console.log(`- Directory Count: ${result.directoryCount}`);
     console.log(`- Total Size: ${formatBytes(result.totalSize)}`);
-    console.log(`- Processing Time: ${result.metadata.processingTime}ms`);
+    console.log(`- Processing Time: ${result.metadata.analysisTime}ms`);
   } catch (error) {
     progress.fail((error as Error).message);
     handleError(error);

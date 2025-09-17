@@ -375,7 +375,7 @@ export class BuildExecutor {
    */
   private isDependencyError(stderr: string): boolean {
     return (
-      stderr.includes('npm ERR!') ||
+      stderr.includes('bun ERR!') ||
       stderr.includes('ERESOLVE') ||
       stderr.includes('peer dep') ||
       stderr.includes('ENOENT') ||
@@ -486,7 +486,7 @@ export class BuildExecutor {
       const timeout = packageInfo.name.includes('frontend') ? 600000 : 300000; // 10 minutes for frontend, 5 for others
 
       const buildResult = await this.executeBuildCommand({
-        command: 'npm',
+        command: 'bun',
         args: ['run', 'build'],
         cwd: packageInfo.path,
         timeout,

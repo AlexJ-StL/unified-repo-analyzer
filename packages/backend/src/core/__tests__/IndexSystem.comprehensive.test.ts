@@ -41,12 +41,13 @@ describe('IndexSystem Comprehensive Tests', () => {
       id: `mock-${name}-${Date.now()}`,
       path: `/path/to/${name}`,
       name,
-      language: languages[0],
+      language: languages.length > 0 ? languages[0] : 'Unknown',
       languages,
       frameworks,
       fileCount: 100,
       directoryCount: 10,
       totalSize: 1024 * 1024,
+      files: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       structure: {
@@ -79,7 +80,7 @@ describe('IndexSystem Comprehensive Tests', () => {
       },
       metadata: {
         analysisMode: 'standard',
-        processingTime: 1000,
+        analysisTime: 1000,
       },
     };
   };

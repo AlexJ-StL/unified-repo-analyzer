@@ -3,7 +3,6 @@ import type React from 'react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import * as apiModule from '../../services/api';
 import { useProviders } from '../useProviders';
-import type { ToastProvider } from '../useToast';
 
 interface Provider {
   id: string;
@@ -50,7 +49,7 @@ interface GetProviderModelsResponse {
 
 // Create a wrapper component that includes the ToastProvider
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <ToastProvider>{ children } < /;;;;;>PTadeioorrstv;
+  return <ToastProvider>{children}</ToastProvider>;
 };
 
 // Mock the apiService

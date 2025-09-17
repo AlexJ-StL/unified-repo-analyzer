@@ -182,7 +182,7 @@ ${analysis.insights.potentialIssues.map((issue: string) => `- ${issue}`).join('\
 
 - **Analysis Mode:** ${analysis.metadata.analysisMode}
 - **LLM Provider:** ${analysis.metadata.llmProvider || 'None'}
-- **Processing Time:** ${analysis.metadata.processingTime} ms
+- **Processing Time:** ${analysis.metadata.analysisTime} ms
 - **Token Usage:** ${analysis.metadata.tokenUsage ? `${analysis.metadata.tokenUsage.total} tokens (${analysis.metadata.tokenUsage.prompt} prompt, ${analysis.metadata.tokenUsage.completion} completion)` : 'N/A'}
 `;
   }
@@ -466,7 +466,7 @@ ${analysis.insights.potentialIssues.map((issue: string) => `- ${issue}`).join('\
     </tr>
     <tr>
       <td>Processing Time</td>
-      <td>${analysis.metadata.processingTime} ms</td>
+      <td>${analysis.metadata.analysisTime} ms</td>
     </tr>
     <tr>
       <td>Token Usage</td>

@@ -176,7 +176,7 @@ describe('RelationshipService', () => {
 
     it('should identify library ecosystem opportunities', async () => {
       const mockRepositories: IndexedRepository[] = [
-        createMockIndexedRepository('lib', 'Utility Library', ['javascript'], ['npm']),
+        createMockIndexedRepository('lib', 'Utility Library', ['javascript'], ['bun']),
         createMockIndexedRepository('app', 'Web Application', ['javascript'], ['react']),
       ];
 

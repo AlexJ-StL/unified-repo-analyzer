@@ -1,0 +1,33 @@
+{
+  "repositories": [
+    {
+      "id": "mock-tag-count-test-1758141383397",
+      "name": "tag-count-test",
+      "path": "/path/to/tag-count-test",
+      "languages": [
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "tags": [
+        "lang:JavaScript",
+        "framework:React",
+        "complexity:high",
+        "test-tag"
+      ],
+      "summary": "tag-count-test is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-17T20:36:23.397Z",
+      "size": 1048576,
+      "complexity": 75
+    }
+  ],
+  "relationships": [],
+  "tags": [
+    {
+      "id": "8ac1c278-58e5-4795-8da2-e3f24dbb8755",
+      "name": "test-tag"
+    }
+  ],
+  "lastUpdated": "2025-09-17T20:36:23.398Z"
+}

@@ -73,7 +73,7 @@ export function performanceMiddleware() {
           this: Response<unknown, Record<string, string[]>>,
           chunk?: unknown,
           encoding?: (() => void) | undefined
-        ) => Response<any, any>;
+        ) => Response<unknown, Record<string, string[]>>;
         return originalEndAsCallbackFn.apply(this, [chunk, encodingParam]);
       }
       if (isBufferEncoding(encodingParam)) {
@@ -85,7 +85,7 @@ export function performanceMiddleware() {
             chunk?: unknown,
             encoding?: BufferEncoding,
             callback?: (() => void) | undefined
-          ) => Response<any, any>;
+          ) => Response<unknown, Record<string, string[]>>;
           return originalEndAsEncodingCbFn.apply(this, [chunk, encodingParam, cb]);
         }
         // Signature: (chunk, encoding)
@@ -93,7 +93,7 @@ export function performanceMiddleware() {
           this: Response<unknown, Record<string, string[]>>,
           chunk?: unknown,
           encoding?: BufferEncoding
-        ) => Response<any, any>;
+        ) => Response<unknown, Record<string, string[]>>;
         return originalEndAsEncodingFn.apply(this, [chunk, encodingParam]);
       }
       // encodingParam is undefined (and not a function)
@@ -107,7 +107,7 @@ export function performanceMiddleware() {
           chunk?: unknown,
           encoding?: BufferEncoding,
           callback?: (() => void) | undefined
-        ) => Response<any, any>;
+        ) => Response<unknown, Record<string, string[]>>;
         return originalEndAsEncodingCbFn.apply(this, [chunk, defaultEncoding, cb]);
       }
       // This implies a call like res.end(chunk, undefined)
@@ -116,7 +116,7 @@ export function performanceMiddleware() {
         this: Response<unknown, Record<string, string[]>>,
         chunk?: unknown,
         encoding?: BufferEncoding
-      ) => Response<any, any>;
+      ) => Response<unknown, Record<string, string[]>>;
       return originalEndAsEncodingFn.apply(this, [chunk, defaultEncoding]);
     };
 

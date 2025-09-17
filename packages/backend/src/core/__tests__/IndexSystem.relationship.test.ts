@@ -94,7 +94,7 @@ describe('IndexSystem Relationship Functionality', () => {
         name: 'utility-library',
         path: '/path/to/lib',
         languages: ['javascript'],
-        frameworks: ['npm'],
+        frameworks: ['bun'],
         tags: ['library', 'utility'],
         summary: 'A utility library for common functions',
         lastAnalyzed: new Date(),
@@ -176,7 +176,7 @@ describe('IndexSystem Relationship Functionality', () => {
           ['javascript', 'typescript'],
           ['react-native']
         ),
-        createMockAnalysis('library-1', 'utility-library', ['javascript'], ['npm']),
+        createMockAnalysis('library-1', 'utility-library', ['javascript'], ['bun']),
         createMockAnalysis('service-1', 'Microservice A', ['javascript'], ['express']),
         createMockAnalysis('service-2', 'Microservice B', ['javascript'], ['express']),
       ];
@@ -327,7 +327,7 @@ describe('IndexSystem Relationship Functionality', () => {
         name: 'utility-lib',
         path: '/path/to/lib',
         languages: ['javascript'],
-        frameworks: ['npm'],
+        frameworks: ['bun'],
         tags: ['library', 'utility'],
         summary: 'Utility library for common functions',
         lastAnalyzed: new Date(),

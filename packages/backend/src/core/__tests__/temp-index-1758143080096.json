@@ -1,0 +1,27 @@
+{
+  "repositories": [
+    {
+      "id": "mock-update-test-1758143080118",
+      "name": "update-test",
+      "path": "/path/to/update-test",
+      "languages": [
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "tags": [
+        "lang:JavaScript",
+        "framework:React",
+        "complexity:high"
+      ],
+      "summary": "update-test is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-17T21:04:40.118Z",
+      "size": 1048576,
+      "complexity": 75
+    }
+  ],
+  "relationships": [],
+  "tags": [],
+  "lastUpdated": "2025-09-17T21:04:40.118Z"
+}
