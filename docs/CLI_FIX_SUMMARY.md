@@ -85,7 +85,7 @@ void (async () => {
 
 ### Commands That Still Need Work:
 
-- ❌ `bunxunified-repo-analyzer analyze --help` - Global package installation not working (requires global npm install)
+- ❌ `bunx unified-repo-analyzer analyze --help` - Global package installation not working (requires global npm install)
 
 ## Current Status
 

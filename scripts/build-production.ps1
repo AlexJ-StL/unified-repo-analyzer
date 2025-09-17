@@ -37,14 +37,15 @@ Set-Location $ProjectRoot
 # Clean previous builds
 Write-Info "Cleaning previous builds..."
 try {
-    npm run clean
-} catch {
+    bun run clean
+}
+catch {
     Write-Warning "Clean command failed, continuing..."
 }
 
 # Install dependencies
 Write-Info "Installing dependencies..."
-npm ci
+bun ci
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to install dependencies"
     exit 1
@@ -55,8 +56,9 @@ if (Test-Path "packages\shared") {
     Write-Info "Building shared package..."
     Set-Location "packages\shared"
     try {
-        npm run build
-    } catch {
+        bun run build
+    }
+    catch {
         Write-Warning "Shared package build failed, continuing..."
     }
     Set-Location $ProjectRoot
@@ -68,18 +70,22 @@ Set-Location "packages\backend"
 if (Test-Path "tsconfig.prod.json") {
     try {
         npx tsc -p tsconfig.prod.json
-    } catch {
+    }
+    catch {
         Write-Warning "Backend build with production config failed, trying default..."
         try {
             npx tsc
-        } catch {
+        }
+        catch {
             Write-Warning "Backend build failed completely, but continuing for deployment setup..."
         }
     }
-} else {
+}
+else {
     try {
-        npm run build
-    } catch {
+        bun run build
+    }
+    catch {
         Write-Warning "Backend build failed, but continuing for deployment setup..."
     }
 }
@@ -89,11 +95,13 @@ Set-Location $ProjectRoot
 Write-Info "Building frontend..."
 Set-Location "packages\frontend"
 try {
-    npm run build:prod
-} catch {
+    bun run build:prod
+}
+catch {
     try {
-        npm run build
-    } catch {
+        bun run build
+    }
+    catch {
         Write-Warning "Frontend build failed, but continuing for deployment setup..."
     }
 }
@@ -103,8 +111,9 @@ Set-Location $ProjectRoot
 Write-Info "Building CLI..."
 Set-Location "packages\cli"
 try {
-    npm run build
-} catch {
+    bun run build
+}
+catch {
     Write-Warning "CLI build failed, but continuing for deployment setup..."
 }
 Set-Location $ProjectRoot

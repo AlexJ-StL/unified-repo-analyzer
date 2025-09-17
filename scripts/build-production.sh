@@ -38,17 +38,17 @@ cd "$PROJECT_ROOT"
 
 # Clean previous builds
 log_info "Cleaning previous builds..."
-npm run clean || log_warning "Clean command failed, continuing..."
+bun run clean || log_warning "Clean command failed, continuing..."
 
 # Install dependencies
 log_info "Installing dependencies..."
-npm ci
+bun ci
 
 # Build shared package first (if it exists)
 if [ -d "packages/shared" ]; then
     log_info "Building shared package..."
     cd packages/shared
-    npm run build || log_warning "Shared package build failed, continuing..."
+    bun run build || log_warning "Shared package build failed, continuing..."
     cd "$PROJECT_ROOT"
 fi
 
@@ -59,20 +59,20 @@ if [ -f "tsconfig.prod.json" ]; then
     npx tsc -p tsconfig.prod.json || log_warning "Backend build with production config failed, trying default..."
     npx tsc || log_error "Backend build failed completely"
 else
-    npm run build || log_warning "Backend build failed, but continuing for deployment setup..."
+    bun run build || log_warning "Backend build failed, but continuing for deployment setup..."
 fi
 cd "$PROJECT_ROOT"
 
 # Build frontend
 log_info "Building frontend..."
 cd packages/frontend
-npm run build:prod || npm run build || log_warning "Frontend build failed, but continuing for deployment setup..."
+bun run build:prod || bun run build || log_warning "Frontend build failed, but continuing for deployment setup..."
 cd "$PROJECT_ROOT"
 
 # Build CLI
 log_info "Building CLI..."
 cd packages/cli
-npm run build || log_warning "CLI build failed, but continuing for deployment setup..."
+bun run build || log_warning "CLI build failed, but continuing for deployment setup..."
 cd "$PROJECT_ROOT"
 
 log_success "Production build process completed!"

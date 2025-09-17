@@ -61,7 +61,7 @@ export function createValidatedMock<T extends (...args: unknown[]) => unknown>(
 /**
  * Validates that a mock is properly configured
  */
-export function validateMock<T extends (...args: any[]) => any>(
+export function validateMock<T extends (...args: unknown[]) => unknown>(
   mock: MockedFunction<T>,
   name: string
 ): void {
@@ -85,7 +85,7 @@ export function validateMock<T extends (...args: any[]) => any>(
 /**
  * Ensures proper mock cleanup
  */
-export function ensureMockCleanup(mocks: Array<MockedFunction<(...args: any[]) => any>>): void {
+export function ensureMockCleanup(mocks: MockedFunction<(...args: unknown[]) => unknown>[]): void {
   for (const mock of mocks) {
     try {
       if (mock && typeof mock.mockClear === 'function') {
@@ -104,7 +104,7 @@ export function ensureMockCleanup(mocks: Array<MockedFunction<(...args: any[]) =
 /**
  * Validates that IndexSystem has all required methods
  */
-export function validateIndexSystemAPI(indexSystemClass: new () => { [key: string]: any }): void {
+export function validateIndexSystemAPI(indexSystemClass: new () => Record<string, unknown>): void {
   const requiredMethods = [
     'addRepository',
     'updateRepository',
@@ -125,7 +125,7 @@ export function validateIndexSystemAPI(indexSystemClass: new () => { [key: strin
 
   // Check methods
   for (const method of requiredMethods) {
-    if (typeof (indexSystemClass as any).prototype[method] !== 'function') {
+    if (typeof (indexSystemClass.prototype as Record<string, unknown>)[method] !== 'function') {
       throw new Error(`IndexSystem is missing required method: ${method}`);
     }
   }
@@ -143,7 +143,7 @@ export function validateIndexSystemAPI(indexSystemClass: new () => { [key: strin
  * Validates method signatures match expected patterns
  */
 export function validateMethodSignatures(
-  obj: { [key: string]: any },
+  obj: Record<string, unknown>,
   expectedSignatures: Record<string, number>
 ): void {
   for (const [methodName, expectedParamCount] of Object.entries(expectedSignatures)) {
@@ -167,7 +167,7 @@ export function validateMethodSignatures(
  * Validates that async methods return promises
  */
 export async function validateAsyncMethods(
-  instance: { [key: string]: any },
+  instance: Record<string, unknown>,
   asyncMethods: string[]
 ): Promise<void> {
   for (const methodName of asyncMethods) {
@@ -201,7 +201,10 @@ export async function validateAsyncMethods(
 /**
  * Validates that test expectations match actual behavior patterns
  */
-export function validateExpectationPatterns(testResults: any[], expectedPatterns: any[]): void {
+export function validateExpectationPatterns(
+  testResults: unknown[],
+  expectedPatterns: unknown[]
+): void {
   if (testResults.length !== expectedPatterns.length) {
     throw new Error(
       `Test results length (${testResults.length}) doesn't match expected patterns length (${expectedPatterns.length})`
@@ -225,17 +228,27 @@ export function validateExpectationPatterns(testResults: any[], expectedPatterns
 /**
  * Validates object patterns recursively (private helper)
  */
-function validateObjectPattern(obj: any, pattern: any, context: string): void {
-  for (const [key, expectedValue] of Object.entries(pattern)) {
-    if (!(key in obj)) {
+function validateObjectPattern(obj: unknown, pattern: unknown, context: string): void {
+  if (typeof pattern !== 'object' || pattern === null || Array.isArray(pattern)) {
+    return;
+  }
+  const patternObj = pattern as Record<string, unknown>;
+
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    throw new Error(`Invalid object in ${context}`);
+  }
+  const objRecord = obj as Record<string, unknown>;
+
+  for (const [key, expectedValue] of Object.entries(patternObj)) {
+    if (!(key in objRecord)) {
       throw new Error(`Missing property ${key} in ${context}`);
     }
 
     if (typeof expectedValue === 'object' && expectedValue !== null) {
-      validateObjectPattern(obj[key], expectedValue, `${context}.${key}`);
-    } else if (obj[key] !== expectedValue) {
+      validateObjectPattern(objRecord[key], expectedValue, `${context}.${key}`);
+    } else if (objRecord[key] !== expectedValue) {
       throw new Error(
-        `Property ${key} in ${context} has value ${obj[key]}, expected ${expectedValue}`
+        `Property ${key} in ${context} has value ${objRecord[key]}, expected ${expectedValue}`
       );
     }
   }
@@ -270,10 +283,11 @@ export function validateArrayStructure<T>(
 /**
  * Validates that search results have expected properties
  */
-export function validateSearchResults(results: any[], expectedProperties: string[]): void {
+export function validateSearchResults(results: unknown[], expectedProperties: string[]): void {
   validateArrayStructure(results, (item, index) => {
+    const itemRecord = item as Record<string, unknown>;
     for (const prop of expectedProperties) {
-      if (!(prop in item)) {
+      if (!(prop in itemRecord)) {
         throw new Error(`Search result at index ${index} missing property: ${prop}`);
       }
     }
@@ -298,16 +312,22 @@ export function validateTestEnvironment(): void {
 
   // Check vitest globals - these should be available in the test context
   // We use globalThis to check for globals that might be injected
-  if (typeof (globalThis as any).expect === 'undefined' && typeof (expect as any) === 'undefined') {
-  }
-
   if (
-    typeof (globalThis as any).describe === 'undefined' &&
-    typeof (describe as any) === 'undefined'
+    typeof (globalThis as unknown as { expect?: unknown }).expect === 'undefined' &&
+    typeof (expect as unknown) === 'undefined'
   ) {
   }
 
-  if (typeof (globalThis as any).it === 'undefined' && typeof (it as any) === 'undefined') {
+  if (
+    typeof (globalThis as unknown as { describe?: unknown }).describe === 'undefined' &&
+    typeof (describe as unknown) === 'undefined'
+  ) {
+  }
+
+  if (
+    typeof (globalThis as unknown as { it?: unknown }).it === 'undefined' &&
+    typeof (it as unknown) === 'undefined'
+  ) {
   }
 }
 
@@ -325,13 +345,13 @@ export function validateTestUtilities(): void {
   const optionalViMethods = ['mock', 'mocked', 'clearAllMocks', 'resetAllMocks'];
 
   for (const method of coreViMethods) {
-    if (typeof (vi as any)[method] !== 'function') {
+    if (typeof (vi as unknown as Record<string, unknown>)[method] !== 'function') {
       throw new Error(`vi.${method} is not available - check vitest configuration`);
     }
   }
 
   for (const method of optionalViMethods) {
-    if (typeof (vi as any)[method] !== 'function') {
+    if (typeof (vi as unknown as Record<string, unknown>)[method] !== 'function') {
     }
   }
 }
@@ -423,20 +443,25 @@ export class RegressionPrevention {
    * Validates a specific class API for completeness
    */
   static validateClassAPI(
-    classConstructor: any,
+    classConstructor: unknown,
     requiredMethods: string[],
     requiredProperties: string[] = []
   ): void {
+    if (typeof classConstructor !== 'function') {
+      throw new Error('Invalid class constructor');
+    }
+    const ctor = classConstructor as new () => Record<string, unknown>;
+
     // Check methods on prototype
     for (const method of requiredMethods) {
-      if (typeof classConstructor.prototype[method] !== 'function') {
+      if (typeof (ctor as any).prototype[method] !== 'function') {
         throw new Error(`Class is missing required method: ${method}`);
       }
     }
 
     // Check properties on instance
     if (requiredProperties.length > 0) {
-      const instance = new classConstructor();
+      const instance = new ctor();
       for (const property of requiredProperties) {
         if (!(property in instance)) {
           throw new Error(`Class is missing required property: ${property}`);
@@ -444,6 +469,6 @@ export class RegressionPrevention {
       }
     }
 
-    console.log(`✅ Class API validation passed for ${classConstructor.name}`);
+    console.log(`✅ Class API validation passed for ${(ctor as any).name}`);
   }
 }

@@ -630,7 +630,7 @@ export namespace DOMIsolation {
           observe() {}
           unobserve() {}
           disconnect() {}
-        } as any;
+        } as unknown;
       }
 
       // IntersectionObserver
@@ -639,7 +639,7 @@ export namespace DOMIsolation {
           observe() {}
           unobserve() {}
           disconnect() {}
-        } as any;
+        } as unknown;
       }
 
       // matchMedia

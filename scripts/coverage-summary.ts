@@ -142,7 +142,7 @@ class CoverageSummary {
     // Check for common issues
     if (!status.configured) {
       status.issues.push('Coverage configuration is incomplete or missing');
-      status.recommendations.push('Run `npm run test:coverage:fix` to fix configuration');
+      status.recommendations.push('Run `bun run test:coverage:fix` to fix configuration');
     }
 
     if (!existsSync(this.coverageDir)) {
@@ -157,7 +157,7 @@ class CoverageSummary {
 
     if (!status.hasData) {
       status.issues.push('No coverage data found');
-      status.recommendations.push('Run tests with coverage: npm run test:coverage');
+      status.recommendations.push('Run tests with coverage: bun run test:coverage');
     }
 
     // Check for Vitest installation
@@ -188,13 +188,13 @@ class CoverageSummary {
     // Add general recommendations
     if (status.working && status.hasData) {
       status.recommendations.push('✅ Coverage collection is working properly');
-      status.recommendations.push('Use `npm run test:coverage:analysis` for detailed analysis');
-      status.recommendations.push('Use `npm run test:coverage:badges` to generate badges');
+      status.recommendations.push('Use `bun run test:coverage:analysis` for detailed analysis');
+      status.recommendations.push('Use `bun run test:coverage:badges` to generate badges');
     }
 
     if (status.configured && !status.hasData) {
       status.recommendations.push('Configuration looks good, try running tests with coverage');
-      status.recommendations.push('Check if tests are passing: npm run test');
+      status.recommendations.push('Check if tests are passing: bun run test');
     }
   }
 
@@ -248,15 +248,15 @@ class CoverageSummary {
     const steps: string[] = [];
 
     if (!status.configured) {
-      steps.push('1. Fix coverage configuration: npm run test:coverage:fix');
+      steps.push('1. Fix coverage configuration: bun run test:coverage:fix');
       steps.push('2. Verify configuration: bun scripts/coverage-validation.ts full');
     } else if (!status.hasData) {
-      steps.push('1. Run tests with coverage: npm run test:coverage');
-      steps.push('2. Generate analysis: npm run test:coverage:analysis');
+      steps.push('1. Run tests with coverage: bun run test:coverage');
+      steps.push('2. Generate analysis: bun run test:coverage:analysis');
     } else if (status.working && status.hasData) {
       steps.push('1. View coverage report: open coverage/index.html');
-      steps.push('2. Generate detailed analysis: npm run test:coverage:analysis');
-      steps.push('3. Create coverage badges: npm run test:coverage:badges');
+      steps.push('2. Generate detailed analysis: bun run test:coverage:analysis');
+      steps.push('3. Create coverage badges: bun run test:coverage:badges');
     } else {
       steps.push('1. Check validation report: coverage-reports/validation-report.md');
       steps.push('2. Fix identified issues');
@@ -291,7 +291,7 @@ class CoverageSummary {
     if (report.availableScripts.length > 0) {
       markdown += '## Available Coverage Scripts\n\n';
       for (const script of report.availableScripts) {
-        markdown += `- \`npm run ${script}\`\n`;
+        markdown += `- \`bun run ${script}\`\n`;
       }
       markdown += '\n';
     }
@@ -327,11 +327,11 @@ class CoverageSummary {
     markdown += '## Usage Examples\n\n';
     markdown += '```bash\n';
     markdown += '# Run tests with coverage\n';
-    markdown += 'npm run test:coverage\n\n';
+    markdown += 'bun run test:coverage\n\n';
     markdown += '# Generate detailed analysis\n';
-    markdown += 'npm run test:coverage:analysis\n\n';
+    markdown += 'bun run test:coverage:analysis\n\n';
     markdown += '# Create coverage badges\n';
-    markdown += 'npm run test:coverage:badges\n\n';
+    markdown += 'bun run test:coverage:badges\n\n';
     markdown += '# Validate coverage setup\n';
     markdown += 'bun scripts/coverage-validation.ts full\n';
     markdown += '```\n\n';

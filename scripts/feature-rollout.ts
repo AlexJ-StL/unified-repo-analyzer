@@ -221,21 +221,21 @@ class FeatureRolloutManager {
         if (args[1]) {
           await this.enableFeature(args[1]);
         } else {
-          console.log('Usage: npm run feature-rollout enable <feature-name>');
+          console.log('Usage: bun run feature-rollout enable <feature-name>');
         }
         break;
       case 'disable':
         if (args[1]) {
           await this.disableFeature(args[1]);
         } else {
-          console.log('Usage: npm run feature-rollout disable <feature-name>');
+          console.log('Usage: bun run feature-rollout disable <feature-name>');
         }
         break;
       case 'stage':
         if (args[1]) {
           await this.enableStage(args[1]);
         } else {
-          console.log('Usage: npm run feature-rollout stage <stage-name>');
+          console.log('Us1age: bun run feature-rollout stage <stage-name>');
         }
         break;
       case 'reset':

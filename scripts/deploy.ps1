@@ -55,9 +55,9 @@ function Test-Requirements {
         exit 1
     }
 
-    # Check if npm is installed
-    if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
-        Write-Error "npm is not installed. Please install npm first."
+    # Check if bun is installed
+    if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
+        Write-Error "bun is not installed. Please install bun first."
         exit 1
     }
 
@@ -99,7 +99,7 @@ function Build-Application {
 
     # Install dependencies
     Write-Info "Installing dependencies..."
-    npm ci
+    bun ci
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to install dependencies"
         exit 1
@@ -107,7 +107,7 @@ function Build-Application {
 
     # Run tests
     Write-Info "Running tests..."
-    npm run test
+    bun run test
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Tests failed"
         exit 1
@@ -115,7 +115,7 @@ function Build-Application {
 
     # Build application
     Write-Info "Building production bundles..."
-    npm run build:prod
+    bun run build:prod
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Build failed"
         exit 1

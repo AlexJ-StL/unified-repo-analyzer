@@ -11,8 +11,8 @@ disable = false
 
 [install.lockfile]
 # Use binary lock file format
-save = false
-print = "yarn"
+save = true
+print = "bun"
 
 [run]
 # Use bun runtime for scripts

@@ -230,7 +230,7 @@ export function createMockFunction<T extends (...args: unknown[]) => unknown>(
  * Mock a module with type safety
  */
 export function mockModule<T>(modulePath: string, factory?: () => T): void {
-  vi.mock(modulePath, factory as any);
+  vi.mock(modulePath, factory as unknown);
 }
 
 /**

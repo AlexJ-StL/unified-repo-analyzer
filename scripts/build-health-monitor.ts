@@ -129,7 +129,7 @@ class BuildHealthMonitor {
       }
 
       // Check lock file
-      const lockFiles = ['bun.lockb', 'package-lock.json', 'yarn.lock'];
+      const lockFiles = ['bun.lockb', 'package-lock.json'];
       const lockFile = lockFiles.find((f) => existsSync(join(this.projectRoot, f)));
       if (lockFile) {
         details += `Lock file: ${lockFile}. `;

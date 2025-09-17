@@ -268,7 +268,7 @@ class BuildDoctor {
 
     // Check lock file
     const preferredLockFiles = ['bun.lockb'];
-    const acceptableLockFiles = ['bun.lock', 'package-lock.json', 'yarn.lock'];
+    const acceptableLockFiles = ['bun.lock', 'package-lock.json'];
     const allLockFiles = [...preferredLockFiles, ...acceptableLockFiles];
 
     const existingLockFile = allLockFiles.find((file) => existsSync(join(this.projectRoot, file)));

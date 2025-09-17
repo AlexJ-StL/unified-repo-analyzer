@@ -96,15 +96,15 @@ build_application() {
 
     # Install dependencies
     log_info "Installing dependencies..."
-    npm ci
+    bun ci
 
     # Run tests
     log_info "Running tests..."
-    npm run test
+    bun run test
 
     # Build application
     log_info "Building production bundles..."
-    npm run build:prod
+    bun run build:prod
 
     log_success "Application built successfully"
 }

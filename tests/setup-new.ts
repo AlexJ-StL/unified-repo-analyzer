@@ -119,7 +119,7 @@ beforeEach(async () => {
   await setupTestIsolation(testId);
 
   // Store test ID for cleanup
-  (globalThis as any).__currentTestId = testId;
+  (globalThis as Record<string, unknown>).__currentTestId = testId;
 
   // Enhanced mock cleanup for better test isolation
   if (typeof vi?.clearAllMocks === 'function') {
@@ -152,10 +152,10 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Get test ID and cleanup isolation
-  const testId = (globalThis as any).__currentTestId;
+  const testId = (globalThis as Record<string, unknown>).__currentTestId;
   if (testId) {
     await cleanupTestIsolation(testId);
-    delete (globalThis as any).__currentTestId;
+    delete (globalThis as Record<string, unknown>).__currentTestId;
   }
 
   // Run mock cleanup after each test
