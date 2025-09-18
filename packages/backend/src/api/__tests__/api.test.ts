@@ -12,7 +12,7 @@ vi.mock('node:fs/promises');
 vi.mock('../../services/logger.service', async (importOriginal) => {
   const actual = await importOriginal();
   return {
-    ...actual,
+    ...(actual as Record<string, unknown>),
     default: {
       debug: vi.fn(),
       info: vi.fn(),
@@ -33,18 +33,7 @@ vi.mock('../../services/logger.service', async (importOriginal) => {
     logPerformance: vi.fn(),
   };
 });
-vi.mock('../../services/logger.service', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    setRequestId: vi.fn(),
-    getRequestId: vi.fn(),
-  },
-  logAnalysis: vi.fn(),
-  logPerformance: vi.fn(),
-}));
+ // Removed redundant logger mock - async mock at lines 12-35 covers it
 
 // Import types for proper typing
 import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
@@ -71,7 +60,7 @@ describe('API Integration Tests', () => {
     id: 'default-batch-id',
     repositories: [],
     createdAt: new Date(),
-    processingTime: 0,
+    analysisTime: 0,
   };
 
   const _mockStats: Stats = {
@@ -113,6 +102,7 @@ describe('API Integration Tests', () => {
       language: 'JavaScript',
       languages: ['JavaScript'],
       frameworks: ['React'],
+      files: [],
       fileCount: 10,
       directoryCount: 5,
       totalSize: 1000,
@@ -148,7 +138,7 @@ describe('API Integration Tests', () => {
       },
       metadata: {
         analysisMode: 'standard' as const,
-        processingTime: 100,
+        analysisTime: 100,
       },
     });
 
@@ -196,6 +186,7 @@ describe('API Integration Tests', () => {
         language: 'JavaScript',
         languages: ['JavaScript'],
         frameworks: ['React'],
+        files: [],
         fileCount: 10,
         directoryCount: 5,
         totalSize: 1000,
@@ -231,7 +222,7 @@ describe('API Integration Tests', () => {
         },
         metadata: {
           analysisMode: 'standard' as const,
-          processingTime: 100,
+          analysisTime: 100,
         },
       };
 
@@ -284,6 +275,7 @@ describe('API Integration Tests', () => {
             language: 'JavaScript',
             languages: ['JavaScript'],
             frameworks: ['React'],
+            files: [],
             fileCount: 10,
             directoryCount: 5,
             totalSize: 1000,
@@ -319,7 +311,7 @@ describe('API Integration Tests', () => {
             },
             metadata: {
               analysisMode: 'standard' as const,
-              processingTime: 100,
+              analysisTime: 100,
             },
           },
           {
@@ -329,6 +321,7 @@ describe('API Integration Tests', () => {
             language: 'TypeScript',
             languages: ['TypeScript'],
             frameworks: ['Express'],
+            files: [],
             fileCount: 15,
             directoryCount: 8,
             totalSize: 2000,
@@ -364,12 +357,12 @@ describe('API Integration Tests', () => {
             },
             metadata: {
               analysisMode: 'standard' as const,
-              processingTime: 150,
+              analysisTime: 150,
             },
           },
         ],
         createdAt: new Date(),
-        processingTime: 200,
+        analysisTime: 200,
       };
 
       // Override the mock for this test
@@ -554,6 +547,7 @@ describe('API Integration Tests', () => {
             complexity: 6,
           },
           similarity: 0.85,
+          matchReason: 'High similarity due to shared languages and frameworks',
           reasons: ['Same language', 'Same framework'],
         },
       ];

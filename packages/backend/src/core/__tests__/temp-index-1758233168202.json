@@ -1,0 +1,27 @@
+{
+  "repositories": [
+    {
+      "id": "mock-<script>alert('xss')</script>-1758233168202",
+      "name": "<script>alert('xss')</script>",
+      "path": "/path/to/<script>alert('xss')</script>",
+      "languages": [
+        "<script>alert('xss')</script>"
+      ],
+      "frameworks": [
+        "<script>alert('xss')</script>"
+      ],
+      "tags": [
+        "lang:<script>alert('xss')</script>",
+        "framework:<script>alert('xss')</script>",
+        "complexity:high"
+      ],
+      "summary": "<script>alert('xss')</script> is a sample repository for testing.",
+      "lastAnalyzed": "2025-09-18T22:06:08.202Z",
+      "size": 1048576,
+      "complexity": 75
+    }
+  ],
+  "relationships": [],
+  "tags": [],
+  "lastUpdated": "2025-09-18T22:06:08.202Z"
+}

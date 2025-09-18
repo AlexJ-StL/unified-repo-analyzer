@@ -2,6 +2,17 @@
  * Tests for Centralized Path Validation Utility
  */
 
+import { vi } from 'vitest';
+
+vi.mock('node:fs/promises', async () => {
+  const actual = await vi.importActual('node:fs/promises');
+  return {
+    ...actual,
+    stat: vi.fn(),
+    access: vi.fn(),
+  };
+});
+
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -22,6 +33,25 @@ describe('PathValidator', () => {
     // Create test file and directory
     await fs.writeFile(testFile, 'test content');
     await fs.mkdir(testDir);
+
+    // Mock fs.promises.stat for existence check
+    const statMock = vi.mocked(fs.stat);
+    statMock.mockImplementation(async (p: string) => {
+      const resolvedP = path.resolve(p);
+      if (resolvedP === path.resolve(testFile)) {
+        return { isFile: () => true, isDirectory: () => false, size: 11 } as any;
+      }
+      if (resolvedP === path.resolve(testDir) || resolvedP === path.resolve(tempDir)) {
+        return { isFile: () => false, isDirectory: () => true, size: 0 } as any;
+      }
+      const err = new Error(`ENOENT: no such file or directory, stat '${p}'`);
+      (err as any).code = 'ENOENT';
+      throw err;
+    });
+
+    // Mock fs.promises.access for permissions check
+    const accessMock = vi.mocked(fs.access);
+    accessMock.mockImplementation(async () => { /* success */ });
   });
 
   afterEach(async () => {
@@ -83,6 +113,15 @@ describe('PathValidator', () => {
   describe('Security Validation', () => {
     it('should detect directory traversal attempts', async () => {
       const maliciousPath = path.join(testDir, '..', '..', 'etc', 'passwd');
+      const normalizedMalicious = path.resolve(maliciousPath);
+      const existsMock = vi.mocked(fsSync.existsSync);
+      const previousImpl = existsMock.getMockImplementation();
+      existsMock.mockImplementation((p: string) => {
+        if (path.resolve(p) === normalizedMalicious) {
+          return true;
+        }
+        return previousImpl ? previousImpl(p) : false;
+      });
       const result = await pathValidator.validatePath(maliciousPath, {
         securityChecks: true,
       });

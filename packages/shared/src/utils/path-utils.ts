@@ -108,10 +108,10 @@ const WINDOWS_RESERVED_NAMES = new Set([
 ]);
 
 // Invalid characters for paths
-const INVALID_PATH_CHARS = IS_WINDOWS ? /[<>:"|?*\x00-\x1f]/ : /[\x00]/;
+const _INVALID_PATH_CHARS = IS_WINDOWS ? /[<>:"|?*\u0000-\u001F]/ : /[\u0000]/;
 
 // Invalid characters for filenames
-const _INVALID_FILENAME_CHARS = IS_WINDOWS ? /[<>:"|?*\x00-\x1f]/ : /[\x00]/;
+const _INVALID_FILENAME_CHARS = IS_WINDOWS ? /[<>:"|?*\u0000-\u001F]/ : /[\u0000]/;
 
 /**
  * Centralized Path Validation Utility Class
@@ -120,6 +120,7 @@ export class PathValidator {
   private static instance: PathValidator;
   private readonly platform: string;
   private readonly isWindows: boolean;
+  private readonly isUnix: boolean;
 
   constructor() {
     this.platform = PLATFORM;
@@ -164,7 +165,25 @@ export class PathValidator {
       if (!basicValidation.isValid) {
         return result;
       }
-
+    
+      // Check for directory traversal in original input
+      if (options.securityChecks !== false) {
+        const normalizedInput = inputPath.replace(/\//g, '\\');
+        if (/(?<!:)(?<!^)[\\/]\.\.(\\|\/|$)/.test(normalizedInput)) {
+          result.errors.push({
+            code: 'DIRECTORY_TRAVERSAL',
+            message: 'Path contains directory traversal sequences',
+            details: 'Detected "../" or "..\\" sequences that could be used for path traversal attacks',
+            suggestions: [
+              'Avoid using "../" in paths',
+              'Use absolute paths when possible',
+              'Validate path input from untrusted sources carefully',
+            ],
+          });
+          return result;
+        }
+      }
+    
       // Normalize path
       const normalizedPath = this.normalizePath(inputPath, options.basePath);
       result.normalizedPath = normalizedPath;
@@ -207,7 +226,7 @@ export class PathValidator {
         const permissionResult = await this.checkPermissions(normalizedPath, options.timeoutMs);
         result.metadata.permissions = permissionResult.permissions;
 
-        if (!permissionResult.canRead) {
+        if (!permissionResult.permissions.readable) {
           result.errors.push({
             code: 'PERMISSION_DENIED',
             message: 'Insufficient permissions to access path',
@@ -306,7 +325,7 @@ export class PathValidator {
     const warnings: PathValidationWarning[] = [];
 
     // Check for empty or invalid input
-    if (!inputPath || typeof inputPath !== 'string') {
+    if (inputPath == null || typeof inputPath !== 'string') {
       errors.push({
         code: 'INVALID_INPUT',
         message: 'Path must be a non-empty string',
@@ -327,17 +346,25 @@ export class PathValidator {
     }
 
     // Check for invalid characters
-    if (INVALID_PATH_CHARS.test(trimmedPath)) {
-      errors.push({
-        code: 'INVALID_CHARACTERS',
-        message: 'Path contains invalid characters',
-        details: `Found characters that are not allowed in paths on ${this.platform}`,
-        suggestions: [
-          'Remove special characters from the path',
-          'Use only alphanumeric characters, spaces, and path separators',
-          'Check platform-specific path restrictions',
-        ],
-      });
+    const pathParts = trimmedPath.split(this.isWindows ? /[\\/]/ : '/');
+    for (let i = 0; i < pathParts.length; i++) {
+      const part = pathParts[i];
+      if (this.isWindows && i === 0 && part.length === 2 && /^[A-Z]:$/i.test(part)) {
+        continue;
+      }
+      if (part && _INVALID_FILENAME_CHARS.test(part)) {
+        errors.push({
+          code: 'INVALID_CHARACTERS',
+          message: 'Path component contains invalid characters',
+          details: `Component "${part}" contains disallowed characters on ${this.platform}`,
+          suggestions: [
+            'Remove special characters...',
+            'Use only alphanumeric...',
+            'Check platform-specific...',
+          ],
+        });
+        break;
+      }
     }
 
     // Check path length
@@ -355,7 +382,7 @@ export class PathValidator {
     }
 
     // Check for control characters
-    if (/[\x00-\x1f]/.test(trimmedPath)) {
+    if (/[\u0000-\u001F]/.test(trimmedPath)) {
       errors.push({
         code: 'CONTROL_CHARACTERS',
         message: 'Path contains control characters',
