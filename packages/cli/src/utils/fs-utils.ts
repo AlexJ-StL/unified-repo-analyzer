@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { CLIError, ErrorType } from './error-handler';
 import { pathValidator, SecurityLevel } from '@unified-repo-analyzer/shared';
+import { CLIError, ErrorType } from './error-handler';
 
 /**
  * Validate that a path exists and is a directory

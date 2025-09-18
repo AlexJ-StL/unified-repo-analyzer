@@ -6,10 +6,10 @@ import { Server } from 'socket.io';
 import { errorHandler, notFound } from './api/middleware/error.middleware.js';
 import { initializeWebSocketHandlers } from './api/websocket/index.js';
 import { env, validateProductionConfig } from './config/environment.js';
-import * as core from './core/index.js';
 import { serviceContainer } from './container/ServiceContainer.js';
-import { requestLogger } from './services/logger.service.js';
+import * as core from './core/index.js';
 import { backupService } from './services/backup.service.js';
+import { requestLogger } from './services/logger.service.js';
 import { metricsService } from './services/metrics.service.js';
 import { initializeProvidersWithConfig } from './services/provider-initialization.service.js';
 
@@ -31,8 +31,6 @@ try {
     error instanceof Error ? error : new Error(String(error))
   );
   process.exit(1);
-
-
 }
 
 // Initialize express app
@@ -140,8 +138,6 @@ const gracefulShutdown = (signal: string) => {
   setTimeout(() => {
     serviceContainer.logger.error('Forced shutdown after timeout');
     process.exit(1);
-
-
   }, 30000);
 };
 

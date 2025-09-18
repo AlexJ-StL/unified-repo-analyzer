@@ -2,10 +2,10 @@
  * Service Container for dependency injection
  */
 
-import type { ILogger, IConfigService, IHealthService } from '../types/services.js';
-import { Logger } from '../services/logger.service.js';
 import { ConfigurationService } from '../services/config.service.js';
 import { HealthService } from '../services/health.service.js';
+import { Logger } from '../services/logger.service.js';
+import type { IConfigService, IHealthService, ILogger } from '../types/services.js';
 
 export class ServiceContainer {
   private _logger?: ILogger;

@@ -6,9 +6,9 @@
  * compatibility, and provides clear error messages.
  */
 
-import path from 'node:path';
 import fs from 'node:fs/promises';
 import { platform } from 'node:os';
+import path from 'node:path';
 
 // Path validation result types
 export interface PathValidationResult {
@@ -64,10 +64,10 @@ export interface PathValidationOptions {
 
 // Security validation levels
 export enum SecurityLevel {
-  BASIC = 'basic',           // Basic format validation only
-  STANDARD = 'standard',     // Format + existence + basic security
-  STRICT = 'strict',         // Full validation + comprehensive security
-  PARANOID = 'paranoid'      // Maximum security checks
+  BASIC = 'basic', // Basic format validation only
+  STANDARD = 'standard', // Format + existence + basic security
+  STRICT = 'strict', // Full validation + comprehensive security
+  PARANOID = 'paranoid', // Maximum security checks
 }
 
 // Platform-specific constants
@@ -83,20 +83,35 @@ const MAX_COMPONENT_LENGTH = IS_WINDOWS ? 255 : 255;
 
 // Windows reserved names
 const WINDOWS_RESERVED_NAMES = new Set([
-  'CON', 'PRN', 'AUX', 'NUL',
-  'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
-  'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
+  'CON',
+  'PRN',
+  'AUX',
+  'NUL',
+  'COM1',
+  'COM2',
+  'COM3',
+  'COM4',
+  'COM5',
+  'COM6',
+  'COM7',
+  'COM8',
+  'COM9',
+  'LPT1',
+  'LPT2',
+  'LPT3',
+  'LPT4',
+  'LPT5',
+  'LPT6',
+  'LPT7',
+  'LPT8',
+  'LPT9',
 ]);
 
 // Invalid characters for paths
-const INVALID_PATH_CHARS = IS_WINDOWS
-  ? /[<>:"|?*\x00-\x1f]/
-  : /[\x00]/;
+const INVALID_PATH_CHARS = IS_WINDOWS ? /[<>:"|?*\x00-\x1f]/ : /[\x00]/;
 
 // Invalid characters for filenames
-const INVALID_FILENAME_CHARS = IS_WINDOWS
-  ? /[<>:"|?*\x00-\x1f]/
-  : /[\x00]/;
+const _INVALID_FILENAME_CHARS = IS_WINDOWS ? /[<>:"|?*\x00-\x1f]/ : /[\x00]/;
 
 /**
  * Centralized Path Validation Utility Class
@@ -105,7 +120,6 @@ export class PathValidator {
   private static instance: PathValidator;
   private readonly platform: string;
   private readonly isWindows: boolean;
-  private readonly isUnix: boolean;
 
   constructor() {
     this.platform = PLATFORM;
@@ -138,7 +152,7 @@ export class PathValidator {
         exists: false,
         isDirectory: false,
         isFile: false,
-      }
+      },
     };
 
     try {
@@ -181,8 +195,8 @@ export class PathValidator {
             suggestions: [
               'Check if the path is spelled correctly',
               'Ensure the file or directory exists',
-              'Use absolute paths for better reliability'
-            ]
+              'Use absolute paths for better reliability',
+            ],
           });
           return result;
         }
@@ -200,15 +214,14 @@ export class PathValidator {
             suggestions: [
               'Check file permissions',
               'Run with appropriate user privileges',
-              'Ensure the path is not locked by another process'
-            ]
+              'Ensure the path is not locked by another process',
+            ],
           });
         }
       }
 
       // If we get here, validation passed
       result.isValid = result.errors.length === 0;
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       result.errors.push({
@@ -218,8 +231,8 @@ export class PathValidator {
         suggestions: [
           'Try a different path',
           'Check the path format',
-          'Ensure the system is functioning properly'
-        ]
+          'Ensure the system is functioning properly',
+        ],
       });
     }
 
@@ -235,7 +248,8 @@ export class PathValidator {
   ): Promise<PathValidationResult> {
     const options: PathValidationOptions = {
       checkExistence: securityLevel !== SecurityLevel.BASIC,
-      checkPermissions: securityLevel === SecurityLevel.STRICT || securityLevel === SecurityLevel.PARANOID,
+      checkPermissions:
+        securityLevel === SecurityLevel.STRICT || securityLevel === SecurityLevel.PARANOID,
       securityChecks: securityLevel !== SecurityLevel.BASIC,
       allowUncPaths: securityLevel !== SecurityLevel.PARANOID,
       allowSymlinks: securityLevel !== SecurityLevel.PARANOID,
@@ -283,7 +297,11 @@ export class PathValidator {
   /**
    * Validate basic input format
    */
-  private validateBasicInput(inputPath: string): { isValid: boolean; errors: PathValidationError[]; warnings: PathValidationWarning[] } {
+  private validateBasicInput(inputPath: string): {
+    isValid: boolean;
+    errors: PathValidationError[];
+    warnings: PathValidationWarning[];
+  } {
     const errors: PathValidationError[] = [];
     const warnings: PathValidationWarning[] = [];
 
@@ -292,7 +310,7 @@ export class PathValidator {
       errors.push({
         code: 'INVALID_INPUT',
         message: 'Path must be a non-empty string',
-        suggestions: ['Provide a valid path string']
+        suggestions: ['Provide a valid path string'],
       });
       return { isValid: false, errors, warnings };
     }
@@ -303,7 +321,7 @@ export class PathValidator {
       errors.push({
         code: 'EMPTY_PATH',
         message: 'Path cannot be empty or whitespace only',
-        suggestions: ['Provide a non-empty path']
+        suggestions: ['Provide a non-empty path'],
       });
       return { isValid: false, errors, warnings };
     }
@@ -317,8 +335,8 @@ export class PathValidator {
         suggestions: [
           'Remove special characters from the path',
           'Use only alphanumeric characters, spaces, and path separators',
-          'Check platform-specific path restrictions'
-        ]
+          'Check platform-specific path restrictions',
+        ],
       });
     }
 
@@ -331,8 +349,8 @@ export class PathValidator {
         suggestions: [
           'Use shorter path names',
           'Move files to a location with shorter paths',
-          'Consider using symbolic links or junctions'
-        ]
+          'Consider using symbolic links or junctions',
+        ],
       });
     }
 
@@ -343,22 +361,25 @@ export class PathValidator {
         message: 'Path contains control characters',
         suggestions: [
           'Remove control characters from the path',
-          'Ensure the path comes from a trusted source'
-        ]
+          'Ensure the path comes from a trusted source',
+        ],
       });
     }
 
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
   /**
    * Perform security validation
    */
-  private validateSecurity(inputPath: string, options: PathValidationOptions): { isValid: boolean; errors: PathValidationError[]; warnings: PathValidationWarning[] } {
+  private validateSecurity(
+    inputPath: string,
+    options: PathValidationOptions
+  ): { isValid: boolean; errors: PathValidationError[]; warnings: PathValidationWarning[] } {
     const errors: PathValidationError[] = [];
     const warnings: PathValidationWarning[] = [];
 
@@ -371,8 +392,8 @@ export class PathValidator {
         suggestions: [
           'Avoid using "../" in paths',
           'Use absolute paths when possible',
-          'Validate path input from untrusted sources carefully'
-        ]
+          'Validate path input from untrusted sources carefully',
+        ],
       });
     }
 
@@ -388,8 +409,8 @@ export class PathValidator {
             suggestions: [
               'Avoid using reserved names like CON, PRN, AUX, NUL',
               'Rename the file or directory',
-              'Use a different path'
-            ]
+              'Use a different path',
+            ],
           });
         }
       }
@@ -401,8 +422,8 @@ export class PathValidator {
           message: 'UNC paths are not allowed',
           suggestions: [
             'Use local paths instead of network paths',
-            'Enable UNC path support if needed'
-          ]
+            'Enable UNC path support if needed',
+          ],
         });
       }
     }
@@ -412,7 +433,7 @@ export class PathValidator {
       warnings.push({
         code: 'HIDDEN_PATH',
         message: 'Path points to a hidden file or directory',
-        details: 'Hidden files may contain sensitive information'
+        details: 'Hidden files may contain sensitive information',
       });
     }
 
@@ -424,10 +445,7 @@ export class PathValidator {
           code: 'COMPONENT_TOO_LONG',
           message: `Path component exceeds maximum length of ${MAX_COMPONENT_LENGTH} characters`,
           details: `Component "${part}" is ${part.length} characters long`,
-          suggestions: [
-            'Use shorter file or directory names',
-            'Reorganize directory structure'
-          ]
+          suggestions: ['Use shorter file or directory names', 'Reorganize directory structure'],
         });
       }
     }
@@ -435,14 +453,17 @@ export class PathValidator {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
   /**
    * Check if path exists and get metadata
    */
-  private async checkExistence(inputPath: string, timeoutMs?: number): Promise<{
+  private async checkExistence(
+    inputPath: string,
+    timeoutMs?: number
+  ): Promise<{
     exists: boolean;
     isDirectory: boolean;
     isFile: boolean;
@@ -459,14 +480,14 @@ export class PathValidator {
         exists: true,
         isDirectory: stats.isDirectory(),
         isFile: stats.isFile(),
-        size: stats.size
+        size: stats.size,
       };
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         return {
           exists: false,
           isDirectory: false,
-          isFile: false
+          isFile: false,
         };
       }
       throw error;
@@ -476,7 +497,10 @@ export class PathValidator {
   /**
    * Check path permissions
    */
-  private async checkPermissions(inputPath: string, timeoutMs?: number): Promise<{
+  private async checkPermissions(
+    inputPath: string,
+    timeoutMs?: number
+  ): Promise<{
     permissions: {
       readable: boolean;
       writable: boolean;
@@ -486,7 +510,7 @@ export class PathValidator {
     const permissions = {
       readable: false,
       writable: false,
-      executable: false
+      executable: false,
     };
 
     try {
@@ -539,12 +563,12 @@ export class PathValidator {
 
   private hasDirectoryTraversal(inputPath: string): boolean {
     // Check for "../" or "..\" sequences
-    return /\.\.[\/\\]/.test(inputPath) || inputPath.includes('..');
+    return /\.\.[/\\]/.test(inputPath) || inputPath.includes('..');
   }
 
   private isHiddenPath(inputPath: string): boolean {
     const pathParts = inputPath.split(/[/\\]/);
-    return pathParts.some(part => part.startsWith('.') && part !== '.' && part !== '..');
+    return pathParts.some((part) => part.startsWith('.') && part !== '.' && part !== '..');
   }
 
   /**

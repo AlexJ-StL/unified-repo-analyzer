@@ -2,10 +2,10 @@
  * Simple test script for Path Validation Utility
  */
 
-import { pathValidator, SecurityLevel } from './packages/shared/src/utils/path-utils.js';
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import os from 'node:os';
+import path from 'node:path';
+import { pathValidator, SecurityLevel } from './packages/shared/src/utils/path-utils.js';
 
 async function testPathUtils() {
   console.log('Testing Path Validation Utility...\n');
@@ -35,14 +35,16 @@ async function testPathUtils() {
     console.log(`   Is Directory: ${dirResult.metadata.isDirectory}`);
 
     console.log('\n3. Testing non-existent path:');
-    const nonexistentResult = await pathValidator.validatePath(path.join(tempDir, 'nonexistent.txt'));
+    const nonexistentResult = await pathValidator.validatePath(
+      path.join(tempDir, 'nonexistent.txt')
+    );
     console.log(`   Valid: ${nonexistentResult.isValid}`);
-    console.log(`   Errors: ${nonexistentResult.errors.map(e => e.code).join(', ')}`);
+    console.log(`   Errors: ${nonexistentResult.errors.map((e) => e.code).join(', ')}`);
 
     console.log('\n4. Testing invalid path (empty):');
     const emptyResult = await pathValidator.validatePath('');
     console.log(`   Valid: ${emptyResult.isValid}`);
-    console.log(`   Errors: ${emptyResult.errors.map(e => e.code).join(', ')}`);
+    console.log(`   Errors: ${emptyResult.errors.map((e) => e.code).join(', ')}`);
 
     console.log('\n5. Testing quick validation:');
     const quickResult = await pathValidator.quickValidate(testFile, SecurityLevel.STANDARD);
@@ -52,20 +54,18 @@ async function testPathUtils() {
     console.log('\n6. Testing security checks:');
     const maliciousPath = path.join(testDir, '..', '..', 'etc', 'passwd');
     const securityResult = await pathValidator.validatePath(maliciousPath, {
-      securityChecks: true
+      securityChecks: true,
     });
     console.log(`   Malicious path valid: ${securityResult.isValid}`);
-    console.log(`   Errors: ${securityResult.errors.map(e => e.code).join(', ')}`);
+    console.log(`   Errors: ${securityResult.errors.map((e) => e.code).join(', ')}`);
 
     console.log('\n✅ Path Validation Utility tests completed successfully!');
-
-  } catch (error) {
-    console.error('❌ Test failed:', error.message);
+  } catch (_error) {
   } finally {
     // Clean up
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore cleanup errors
     }
   }

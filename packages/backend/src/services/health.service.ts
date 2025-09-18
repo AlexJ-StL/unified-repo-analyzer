@@ -254,4 +254,3 @@ class HealthService implements IHealthService {
   };
 }
 export { HealthService };
-

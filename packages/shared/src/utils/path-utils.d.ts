@@ -48,7 +48,7 @@ export enum SecurityLevel {
   BASIC = 'basic',
   STANDARD = 'standard',
   STRICT = 'strict',
-  PARANOID = 'paranoid'
+  PARANOID = 'paranoid',
 }
 
 export declare class PathValidator {
@@ -60,6 +60,12 @@ export declare class PathValidator {
 
 export declare const pathValidator: PathValidator;
 
-export declare function validatePath(inputPath: string, options?: PathValidationOptions): Promise<PathValidationResult>;
-export declare function quickValidate(inputPath: string, securityLevel?: SecurityLevel): Promise<PathValidationResult>;
+export declare function validatePath(
+  inputPath: string,
+  options?: PathValidationOptions
+): Promise<PathValidationResult>;
+export declare function quickValidate(
+  inputPath: string,
+  securityLevel?: SecurityLevel
+): Promise<PathValidationResult>;
 export declare function normalizePath(inputPath: string, basePath?: string): string;

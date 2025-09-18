@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import type { ErrorContext } from '@unified-repo-analyzer/shared';
-import { errorClassifier, pathValidator, SecurityLevel } from '@unified-repo-analyzer/shared';
+import { errorClassifier } from '@unified-repo-analyzer/shared';
 import type { DirectoryInfo } from '@unified-repo-analyzer/shared/src/types/repository.js';
 import * as ignore from 'ignore';
 import { logger, logPerformance } from '../services/logger.service.js';

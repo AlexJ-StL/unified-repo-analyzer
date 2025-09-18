@@ -6,10 +6,31 @@ import type { UserPreferences } from '@unified-repo-analyzer/shared';
 
 // Logger interface
 export interface ILogger {
-  debug(message: string, metadata?: Record<string, unknown>, component?: string, requestId?: string): void;
-  info(message: string, metadata?: Record<string, unknown>, component?: string, requestId?: string): void;
-  warn(message: string, metadata?: Record<string, unknown>, component?: string, requestId?: string): void;
-  error(message: string, error?: Error, metadata?: Record<string, unknown>, component?: string, requestId?: string): void;
+  debug(
+    message: string,
+    metadata?: Record<string, unknown>,
+    component?: string,
+    requestId?: string
+  ): void;
+  info(
+    message: string,
+    metadata?: Record<string, unknown>,
+    component?: string,
+    requestId?: string
+  ): void;
+  warn(
+    message: string,
+    metadata?: Record<string, unknown>,
+    component?: string,
+    requestId?: string
+  ): void;
+  error(
+    message: string,
+    error?: Error,
+    metadata?: Record<string, unknown>,
+    component?: string,
+    requestId?: string
+  ): void;
   setRequestId(requestId: string): void;
   getRequestId(): string;
 }

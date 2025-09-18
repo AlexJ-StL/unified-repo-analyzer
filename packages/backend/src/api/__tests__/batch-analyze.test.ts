@@ -195,7 +195,12 @@ describe('Batch Analysis API', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
-    if (httpServer && typeof httpServer === 'object' && 'close' in httpServer && httpServer.listening) {
+    if (
+      httpServer &&
+      typeof httpServer === 'object' &&
+      'close' in httpServer &&
+      httpServer.listening
+    ) {
       await new Promise((resolve, reject) => {
         (httpServer as { close: (callback?: (err?: Error) => void) => void }).close((err) => {
           if (err) reject(err);

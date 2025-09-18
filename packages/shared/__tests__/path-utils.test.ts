@@ -2,11 +2,11 @@
  * Tests for Centralized Path Validation Utility
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { pathValidator, SecurityLevel } from '../src/utils/path-utils';
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import os from 'node:os';
+import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { pathValidator, SecurityLevel } from '../src/utils/path-utils';
 
 describe('PathValidator', () => {
   let tempDir: string;
@@ -28,7 +28,7 @@ describe('PathValidator', () => {
     // Clean up temporary directory
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
-    } catch (error) {
+    } catch (_error) {
       // Ignore cleanup errors
     }
   });
@@ -84,7 +84,7 @@ describe('PathValidator', () => {
     it('should detect directory traversal attempts', async () => {
       const maliciousPath = path.join(testDir, '..', '..', 'etc', 'passwd');
       const result = await pathValidator.validatePath(maliciousPath, {
-        securityChecks: true
+        securityChecks: true,
       });
       expect(result.isValid).toBe(false);
       expect(result.errors[0].code).toBe('DIRECTORY_TRAVERSAL');
@@ -108,7 +108,7 @@ describe('PathValidator', () => {
   describe('Permission Validation', () => {
     it('should validate read permissions for existing file', async () => {
       const result = await pathValidator.validatePath(testFile, {
-        checkPermissions: true
+        checkPermissions: true,
       });
       expect(result.isValid).toBe(true);
       expect(result.metadata.permissions?.readable).toBe(true);
@@ -116,7 +116,7 @@ describe('PathValidator', () => {
 
     it('should validate directory permissions', async () => {
       const result = await pathValidator.validatePath(testDir, {
-        checkPermissions: true
+        checkPermissions: true,
       });
       expect(result.isValid).toBe(true);
       expect(result.metadata.permissions?.readable).toBe(true);
@@ -135,7 +135,7 @@ describe('PathValidator', () => {
     it('should allow non-existent paths when existence check is disabled', async () => {
       const nonExistentPath = path.join(tempDir, 'nonexistent.txt');
       const result = await pathValidator.validatePath(nonExistentPath, {
-        checkExistence: false
+        checkExistence: false,
       });
       expect(result.isValid).toBe(true);
       expect(result.normalizedPath).toBe(path.resolve(nonExistentPath));
@@ -176,7 +176,7 @@ describe('PathValidator', () => {
       if (process.platform === 'win32') {
         const uncPath = `\\\\localhost\\${testFile.replace(/\\/g, '\\')}`;
         const result = await pathValidator.validatePath(uncPath, {
-          allowUncPaths: true
+          allowUncPaths: true,
         });
         // UNC path validation depends on system configuration
         expect(result).toBeDefined();
@@ -203,7 +203,7 @@ describe('PathValidator', () => {
   describe('Timeout Handling', () => {
     it('should handle timeout gracefully', async () => {
       const result = await pathValidator.validatePath(testFile, {
-        timeoutMs: 1 // Very short timeout
+        timeoutMs: 1, // Very short timeout
       });
       // Should either succeed quickly or timeout gracefully
       expect(result).toBeDefined();
