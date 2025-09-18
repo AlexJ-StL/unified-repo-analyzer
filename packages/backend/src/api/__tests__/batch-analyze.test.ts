@@ -8,8 +8,28 @@ import express from 'express';
 import { Server } from 'socket.io';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
 
 import { AnalysisEngine } from '../../core/AnalysisEngine.js';
+
+// Create mock instance for top-level mocking
+const mockAnalysisEngine = mock<typeof AnalysisEngine.prototype>();
+
+vi.mock('../../core/AnalysisEngine', () => ({
+  AnalysisEngine: vi.fn(() => mockAnalysisEngine),
+}));
+vi.mock('../../services/logger.service', () => ({
+  logger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    setRequestId: vi.fn(),
+    getRequestId: vi.fn(),
+  },
+  logAnalysis: vi.fn(),
+  logPerformance: vi.fn(),
+}));
 
 describe('Batch Analysis API', () => {
   let app: express.Application;
@@ -20,133 +40,127 @@ describe('Batch Analysis API', () => {
     // Reset mocks
     vi.clearAllMocks();
 
-    // Create a simple mock implementation
-    const mockAnalysisEngine = {
-      analyzeRepository: vi.fn().mockResolvedValue({
-        name: 'test-repo',
-        path: '/test/path',
-        languages: ['JavaScript'],
-        frameworks: ['React'],
-        summary: 'Test repository',
-        files: [],
-        dependencies: {},
-        metrics: { fileCount: 10, totalSize: 1000 },
-      }),
-      analyzeMultipleRepositories: vi.fn(),
-      analyzeMultipleRepositoriesWithQueue: vi
-        .fn()
-        .mockImplementation(async (paths, _options, _concurrency, progressCallback) => {
-          // Call progress callback a few times to simulate progress
-          if (progressCallback) {
-            progressCallback({
-              batchId: 'test-batch',
-              status: {
-                total: paths.length,
-                completed: 0,
-                failed: 0,
-                inProgress: 1,
-                pending: paths.length - 1,
-                progress: 0,
-              },
-              currentRepository: [paths[0]],
-            });
+    // Set up mock behaviors
+    mockAnalysisEngine.analyzeRepository.mockResolvedValue({
+      name: 'test-repo',
+      path: '/test/path',
+      languages: ['JavaScript'],
+      frameworks: ['React'],
+      summary: 'Test repository',
+      files: [],
+      dependencies: {},
+      metrics: { fileCount: 10, totalSize: 1000 },
+    });
+    mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue.mockImplementation(async (paths, _options, _concurrency, progressCallback) => {
+      // Call progress callback a few times to simulate progress
+      if (progressCallback) {
+        progressCallback({
+          batchId: 'test-batch',
+          status: {
+            total: paths.length,
+            completed: 0,
+            failed: 0,
+            inProgress: 1,
+            pending: paths.length - 1,
+            progress: 0,
+          },
+          currentRepository: [paths[0]],
+        });
 
-            progressCallback({
-              batchId: 'test-batch',
-              status: {
-                total: paths.length,
-                completed: paths.length,
-                failed: 0,
-                inProgress: 0,
-                pending: 0,
-                progress: 100,
-              },
-              currentRepository: [],
-            });
-          }
+        progressCallback({
+          batchId: 'test-batch',
+          status: {
+            total: paths.length,
+            completed: paths.length,
+            failed: 0,
+            inProgress: 0,
+            pending: 0,
+            progress: 100,
+          },
+          currentRepository: [],
+        });
+      }
 
-          // Return mock batch result
-          return {
-            id: 'test-batch',
-            repositories: paths.map((path: string) => ({
-              id: `repo-${path.replace(/\//g, '-')}`,
-              path,
-              name: path.split('/').pop(),
-              language: 'JavaScript',
-              languages: ['JavaScript', 'TypeScript'],
-              frameworks: [],
-              fileCount: 100,
-              directoryCount: 10,
-              totalSize: 1024 * 1024,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              structure: {
-                directories: [],
-                keyFiles: [],
-                tree: 'mock-tree',
-              },
-              codeAnalysis: {
-                functionCount: 0,
-                classCount: 0,
-                importCount: 0,
-                complexity: {
-                  cyclomaticComplexity: 0,
-                  maintainabilityIndex: 0,
-                  technicalDebt: 'Low',
-                  codeQuality: 'good',
-                },
-                patterns: [],
-              },
-              dependencies: {
-                production: [],
-                development: [],
-                frameworks: [],
-              },
-              insights: {
-                executiveSummary: '',
-                technicalBreakdown: '',
-                recommendations: [],
-                potentialIssues: [],
-              },
-              metadata: {
-                analysisMode: 'standard',
-                processingTime: 0,
-              },
-            })),
-            combinedInsights: {
-              commonalities: ['Common language: JavaScript'],
-              differences: [],
-              integrationOpportunities: [],
+      // Return mock batch result
+      return {
+        id: 'test-batch',
+        repositories: paths.map((path: string) => ({
+          id: `repo-${path.replace(/\//g, '-')}`,
+          path,
+          name: path.split('/').pop(),
+          language: 'JavaScript',
+          languages: ['JavaScript', 'TypeScript'],
+          frameworks: [],
+          fileCount: 100,
+          directoryCount: 10,
+          totalSize: 1024 * 1024,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          structure: {
+            directories: [],
+            keyFiles: [],
+            tree: 'mock-tree',
+          },
+          codeAnalysis: {
+            functionCount: 0,
+            classCount: 0,
+            importCount: 0,
+            complexity: {
+              cyclomaticComplexity: 0,
+              maintainabilityIndex: 0,
+              technicalDebt: 'Low',
+              codeQuality: 'good',
             },
-            createdAt: new Date(),
-            processingTime: 1000,
-            status: {
-              total: paths.length,
-              completed: paths.length,
-              failed: 0,
-              inProgress: 0,
-              pending: 0,
-              progress: 100,
-            },
-          };
-        }),
-      generateCombinedInsights: vi.fn(),
-      generateSynopsis: vi.fn(),
-      updateIndex: vi.fn(),
-      searchRepositories: vi.fn(),
-      findSimilarRepositories: vi.fn(),
-      suggestCombinations: vi.fn(),
-      // Add missing properties
-      advancedAnalyzer: {},
-      getIndexSystem: vi.fn(),
-      _indexSystem: null,
-      processFilesForAnalysis: vi.fn(),
-    };
-
-    // Mock the AnalysisEngine module
-    vi.mock('../../core/AnalysisEngine', () => ({
-      AnalysisEngine: vi.fn(() => mockAnalysisEngine),
-    }));
+            patterns: [],
+          },
+          dependencies: {
+            production: [],
+            development: [],
+            frameworks: [],
+          },
+          insights: {
+            executiveSummary: '',
+            technicalBreakdown: '',
+            recommendations: [],
+            potentialIssues: [],
+          },
+          metadata: {
+            analysisMode: 'standard',
+            processingTime: 0,
+          },
+        })),
+        combinedInsights: {
+          commonalities: ['Common language: JavaScript'],
+          differences: [],
+          integrationOpportunities: [],
+        },
+        createdAt: new Date(),
+        processingTime: 1000,
+        status: {
+          total: paths.length,
+          completed: paths.length,
+          failed: 0,
+          inProgress: 0,
+          pending: 0,
+          progress: 100,
+        },
+      };
+    });
+    mockAnalysisEngine.generateCombinedInsights.mockResolvedValue({
+      commonalities: ['Common language: JavaScript'],
+      differences: [],
+      integrationOpportunities: [],
+    });
+    mockAnalysisEngine.generateSynopsis.mockResolvedValue('');
+    mockAnalysisEngine.updateIndex.mockResolvedValue(undefined);
+    mockAnalysisEngine.searchRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.findSimilarRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.suggestCombinations.mockResolvedValue([]);
+    mockAnalysisEngine.advancedAnalyzer = {};
+    mockAnalysisEngine.getIndexSystem.mockReturnValue(null);
+    mockAnalysisEngine._indexSystem = null;
+    mockAnalysisEngine.processFilesForAnalysis.mockResolvedValue([]);
 
     // Create Express app
     app = express();
@@ -172,6 +186,7 @@ describe('Batch Analysis API', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     if (httpServer && typeof httpServer === 'object' && 'close' in httpServer) {
       (httpServer as { close: () => void }).close();
     }
@@ -228,16 +243,10 @@ describe('Batch Analysis API', () => {
 
   test('should handle errors during batch analysis', async () => {
     // Mock analyzeMultipleRepositoriesWithQueue to throw an error
-    (
-      AnalysisEngine.prototype.analyzeMultipleRepositoriesWithQueue as unknown as ReturnType<
-        typeof vi.fn
-      >
-        // Get the mock instance from the mocked constructor
     const mockInstance = vi.mocked(AnalysisEngine).mock.results[0]?.value;
     if (mockInstance) {
       mockInstance.analyzeMultipleRepositoriesWithQueue.mockRejectedValueOnce(new Error('Batch analysis failed'));
-    }</search>
-</search_and_replace>
+    }
 
     const response = await request(app)
       .post('/api/analyze/batch')

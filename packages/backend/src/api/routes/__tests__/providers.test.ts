@@ -5,6 +5,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 
+// Import the route handler directly
+import providersRouter from '../providers.js';
+
 // Helper function to create mock response object
 function createMockResponse() {
   const res: any = {
@@ -15,10 +18,22 @@ function createMockResponse() {
   return res;
 }
 
+// Extract the GET / handler from the router
+function getProvidersHandler() {
+  // Access the router's stack to find the GET / handler
+  const stack = (providersRouter as any).stack;
+  const layer = stack.find((l: any) => l.route && l.route.path === '/' && l.route.methods.get);
+  return layer ? layer.route.stack[0].handle : null;
+}
+
 describe('providers routes', () => {
+  let handler: any;
+
   beforeEach(() => {
     // Reset the registry before each test
     ProviderRegistry.getInstance().reset();
+    // Get the handler for each test
+    handler = getProvidersHandler();
   });
 
   test('simple test to verify structure', () => {
@@ -35,23 +50,12 @@ describe('providers routes', () => {
         model: 'openrouter/test-model',
       });
 
-      // Import the route handler
-      const providersRoute = (await import('../providers.js')).default;
-
       // Create a mock request and response
       const req: any = {};
       const res = createMockResponse();
 
-      // Find the GET handler for the root path
-      const routeStack = (providersRoute as any).stack;
-      const getHandler = routeStack.find(
-        (layer: any) => layer.route && layer.route.path === '/' && layer.route.methods.get
-      );
-
-      if (getHandler) {
-        // Call the route handler
-        await getHandler.route.stack[0].handle(req, res);
-      }
+      // Call the route handler directly
+      await handler(req, res);
 
       // Verify the response
       expect(res.json).toHaveBeenCalled();
@@ -79,9 +83,6 @@ describe('providers routes', () => {
     });
 
     test('should handle errors gracefully', async () => {
-      // Import the route handler
-      const providersRoute = (await import('../providers.js')).default;
-
       // Create a mock request and response
       const req: any = {};
       const res = createMockResponse();
@@ -91,16 +92,8 @@ describe('providers routes', () => {
         throw new Error('Test error');
       });
 
-      // Find the GET handler for the root path
-      const routeStack = (providersRoute as any).stack;
-      const getHandler = routeStack.find(
-        (layer: any) => layer.route && layer.route.path === '/' && layer.route.methods.get
-      );
-
-      if (getHandler) {
-        // Call the route handler
-        await getHandler.route.stack[0].handle(req, res);
-      }
+      // Call the route handler directly
+      await handler(req, res);
 
       // Verify error response
       expect(res.status).toHaveBeenCalledWith(500);
@@ -113,23 +106,12 @@ describe('providers routes', () => {
 
   describe('Requirements Validation', () => {
     test('should meet requirement 1.1 - OpenRouter listed as available provider', async () => {
-      // Import the route handler
-      const providersRoute = (await import('../providers.js')).default;
-
       // Create a mock request and response
       const req: any = {};
       const res = createMockResponse();
 
-      // Find the GET handler for the root path
-      const routeStack = (providersRoute as any).stack;
-      const getHandler = routeStack.find(
-        (layer: any) => layer.route && layer.route.path === '/' && layer.route.methods.get
-      );
-
-      if (getHandler) {
-        // Call the route handler
-        await getHandler.route.stack[0].handle(req, res);
-      }
+      // Call the route handler directly
+      await handler(req, res);
 
       // Verify OpenRouter is listed
       expect(res.json).toHaveBeenCalled();
@@ -149,23 +131,12 @@ describe('providers routes', () => {
         apiKey: 'test-openrouter-key',
       });
 
-      // Import the route handler
-      const providersRoute = (await import('../providers.js')).default;
-
       // Create a mock request and response
       const req: any = {};
       const res = createMockResponse();
 
-      // Find the GET handler for the root path
-      const routeStack = (providersRoute as any).stack;
-      const getHandler = routeStack.find(
-        (layer: any) => layer.route && layer.route.path === '/' && layer.route.methods.get
-      );
-
-      if (getHandler) {
-        // Call the route handler
-        await getHandler.route.stack[0].handle(req, res);
-      }
+      // Call the route handler directly
+      await handler(req, res);
 
       // Verify all providers have status information
       expect(res.json).toHaveBeenCalled();
@@ -180,23 +151,12 @@ describe('providers routes', () => {
     });
 
     test('should meet requirement 7.3 - clearly indicate provider capabilities', async () => {
-      // Import the route handler
-      const providersRoute = (await import('../providers.js')).default;
-
       // Create a mock request and response
       const req: any = {};
       const res = createMockResponse();
 
-      // Find the GET handler for the root path
-      const routeStack = (providersRoute as any).stack;
-      const getHandler = routeStack.find(
-        (layer: any) => layer.route && layer.route.path === '/' && layer.route.methods.get
-      );
-
-      if (getHandler) {
-        // Call the route handler
-        await getHandler.route.stack[0].handle(req, res);
-      }
+      // Call the route handler directly
+      await handler(req, res);
 
       // Verify capabilities are clearly indicated
       expect(res.json).toHaveBeenCalled();

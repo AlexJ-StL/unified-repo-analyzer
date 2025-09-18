@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PerformanceMonitor } from '../performance-monitor.service.js';
 
 // Mock the logger service
-vi.mock('../logger.service.js', () => ({
-  default: {
+vi.mock('../logger.service', () => ({
+  logger: {
     debug: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),

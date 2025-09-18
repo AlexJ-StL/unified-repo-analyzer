@@ -77,14 +77,12 @@ vi.mock('node:os', () => ({
 }));
 const mockOsHomedir = vi.mocked(os.homedir);
 
-const mockLoggerInfo = vi.fn();
-const mockLoggerWarn = vi.fn();
-const mockLoggerError = vi.fn();
-vi.doMock('../../utils/logger', () => ({
+vi.mock('../utils/logger', () => ({
   logger: {
-    info: mockLoggerInfo,
-    warn: mockLoggerWarn,
-    error: mockLoggerError,
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
@@ -101,9 +99,6 @@ describe('ConfigurationService', () => {
 
     mockUuidV4.mockReturnValue('mock-uuid-123');
     mockOsHomedir.mockReturnValue('/mock/home');
-    mockLoggerInfo.mockClear();
-    mockLoggerWarn.mockClear();
-    mockLoggerError.mockClear();
 
     configService = new ConfigurationService();
   });

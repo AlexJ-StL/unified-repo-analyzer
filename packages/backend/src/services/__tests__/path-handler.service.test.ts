@@ -10,8 +10,8 @@ import { PathHandler } from '../path-handler.service.js';
 // Mock dependencies
 vi.mock('node:fs/promises');
 vi.mock('node:os');
-vi.mock('../logger.service.js', () => ({
-  default: {
+vi.mock('../logger.service', () => ({
+  logger: {
     debug: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),

@@ -1,15 +1,26 @@
-ackages/backend/src/api/__tests__/api.test.ts</path>
-<content">/**
+/**
  * API integration tests
  */
 
 import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import request from 'supertest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock } from 'vitest-mock-extended';
 
 vi.mock('node:fs/promises');
+vi.mock('../../services/logger.service', () => ({
+  logger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    setRequestId: vi.fn(),
+    getRequestId: vi.fn(),
+  },
+  logAnalysis: vi.fn(),
+  logPerformance: vi.fn(),
+}));
 
 // Import types for proper typing
 import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
@@ -19,6 +30,17 @@ import type { IndexSystem } from '../../core/IndexSystem.js';
 
 import { app } from '../../index.js';
 
+// Create mock instances for top-level mocking
+const mockAnalysisEngine = mock<AnalysisEngine>();
+const mockIndexSystem = mock<IndexSystem>();
+
+vi.mock('../../core/AnalysisEngine', () => ({
+  AnalysisEngine: vi.fn(() => mockAnalysisEngine),
+}));
+vi.mock('../../core/IndexSystem', () => ({
+  IndexSystem: vi.fn(() => mockIndexSystem),
+}));
+
 describe('API Integration Tests', () => {
   // Default mock for BatchAnalysisResult
   const defaultMockBatchResult = {
@@ -27,9 +49,6 @@ describe('API Integration Tests', () => {
     createdAt: new Date(),
     processingTime: 0,
   };
-
-  let mockAnalysisEngine: MockProxy<AnalysisEngine>;
-  let mockIndexSystem: MockProxy<IndexSystem>;
 
   const _mockStats: Stats = {
     isFile: () => true,
@@ -61,10 +80,6 @@ describe('API Integration Tests', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    // Create mock instances
-    mockAnalysisEngine = mock<AnalysisEngine>();
-    mockIndexSystem = mock<IndexSystem>();
 
     // Set up default mock behaviors
     mockAnalysisEngine.analyzeRepository.mockResolvedValue({
@@ -128,15 +143,10 @@ describe('API Integration Tests', () => {
       tags: [],
       lastUpdated: new Date(),
     });
+  });
 
-    // Mock the constructors to return our mock instances
-    // Mock the modules using factory functions
-    vi.mock('../../core/AnalysisEngine', () => ({
-      AnalysisEngine: vi.fn(() => mockAnalysisEngine),
-    }));
-    vi.mock('../../core/IndexSystem', () => ({
-      IndexSystem: vi.fn(() => mockIndexSystem),
-    }));
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('Health Check', () => {
