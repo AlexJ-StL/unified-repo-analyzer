@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 /// <reference types="node" />
 
-import { vi } from 'vitest';
 import fs from 'node:fs';
-import path from 'node:path';
 import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { vi } from 'vitest';
 
 // Set test environment variables BEFORE importing any services
 process.env.NODE_ENV = 'test';
@@ -18,7 +18,13 @@ process.env.LOG_DIR = path.join(tempDir, 'logs');
 process.env.BACKUP_DIR = path.join(tempDir, 'backups');
 
 // Create temporary directories
-const dirs = [process.env.DATA_DIR, process.env.CACHE_DIR, process.env.INDEX_DIR, process.env.LOG_DIR, process.env.BACKUP_DIR];
+const dirs = [
+  process.env.DATA_DIR,
+  process.env.CACHE_DIR,
+  process.env.INDEX_DIR,
+  process.env.LOG_DIR,
+  process.env.BACKUP_DIR,
+];
 dirs.forEach((dir) => {
   if (dir && !fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
