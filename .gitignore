@@ -254,3 +254,5 @@ tests/e2e/playwright-report/
 
 # Test Analysis Results
 analysis-results/*
+
+.early.coverage
