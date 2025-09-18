@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Request, Response } from 'express';
 import { env } from '../config/environment.js';
-import logger from './logger.service.js';
+import type { IHealthService, ILogger } from '../types/services.js';
 
 interface HealthCheck {
   name: string;
@@ -25,11 +25,13 @@ interface HealthStatus {
   checks: HealthCheck[];
 }
 
-class HealthService {
+class HealthService implements IHealthService {
   private checks: Map<string, HealthCheck> = new Map();
+  private logger: ILogger;
   private startTime: Date = new Date();
 
-  constructor() {
+  constructor(logger: ILogger) {
+    this.logger = logger;
     this.registerDefaultChecks();
     this.startPeriodicChecks();
   }
@@ -174,7 +176,7 @@ class HealthService {
   private startPeriodicChecks(): void {
     setInterval(() => {
       this.runAllChecks().catch((error) => {
-        logger.error(
+        this.logger.error(
           'Error running periodic health checks',
           error instanceof Error ? error : new Error(String(error))
         );
@@ -183,7 +185,7 @@ class HealthService {
 
     // Run initial checks
     this.runAllChecks().catch((error) => {
-      logger.error(
+      this.logger.error(
         'Error running initial health checks',
         error instanceof Error ? error : new Error(String(error))
       );
@@ -251,6 +253,5 @@ class HealthService {
     });
   };
 }
+export { HealthService };
 
-export const healthService = new HealthService();
-export default healthService;

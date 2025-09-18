@@ -9,6 +9,30 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
 vi.mock('node:fs/promises');
+vi.mock('../../services/logger.service', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    default: {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      setRequestId: vi.fn(),
+      getRequestId: vi.fn(),
+    },
+    logger: {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      setRequestId: vi.fn(),
+      getRequestId: vi.fn(),
+    },
+    logAnalysis: vi.fn(),
+    logPerformance: vi.fn(),
+  };
+});
 vi.mock('../../services/logger.service', () => ({
   logger: {
     debug: vi.fn(),

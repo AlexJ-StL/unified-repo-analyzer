@@ -1,34 +1,42 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { CLIError, ErrorType } from './error-handler';
+import { pathValidator, SecurityLevel } from '@unified-repo-analyzer/shared';
 
 /**
  * Validate that a path exists and is a directory
  */
-export function validateRepositoryPath(repoPath: string): string {
+export async function validateRepositoryPath(repoPath: string): Promise<string> {
   try {
-    // Resolve to absolute path
-    const absolutePath = path.resolve(repoPath);
+    // Use centralized path validation with strict security
+    const validationResult = await pathValidator.quickValidate(repoPath, SecurityLevel.STRICT);
 
-    // Check if path exists
-    if (!fs.existsSync(absolutePath)) {
+    if (!validationResult.isValid) {
+      const primaryError = validationResult.errors[0];
+      const errorMessage = primaryError.details
+        ? `${primaryError.message}: ${primaryError.details}`
+        : primaryError.message;
+
+      throw new CLIError(
+        `Repository path validation failed: ${errorMessage}`,
+        ErrorType.FILESYSTEM
+      );
+    }
+
+    // Additional checks for repository-specific requirements
+    if (!validationResult.metadata.exists) {
       throw new CLIError(`Repository path does not exist: ${repoPath}`, ErrorType.FILESYSTEM);
     }
 
-    // Check if path is a directory
-    const stats = fs.statSync(absolutePath);
-    if (!stats.isDirectory()) {
+    if (!validationResult.metadata.isDirectory) {
       throw new CLIError(`Path is not a directory: ${repoPath}`, ErrorType.FILESYSTEM);
     }
 
-    // Check if directory is readable
-    try {
-      fs.accessSync(absolutePath, fs.constants.R_OK);
-    } catch (_error) {
+    if (!validationResult.metadata.permissions?.readable) {
       throw new CLIError(`Directory is not readable: ${repoPath}`, ErrorType.FILESYSTEM);
     }
 
-    return absolutePath;
+    return validationResult.normalizedPath!;
   } catch (error) {
     if (error instanceof CLIError) {
       throw error;

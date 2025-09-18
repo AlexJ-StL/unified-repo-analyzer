@@ -175,6 +175,12 @@ describe('Batch Analysis API', () => {
     // Typecast httpServer to satisfy Server constructor's expected type for the first argument
     _io = new Server(httpServer as HttpServer);
 
+    // Start server listening on a random port
+    await new Promise<void>((resolve, reject) => {
+      httpServer.listen(0, () => resolve());
+      httpServer.on('error', reject);
+    });
+
     // Mock Socket.IO
     (global as Record<string, unknown>).io = {
       to: vi.fn().mockReturnValue({
@@ -187,10 +193,15 @@ describe('Batch Analysis API', () => {
     app.use('/api/analyze', analyzeRoutes);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.restoreAllMocks();
-    if (httpServer && typeof httpServer === 'object' && 'close' in httpServer) {
-      (httpServer as { close: () => void }).close();
+    if (httpServer && typeof httpServer === 'object' && 'close' in httpServer && httpServer.listening) {
+      await new Promise((resolve, reject) => {
+        (httpServer as { close: (callback?: (err?: Error) => void) => void }).close((err) => {
+          if (err) reject(err);
+          else resolve(undefined);
+        });
+      });
     }
   });
 

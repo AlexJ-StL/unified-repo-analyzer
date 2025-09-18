@@ -7,10 +7,9 @@ import { errorHandler, notFound } from './api/middleware/error.middleware.js';
 import { initializeWebSocketHandlers } from './api/websocket/index.js';
 import { env, validateProductionConfig } from './config/environment.js';
 import * as core from './core/index.js';
+import { serviceContainer } from './container/ServiceContainer.js';
+import { requestLogger } from './services/logger.service.js';
 import { backupService } from './services/backup.service.js';
-import { configurationService } from './services/config.service.js';
-import { healthService } from './services/health.service.js';
-import logger, { requestLogger } from './services/logger.service.js';
 import { metricsService } from './services/metrics.service.js';
 import { initializeProvidersWithConfig } from './services/provider-initialization.service.js';
 
@@ -20,15 +19,20 @@ import { initializeProvidersWithConfig } from './services/provider-initializatio
 // Import configuration and environment
 // Import core modules
 // Import services
+// Initialize ServiceContainer
+await serviceContainer.initialize();
+
 // Validate production configuration
 try {
   validateProductionConfig();
 } catch (error) {
-  logger.error(
+  serviceContainer.logger.error(
     'Configuration validation failed',
     error instanceof Error ? error : new Error(String(error))
   );
   process.exit(1);
+
+
 }
 
 // Initialize express app
@@ -93,9 +97,9 @@ app.get('/', (_req, res) => {
 });
 
 // Health check endpoints
-app.get('/health', healthService.healthCheckHandler as any);
-app.get('/health/ready', healthService.readinessHandler as any);
-app.get('/health/live', healthService.livenessHandler as any);
+app.get('/health', serviceContainer.healthService.healthCheckHandler as any);
+app.get('/health/ready', serviceContainer.healthService.readinessHandler as any);
+app.get('/health/live', serviceContainer.healthService.livenessHandler as any);
 
 // Metrics endpoints
 if (env.ENABLE_METRICS) {
@@ -114,29 +118,30 @@ app.use(errorHandler as any);
 initializeWebSocketHandlers(io);
 
 // Initialize configuration service
-configurationService.initialize().catch(console.error);
 
 // Initialize providers with configurations
 initializeProvidersWithConfig().catch((error) => {
-  logger.error('Failed to initialize providers with configurations:', error);
+  serviceContainer.logger.error('Failed to initialize providers with configurations:', error);
 });
 
 // Graceful shutdown handling
 const gracefulShutdown = (signal: string) => {
-  logger.info(`Received ${signal}, starting graceful shutdown`);
+  serviceContainer.logger.info(`Received ${signal}, starting graceful shutdown`);
 
   // Cleanup services
   backupService.destroy();
 
   httpServer.close(() => {
-    logger.info('HTTP server closed');
+    serviceContainer.logger.info('HTTP server closed');
     process.exit(0);
   });
 
   // Force close after 30 seconds
   setTimeout(() => {
-    logger.error('Forced shutdown after timeout');
+    serviceContainer.logger.error('Forced shutdown after timeout');
     process.exit(1);
+
+
   }, 30000);
 };
 
@@ -145,7 +150,7 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Start server
 const server = httpServer.listen(env.PORT, () => {
-  logger.info(`Server running on port ${env.PORT}`, {
+  serviceContainer.logger.info(`Server running on port ${env.PORT}`, {
     environment: env.NODE_ENV,
     version: process.env.npm_package_version || '1.0.0',
     pid: process.pid,
