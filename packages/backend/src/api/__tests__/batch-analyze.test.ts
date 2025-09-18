@@ -52,24 +52,92 @@ describe('Batch Analysis API', () => {
       metrics: { fileCount: 10, totalSize: 1000 },
     });
     mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue([]);
-    mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue.mockImplementation(async (paths, _options, _concurrency, progressCallback) => {
-      // Call progress callback a few times to simulate progress
-      if (progressCallback) {
-        progressCallback({
-          batchId: 'test-batch',
-          status: {
-            total: paths.length,
-            completed: 0,
-            failed: 0,
-            inProgress: 1,
-            pending: paths.length - 1,
-            progress: 0,
-          },
-          currentRepository: [paths[0]],
-        });
+    mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue.mockImplementation(
+      async (paths, _options, _concurrency, progressCallback) => {
+        // Call progress callback a few times to simulate progress
+        if (progressCallback) {
+          progressCallback({
+            batchId: 'test-batch',
+            status: {
+              total: paths.length,
+              completed: 0,
+              failed: 0,
+              inProgress: 1,
+              pending: paths.length - 1,
+              progress: 0,
+            },
+            currentRepository: [paths[0]],
+          });
 
-        progressCallback({
-          batchId: 'test-batch',
+          progressCallback({
+            batchId: 'test-batch',
+            status: {
+              total: paths.length,
+              completed: paths.length,
+              failed: 0,
+              inProgress: 0,
+              pending: 0,
+              progress: 100,
+            },
+            currentRepository: [],
+          });
+        }
+
+        // Return mock batch result
+        return {
+          id: 'test-batch',
+          repositories: paths.map((path: string) => ({
+            id: `repo-${path.replace(/\//g, '-')}`,
+            path,
+            name: path.split('/').pop(),
+            language: 'JavaScript',
+            languages: ['JavaScript', 'TypeScript'],
+            frameworks: [],
+            fileCount: 100,
+            directoryCount: 10,
+            totalSize: 1024 * 1024,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            structure: {
+              directories: [],
+              keyFiles: [],
+              tree: 'mock-tree',
+            },
+            codeAnalysis: {
+              functionCount: 0,
+              classCount: 0,
+              importCount: 0,
+              complexity: {
+                cyclomaticComplexity: 0,
+                maintainabilityIndex: 0,
+                technicalDebt: 'Low',
+                codeQuality: 'good',
+              },
+              patterns: [],
+            },
+            dependencies: {
+              production: [],
+              development: [],
+              frameworks: [],
+            },
+            insights: {
+              executiveSummary: '',
+              technicalBreakdown: '',
+              recommendations: [],
+              potentialIssues: [],
+            },
+            metadata: {
+              analysisMode: 'standard',
+              processingTime: 0,
+            },
+          })),
+          combinedInsights: {
+            commonalities: ['Common language: JavaScript'],
+            differences: [],
+            integrationOpportunities: [],
+          },
+          createdAt: new Date(),
+          processingTime: 1000,
           status: {
             total: paths.length,
             completed: paths.length,
@@ -78,75 +146,9 @@ describe('Batch Analysis API', () => {
             pending: 0,
             progress: 100,
           },
-          currentRepository: [],
-        });
+        };
       }
-
-      // Return mock batch result
-      return {
-        id: 'test-batch',
-        repositories: paths.map((path: string) => ({
-          id: `repo-${path.replace(/\//g, '-')}`,
-          path,
-          name: path.split('/').pop(),
-          language: 'JavaScript',
-          languages: ['JavaScript', 'TypeScript'],
-          frameworks: [],
-          fileCount: 100,
-          directoryCount: 10,
-          totalSize: 1024 * 1024,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          structure: {
-            directories: [],
-            keyFiles: [],
-            tree: 'mock-tree',
-          },
-          codeAnalysis: {
-            functionCount: 0,
-            classCount: 0,
-            importCount: 0,
-            complexity: {
-              cyclomaticComplexity: 0,
-              maintainabilityIndex: 0,
-              technicalDebt: 'Low',
-              codeQuality: 'good',
-            },
-            patterns: [],
-          },
-          dependencies: {
-            production: [],
-            development: [],
-            frameworks: [],
-          },
-          insights: {
-            executiveSummary: '',
-            technicalBreakdown: '',
-            recommendations: [],
-            potentialIssues: [],
-          },
-          metadata: {
-            analysisMode: 'standard',
-            processingTime: 0,
-          },
-        })),
-        combinedInsights: {
-          commonalities: ['Common language: JavaScript'],
-          differences: [],
-          integrationOpportunities: [],
-        },
-        createdAt: new Date(),
-        processingTime: 1000,
-        status: {
-          total: paths.length,
-          completed: paths.length,
-          failed: 0,
-          inProgress: 0,
-          pending: 0,
-          progress: 100,
-        },
-      };
-    });
+    );
     mockAnalysisEngine.generateCombinedInsights.mockResolvedValue({
       commonalities: ['Common language: JavaScript'],
       differences: [],
@@ -245,7 +247,9 @@ describe('Batch Analysis API', () => {
     // Mock analyzeMultipleRepositoriesWithQueue to throw an error
     const mockInstance = vi.mocked(AnalysisEngine).mock.results[0]?.value;
     if (mockInstance) {
-      mockInstance.analyzeMultipleRepositoriesWithQueue.mockRejectedValueOnce(new Error('Batch analysis failed'));
+      mockInstance.analyzeMultipleRepositoriesWithQueue.mockRejectedValueOnce(
+        new Error('Batch analysis failed')
+      );
     }
 
     const response = await request(app)

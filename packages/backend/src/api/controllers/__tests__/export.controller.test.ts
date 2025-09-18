@@ -14,10 +14,11 @@ vi.mock('node:fs', async (importOriginal) => {
     unlink: vi.fn(),
   };
 });
+
+import type { ReadStream } from 'node:fs';
 import * as fs from 'node:fs';
 import type { Request, Response } from 'express';
-import { vi, type MockedFunction } from 'vitest';
-import type { ReadStream } from 'node:fs';
+import { type MockedFunction, vi } from 'vitest';
 import exportService from '../../../services/export.service';
 import {
   clearExportMetadata,

@@ -5,9 +5,9 @@
 import express from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Provider } from '../../../../shared/types/provider';
 import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 import providersRouter from '../providers.js';
-import type { Provider } from '../../../../shared/types/provider';
 
 describe('OpenRouter Model Selection Integration', () => {
   let app: express.Application;
@@ -180,7 +180,9 @@ describe('OpenRouter Model Selection Integration', () => {
     it('should include OpenRouter in provider list with model-selection capability', async () => {
       const response = await request(app).get('/api/providers').expect(200);
 
-      const openRouterProvider = response.body.providers.find((p: Provider) => p.id === 'openrouter');
+      const openRouterProvider = response.body.providers.find(
+        (p: Provider) => p.id === 'openrouter'
+      );
 
       expect(openRouterProvider).toBeDefined();
       expect(openRouterProvider.displayName).toBe('OpenRouter');

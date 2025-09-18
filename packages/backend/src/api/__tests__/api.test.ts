@@ -6,7 +6,7 @@ import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type MockProxy, mock } from 'vitest-mock-extended';
+import { mock } from 'vitest-mock-extended';
 
 vi.mock('node:fs/promises');
 vi.mock('../../services/logger.service', () => ({

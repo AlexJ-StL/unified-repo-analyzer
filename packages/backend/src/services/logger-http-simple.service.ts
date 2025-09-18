@@ -2,8 +2,8 @@
  * HTTP Request/Response Logging Service - Simplified
  */
 
+import type { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import type { Request, Response, NextFunction } from 'express';
 import logger from './logger.service.js';
 
 /**
