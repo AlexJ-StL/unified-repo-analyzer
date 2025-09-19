@@ -255,6 +255,11 @@ tests/e2e/playwright-report/
 # Test Analysis Results
 analysis-results/*
 
+# Early Extension Workspace Files
 .early.coverage
 .early.coverage/**/*
 .early.coverage/v8/coverage-final.json
+
+# Development Notes and Checklists
+Code_Quality_To-Do_List.md
+failed_test_corrections.md
