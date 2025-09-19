@@ -22,7 +22,17 @@
       "**/temp/**",
       "packages/**/dist/**",
       "packages/**/build/**",
-      "packages/**/temp/**"
+      "packages/**/temp/**",
+      ".early.coverage/v8/**",
+      ".vscode/**",
+      ".kiron/**",
+      ".github/**",
+      ".test-cache/**",
+      "analysis-results/**",
+      "backups/**",
+      "coverage-reports/**",
+      "test-reports/**",
+      "**/logs/**"
     ]
   },
   "linter": {
