@@ -1,1 +1,6 @@
-{"name":"batch-repo-14","dependencies":{"react":"^18.0.0"}}
+{
+  "name": "batch-repo-14",
+  "dependencies": {
+    "react": "^18.0.0"
+  }
+}
