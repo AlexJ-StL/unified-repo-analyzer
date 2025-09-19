@@ -4,12 +4,8 @@
       "id": "mock-tag-heavy-repo-1758012189491",
       "name": "tag-heavy-repo",
       "path": "/path/to/tag-heavy-repo",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
       "tags": [
         "lang:JavaScript",
         "framework:React",

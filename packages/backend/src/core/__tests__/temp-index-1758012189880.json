@@ -6,9 +6,7 @@
       "path": "/path/to/null-test",
       "languages": [],
       "frameworks": [],
-      "tags": [
-        "complexity:high"
-      ],
+      "tags": ["complexity:high"],
       "summary": "null-test is a sample repository for testing.",
       "lastAnalyzed": "2025-09-16T08:43:09.880Z",
       "size": 1048576,

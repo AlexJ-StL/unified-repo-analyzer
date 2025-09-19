@@ -4,12 +4,8 @@
       "id": "mock-<script>alert('xss')</script>-1758141383348",
       "name": "<script>alert('xss')</script>",
       "path": "/path/to/<script>alert('xss')</script>",
-      "languages": [
-        "<script>alert('xss')</script>"
-      ],
-      "frameworks": [
-        "<script>alert('xss')</script>"
-      ],
+      "languages": ["<script>alert('xss')</script>"],
+      "frameworks": ["<script>alert('xss')</script>"],
       "tags": [
         "lang:<script>alert('xss')</script>",
         "framework:<script>alert('xss')</script>",

@@ -4,17 +4,9 @@
       "id": "mock-concurrent-repo-1758141381089",
       "name": "concurrent-repo",
       "path": "/path/to/concurrent-repo",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "concurrent-repo is a sample repository for testing.",
       "lastAnalyzed": "2025-09-17T20:36:21.089Z",
       "size": 1048576,

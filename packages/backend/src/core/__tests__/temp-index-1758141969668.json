@@ -4,18 +4,9 @@
       "id": "mock-tag-count-test-1758141969668",
       "name": "tag-count-test",
       "path": "/path/to/tag-count-test",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high",
-        "test-tag"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high", "test-tag"],
       "summary": "tag-count-test is a sample repository for testing.",
       "lastAnalyzed": "2025-09-17T20:46:09.668Z",
       "size": 1048576,
