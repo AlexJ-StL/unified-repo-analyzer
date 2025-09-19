@@ -33,7 +33,8 @@ vi.mock('../../services/logger.service', async (importOriginal) => {
     logPerformance: vi.fn(),
   };
 });
- // Removed redundant logger mock - async mock at lines 12-35 covers it
+
+// Removed redundant logger mock - async mock at lines 12-35 covers it
 
 // Import types for proper typing
 import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
