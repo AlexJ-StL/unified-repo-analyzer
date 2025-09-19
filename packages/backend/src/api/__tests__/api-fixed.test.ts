@@ -57,9 +57,40 @@ vi.mock('socket.io', () => ({
     engine: {
       on: vi.fn(),
     },
+// Mock HealthService before importing app
+vi.mock('../../services/health.service', () => ({
+  HealthService: class MockHealthService {
+    healthCheckHandler = vi.fn();
+    readinessHandler = vi.fn();
+    livenessHandler = vi.fn();
+  },
+  healthService: {
+    healthCheckHandler: vi.fn(),
+    readinessHandler: vi.fn(),
+    livenessHandler: vi.fn(),
+  },
+}));
+
+// Mock ServiceContainer
+vi.mock('../../container/ServiceContainer', () => ({
+  serviceContainer: {
+    initialize: vi.fn().mockResolvedValue(undefined),
+    healthService: {
+      healthCheckHandler: vi.fn(),
+      readinessHandler: vi.fn(),
+      livenessHandler: vi.fn(),
+    },
+    logger: {
+      error: vi.fn(),
+      info: vi.fn(),
+    },
+  },
+}));
   })),
 }));
 
+// Debug: Check if app import triggers HealthService
+console.log('About to import app...');
 // Import app after mocking
 import { app } from '../../index.js';
 
@@ -155,6 +186,19 @@ describe('Fixed API Integration Tests', () => {
       },
       insights: {
         executiveSummary: 'Test summary',
+  describe('Health Check', () => {
+    it('should return status ok', async () => {
+      console.log('Running health check test...');
+      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.unlink).mockResolvedValue(undefined);
+      vi.mocked(fs.stat).mockResolvedValue(mockStats);
+
+      const response = await request(app).get('/health');
+      console.log('Health check response:', response.status, response.body);
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('status', 'healthy');
+    });
+  });
         technicalBreakdown: 'Test breakdown',
         recommendations: [],
         potentialIssues: [],
