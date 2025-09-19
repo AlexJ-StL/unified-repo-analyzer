@@ -2,12 +2,7 @@
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
   "check-coverage": true,
-  "reporter": [
-    "text",
-    "html",
-    "json",
-    "lcov"
-  ],
+  "reporter": ["text", "html", "json", "lcov"],
   "report-dir": "coverage",
   "exclude": [
     "**/*.d.ts",

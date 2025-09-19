@@ -20,10 +20,5 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "packages/frontend",
-    "**/temp-test-repos/**"
-  ]
+  "exclude": ["node_modules", "dist", "packages/frontend", "**/temp-test-repos/**"]
 }

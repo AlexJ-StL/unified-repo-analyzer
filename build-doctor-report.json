@@ -75,9 +75,7 @@
       "name": "Dependency Lock File",
       "status": "pass",
       "message": "Lock file found: bun.lock",
-      "suggestions": [
-        "Consider upgrading to bun.lockb format for better performance"
-      ]
+      "suggestions": ["Consider upgrading to bun.lockb format for better performance"]
     },
     {
       "name": "TypeScript Compilation",
@@ -123,9 +121,7 @@
       "name": "Available Memory",
       "status": "warning",
       "message": "Low available memory: 2MB",
-      "suggestions": [
-        "Consider increasing Node.js memory limit with --max-old-space-size"
-      ]
+      "suggestions": ["Consider increasing Node.js memory limit with --max-old-space-size"]
     },
     {
       "name": "Project Directory Access",

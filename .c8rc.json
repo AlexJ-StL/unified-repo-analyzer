@@ -1,10 +1,5 @@
 {
-  "reporter": [
-    "text",
-    "json",
-    "html",
-    "lcov"
-  ],
+  "reporter": ["text", "json", "html", "lcov"],
   "reports-dir": "coverage",
   "exclude": [
     "node_modules/**",
