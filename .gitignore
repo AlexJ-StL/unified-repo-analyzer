@@ -256,5 +256,5 @@ tests/e2e/playwright-report/
 analysis-results/*
 
 .early.coverage
-.early.coverage/*
-.early.coverage/coverage-final.json
+.early.coverage/**/*
+.early.coverage/v8/coverage-final.json

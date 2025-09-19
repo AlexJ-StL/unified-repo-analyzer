@@ -13,8 +13,8 @@ vi.mock('node:fs/promises', async () => {
   };
 });
 
-import * as fs from 'node:fs';
-import fsSync from 'node:fs';
+import fs from 'node:fs/promises';
+
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -40,10 +40,18 @@ describe('PathValidator', () => {
     statMock.mockImplementation(async (p: string) => {
       const resolvedP = path.resolve(p);
       if (resolvedP === path.resolve(testFile)) {
-        return { isFile: vi.fn().mockReturnValue(true), isDirectory: vi.fn().mockReturnValue(false), size: 11 } as any;
+        return {
+          isFile: vi.fn().mockReturnValue(true),
+          isDirectory: vi.fn().mockReturnValue(false),
+          size: 11,
+        } as any;
       }
       if (resolvedP === path.resolve(testDir) || resolvedP === path.resolve(tempDir)) {
-        return { isFile: vi.fn().mockReturnValue(false), isDirectory: vi.fn().mockReturnValue(true), size: 0 } as any;
+        return {
+          isFile: vi.fn().mockReturnValue(false),
+          isDirectory: vi.fn().mockReturnValue(true),
+          size: 0,
+        } as any;
       }
       const err = new Error(`ENOENT: no such file or directory, stat '${p}'`);
       (err as any).code = 'ENOENT';
@@ -117,7 +125,7 @@ describe('PathValidator', () => {
     it('should detect directory traversal attempts', async () => {
       const maliciousPath = path.join(testDir, '..', '..', 'etc', 'passwd');
       const normalizedMalicious = path.resolve(maliciousPath);
-      const existsMock = vi.mocked(fsSync.existsSync);
+      const existsMock = vi.mocked(fs.existsSync);
       const previousImpl = existsMock.getMockImplementation();
       existsMock.mockImplementation((p: string) => {
         if (path.resolve(p) === normalizedMalicious) {
