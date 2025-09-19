@@ -16,15 +16,19 @@ const access = promisify(fs.access);
 const _stat = promisify(fs.stat);
 const _readdir = promisify(fs.readdir);
 
-// Mock the logger service
-vi.mock('../logger.service', () => ({
-  logger: {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  },
-}));
+vi.mock('../logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../logger.service')>();
+  return {
+    ...actual,
+    logger: {
+      ...actual.logger,
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+    },
+  };
+});
 
 // Mock environment
 vi.mock('../config/environment', () => ({

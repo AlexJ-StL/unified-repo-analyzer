@@ -4,17 +4,9 @@
       "id": "mock-search-repo-0-1758244730971",
       "name": "search-repo-0",
       "path": "/path/to/search-repo-0",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-0 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.971Z",
       "size": 1048576,
@@ -24,17 +16,9 @@
       "id": "mock-search-repo-1-1758244730972",
       "name": "search-repo-1",
       "path": "/path/to/search-repo-1",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-1 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.972Z",
       "size": 1048576,
@@ -44,17 +28,9 @@
       "id": "mock-search-repo-2-1758244730973",
       "name": "search-repo-2",
       "path": "/path/to/search-repo-2",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-2 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.973Z",
       "size": 1048576,
@@ -64,17 +40,9 @@
       "id": "mock-search-repo-3-1758244730974",
       "name": "search-repo-3",
       "path": "/path/to/search-repo-3",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-3 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.974Z",
       "size": 1048576,
@@ -84,17 +52,9 @@
       "id": "mock-search-repo-4-1758244730977",
       "name": "search-repo-4",
       "path": "/path/to/search-repo-4",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-4 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.977Z",
       "size": 1048576,
@@ -104,17 +64,9 @@
       "id": "mock-search-repo-5-1758244730978",
       "name": "search-repo-5",
       "path": "/path/to/search-repo-5",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-5 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.978Z",
       "size": 1048576,
@@ -124,17 +76,9 @@
       "id": "mock-search-repo-6-1758244730980",
       "name": "search-repo-6",
       "path": "/path/to/search-repo-6",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-6 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.980Z",
       "size": 1048576,
@@ -144,17 +88,9 @@
       "id": "mock-search-repo-7-1758244730981",
       "name": "search-repo-7",
       "path": "/path/to/search-repo-7",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-7 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.981Z",
       "size": 1048576,
@@ -164,17 +100,9 @@
       "id": "mock-search-repo-8-1758244730983",
       "name": "search-repo-8",
       "path": "/path/to/search-repo-8",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-8 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.983Z",
       "size": 1048576,
@@ -184,17 +112,9 @@
       "id": "mock-search-repo-9-1758244730985",
       "name": "search-repo-9",
       "path": "/path/to/search-repo-9",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-9 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.985Z",
       "size": 1048576,
@@ -204,17 +124,9 @@
       "id": "mock-search-repo-10-1758244730990",
       "name": "search-repo-10",
       "path": "/path/to/search-repo-10",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-10 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.990Z",
       "size": 1048576,
@@ -224,17 +136,9 @@
       "id": "mock-search-repo-11-1758244730992",
       "name": "search-repo-11",
       "path": "/path/to/search-repo-11",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-11 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.992Z",
       "size": 1048576,
@@ -244,17 +148,9 @@
       "id": "mock-search-repo-12-1758244730994",
       "name": "search-repo-12",
       "path": "/path/to/search-repo-12",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-12 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.994Z",
       "size": 1048576,
@@ -264,17 +160,9 @@
       "id": "mock-search-repo-13-1758244730998",
       "name": "search-repo-13",
       "path": "/path/to/search-repo-13",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-13 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:50.998Z",
       "size": 1048576,
@@ -284,17 +172,9 @@
       "id": "mock-search-repo-14-1758244731001",
       "name": "search-repo-14",
       "path": "/path/to/search-repo-14",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-14 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.001Z",
       "size": 1048576,
@@ -304,17 +184,9 @@
       "id": "mock-search-repo-15-1758244731007",
       "name": "search-repo-15",
       "path": "/path/to/search-repo-15",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-15 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.007Z",
       "size": 1048576,
@@ -324,17 +196,9 @@
       "id": "mock-search-repo-16-1758244731012",
       "name": "search-repo-16",
       "path": "/path/to/search-repo-16",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-16 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.012Z",
       "size": 1048576,
@@ -344,17 +208,9 @@
       "id": "mock-search-repo-17-1758244731015",
       "name": "search-repo-17",
       "path": "/path/to/search-repo-17",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-17 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.015Z",
       "size": 1048576,
@@ -364,17 +220,9 @@
       "id": "mock-search-repo-18-1758244731018",
       "name": "search-repo-18",
       "path": "/path/to/search-repo-18",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-18 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.018Z",
       "size": 1048576,
@@ -384,17 +232,9 @@
       "id": "mock-search-repo-19-1758244731022",
       "name": "search-repo-19",
       "path": "/path/to/search-repo-19",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-19 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.022Z",
       "size": 1048576,
@@ -404,17 +244,9 @@
       "id": "mock-search-repo-20-1758244731027",
       "name": "search-repo-20",
       "path": "/path/to/search-repo-20",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-20 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.027Z",
       "size": 1048576,
@@ -424,17 +256,9 @@
       "id": "mock-search-repo-21-1758244731030",
       "name": "search-repo-21",
       "path": "/path/to/search-repo-21",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-21 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.030Z",
       "size": 1048576,
@@ -444,17 +268,9 @@
       "id": "mock-search-repo-22-1758244731034",
       "name": "search-repo-22",
       "path": "/path/to/search-repo-22",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-22 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.034Z",
       "size": 1048576,
@@ -464,17 +280,9 @@
       "id": "mock-search-repo-23-1758244731038",
       "name": "search-repo-23",
       "path": "/path/to/search-repo-23",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-23 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.038Z",
       "size": 1048576,
@@ -484,17 +292,9 @@
       "id": "mock-search-repo-24-1758244731042",
       "name": "search-repo-24",
       "path": "/path/to/search-repo-24",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-24 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.042Z",
       "size": 1048576,
@@ -504,17 +304,9 @@
       "id": "mock-search-repo-25-1758244731047",
       "name": "search-repo-25",
       "path": "/path/to/search-repo-25",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-25 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.047Z",
       "size": 1048576,
@@ -524,17 +316,9 @@
       "id": "mock-search-repo-26-1758244731053",
       "name": "search-repo-26",
       "path": "/path/to/search-repo-26",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-26 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.053Z",
       "size": 1048576,
@@ -544,17 +328,9 @@
       "id": "mock-search-repo-27-1758244731058",
       "name": "search-repo-27",
       "path": "/path/to/search-repo-27",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-27 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.058Z",
       "size": 1048576,
@@ -564,17 +340,9 @@
       "id": "mock-search-repo-28-1758244731063",
       "name": "search-repo-28",
       "path": "/path/to/search-repo-28",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-28 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.063Z",
       "size": 1048576,
@@ -584,17 +352,9 @@
       "id": "mock-search-repo-29-1758244731068",
       "name": "search-repo-29",
       "path": "/path/to/search-repo-29",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-29 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.068Z",
       "size": 1048576,
@@ -604,17 +364,9 @@
       "id": "mock-search-repo-30-1758244731074",
       "name": "search-repo-30",
       "path": "/path/to/search-repo-30",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-30 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.074Z",
       "size": 1048576,
@@ -624,17 +376,9 @@
       "id": "mock-search-repo-31-1758244731079",
       "name": "search-repo-31",
       "path": "/path/to/search-repo-31",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-31 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.079Z",
       "size": 1048576,
@@ -644,17 +388,9 @@
       "id": "mock-search-repo-32-1758244731085",
       "name": "search-repo-32",
       "path": "/path/to/search-repo-32",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-32 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.085Z",
       "size": 1048576,
@@ -664,17 +400,9 @@
       "id": "mock-search-repo-33-1758244731100",
       "name": "search-repo-33",
       "path": "/path/to/search-repo-33",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-33 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.100Z",
       "size": 1048576,
@@ -684,17 +412,9 @@
       "id": "mock-search-repo-34-1758244731116",
       "name": "search-repo-34",
       "path": "/path/to/search-repo-34",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-34 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.116Z",
       "size": 1048576,
@@ -704,17 +424,9 @@
       "id": "mock-search-repo-35-1758244731129",
       "name": "search-repo-35",
       "path": "/path/to/search-repo-35",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-35 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.129Z",
       "size": 1048576,
@@ -724,17 +436,9 @@
       "id": "mock-search-repo-36-1758244731136",
       "name": "search-repo-36",
       "path": "/path/to/search-repo-36",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-36 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.136Z",
       "size": 1048576,
@@ -744,17 +448,9 @@
       "id": "mock-search-repo-37-1758244731143",
       "name": "search-repo-37",
       "path": "/path/to/search-repo-37",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-37 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.143Z",
       "size": 1048576,
@@ -764,17 +460,9 @@
       "id": "mock-search-repo-38-1758244731149",
       "name": "search-repo-38",
       "path": "/path/to/search-repo-38",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-38 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.149Z",
       "size": 1048576,
@@ -784,17 +472,9 @@
       "id": "mock-search-repo-39-1758244731161",
       "name": "search-repo-39",
       "path": "/path/to/search-repo-39",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-39 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.161Z",
       "size": 1048576,
@@ -804,17 +484,9 @@
       "id": "mock-search-repo-40-1758244731169",
       "name": "search-repo-40",
       "path": "/path/to/search-repo-40",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-40 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.169Z",
       "size": 1048576,
@@ -824,17 +496,9 @@
       "id": "mock-search-repo-41-1758244731180",
       "name": "search-repo-41",
       "path": "/path/to/search-repo-41",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-41 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.180Z",
       "size": 1048576,
@@ -844,17 +508,9 @@
       "id": "mock-search-repo-42-1758244731190",
       "name": "search-repo-42",
       "path": "/path/to/search-repo-42",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-42 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.190Z",
       "size": 1048576,
@@ -864,17 +520,9 @@
       "id": "mock-search-repo-43-1758244731197",
       "name": "search-repo-43",
       "path": "/path/to/search-repo-43",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-43 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.197Z",
       "size": 1048576,
@@ -884,17 +532,9 @@
       "id": "mock-search-repo-44-1758244731206",
       "name": "search-repo-44",
       "path": "/path/to/search-repo-44",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-44 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.206Z",
       "size": 1048576,
@@ -904,17 +544,9 @@
       "id": "mock-search-repo-45-1758244731217",
       "name": "search-repo-45",
       "path": "/path/to/search-repo-45",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-45 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.217Z",
       "size": 1048576,
@@ -924,17 +556,9 @@
       "id": "mock-search-repo-46-1758244731226",
       "name": "search-repo-46",
       "path": "/path/to/search-repo-46",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-46 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.226Z",
       "size": 1048576,
@@ -944,17 +568,9 @@
       "id": "mock-search-repo-47-1758244731235",
       "name": "search-repo-47",
       "path": "/path/to/search-repo-47",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-47 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.235Z",
       "size": 1048576,
@@ -964,17 +580,9 @@
       "id": "mock-search-repo-48-1758244731244",
       "name": "search-repo-48",
       "path": "/path/to/search-repo-48",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-48 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.244Z",
       "size": 1048576,
@@ -984,17 +592,9 @@
       "id": "mock-search-repo-49-1758244731254",
       "name": "search-repo-49",
       "path": "/path/to/search-repo-49",
-      "languages": [
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "tags": [
-        "lang:JavaScript",
-        "framework:React",
-        "complexity:high"
-      ],
+      "languages": ["JavaScript"],
+      "frameworks": ["React"],
+      "tags": ["lang:JavaScript", "framework:React", "complexity:high"],
       "summary": "search-repo-49 is a sample repository for testing.",
       "lastAnalyzed": "2025-09-19T01:18:51.254Z",
       "size": 1048576,

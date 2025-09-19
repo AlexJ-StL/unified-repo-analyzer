@@ -13,7 +13,8 @@ vi.mock('node:fs/promises', async () => {
   };
 });
 
-import fs from 'node:fs/promises';
+import * as fs from 'node:fs';
+import fsSync from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -35,14 +36,14 @@ describe('PathValidator', () => {
     await fs.mkdir(testDir);
 
     // Mock fs.promises.stat for existence check
-    const statMock = vi.mocked(fs.stat);
+    const statMock = fs.stat;
     statMock.mockImplementation(async (p: string) => {
       const resolvedP = path.resolve(p);
       if (resolvedP === path.resolve(testFile)) {
-        return { isFile: () => true, isDirectory: () => false, size: 11 } as any;
+        return { isFile: vi.fn().mockReturnValue(true), isDirectory: vi.fn().mockReturnValue(false), size: 11 } as any;
       }
       if (resolvedP === path.resolve(testDir) || resolvedP === path.resolve(tempDir)) {
-        return { isFile: () => false, isDirectory: () => true, size: 0 } as any;
+        return { isFile: vi.fn().mockReturnValue(false), isDirectory: vi.fn().mockReturnValue(true), size: 0 } as any;
       }
       const err = new Error(`ENOENT: no such file or directory, stat '${p}'`);
       (err as any).code = 'ENOENT';
@@ -50,7 +51,7 @@ describe('PathValidator', () => {
     });
 
     // Mock fs.promises.access for permissions check
-    const accessMock = vi.mocked(fs.access);
+    const accessMock = fs.access;
     accessMock.mockImplementation(async () => {
       /* success */
     });

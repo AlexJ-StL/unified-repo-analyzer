@@ -18,18 +18,23 @@ const mockAnalysisEngine = mock<typeof AnalysisEngine.prototype>();
 vi.mock('../../core/AnalysisEngine', () => ({
   AnalysisEngine: vi.fn(() => mockAnalysisEngine),
 }));
-vi.mock('../../services/logger.service', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    setRequestId: vi.fn(),
-    getRequestId: vi.fn(),
-  },
-  logAnalysis: vi.fn(),
-  logPerformance: vi.fn(),
-}));
+vi.mock('../../services/logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../services/logger.service')>();
+  return {
+    ...actual,
+    logger: {
+      ...actual.logger,
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      setRequestId: vi.fn(),
+      getRequestId: vi.fn(),
+    },
+    logAnalysis: vi.fn(),
+    logPerformance: vi.fn(),
+  };
+});
 
 describe('Batch Analysis API', () => {
   let app: express.Application;

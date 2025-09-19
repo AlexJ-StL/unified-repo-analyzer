@@ -19,16 +19,21 @@ const mockLoggerWarn = vi.fn();
 const mockLoggerError = vi.fn();
 const mockLoggerDebug = vi.fn();
 
-vi.doMock('../services/logger.service', () => ({
-  logger: {
-    info: mockLoggerInfo,
-    warn: mockLoggerWarn,
-    error: mockLoggerError,
-    debug: mockLoggerDebug,
-    setRequestId: vi.fn(),
-    getRequestId: vi.fn(() => 'test-request-id'),
-  },
-}));
+vi.doMock('../services/logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../services/logger.service')>();
+  return {
+    ...actual,
+    logger: {
+      ...actual.logger,
+      info: mockLoggerInfo,
+      warn: mockLoggerWarn,
+      error: mockLoggerError,
+      debug: mockLoggerDebug,
+      setRequestId: vi.fn(),
+      getRequestId: vi.fn(() => 'test-request-id'),
+    },
+  };
+});
 
 describe('Logging Integration Tests', () => {
   let tempDir: string;

@@ -2,14 +2,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PerformanceMonitor } from '../performance-monitor.service.js';
 
 // Mock the logger service
-vi.mock('../logger.service', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('../logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../logger.service')>();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    },
+  };
+});
 
 describe('PerformanceMonitor', () => {
   let monitor: PerformanceMonitor;

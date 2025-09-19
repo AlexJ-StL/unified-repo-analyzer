@@ -9,13 +9,18 @@ vi.mock('uuid', () => ({
   v4: vi.fn(() => 'mock-uuid'),
 }));
 
-vi.mock('../../../services/logger.service.js', () => ({
-  default: {
-    info: vi.fn(),
-    debug: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('../../../services/logger.service.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../services/logger.service.js')>();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      info: vi.fn(),
+      debug: vi.fn(),
+      error: vi.fn(),
+    },
+  };
+});
 
 vi.mock('../../../services/metrics.service.js', () => ({
   metricsService: {

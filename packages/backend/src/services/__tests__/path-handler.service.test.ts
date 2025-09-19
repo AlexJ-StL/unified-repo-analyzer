@@ -10,14 +10,19 @@ import { PathHandler } from '../path-handler.service.js';
 // Mock dependencies
 vi.mock('node:fs/promises');
 vi.mock('node:os');
-vi.mock('../logger.service', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('../logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../logger.service')>();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    },
+  };
+});
 
 const mockFs = fs as any;
 const _mockPlatform = platform as any;

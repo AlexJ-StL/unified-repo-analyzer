@@ -2,15 +2,19 @@ import fs from 'node:fs/promises';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PathHandler } from '../path-handler.service.js';
 
-// Mock the logger service
-vi.mock('../logger.service.js', () => ({
-  default: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('../logger.service.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../logger.service.js')>();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    },
+  };
+});
 
 // Mock fs promises
 vi.mock('node:fs/promises', () => ({
