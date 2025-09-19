@@ -3,23 +3,8 @@
   "path": "C:\\Users\\AlexJ\\Documents\\Coding\\Repos\\my-repos\\myRepoAnalyzer\\unified-repo-analyzer",
   "name": "unified-repo-analyzer",
   "language": "TypeScript",
-  "languages": [
-    "TypeScript",
-    "JavaScript",
-    "Markdown",
-    "YAML",
-    "JSON",
-    "Python",
-    "HTML"
-  ],
-  "frameworks": [
-    "React",
-    "Angular",
-    "NestJS",
-    "Express",
-    "Flask",
-    "FastAPI"
-  ],
+  "languages": ["TypeScript", "JavaScript", "Markdown", "YAML", "JSON", "Python", "HTML"],
+  "frameworks": ["React", "Angular", "NestJS", "Express", "Flask", "FastAPI"],
   "fileCount": 502,
   "directoryCount": 92,
   "totalSize": 1838527,
