@@ -51,7 +51,9 @@ describe('PathValidator', () => {
 
     // Mock fs.promises.access for permissions check
     const accessMock = vi.mocked(fs.access);
-    accessMock.mockImplementation(async () => { /* success */ });
+    accessMock.mockImplementation(async () => {
+      /* success */
+    });
   });
 
   afterEach(async () => {

@@ -8,13 +8,5 @@
     "types": ["node", "vitest/globals", "bun-types"]
   },
   "include": ["src/**/*.ts", "bin/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "bin",
-    "**/*.js",
-    "**/__tests__/**",
-    "**/*.test.ts"
-  ]
+  "exclude": ["node_modules", "dist", "build", "bin", "**/*.js", "**/__tests__/**", "**/*.test.ts"]
 }

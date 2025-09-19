@@ -165,7 +165,7 @@ export class PathValidator {
       if (!basicValidation.isValid) {
         return result;
       }
-    
+
       // Check for directory traversal in original input
       if (options.securityChecks !== false) {
         const normalizedInput = inputPath.replace(/\//g, '\\');
@@ -173,7 +173,8 @@ export class PathValidator {
           result.errors.push({
             code: 'DIRECTORY_TRAVERSAL',
             message: 'Path contains directory traversal sequences',
-            details: 'Detected "../" or "..\\" sequences that could be used for path traversal attacks',
+            details:
+              'Detected "../" or "..\\" sequences that could be used for path traversal attacks',
             suggestions: [
               'Avoid using "../" in paths',
               'Use absolute paths when possible',
@@ -183,7 +184,7 @@ export class PathValidator {
           return result;
         }
       }
-    
+
       // Normalize path
       const normalizedPath = this.normalizePath(inputPath, options.basePath);
       result.normalizedPath = normalizedPath;
