@@ -2,11 +2,11 @@
   "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
   "files": {
     "includes": [
-      "**/*.{js,ts,tsx,jsx,cjs}",
-      "packages/**/*.{js,ts,tsx,jsx,cjs}",
-      "scripts/**/*.{js,ts}",
-      "tests/**/*.{js,ts,tsx,cjs}",
-      "*.{js,ts,tsx,jsx,cjs}"
+      "**/*.{js,ts,tsx,jsx,cjs,json,jsonc,css,scss,html}",
+      "packages/**/*.{js,ts,tsx,jsx,cjs,json,jsonc,css,scss,html}",
+      "scripts/**/*.{js,ts,json,jsonc}",
+      "tests/**/*.{js,ts,tsx,cjs,json,jsonc}",
+      "*.{js,ts,tsx,jsx,cjs,json,jsonc}"
     ],
     "maxSize": 12582912,
     "ignoreUnknown": false,
@@ -111,16 +111,23 @@
         "**/temp/**",
         "**/packages/**/temp/**"
       ],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
+      "linter": { "enabled": true },
+      "formatter": { "enabled": true }
     },
     {
       "includes": ["**/packages/**/dist/**", "**/packages/**/build/**"],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
+      "linter": { "enabled": true },
+      "formatter": { "enabled": true }
     },
     {
-      "includes": ["**/__tests__/**", "tests/**", "**/*.test.ts", "**/*.test.tsx"],
+      "includes": [
+        "**/__tests__/**",
+        "tests/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.test.js",
+        "**/*.test.jsx"
+      ],
       "linter": {
         "rules": {
           "suspicious": { "noExplicitAny": "warn" }
@@ -128,7 +135,7 @@
       }
     },
     {
-      "includes": ["**/*.d.ts"],
+      "includes": ["**/*.d.ts", "**/*.d.js"],
       "linter": {
         "rules": {
           "suspicious": { "noExplicitAny": "warn" }
