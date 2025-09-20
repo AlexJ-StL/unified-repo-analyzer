@@ -45,6 +45,8 @@ const mockExportService = exportService as unknown as {
   saveToFile: MockedFunction<Promise<string>>;
 };
 
+// Removed duplicate fs mock - using the one at the top
+// Duplicate fs mock removed - using the one at the top of the file
 // Mock fs
 vi.mock('node:fs', () => ({
   createReadStream: vi.fn(() => {
