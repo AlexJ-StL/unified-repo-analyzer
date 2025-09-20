@@ -256,6 +256,7 @@ tests/e2e/playwright-report/
 analysis-results/*
 
 # Early Extension Workspace Files
+.early.json
 .early.coverage
 .early.coverage/**/*
 .early.coverage/v8/coverage-final.json

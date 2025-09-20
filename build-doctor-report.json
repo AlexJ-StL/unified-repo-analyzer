@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-17T20:04:38.296Z",
+  "timestamp": "2025-09-20T22:31:39.017Z",
   "summary": {
     "passed": 24,
     "warnings": 1,
@@ -75,7 +75,9 @@
       "name": "Dependency Lock File",
       "status": "pass",
       "message": "Lock file found: bun.lock",
-      "suggestions": ["Consider upgrading to bun.lockb format for better performance"]
+      "suggestions": [
+        "Consider upgrading to bun.lockb format for better performance"
+      ]
     },
     {
       "name": "TypeScript Compilation",
@@ -121,7 +123,9 @@
       "name": "Available Memory",
       "status": "warning",
       "message": "Low available memory: 2MB",
-      "suggestions": ["Consider increasing Node.js memory limit with --max-old-space-size"]
+      "suggestions": [
+        "Consider increasing Node.js memory limit with --max-old-space-size"
+      ]
     },
     {
       "name": "Project Directory Access",
@@ -131,7 +135,7 @@
     {
       "name": "Dependencies Size",
       "status": "pass",
-      "message": "Reasonable number of dependencies (690 packages)"
+      "message": "Reasonable number of dependencies (692 packages)"
     }
   ],
   "recoveryActions": [],
