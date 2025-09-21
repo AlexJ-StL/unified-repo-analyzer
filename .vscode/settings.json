@@ -27,5 +27,31 @@
   },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
-  }
+  },
+
+  // Vitest Configuration
+  "vitest.enable": true,
+  "vitest.commandLine": "bun",
+  "vitest.testExplorer": true,
+  "vitest.debugExclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.{idea,git,cache,output,temp}/**",
+    "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
+    "**/temp-test-repos/**",
+    "**/large-performance-test/**"
+  ],
+
+  // Testing Configuration
+  "testing.automaticallyOpenTestResults": "openOnTestFailure",
+  "testing.openTesting": "neverOpen",
+  "testExplorer.useNativeTesting": true,
+  "testExplorer.addToEditorContextMenu": true,
+  "testExplorer.showOnWindowOpen": false,
+
+  // Debug Configuration
+  "debug.terminal.clearBeforeReusing": true,
+  "debug.showBreakpointsInOverviewRuler": true,
+  "debug.showInlineBreakpointCandidates": true,
+  "debug.showSubSessionsInToolBar": true
 }

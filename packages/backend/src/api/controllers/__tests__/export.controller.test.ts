@@ -2,6 +2,8 @@ vi.mock('node:fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:fs')>();
   return {
     ...actual,
+    default: {
+      ...actual,
     createReadStream: vi.fn(() => {
       const { Readable } = require('node:stream');
       const stream = new Readable();

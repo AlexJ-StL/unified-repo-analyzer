@@ -54,6 +54,14 @@ vi.mock('../../core/AnalysisEngine', () => ({
 vi.mock('../../core/IndexSystem', () => ({
   IndexSystem: vi.fn(() => mockIndexSystem),
 }));
+// Mock HealthService
+vi.mock('../../services/health.service', () => ({
+  HealthService: class MockHealthService {
+    healthCheckHandler = vi.fn();
+    readinessHandler = vi.fn();
+    livenessHandler = vi.fn();
+  },
+}));
 
 describe('API Integration Tests', () => {
   // Default mock for BatchAnalysisResult

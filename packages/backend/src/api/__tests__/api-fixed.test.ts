@@ -86,8 +86,6 @@ vi.mock('../../container/ServiceContainer', () => ({
     },
   },
 }));
-  })),
-}));
 
 // Debug: Check if app import triggers HealthService
 console.log('About to import app...');
