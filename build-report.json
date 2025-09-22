@@ -24,9 +24,7 @@
       "stdout": "src/commands/analyze.ts(40,36): error TS2345: Argument of type 'Promise<string>' is not assignable to parameter of type 'string'.\r\nsrc/commands/analyze.ts(65,9): error TS2322: Type 'Promise<string>' is not assignable to type 'string'.\r\nsrc/commands/analyze.ts(112,50): error TS2345: Argument of type 'Promise<string>' is not assignable to parameter of type 'string'.\r\nsrc/utils/fs-utils.ts(3,10): error TS2305: Module '\"@unified-repo-analyzer/shared\"' has no exported member 'pathValidator'.\r\nsrc/utils/fs-utils.ts(3,25): error TS2305: Module '\"@unified-repo-analyzer/shared\"' has no exported member 'SecurityLevel'.\r\n",
       "stderr": "$ bun run build:clean && bun run build:types && bun run build:shebang\n$ bunx rimraf dist\n$ bunx tsc --project tsconfig.json\n",
       "error": "$ bun run build:clean && bun run build:types && bun run build:shebang\n$ bunx rimraf dist\n$ bunx tsc --project tsconfig.json\n",
-      "suggestions": [
-        "Check build logs for detailed error information"
-      ]
+      "suggestions": ["Check build logs for detailed error information"]
     },
     "@unified-repo-analyzer/frontend": {
       "success": true,

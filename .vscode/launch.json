@@ -6,18 +6,11 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/packages/frontend/node_modules/.bin/vitest",
-      "args": [
-        "run",
-        "--reporter=verbose",
-        "--no-coverage"
-      ],
+      "args": ["run", "--reporter=verbose", "--no-coverage"],
       "cwd": "${workspaceFolder}/packages/frontend",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "env": {
         "NODE_ENV": "test"
       }
@@ -27,17 +20,11 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/packages/frontend/node_modules/.bin/vitest",
-      "args": [
-        "--reporter=verbose",
-        "--no-coverage"
-      ],
+      "args": ["--reporter=verbose", "--no-coverage"],
       "cwd": "${workspaceFolder}/packages/frontend",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "env": {
         "NODE_ENV": "test"
       }
@@ -47,18 +34,11 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/packages/shared/node_modules/.bin/vitest",
-      "args": [
-        "run",
-        "--reporter=verbose",
-        "--no-coverage"
-      ],
+      "args": ["run", "--reporter=verbose", "--no-coverage"],
       "cwd": "${workspaceFolder}/packages/shared",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "env": {
         "NODE_ENV": "test"
       }
@@ -68,19 +48,11 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/vitest",
-      "args": [
-        "run",
-        "${file}",
-        "--reporter=verbose",
-        "--no-coverage"
-      ],
+      "args": ["run", "${file}", "--reporter=verbose", "--no-coverage"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "env": {
         "NODE_ENV": "test"
       }
@@ -90,18 +62,11 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/vitest",
-      "args": [
-        "run",
-        "--coverage",
-        "--reporter=verbose"
-      ],
+      "args": ["run", "--coverage", "--reporter=verbose"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "env": {
         "NODE_ENV": "test"
       }

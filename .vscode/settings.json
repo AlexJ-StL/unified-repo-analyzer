@@ -31,7 +31,6 @@
 
   // Vitest Configuration
   "vitest.enable": true,
-  "vitest.commandLine": "bun",
   "vitest.testExplorer": true,
   "vitest.debugExclude": [
     "**/node_modules/**",
