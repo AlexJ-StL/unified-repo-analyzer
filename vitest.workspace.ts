@@ -1,6 +1,6 @@
-import { defineWorkspace } from 'vitest/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { defineWorkspace } from 'vitest/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,7 +10,7 @@ const baseConfig = {
   test: {
     // CRITICAL: Ultra-conservative resource limits to prevent system overload
     maxConcurrency: 1,
-    pool: 'threads', // Use threads instead of forks for Bun compatibility
+    pool: 'threads'
     poolOptions: {
       threads: {
         singleThread: true,
@@ -155,12 +155,7 @@ export default defineWorkspace([
       ],
 
       // Root-level exclusions
-      exclude: [
-        ...baseConfig.test.exclude,
-        'packages/**',
-        '**/node_modules/**',
-        '**/dist/**',
-      ],
+      exclude: [...baseConfig.test.exclude, 'packages/**', '**/node_modules/**', '**/dist/**'],
     },
   },
 ]);

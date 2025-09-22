@@ -28,6 +28,8 @@ export function mockModule<T extends Record<string, any>>(
   if (typeof vi.mock === 'function') {
     vi.mock(modulePath, () => mockImplementation);
   } else {
+    // Fallback for environments without vi.mock
+    console.warn(`Mocking not available in current environment for module: ${modulePath}`);
   }
 }
 
