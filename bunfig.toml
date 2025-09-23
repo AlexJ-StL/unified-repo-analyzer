@@ -4,15 +4,12 @@
 registry = "https://registry.npmjs.org"
 # Automatically install peer dependencies
 auto = "auto"
+# If false, generate bun.lockb file
+saveTextLockfile = false
 
 [install.cache]
 # Enable cache for faster installs
 disable = false
-
-[install.lockfile]
-# Use binary lock file format
-save = true
-print = "bun"
 
 [run]
 # Use bun runtime for scripts

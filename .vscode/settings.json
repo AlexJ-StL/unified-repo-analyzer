@@ -5,13 +5,13 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
@@ -28,7 +28,6 @@
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
-
   // Vitest Configuration
   "vitest.enable": true,
   "vitest.testExplorer": true,
@@ -40,17 +39,22 @@
     "**/temp-test-repos/**",
     "**/large-performance-test/**"
   ],
-
   // Testing Configuration
-  "testing.automaticallyOpenTestResults": "openOnTestFailure",
+  "testing.automaticallyOpenTestResults": "neverOpen",
   "testing.openTesting": "neverOpen",
   "testExplorer.useNativeTesting": true,
   "testExplorer.addToEditorContextMenu": true,
   "testExplorer.showOnWindowOpen": false,
-
   // Debug Configuration
   "debug.terminal.clearBeforeReusing": true,
   "debug.showBreakpointsInOverviewRuler": true,
   "debug.showInlineBreakpointCandidates": true,
-  "debug.showSubSessionsInToolBar": true
+  "debug.showSubSessionsInToolBar": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "markdown-mermaid.lightModeTheme": "dark",
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
+  "npm.packageManager": "bun",
+  "npm.scriptRunner": "bun",
+  "npm-intellisense.showBuildInLibs": true,
+  "php.executablePath": ""
 }

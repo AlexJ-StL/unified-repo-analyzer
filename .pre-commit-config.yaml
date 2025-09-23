@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: biome-lint
+        name: Run Biome lint
+        entry: bunx biome check --reporter summary
+        language: system
+        files: \.(js|ts|jsx|tsx|json)$
+        pass_filenames: true
+      - id: biome-format
+        name: Run Biome format
+        entry: bunx biome format --write
+        language: system
+        files: \.(js|ts|jsx|tsx|json)$
+        pass_filenames: true

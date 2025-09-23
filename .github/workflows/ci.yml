@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: "bun"
 
       - name: Install dependencies (Bun)
         if: matrix.runtime == 'bun'
@@ -44,7 +44,7 @@ jobs:
 
       - name: Install dependencies (Node)
         if: matrix.runtime == 'node'
-        run: npm ci
+        run: bun ci
 
       - name: Run tests with CI configuration (Bun)
         if: matrix.runtime == 'bun'
@@ -59,7 +59,7 @@ jobs:
 
       - name: Run tests with CI configuration (Node)
         if: matrix.runtime == 'node'
-        run: npm run test:ci
+        run: bun run test:ci
         env:
           CI: true
           NODE_ENV: test

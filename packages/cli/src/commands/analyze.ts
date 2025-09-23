@@ -35,8 +35,17 @@ export async function executeAnalyze(
   const progress = new ProgressTracker('Repository Analysis');
 
   try {
+    console.log('DEBUG: executeAnalyze called with repoPath:', repoPath);
+
     // Validate repository path
-    const absolutePath = validateRepositoryPath(repoPath);
+    const absolutePath = await validateRepositoryPath(repoPath);
+    console.log(
+      'DEBUG: validateRepositoryPath returned:',
+      absolutePath,
+      'Type:',
+      typeof absolutePath
+    );
+
     const repoName = path.basename(absolutePath);
 
     // Prepare analysis options
@@ -107,6 +116,12 @@ export async function executeAnalyze(
         },
       };
     } else {
+      console.log(
+        'DEBUG: About to call API with absolutePath:',
+        absolutePath,
+        'Type:',
+        typeof absolutePath
+      );
       // Call API to analyze repository
       const apiClient = new ApiClient();
       result = await apiClient.analyzeRepository(absolutePath, analysisOptions);

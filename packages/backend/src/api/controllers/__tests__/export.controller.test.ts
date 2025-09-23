@@ -4,16 +4,17 @@ vi.mock('node:fs', async (importOriginal) => {
     ...actual,
     default: {
       ...actual,
-    createReadStream: vi.fn(() => {
-      const { Readable } = require('node:stream');
-      const stream = new Readable();
-      stream.push(null);
-      return stream;
-    }),
-    stat: vi.fn(),
-    mkdir: vi.fn(),
-    readdir: vi.fn(),
-    unlink: vi.fn(),
+      createReadStream: vi.fn(() => {
+        const { Readable } = require('node:stream');
+        const stream = new Readable();
+        stream.push(null);
+        return stream;
+      }),
+      stat: vi.fn(),
+      mkdir: vi.fn(),
+      readdir: vi.fn(),
+      unlink: vi.fn(),
+    },
   };
 });
 

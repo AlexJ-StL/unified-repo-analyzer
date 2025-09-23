@@ -4,6 +4,7 @@
   "description": "Command-line interface for the Unified Repository Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "private": true,
   "bin": {
     "repo-analyzer": "./dist/bin/repo-analyzer.js"

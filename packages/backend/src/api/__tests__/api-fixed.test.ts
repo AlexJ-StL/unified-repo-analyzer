@@ -10,7 +10,12 @@ import { mockManager } from '../../../../../tests/MockManager.js';
 import { mockModule } from '../../../../../tests/setup-minimal-simple.js';
 
 // Mock the modules before importing the app
-vi.mock('node:fs/promises');
+vi.mock('node:fs/promises', () => ({
+  stat: vi.fn(),
+  writeFile: vi.fn(),
+  unlink: vi.fn(),
+  // Add other methods as needed
+}));
 
 mockModule('../../core/AnalysisEngine', () => ({
   AnalysisEngine: class MockAnalysisEngine {
@@ -57,6 +62,9 @@ vi.mock('socket.io', () => ({
     engine: {
       on: vi.fn(),
     },
+  })),
+}));
+
 // Mock HealthService before importing app
 vi.mock('../../services/health.service', () => ({
   HealthService: class MockHealthService {
@@ -93,27 +101,27 @@ console.log('About to import app...');
 // Import app after mocking
 import { app } from '../../index.js';
 
+// Mock classes for type safety (defined before use)
+class MockAnalysisEngine {
+  analyzeRepository = mockManager.mockFunction();
+  analyzeMultipleRepositories = mockManager.mockFunction();
+  analyzeMultipleRepositoriesWithQueue = mockManager.mockFunction();
+  generateSynopsis = mockManager.mockFunction();
+  updateIndex = mockManager.mockFunction();
+  searchRepositories = mockManager.mockFunction();
+  findSimilarRepositories = mockManager.mockFunction();
+  suggestCombinations = mockManager.mockFunction();
+}
+
+class MockIndexSystem {
+  getIndex = mockManager.mockFunction();
+  updateIndex = mockManager.mockFunction();
+  searchIndex = mockManager.mockFunction();
+}
+
 describe('Fixed API Integration Tests', () => {
   let mockAnalysisEngine: InstanceType<typeof MockAnalysisEngine>;
   let mockIndexSystem: InstanceType<typeof MockIndexSystem>;
-
-  // Mock classes for type safety
-  class MockAnalysisEngine {
-    analyzeRepository = mockManager.mockFunction();
-    analyzeMultipleRepositories = mockManager.mockFunction();
-    analyzeMultipleRepositoriesWithQueue = mockManager.mockFunction();
-    generateSynopsis = mockManager.mockFunction();
-    updateIndex = mockManager.mockFunction();
-    searchRepositories = mockManager.mockFunction();
-    findSimilarRepositories = mockManager.mockFunction();
-    suggestCombinations = mockManager.mockFunction();
-  }
-
-  class MockIndexSystem {
-    getIndex = mockManager.mockFunction();
-    updateIndex = mockManager.mockFunction();
-    searchIndex = mockManager.mockFunction();
-  }
 
   const mockStats: Stats = {
     isFile: () => true,
@@ -143,7 +151,7 @@ describe('Fixed API Integration Tests', () => {
     birthtime: new Date(),
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Create fresh mock instances
     mockAnalysisEngine = new MockAnalysisEngine();
     mockIndexSystem = new MockIndexSystem();
@@ -185,124 +193,93 @@ describe('Fixed API Integration Tests', () => {
       },
       insights: {
         executiveSummary: 'Test summary',
-  describe('Health Check', () => {
-    it('should return status ok', async () => {
-      console.log('Running health check test...');
-    vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-    vi.mocked(fs.unlink).mockResolvedValue(undefined);
-    vi.mocked(fs.stat).mockResolvedValue(mockStats);
-
-    const response = await request(app).get('/health');
-    console.log('Health check response:', response.status, response.body);
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('status', 'healthy');
-  });
-});
-technicalBreakdown: 'Test breakdown', recommendations;
-: [],
+        technicalBreakdown: 'Test breakdown',
+        recommendations: [],
         potentialIssues: [],
       },
-      metadata:
-{
-  analysisMode: 'standard' as const, processingTime;
-  : 100,
-}
-,
-    })
+      metadata: {
+        analysisMode: 'standard' as const,
+        processingTime: 100,
+      },
+    });
 
-mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue(
-{
-  id: 'batch-123', repositories;
-  : [],
-  createdAt: new Date(),
-  processingTime: 0,
-}
-)
+    mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue({
+      id: 'batch-123',
+      repositories: [],
+      createdAt: new Date(),
+      processingTime: 0,
+    });
 
-mockAnalysisEngine.generateSynopsis.mockResolvedValue('');
-mockAnalysisEngine.updateIndex.mockResolvedValue(undefined);
-mockAnalysisEngine.searchRepositories.mockResolvedValue([]);
-mockAnalysisEngine.findSimilarRepositories.mockResolvedValue([]);
-mockAnalysisEngine.suggestCombinations.mockResolvedValue([]);
+    mockAnalysisEngine.generateSynopsis.mockResolvedValue('');
+    mockAnalysisEngine.updateIndex.mockResolvedValue(undefined);
+    mockAnalysisEngine.searchRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.findSimilarRepositories.mockResolvedValue([]);
+    mockAnalysisEngine.suggestCombinations.mockResolvedValue([]);
 
-mockIndexSystem.getIndex.mockReturnValue({
-  repositories: [],
-  relationships: [],
-  tags: [],
-  lastUpdated: new Date(),
-});
-})
-
-describe('Health Check', () =>
-{
-  it('should return status ok', async () => {
-    vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-    vi.mocked(fs.unlink).mockResolvedValue(undefined);
-    vi.mocked(fs.stat).mockResolvedValue(mockStats);
-
-    const response = await request(app).get('/health');
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('status', 'healthy');
-  });
-}
-)
-
-describe('Repository Analysis', () => {
-  it('should handle analyze request', async () => {
-    const response = await request(app)
-      .post('/api/analyze')
-      .send({
-        path: '/test/repo',
-        options: {
-          mode: 'standard',
-          maxFiles: 100,
-        },
-      });
-
-    // Test should not fail due to mock issues
-    expect(response.status).toBeGreaterThanOrEqual(200);
+    mockIndexSystem.getIndex.mockReturnValue({
+      repositories: [],
+      relationships: [],
+      tags: [],
+      lastUpdated: new Date(),
+    });
   });
 
-  it('should handle batch analyze request', async () => {
-    const response = await request(app)
-      .post('/api/analyze/batch')
-      .send({
-        paths: ['/test/repo1', '/test/repo2'],
-        options: {
-          mode: 'quick',
-        },
-      });
+  describe('Repository Analysis', () => {
+    it('should handle analyze request', async () => {
+      const response = await request(app)
+        .post('/api/analyze')
+        .send({
+          path: '/test/repo',
+          options: {
+            mode: 'standard',
+            maxFiles: 100,
+          },
+        });
 
-    // Test should not fail due to mock issues
-    expect(response.status).toBeGreaterThanOrEqual(200);
+      // Test should not fail due to mock issues
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    });
+
+    it('should handle batch analyze request', async () => {
+      const response = await request(app)
+        .post('/api/analyze/batch')
+        .send({
+          paths: ['/test/repo1', '/test/repo2'],
+          options: {
+            mode: 'quick',
+          },
+        });
+
+      // Test should not fail due to mock issues
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    });
   });
-});
 
-describe('Repository Management', () => {
-  it('should handle get repositories request', async () => {
-    const response = await request(app).get('/api/repositories');
+  describe('Repository Management', () => {
+    it('should handle get repositories request', async () => {
+      const response = await request(app).get('/api/repositories');
 
-    // Test should not fail due to mock issues
-    expect(response.status).toBeGreaterThanOrEqual(200);
-  });
+      // Test should not fail due to mock issues
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    });
 
-  it('should handle get repository by ID request', async () => {
-    const response = await request(app).get('/api/repositories/123');
+    it('should handle get repository by ID request', async () => {
+      const response = await request(app).get('/api/repositories/123');
 
-    // Test should not fail due to mock issues
-    expect(response.status).toBeGreaterThanOrEqual(200);
-  });
+      // Test should not fail due to mock issues
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    });
 
-  it('should handle search repositories request', async () => {
-    const response = await request(app)
-      .get('/api/repositories/search')
-      .query({
-        languages: ['JavaScript'],
-        frameworks: ['React'],
-      });
+    it('should handle search repositories request', async () => {
+      const response = await request(app)
+        .get('/api/repositories/search')
+        .query({
+          languages: ['JavaScript'],
+          frameworks: ['React'],
+        });
 
-    // Test should not fail due to mock issues
-    expect(response.status).toBeGreaterThanOrEqual(200);
+      // Test should not fail due to mock issues
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    });
   });
 });
-})

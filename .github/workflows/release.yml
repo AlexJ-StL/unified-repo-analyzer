@@ -39,10 +39,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'bun'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Determine version
         id: version
@@ -81,10 +81,11 @@ jobs:
 
       - name: Run full test suite
         run: |
-          npm run build
-          npm run test
-          npm run test:integration
-          npm run lint
+          bun run build
+          bun run test
+          bun run test:integration
+          bun run lint
+          bunx biome format . --check
 
   # Job 2: Build Release Artifacts
   build:
@@ -114,21 +115,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'bun'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Update version in package.json files
         run: |
-          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version --workspaces
+          bun version ${{ needs.validate.outputs.version }} --no-git-tag-version --workspaces
 
       - name: Build all packages
-        run: npm run build
+        run: bun run build
 
       - name: Package CLI for ${{ matrix.platform }}
         run: |
-          npm run package:cli -- --platform ${{ matrix.platform }} --arch ${{ matrix.arch }}
+          bun run package:cli -- --platform ${{ matrix.platform }} --arch ${{ matrix.arch }}
 
       - name: Create platform-specific archive
         run: |
@@ -213,9 +214,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Job 4: Publish to npm
-  npm-publish:
-    name: Publish to npm
+  # Job 4: Publish to bun
+  bun-publish:
+    name: Publish to bun
     runs-on: ubuntu-latest
     needs: [validate, build]
 
@@ -227,34 +228,34 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
+          cache: 'bun'
+          registry-url: 'https://registry.bunjs.org'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Update version in package.json files
         run: |
-          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version --workspaces
+          bun version ${{ needs.validate.outputs.version }} --no-git-tag-version --workspaces
 
       - name: Build all packages
-        run: npm run build
+        run: bun run build
 
-      - name: Publish packages to npm
+      - name: Publish packages to bun
         run: |
           if [ "${{ needs.validate.outputs.is_prerelease }}" = "true" ]; then
-            npm publish --tag beta --workspaces
+            bun publish --tag beta --workspaces
           else
-            npm publish --workspaces
+            bun publish --workspaces
           fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.bun_TOKEN }}
 
   # Job 5: Create GitHub Release
   github-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [validate, build, docker, npm-publish]
+    needs: [validate, build, docker, bun-publish]
 
     steps:
       - name: Checkout code
@@ -295,9 +296,9 @@ jobs:
 
             ## Installation
 
-            ### npm
+            ### bun
             ```bash
-            npm install -g @unified-repo-analyzer/cli@${{ needs.validate.outputs.version }}
+            bun install -g @unified-repo-analyzer/cli@${{ needs.validate.outputs.version }}
             ```
 
             ### Docker
@@ -335,10 +336,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'bun'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Update version in documentation
         run: |
@@ -346,10 +347,10 @@ jobs:
           sed -i "s/Version: .*/Version: ${{ needs.validate.outputs.version }}/" docs/user-guide/README.md
 
       - name: Generate API documentation
-        run: npm run docs:api
+        run: bun run docs:api
 
       - name: Build documentation site
-        run: npm run docs:build
+        run: bun run docs:build
 
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
@@ -381,7 +382,7 @@ jobs:
 
           # Update version in package.json files for next development cycle
           NEXT_VERSION=$(echo "${{ needs.validate.outputs.version }}" | awk -F. '{$NF = $NF + 1; print}' OFS=.)
-          npm version ${NEXT_VERSION}-dev --no-git-tag-version --workspaces
+          bun version ${NEXT_VERSION}-dev --no-git-tag-version --workspaces
 
           git add .
           git commit -m "chore: bump version to ${NEXT_VERSION}-dev for next development cycle"
@@ -404,7 +405,7 @@ jobs:
           text: |
             🚀 Successfully released Unified Repository Analyzer v${{ needs.validate.outputs.version }}!
 
-            📦 npm: https://www.npmjs.com/package/@unified-repo-analyzer/cli
+            📦 bun: https://www.bunjs.com/package/@unified-repo-analyzer/cli
             🐳 Docker: ${{ secrets.DOCKER_USERNAME }}/unified-repo-analyzer:${{ needs.validate.outputs.version }}
             📖 Release Notes: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.validate.outputs.version }}
         env:
@@ -435,15 +436,15 @@ jobs:
   rollback:
     name: Rollback on Failure
     runs-on: ubuntu-latest
-    needs: [validate, build, docker, npm-publish, github-release]
+    needs: [validate, build, docker, bun-publish, github-release]
     if: failure()
 
     steps:
-      - name: Rollback npm publish
-        if: needs.npm-publish.result == 'success'
+      - name: Rollback bun publish
+        if: needs.bun-publish.result == 'success'
         run: |
-          echo "Rolling back npm packages..."
-          # Note: npm unpublish is restricted, so this would need manual intervention
+          echo "Rolling back bun packages..."
+          # Note: bun unpublish is restricted, so this would need manual intervention
           echo "Manual intervention required to unpublish packages"
 
       - name: Delete Docker images

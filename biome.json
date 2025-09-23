@@ -6,7 +6,8 @@
       "packages/**/*.{js,ts,tsx,jsx,cjs,json,jsonc,css,scss,html}",
       "scripts/**/*.{js,ts,json,jsonc}",
       "tests/**/*.{js,ts,tsx,cjs,json,jsonc}",
-      "*.{js,ts,tsx,jsx,cjs,json,jsonc}"
+      "*.{js,ts,tsx,jsx,cjs,json,jsonc}",
+      "!**/.early.coverage"
     ],
     "maxSize": 12582912,
     "ignoreUnknown": false,

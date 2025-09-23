@@ -8,6 +8,10 @@ import { CLIError, ErrorType } from './error-handler';
  */
 export async function validateRepositoryPath(repoPath: string): Promise<string> {
   try {
+    console.log('DEBUG: validateRepositoryPath called with:', repoPath);
+    console.log('DEBUG: pathValidator available:', typeof pathValidator);
+    console.log('DEBUG: SecurityLevel available:', typeof SecurityLevel);
+
     // Use centralized path validation with strict security
     const validationResult = await pathValidator.quickValidate(repoPath, SecurityLevel.STRICT);
 

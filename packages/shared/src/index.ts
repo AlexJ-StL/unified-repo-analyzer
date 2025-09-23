@@ -34,5 +34,6 @@ export * from './utils/error-classifier';
 export { ErrorClassifier, errorClassifier } from './utils/error-classifier.js';
 export * from './utils/error-formatter';
 export * from './utils/error-handling';
+export * from './utils/path-utils';
 export * from './validation';
 export { userPreferencesSchema } from './validation/schemas.js';

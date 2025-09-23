@@ -10,7 +10,7 @@ const baseConfig = {
   test: {
     // CRITICAL: Ultra-conservative resource limits to prevent system overload
     maxConcurrency: 1,
-    pool: 'threads'
+    pool: 'threads',
     poolOptions: {
       threads: {
         singleThread: true,
