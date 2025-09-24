@@ -406,7 +406,7 @@ export class ProviderRegistry {
         ) {
           throw new Error('401 Unauthorized - Invalid API key');
         }
-        if (!config.apiKey) {
+        if (config.apiKey == null || config.apiKey === '') {
           throw new Error('API key is required for OpenRouter testing');
         }
         await provider.fetchModels(config.apiKey);

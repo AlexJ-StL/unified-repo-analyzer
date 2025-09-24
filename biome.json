@@ -122,13 +122,13 @@
         "**/temp/**",
         "**/packages/**/temp/**"
       ],
-      "linter": { "enabled": true },
-      "formatter": { "enabled": true }
+      "linter": { "enabled": false },
+      "formatter": { "enabled": false }
     },
     {
       "includes": ["**/packages/**/dist/**", "**/packages/**/build/**"],
-      "linter": { "enabled": true },
-      "formatter": { "enabled": true }
+      "linter": { "enabled": false },
+      "formatter": { "enabled": false }
     },
     {
       "includes": [
