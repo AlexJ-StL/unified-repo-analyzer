@@ -6,6 +6,10 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { vi } from 'vitest';
 
+if (typeof globalThis.vi === 'undefined') {
+  globalThis.vi = vi;
+}
+
 // Set test environment variables BEFORE importing any services
 process.env.NODE_ENV = 'test';
 

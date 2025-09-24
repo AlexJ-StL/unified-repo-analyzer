@@ -357,6 +357,14 @@ export class PathHandler {
                 errorName === 'AbortError'
                   ? 'The operation was cancelled'
                   : `Operation exceeded the ${timeoutMs}ms timeout limit`,
+              suggestions:
+                errorName === 'AbortError'
+                  ? undefined
+                  : [
+                      'Increase the timeout value',
+                      'Check network connectivity',
+                      'Try with a shorter path',
+                    ],
             },
           ],
           warnings: [],
@@ -366,6 +374,11 @@ export class PathHandler {
             permissions: { read: false, write: false, execute: false },
           },
         };
+        try {
+          result.normalizedPath = this.normalizePath(inputPath);
+        } catch {
+          // Ignore normalization errors during exception handling
+        }
         return result;
       }
 
@@ -388,6 +401,11 @@ export class PathHandler {
           permissions: { read: false, write: false, execute: false },
         },
       };
+      try {
+        result.normalizedPath = this.normalizePath(inputPath);
+      } catch {
+        // Ignore normalization errors during exception handling
+      }
 
       logger.warn('Path validation failed', {
         inputPath,
@@ -503,6 +521,14 @@ export class PathHandler {
       result.metadata.exists = existsResult.exists;
       result.metadata.isDirectory = existsResult.isDirectory;
       result.metadata.size = existsResult.size;
+
+      if (!existsResult.exists) {
+        result.errors.push({
+          code: 'PATH_NOT_FOUND',
+          message: 'Path does not exist',
+          details: `The path '${normalizedPath}' was not found on the filesystem`,
+        });
+      }
 
       onProgress?.({
         stage: 'existence_check',
@@ -1123,6 +1149,26 @@ export class PathHandler {
           message: 'Invalid drive letter format',
           details: 'Drive letter must be A-Z followed by a colon',
           suggestions: ['Use format like C:\\ or D:\\'],
+        });
+      } else if (inputPath.startsWith(':')) {
+        // Check for paths starting with colon (like ":test")
+        errors.push({
+          code: 'INVALID_DRIVE_LETTER',
+          message: 'Invalid drive letter format',
+          details: 'Path cannot start with a colon without a valid drive letter',
+          suggestions: ['Use format like C:\\ or D:\\', 'Remove the leading colon'],
+        });
+      } else if (inputPath.startsWith('\\') && !inputPath.startsWith('\\\\')) {
+        // Check for paths starting with single backslash (like "\test") but not valid UNC paths
+        errors.push({
+          code: 'INVALID_DRIVE_LETTER',
+          message: 'Invalid drive letter format',
+          details:
+            'Single backslash paths are not valid. Use proper UNC format: \\\\server\\share\\path or a drive letter like C:\\',
+          suggestions: [
+            'Use proper UNC format: \\\\server\\share\\path',
+            'Use a drive letter like C:\\',
+          ],
         });
       }
 

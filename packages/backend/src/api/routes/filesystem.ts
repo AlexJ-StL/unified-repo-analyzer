@@ -2,7 +2,7 @@
  * Filesystem routes
  */
 
-import { Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import { query } from 'express-validator';
 import * as filesystemController from '../controllers/filesystem.controller.js';
 
@@ -15,14 +15,14 @@ const router = Router();
 router.get(
   '/browse',
   [query('path').isString().notEmpty().withMessage('Path is required')],
-  filesystemController.browseDirectory as any
+  filesystemController.browseDirectory as RequestHandler
 );
 
 /**
  * GET /api/filesystem/home
  * Get the user's home directory
  */
-router.get('/home', filesystemController.getHomeDirectory as any);
+router.get('/home', filesystemController.getHomeDirectory as RequestHandler);
 
 /**
  * GET /api/filesystem/validate
@@ -31,13 +31,13 @@ router.get('/home', filesystemController.getHomeDirectory as any);
 router.get(
   '/validate',
   [query('path').isString().notEmpty().withMessage('Path is required')],
-  filesystemController.validateDirectory as any
+  filesystemController.validateDirectory as RequestHandler
 );
 
 /**
  * GET /api/filesystem/recent-repositories
  * Get recent repositories from history
  */
-router.get('/recent-repositories', filesystemController.getRecentRepositories as any);
+router.get('/recent-repositories', filesystemController.getRecentRepositories as RequestHandler);
 
 export default router;

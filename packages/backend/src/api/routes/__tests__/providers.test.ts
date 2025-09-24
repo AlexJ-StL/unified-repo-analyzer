@@ -2,17 +2,41 @@
  * Tests for providers API routes
  */
 
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Request, Response } from 'express';
+import { beforeEach, describe, expect, type MockedFunction, test, vi } from 'vitest';
 import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
 
 // Import the route handler directly
 import providersRouter from '../providers.js';
 
+interface ProviderInfo {
+  id: string;
+  configured: boolean;
+  model?: string;
+  displayName: string;
+  available: boolean;
+  status: string;
+  capabilities: string[];
+}
+
+interface MockResponse {
+  json: MockedFunction<(data: Record<string, unknown>) => MockResponse>;
+  status: MockedFunction<(code: number) => MockResponse>;
+}
+
+interface RouterLayer {
+  route?: {
+    path: string;
+    methods: { get?: boolean };
+    stack: Array<{ handle: (req: Request, res: Response) => Promise<void> }>;
+  };
+}
+
 // Helper function to create mock response object
-function createMockResponse() {
-  const res: any = {
-    json: vi.fn(),
-    status: vi.fn(),
+function createMockResponse(): MockResponse {
+  const res = {
+    json: vi.fn() as MockedFunction<(data: Record<string, unknown>) => MockResponse>,
+    status: vi.fn() as MockedFunction<(code: number) => MockResponse>,
   };
   res.status.mockReturnValue(res);
   return res;
@@ -21,13 +45,15 @@ function createMockResponse() {
 // Extract the GET / handler from the router
 function getProvidersHandler() {
   // Access the router's stack to find the GET / handler
-  const stack = (providersRouter as any).stack;
-  const layer = stack.find((l: any) => l.route && l.route.path === '/' && l.route.methods.get);
-  return layer ? layer.route.stack[0].handle : null;
+  const stack = (providersRouter as { stack: RouterLayer[] }).stack;
+  const layer = stack.find(
+    (l: RouterLayer) => l.route && l.route.path === '/' && l.route.methods.get
+  );
+  return layer ? layer.route?.stack[0].handle : null;
 }
 
 describe('providers routes', () => {
-  let handler: any;
+  let handler: (req: Request, res: Response) => Promise<void>;
 
   beforeEach(() => {
     // Reset the registry before each test
@@ -51,7 +77,7 @@ describe('providers routes', () => {
       });
 
       // Create a mock request and response
-      const req: any = {};
+      const req: Request = {} as Request;
       const res = createMockResponse();
 
       // Call the route handler directly
@@ -66,9 +92,11 @@ describe('providers routes', () => {
       expect(response.providers).toHaveLength(4); // claude, gemini, openrouter, mock
 
       // Check that configured providers are marked as configured
-      const claudeProvider = response.providers.find((p: any) => p.id === 'claude');
-      const openrouterProvider = response.providers.find((p: any) => p.id === 'openrouter');
-      const mockProvider = response.providers.find((p: any) => p.id === 'mock');
+      const claudeProvider = response.providers.find((p: ProviderInfo) => p.id === 'claude');
+      const openrouterProvider = response.providers.find(
+        (p: ProviderInfo) => p.id === 'openrouter'
+      );
+      const mockProvider = response.providers.find((p: ProviderInfo) => p.id === 'mock');
 
       expect(claudeProvider).toBeDefined();
       expect(claudeProvider.configured).toBe(true);
@@ -84,7 +112,7 @@ describe('providers routes', () => {
 
     test('should handle errors gracefully', async () => {
       // Create a mock request and response
-      const req: any = {};
+      const req: Request = {} as Request;
       const res = createMockResponse();
 
       // Mock an error in the registry
@@ -107,7 +135,7 @@ describe('providers routes', () => {
   describe('Requirements Validation', () => {
     test('should meet requirement 1.1 - OpenRouter listed as available provider', async () => {
       // Create a mock request and response
-      const req: any = {};
+      const req: Request = {} as Request;
       const res = createMockResponse();
 
       // Call the route handler directly
@@ -116,7 +144,9 @@ describe('providers routes', () => {
       // Verify OpenRouter is listed
       expect(res.json).toHaveBeenCalled();
       const response = res.json.mock.calls[0][0];
-      const openrouterProvider = response.providers.find((p: any) => p.id === 'openrouter');
+      const openrouterProvider = response.providers.find(
+        (p: ProviderInfo) => p.id === 'openrouter'
+      );
 
       expect(openrouterProvider).toBeDefined();
       expect(openrouterProvider.displayName).toBe('OpenRouter');
@@ -132,7 +162,7 @@ describe('providers routes', () => {
       });
 
       // Create a mock request and response
-      const req: any = {};
+      const req: Request = {} as Request;
       const res = createMockResponse();
 
       // Call the route handler directly
@@ -142,7 +172,7 @@ describe('providers routes', () => {
       expect(res.json).toHaveBeenCalled();
       const response = res.json.mock.calls[0][0];
 
-      response.providers.forEach((provider: any) => {
+      response.providers.forEach((provider: ProviderInfo) => {
         expect(provider).toHaveProperty('status');
         expect(provider).toHaveProperty('configured');
         expect(provider).toHaveProperty('capabilities');
@@ -152,7 +182,7 @@ describe('providers routes', () => {
 
     test('should meet requirement 7.3 - clearly indicate provider capabilities', async () => {
       // Create a mock request and response
-      const req: any = {};
+      const req: Request = {} as Request;
       const res = createMockResponse();
 
       // Call the route handler directly
@@ -162,9 +192,11 @@ describe('providers routes', () => {
       expect(res.json).toHaveBeenCalled();
       const response = res.json.mock.calls[0][0];
 
-      const openrouterProvider = response.providers.find((p: any) => p.id === 'openrouter');
-      const claudeProvider = response.providers.find((p: any) => p.id === 'claude');
-      const geminiProvider = response.providers.find((p: any) => p.id === 'gemini');
+      const openrouterProvider = response.providers.find(
+        (p: ProviderInfo) => p.id === 'openrouter'
+      );
+      const claudeProvider = response.providers.find((p: ProviderInfo) => p.id === 'claude');
+      const geminiProvider = response.providers.find((p: ProviderInfo) => p.id === 'gemini');
 
       // Verify OpenRouter capabilities
       expect(openrouterProvider.capabilities).toContain('text-generation');

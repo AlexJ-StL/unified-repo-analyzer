@@ -2,7 +2,7 @@
  * Path validation routes
  */
 
-import { Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import { body } from 'express-validator';
 import * as pathController from '../controllers/path.controller.js';
 
@@ -30,13 +30,13 @@ router.post(
       .isBoolean()
       .withMessage('validatePermissions must be a boolean'),
   ],
-  pathController.validatePath as any
+  pathController.validatePath as RequestHandler
 );
 
 /**
  * GET /api/path/format-info
  * Get platform-specific path format information
  */
-router.get('/format-info', pathController.getPathFormatInfo as any);
+router.get('/format-info', pathController.getPathFormatInfo as RequestHandler);
 
 export default router;

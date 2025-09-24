@@ -4,16 +4,17 @@
 
 import express from 'express';
 import request from 'supertest';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
-import providersRouter from '../providers.js';
+import { afterEach, beforeEach, describe, expect, it, type Mocked, vi } from 'vitest';
 
 // Mock the ProviderRegistry
 vi.mock('../../../providers/ProviderRegistry');
 
+import { ProviderRegistry } from '../../../providers/ProviderRegistry.js';
+import providersRouter from '../providers.js';
+
 describe('Provider Models API Routes', () => {
   let app: express.Application;
-  let mockRegistry: any;
+  let mockRegistry: Mocked<ProviderRegistry>;
 
   beforeEach(() => {
     app = express();
@@ -28,7 +29,7 @@ describe('Provider Models API Routes', () => {
       getProviderModelRecommendations: vi.fn(),
     };
 
-    (ProviderRegistry as any).getInstance.mockReturnValue(mockRegistry);
+    (ProviderRegistry as Mocked<typeof ProviderRegistry>).getInstance.mockReturnValue(mockRegistry);
   });
 
   afterEach(() => {
