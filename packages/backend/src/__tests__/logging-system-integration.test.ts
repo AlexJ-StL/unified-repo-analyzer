@@ -425,29 +425,50 @@ describe('Logging System Integration Tests', () => {
       const components = ['component-a', 'component-b', 'component-c', 'component-d'];
       const logsPerComponent = 100;
       const requestId = 'concurrent-test-002';
+      const batchSize = 10; // Write logs in batches of 10
 
       const startTime = Date.now();
 
-      // Create concurrent logging from multiple components
+      // Create concurrent logging from multiple components with batched writes
       const componentPromises = components.map(async (component, componentIndex) => {
-        const promises: Promise<void>[] = [];
+        const logBatch: Array<{
+          message: string;
+          metadata: Record<string, unknown>;
+          component: string;
+          requestId: string;
+        }> = [];
+
+        // Collect logs in batches
         for (let i = 0; i < logsPerComponent; i++) {
-          promises.push(
-            (async () => {
-              logger.info(
-                `Message ${i} from ${component}`,
-                {
-                  componentIndex,
-                  messageIndex: i,
-                  timestamp: new Date().toISOString(),
-                },
-                component,
-                requestId
-              );
-            })()
-          );
+          logBatch.push({
+            message: `Message ${i} from ${component}`,
+            metadata: {
+              componentIndex,
+              messageIndex: i,
+              timestamp: new Date().toISOString(),
+            },
+            component,
+            requestId,
+          });
+
+          // Write batch when it reaches batchSize or at the end
+          if (logBatch.length >= batchSize || i === logsPerComponent - 1) {
+            // Write batch to reduce I/O contention
+            await Promise.all(
+              logBatch.map((logEntry) =>
+                Promise.resolve().then(() => {
+                  logger.info(
+                    logEntry.message,
+                    logEntry.metadata,
+                    logEntry.component,
+                    logEntry.requestId
+                  );
+                })
+              )
+            );
+            logBatch.length = 0; // Clear batch
+          }
         }
-        return Promise.all(promises);
       });
 
       await Promise.all(componentPromises);

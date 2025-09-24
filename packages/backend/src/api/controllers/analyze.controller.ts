@@ -122,6 +122,37 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
 
     // Check if path validation failed
     if (!pathValidationResult.isValid) {
+      // Check if the error is specifically about path not found
+      const hasPathNotFoundError = pathValidationResult.errors.some(
+        (error) => error.code === 'PATH_NOT_FOUND'
+      );
+
+      if (hasPathNotFoundError) {
+        const userFriendlyError = errorMessageService.createPathErrorMessage(
+          pathValidationResult.errors,
+          pathValidationResult.warnings,
+          resolvedPath
+        );
+
+        logger.warn('Repository path does not exist', {
+          requestId,
+          path: resolvedPath,
+          normalizedPath: pathValidationResult.normalizedPath,
+        });
+
+        res.status(404).json({
+          error: userFriendlyError.title,
+          message: userFriendlyError.message,
+          details: userFriendlyError.details,
+          path: resolvedPath,
+          normalizedPath: pathValidationResult.normalizedPath,
+          suggestions: userFriendlyError.suggestions,
+          learnMoreUrl: userFriendlyError.learnMoreUrl,
+        });
+        return;
+      }
+
+      // For other validation errors, return 400
       const userFriendlyError = errorMessageService.createPathErrorMessage(
         pathValidationResult.errors,
         pathValidationResult.warnings,
@@ -238,17 +269,43 @@ export const analyzeRepository = async (req: Request, res: Response): Promise<vo
     const normalizedPath = pathValidationResult.normalizedPath;
     if (!normalizedPath) {
       logger.error(
-        `Path validation succeeded but normalized path is null. RequestId: ${requestId}, OriginalPath: ${resolvedPath}`
+        `Path validation succeeded but normalized path is null. This indicates a path resolution issue. RequestId: ${requestId}, OriginalPath: ${resolvedPath}, ValidationResult: ${JSON.stringify(pathValidationResult)}`
       );
 
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'Path validation succeeded but normalized path is unavailable',
-        suggestions: [
-          'Try again with a different path',
-          'Check system permissions',
-          'Contact support if the issue persists',
+      const userFriendlyError = errorMessageService.createPathErrorMessage(
+        [
+          {
+            code: 'PATH_RESOLUTION_FAILED',
+            message: 'Path could not be resolved to a valid location',
+          },
         ],
+        pathValidationResult.warnings || [],
+        resolvedPath
+      );
+
+      res.status(404).json({
+        error: userFriendlyError.title,
+        message: userFriendlyError.message,
+        details: userFriendlyError.details,
+        path: resolvedPath,
+        normalizedPath: null,
+        suggestions: [
+          'Verify the path exists and is accessible',
+          'Check for typos in the path',
+          'Ensure you have read permissions for the specified path',
+          'Try using an absolute path instead of a relative path',
+        ],
+        learnMoreUrl: userFriendlyError.learnMoreUrl,
+        technicalDetails: {
+          errors: [
+            {
+              code: 'PATH_RESOLUTION_FAILED',
+              message: 'Normalized path is null despite successful validation',
+            },
+          ],
+          warnings: pathValidationResult.warnings || [],
+          requestId,
+        },
       });
       return;
     }

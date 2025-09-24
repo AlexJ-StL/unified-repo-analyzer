@@ -19,7 +19,7 @@ vi.mock('../../core/AnalysisEngine', () => ({
   AnalysisEngine: vi.fn(() => mockAnalysisEngine),
 }));
 vi.mock('../../services/logger.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../services/logger.service')>();
+  const actual = await importOriginal();
   return {
     ...actual,
     logger: {

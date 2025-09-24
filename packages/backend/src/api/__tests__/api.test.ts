@@ -2,65 +2,288 @@
  * API integration tests
  */
 
-import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
+import type { Request, Response } from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
-vi.mock('node:fs/promises');
-vi.mock('../../services/logger.service', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as Record<string, unknown>),
-    default: {
-      debug: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      setRequestId: vi.fn(),
-      getRequestId: vi.fn(),
-    },
-    logger: {
-      debug: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      setRequestId: vi.fn(),
-      getRequestId: vi.fn(),
-    },
-    logAnalysis: vi.fn(),
-    logPerformance: vi.fn(),
-  };
-});
+mock.module('node:fs/promises', () => ({
+  stat: mock(() =>
+    Promise.resolve({
+      isFile: () => true,
+      isDirectory: () => false,
+      isBlockDevice: () => false,
+      isCharacterDevice: () => false,
+      isSymbolicLink: () => false,
+      isFIFO: () => false,
+      isSocket: () => false,
+      dev: 0,
+      ino: 0,
+      mode: 0,
+      nlink: 0,
+      uid: 0,
+      gid: 0,
+      rdev: 0,
+      size: 100,
+      blksize: 0,
+      blocks: 0,
+      atimeMs: 0,
+      mtimeMs: 0,
+      ctimeMs: 0,
+      birthtimeMs: 0,
+      atime: new Date(),
+      mtime: new Date(),
+      ctime: new Date(),
+      birthtime: new Date(),
+    })
+  ),
+  writeFile: mock(() => Promise.resolve()),
+  unlink: mock(() => Promise.resolve()),
+}));
+
+mock.module('node:fs', () => ({
+  promises: {
+    stat: mock(() =>
+      Promise.resolve({
+        isFile: () => true,
+        isDirectory: () => false,
+        isBlockDevice: () => false,
+        isCharacterDevice: () => false,
+        isSymbolicLink: () => false,
+        isFIFO: () => false,
+        isSocket: () => false,
+        dev: 0,
+        ino: 0,
+        mode: 0,
+        nlink: 0,
+        uid: 0,
+        gid: 0,
+        rdev: 0,
+        size: 100,
+        blksize: 0,
+        blocks: 0,
+        atimeMs: 0,
+        mtimeMs: 0,
+        ctimeMs: 0,
+        birthtimeMs: 0,
+        atime: new Date(),
+        mtime: new Date(),
+        ctime: new Date(),
+        birthtime: new Date(),
+      })
+    ),
+  },
+}));
+
+import { pathHandler } from '../../services/path-handler.service.js';
+
+mock.module('../../services/logger.service', () => ({
+  default: {
+    debug: mock(),
+    info: mock(),
+    warn: mock(),
+    error: mock(),
+    setRequestId: mock(),
+    getRequestId: mock(),
+  },
+  logger: {
+    debug: mock(),
+    info: mock(),
+    warn: mock(),
+    error: mock(),
+    setRequestId: mock(),
+    getRequestId: mock(),
+  },
+  logAnalysis: mock(),
+  logPerformance: mock(),
+  requestLogger: mock(),
+}));
 
 // Removed redundant logger mock - async mock at lines 12-35 covers it
-
-// Import types for proper typing
-import type { AnalysisEngine } from '../../core/AnalysisEngine.js';
-import type { IndexSystem } from '../../core/IndexSystem.js';
 
 // Import before mocking
 
 import { app } from '../../index.js';
 
 // Create mock instances for top-level mocking
-const mockAnalysisEngine = mock<AnalysisEngine>();
-const mockIndexSystem = mock<IndexSystem>();
+const mockAnalysisEngine = {
+  analyzeRepository: mock(() =>
+    Promise.resolve({
+      id: '123',
+      path: '/test/repo',
+      name: 'test-repo',
+      language: 'JavaScript',
+      languages: ['JavaScript'],
+      frameworks: ['React'],
+      files: [],
+      fileCount: 10,
+      directoryCount: 5,
+      totalSize: 1000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      structure: {
+        directories: [],
+        keyFiles: [],
+        tree: '',
+      },
+      codeAnalysis: {
+        functionCount: 5,
+        classCount: 2,
+        importCount: 10,
+        complexity: {
+          cyclomaticComplexity: 5,
+          maintainabilityIndex: 80,
+          technicalDebt: 'low',
+          codeQuality: 'good' as const,
+        },
+        patterns: [],
+      },
+      dependencies: {
+        production: [],
+        development: [],
+        frameworks: [],
+      },
+      insights: {
+        executiveSummary: 'Test summary',
+        technicalBreakdown: 'Test breakdown',
+        recommendations: [],
+        potentialIssues: [],
+      },
+      metadata: {
+        analysisMode: 'standard' as const,
+        analysisTime: 100,
+      },
+    })
+  ),
+  analyzeMultipleRepositoriesWithQueue: mock(() =>
+    Promise.resolve({
+      id: 'default-batch-id',
+      repositories: [],
+      createdAt: new Date(),
+      analysisTime: 0,
+    })
+  ),
+  analyzeMultipleRepositories: mock(() =>
+    Promise.resolve({
+      id: 'default-batch-id',
+      repositories: [],
+      createdAt: new Date(),
+      analysisTime: 0,
+    })
+  ),
+  generateSynopsis: mock(() => Promise.resolve('')),
+  updateIndex: mock(() => Promise.resolve()),
+  searchRepositories: mock(() => Promise.resolve([])),
+  findSimilarRepositories: mock(() => Promise.resolve([])),
+};
 
-vi.mock('../../core/AnalysisEngine', () => ({
-  AnalysisEngine: vi.fn(() => mockAnalysisEngine),
-}));
-vi.mock('../../core/IndexSystem', () => ({
-  IndexSystem: vi.fn(() => mockIndexSystem),
-}));
-// Mock HealthService
-vi.mock('../../services/health.service', () => ({
-  HealthService: class MockHealthService {
-    healthCheckHandler = vi.fn();
-    readinessHandler = vi.fn();
-    livenessHandler = vi.fn();
+const mockIndexSystem = {
+  addRepository: mock(() => Promise.resolve()),
+  updateRepository: mock(() => Promise.resolve()),
+  findSimilarRepositories: mock(() => Promise.resolve([])),
+  suggestCombinations: mock(() => Promise.resolve([])),
+  getIndex: mock(() => ({
+    repositories: [],
+    relationships: [],
+    tags: [],
+    lastUpdated: new Date(),
+  })),
+};
+
+const mockHealthService = {
+  healthCheckHandler: mock((_req: Request, res: Response) => {
+    res.status(200).json({ status: 'healthy' });
+  }),
+  readinessHandler: mock((_req: Request, res: Response) => {
+    res.status(200).json({ status: 'ready' });
+  }),
+  livenessHandler: mock((_req: Request, res: Response) => {
+    res.status(200).json({ status: 'alive' });
+  }),
+};
+
+const mockPathHandler = {
+  validatePath: mock(() =>
+    Promise.resolve({
+      isValid: true,
+      normalizedPath: '/test/nonexistent-repo',
+      errors: [],
+      warnings: [],
+      metadata: {
+        exists: true,
+        isDirectory: true,
+        permissions: {
+          read: true,
+        },
+      },
+    })
+  ),
+};
+
+const mockMetricsService = {
+  requestMiddleware: mock(() => (_req: Request, _res: Response, next: () => void) => next()),
+  metricsHandler: mock((_req: Request, res: Response) => {
+    res.status(200).json({ metrics: {} });
+  }),
+  prometheusHandler: mock((_req: Request, res: Response) => {
+    res.status(200).send('# Prometheus metrics\n');
+  }),
+};
+
+const mockServiceContainer = {
+  initialize: mock(() => Promise.resolve()),
+  healthService: mockHealthService,
+  logger: {
+    info: mock(),
+    error: mock(),
+    warn: mock(),
+    debug: mock(),
   },
+};
+
+// Mock modules using Bun's mocking system
+mock.module('../../core/AnalysisEngine', () => ({
+  AnalysisEngine: class MockAnalysisEngine {
+    analyzeRepository = mockAnalysisEngine.analyzeRepository;
+    analyzeMultipleRepositoriesWithQueue = mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue;
+    analyzeMultipleRepositories = mockAnalysisEngine.analyzeMultipleRepositories;
+    generateSynopsis = mockAnalysisEngine.generateSynopsis;
+    updateIndex = mockAnalysisEngine.updateIndex;
+    searchRepositories = mockAnalysisEngine.searchRepositories;
+    findSimilarRepositories = mockAnalysisEngine.findSimilarRepositories;
+  },
+}));
+
+mock.module('../../core/IndexSystem', () => ({
+  IndexSystem: class MockIndexSystem {
+    addRepository = mockIndexSystem.addRepository;
+    updateRepository = mockIndexSystem.updateRepository;
+    findSimilarRepositories = mockIndexSystem.findSimilarRepositories;
+    suggestCombinations = mockIndexSystem.suggestCombinations;
+    getIndex = mockIndexSystem.getIndex;
+  },
+}));
+
+mock.module('../../services/health.service', () => ({
+  HealthService: class MockHealthService {
+    healthCheckHandler = mockHealthService.healthCheckHandler;
+    readinessHandler = mockHealthService.readinessHandler;
+    livenessHandler = mockHealthService.livenessHandler;
+  },
+  healthService: mockHealthService,
+}));
+
+mock.module('../../services/path-handler.service', () => ({
+  pathHandler: mockPathHandler,
+}));
+
+mock.module('../../services/metrics.service', () => ({
+  metricsService: mockMetricsService,
+}));
+
+mock.module('../../container/ServiceContainer', () => ({
+  serviceContainer: mockServiceContainer,
 }));
 
 describe('API Integration Tests', () => {
@@ -70,34 +293,6 @@ describe('API Integration Tests', () => {
     repositories: [],
     createdAt: new Date(),
     analysisTime: 0,
-  };
-
-  const _mockStats: Stats = {
-    isFile: () => true,
-    isDirectory: () => false,
-    isBlockDevice: () => false,
-    isCharacterDevice: () => false,
-    isSymbolicLink: () => false,
-    isFIFO: () => false,
-    isSocket: () => false,
-    dev: 0,
-    ino: 0,
-    mode: 0,
-    nlink: 0,
-    uid: 0,
-    gid: 0,
-    rdev: 0,
-    size: 100,
-    blksize: 0,
-    blocks: 0,
-    atimeMs: 0,
-    mtimeMs: 0,
-    ctimeMs: 0,
-    birthtimeMs: 0,
-    atime: new Date(),
-    mtime: new Date(),
-    ctime: new Date(),
-    birthtime: new Date(),
   };
 
   beforeEach(() => {
@@ -166,6 +361,21 @@ describe('API Integration Tests', () => {
       tags: [],
       lastUpdated: new Date(),
     });
+
+    // Mock pathHandler for path validation
+    pathHandler.validatePath.mockResolvedValue({
+      isValid: true,
+      normalizedPath: '/test/nonexistent-repo',
+      errors: [],
+      warnings: [],
+      metadata: {
+        exists: true,
+        isDirectory: true,
+        permissions: {
+          read: true,
+        },
+      },
+    });
   });
 
   afterEach(() => {
@@ -177,7 +387,6 @@ describe('API Integration Tests', () => {
       // Mock fs.writeFile to succeed for health check
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
       vi.mocked(fs.unlink).mockResolvedValue(undefined);
-      vi.mocked(fs.stat).mockResolvedValue(_mockStats);
 
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);
@@ -190,7 +399,7 @@ describe('API Integration Tests', () => {
       // Mock the analyzeRepository method for this specific test
       const mockAnalysis = {
         id: '123',
-        path: '/test/repo',
+        path: '/test/nonexistent-repo',
         name: 'test-repo',
         language: 'JavaScript',
         languages: ['JavaScript'],
@@ -241,7 +450,7 @@ describe('API Integration Tests', () => {
       const response = await request(app)
         .post('/api/analyze')
         .send({
-          path: '/test/repo',
+          path: '/test/nonexistent-repo',
           options: {
             mode: 'standard',
             maxFiles: 100,
@@ -251,7 +460,7 @@ describe('API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockAnalysis);
       expect(mockAnalysisEngine.analyzeRepository).toHaveBeenCalledWith(
-        '/test/repo',
+        '/test/nonexistent-repo',
         expect.objectContaining({
           mode: 'standard',
           maxFiles: 100,

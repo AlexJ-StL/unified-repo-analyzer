@@ -140,7 +140,7 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "2.2.4",
     "@sentry/bun": "^10.11.0",
     "@sentry/cli": "^2.53.0",
     "binary": "^0.3.0",

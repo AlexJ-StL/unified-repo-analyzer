@@ -464,9 +464,24 @@ describe('Performance and Load Testing', () => {
       expect(totalTime).toBeLessThan(15000); // Should complete within 15 seconds
       expect(messagesPerSecond).toBeGreaterThan(50); // Should maintain reasonable throughput
 
-      // Verify rotation occurred
+      // Add 500ms wait before checking for rotated files to allow asynchronous rotation to complete
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Verify rotation occurred and log file sizes
       const files = await fs.readdir(testDir);
       const rotatedFiles = files.filter((f) => f.includes('rotating-load') && f.endsWith('.log'));
+
+      console.log(`Rotated files found: ${rotatedFiles.length}`);
+      for (const file of rotatedFiles) {
+        try {
+          const filePath = path.join(testDir, file);
+          const stats = await fs.stat(filePath);
+          console.log(`File: ${file}, Size: ${(stats.size / 1024).toFixed(2)} KB`);
+        } catch (error) {
+          console.log(`Error getting size for ${file}:`, error);
+        }
+      }
+
       expect(rotatedFiles.length).toBeGreaterThanOrEqual(1); // Should have created at least one rotated file
     });
   });
@@ -600,7 +615,7 @@ describe('Performance and Load Testing', () => {
   });
 
   describe('Stress Testing', () => {
-    it('should handle extreme load without crashing', { timeout: 60000 }, async () => {
+    it('should handle extreme load without crashing', async () => {
       const extremeLoad = {
         pathValidations: 500,
         logMessages: 5000,

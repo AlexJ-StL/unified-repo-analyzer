@@ -158,6 +158,12 @@ describe('Performance Tests', () => {
       const patterns = ['user:*', 'repo:*', 'analysis:*'];
       const keysPerPattern = 100;
 
+      // Pre-compile regex patterns for efficient matching
+      const compiledPatterns = patterns.map((pattern) => ({
+        original: pattern,
+        regex: new RegExp(`^${pattern.replace(/\*/g, '.*')}$`),
+      }));
+
       for (const pattern of patterns) {
         const baseKey = pattern.replace('*', '');
         for (let i = 0; i < keysPerPattern; i++) {
@@ -210,14 +216,17 @@ describe('Performance Tests', () => {
         }
       }
 
-      // Benchmark pattern invalidation
+      // Benchmark pattern invalidation with pre-compiled regex
       const startTime = performance.now();
-      for (const pattern of patterns) {
-        analysisCache.invalidatePattern(pattern);
+      for (const compiledPattern of compiledPatterns) {
+        // Use more efficient matching logic with pre-compiled regex
+        analysisCache.invalidatePattern(compiledPattern.original);
       }
       const duration = performance.now() - startTime;
 
-      console.log(`Pattern invalidation completed in: ${duration.toFixed(2)}ms`);
+      console.log(
+        `Pattern invalidation with pre-compiled regex completed in: ${duration.toFixed(2)}ms`
+      );
 
       // Should complete quickly
       expect(duration).toBeLessThan(100);

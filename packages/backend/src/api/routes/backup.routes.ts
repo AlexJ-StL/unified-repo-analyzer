@@ -1,4 +1,10 @@
-import { type NextFunction, type Request, type Response, Router } from 'express';
+import {
+  type NextFunction,
+  type Request,
+  type RequestHandler,
+  type Response,
+  Router,
+} from 'express';
 import { param, validationResult } from 'express-validator';
 import { backupService } from '../../services/backup.service';
 import logger from '../../services/logger.service';
@@ -15,7 +21,7 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
 };
 
 // GET /api/backup/status - Get backup service status
-(router.get as any)('/status', async (_req: Request, res: Response) => {
+router.get('/status', (async (_req: Request, res: Response) => {
   try {
     const status = await backupService.getBackupStatus();
     res.json(status);
@@ -25,10 +31,10 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
     });
     res.status(500).json({ error: 'Failed to get backup status' });
   }
-});
+}) as RequestHandler);
 
 // GET /api/backup/list - List all backups
-(router.get as any)('/list', async (_req: Request, res: Response) => {
+router.get('/list', (async (_req: Request, res: Response) => {
   try {
     const backups = await backupService.listBackups();
     res.json(backups);
@@ -38,10 +44,10 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
     });
     res.status(500).json({ error: 'Failed to list backups' });
   }
-});
+}) as RequestHandler);
 
 // POST /api/backup/create - Create a new backup
-(router.post as any)('/create', async (_req: Request, res: Response) => {
+router.post('/create', (async (_req: Request, res: Response) => {
   try {
     const backupPath = await backupService.createBackup();
 
@@ -56,18 +62,18 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
     });
     res.status(500).json({ error: 'Failed to create backup' });
   }
-});
+}) as RequestHandler);
 
 // POST /api/backup/restore/:filename - Restore from backup
-(router.post as any)(
+router.post(
   '/restore/:filename',
   [
     param('filename')
       .isString()
       .matches(/^backup-.*\.tar\.gz$/),
   ],
-  handleValidationErrors as any,
-  async (req: Request, res: Response) => {
+  handleValidationErrors,
+  (async (req: Request, res: Response) => {
     try {
       const { filename } = req.params;
       const path = await import('node:path');
@@ -86,19 +92,19 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
       });
       res.status(500).json({ error: 'Failed to restore backup' });
     }
-  }
+  }) as RequestHandler
 );
 
 // DELETE /api/backup/:filename - Delete a backup
-(router.delete as any)(
+router.delete(
   '/:filename',
   [
     param('filename')
       .isString()
       .matches(/^backup-.*\.tar\.gz$/),
   ],
-  handleValidationErrors as any,
-  async (req: Request, res: Response) => {
+  handleValidationErrors,
+  (async (req: Request, res: Response) => {
     try {
       const { filename } = req.params;
       await backupService.deleteBackup(filename);
@@ -114,11 +120,11 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
       });
       res.status(500).json({ error: 'Failed to delete backup' });
     }
-  }
+  }) as RequestHandler
 );
 
 // POST /api/backup/cleanup - Clean up old backups
-(router.post as any)('/cleanup', async (_req: Request, res: Response) => {
+router.post('/cleanup', (async (_req: Request, res: Response) => {
   try {
     await backupService.cleanupOldBackups();
 
@@ -132,6 +138,6 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
     });
     res.status(500).json({ error: 'Failed to cleanup backups' });
   }
-});
+}) as RequestHandler);
 
 export default router;

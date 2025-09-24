@@ -11,24 +11,29 @@ import type { AnalysisOptions } from '@unified-repo-analyzer/shared';
 import axios from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AnalysisEngine } from '../core/AnalysisEngine.js';
-import { logger } from '../services/logger.service.js';
+// Import the mocked logger service
+import * as mockedLoggerService from '../services/logger.service.js';
 import { readFileWithErrorHandling, traverseDirectory } from '../utils/fileSystem.js';
 
-const mockLoggerInfo = vi.fn();
-const mockLoggerWarn = vi.fn();
-const mockLoggerError = vi.fn();
-const mockLoggerDebug = vi.fn();
+// Mocks are now defined inline in the vi.mock factory function
 
-vi.doMock('../services/logger.service', async (importOriginal) => {
+vi.mock('../services/logger.service', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../services/logger.service')>();
+
+  // Create inline mocks to avoid hoisting issues
+  const mockInfo = vi.fn();
+  const mockWarn = vi.fn();
+  const mockError = vi.fn();
+  const mockDebug = vi.fn();
+
   return {
     ...actual,
     logger: {
       ...actual.logger,
-      info: mockLoggerInfo,
-      warn: mockLoggerWarn,
-      error: mockLoggerError,
-      debug: mockLoggerDebug,
+      info: mockInfo,
+      warn: mockWarn,
+      error: mockError,
+      debug: mockDebug,
       setRequestId: vi.fn(),
       getRequestId: vi.fn(() => 'test-request-id'),
     },
@@ -43,10 +48,10 @@ describe('Logging Integration Tests', () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'logging-test-'));
 
     // Clear any existing logs
-    mockLoggerInfo.mockClear();
-    mockLoggerWarn.mockClear();
-    mockLoggerError.mockClear();
-    mockLoggerDebug.mockClear();
+    mockedLoggerService.logger.info.mockClear();
+    mockedLoggerService.logger.warn.mockClear();
+    mockedLoggerService.logger.error.mockClear();
+    mockedLoggerService.logger.debug.mockClear();
     vi.clearAllMocks();
   });
 
@@ -71,7 +76,7 @@ describe('Logging Integration Tests', () => {
       const result = await traverseDirectory(testDir);
 
       // Verify logging occurred
-      expect(mockLoggerInfo).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.info).toHaveBeenCalledWith(
         'Starting directory traversal',
         expect.objectContaining({
           path: testDir,
@@ -81,7 +86,7 @@ describe('Logging Integration Tests', () => {
         expect.any(String)
       );
 
-      expect(mockLoggerInfo).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.info).toHaveBeenCalledWith(
         'Directory traversal completed',
         expect.objectContaining({
           path: testDir,
@@ -94,7 +99,7 @@ describe('Logging Integration Tests', () => {
         expect.any(String)
       );
 
-      expect(mockLoggerDebug).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         'Path normalized',
         expect.objectContaining({
           original: testDir,
@@ -119,7 +124,7 @@ describe('Logging Integration Tests', () => {
       const content = await readFileWithErrorHandling(testFile);
 
       // Verify logging occurred
-      expect(mockLoggerDebug).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         'Reading file',
         expect.objectContaining({
           path: testFile,
@@ -129,7 +134,7 @@ describe('Logging Integration Tests', () => {
         expect.any(String)
       );
 
-      expect(mockLoggerDebug).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         'File read successfully',
         expect.objectContaining({
           path: testFile,
@@ -150,7 +155,7 @@ describe('Logging Integration Tests', () => {
       await expect(readFileWithErrorHandling(nonExistentFile)).rejects.toThrow();
 
       // Verify error logging occurred
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         'File read failed - file not found',
         expect.any(Error),
         expect.objectContaining({
@@ -185,7 +190,7 @@ describe('Logging Integration Tests', () => {
       await fs.chmod(testFile, 0o644);
 
       // Verify permission error logging
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         expect.stringContaining('permission'),
         expect.any(Error),
         expect.objectContaining({
@@ -301,7 +306,7 @@ describe('Logging Integration Tests', () => {
       await expect(analysisEngine.analyzeRepository(nonExistentRepo, options)).rejects.toThrow();
 
       // Verify error logging occurred
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         'Repository analysis failed',
         expect.any(Error),
         expect.objectContaining({
@@ -378,7 +383,7 @@ describe('Logging Integration Tests', () => {
       );
 
       // Verify debug logging
-      expect(mockLoggerDebug).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         'Claude API request details',
         expect.objectContaining({
           model: 'claude-3-sonnet-20240229',
@@ -419,7 +424,7 @@ describe('Logging Integration Tests', () => {
       await expect(claudeProvider.analyze(testPrompt)).rejects.toThrow();
 
       // Verify error logging occurred
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         'Claude API authentication failed',
         expect.any(Error),
         expect.objectContaining({
@@ -434,7 +439,7 @@ describe('Logging Integration Tests', () => {
         expect.any(String)
       );
 
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         'Claude LLM analysis failed',
         expect.any(Error),
         expect.objectContaining({
@@ -465,7 +470,7 @@ describe('Logging Integration Tests', () => {
       await readFileWithErrorHandling(testFile);
 
       // Verify all log calls used the same request ID
-      expect(mockLoggerDebug).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(Object),
         'filesystem',
@@ -527,7 +532,10 @@ describe('Logging Integration Tests', () => {
       await claudeProvider.analyze('Test prompt');
 
       // Verify that API key is not logged in plain text
-      const allLogCalls = [...mockLoggerInfo.mock.calls, ...mockLoggerDebug.mock.calls];
+      const allLogCalls = [
+        ...mockLoggerInfo.mock.calls,
+        ...mockedLoggerService.logger.debug.mock.calls,
+      ];
       const loggedContent = allLogCalls.map((call) => JSON.stringify(call)).join(' ');
 
       expect(loggedContent).not.toContain('sk-test-secret-api-key-12345');
@@ -543,7 +551,7 @@ describe('Logging Integration Tests', () => {
       }
 
       // Verify error log includes appropriate context
-      expect(mockLoggerError).toHaveBeenCalledWith(
+      expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(Error),
         expect.objectContaining({

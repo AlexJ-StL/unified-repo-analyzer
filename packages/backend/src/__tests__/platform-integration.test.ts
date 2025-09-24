@@ -46,8 +46,9 @@ describe('Platform-Specific Integration Tests', () => {
       const result = await pathHandler.validatePath(testPath);
 
       expect(result.normalizedPath).toBe('C:\\Users\\TestUser\\Documents\\Project');
-      expect(result.isValid).toBe(true); // Path format is valid, even if it doesn't exist
-      expect(result.errors.length).toBe(0); // No format errors
+      expect(result.isValid).toBe(false); // Path does not exist
+      expect(result.errors.length).toBe(1); // Has PATH_NOT_FOUND error
+      expect(result.errors[0].code).toBe('PATH_NOT_FOUND');
     });
 
     it('should handle Windows forward slash paths correctly', async () => {
@@ -55,8 +56,9 @@ describe('Platform-Specific Integration Tests', () => {
       const result = await pathHandler.validatePath(testPath);
 
       expect(result.normalizedPath).toBe('C:\\Users\\TestUser\\Documents\\Project');
-      expect(result.isValid).toBe(true); // Path format is valid, even though it doesn't exist
-      expect(result.errors.length).toBe(0); // No format errors
+      expect(result.isValid).toBe(false); // Path does not exist
+      expect(result.errors.length).toBe(1); // Has PATH_NOT_FOUND error
+      expect(result.errors[0].code).toBe('PATH_NOT_FOUND');
       expect(result.metadata.exists).toBe(false); // Path doesn't exist
     });
 
@@ -143,8 +145,9 @@ describe('Platform-Specific Integration Tests', () => {
       const result = await pathHandler.validatePath(testPath);
 
       expect(result.normalizedPath).toBe('/home/user/documents/project');
-      expect(result.isValid).toBe(true); // Path format is valid, even though it doesn't exist
-      expect(result.errors.length).toBe(0); // No format errors
+      expect(result.isValid).toBe(false); // Path does not exist
+      expect(result.errors.length).toBe(1); // Has PATH_NOT_FOUND error
+      expect(result.errors[0].code).toBe('PATH_NOT_FOUND');
       expect(result.metadata.exists).toBe(false); // Path doesn't exist
     });
 

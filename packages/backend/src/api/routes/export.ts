@@ -2,7 +2,7 @@
  * Export routes
  */
 
-import { Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import { body, param } from 'express-validator';
 import { exportController } from '../controllers';
 
@@ -21,7 +21,7 @@ router.post(
       .withMessage('Format must be json, markdown, or html'),
     body('analysis').optional().isObject(),
   ],
-  exportController.exportAnalysis as any
+  exportController.exportAnalysis as RequestHandler
 );
 
 /**
@@ -37,7 +37,7 @@ router.post(
       .withMessage('Format must be json, markdown, or html'),
     body('batchAnalysis').optional().isObject(),
   ],
-  exportController.exportBatchAnalysis as any
+  exportController.exportBatchAnalysis as RequestHandler
 );
 
 /**
@@ -47,14 +47,14 @@ router.post(
 router.get(
   '/download/:exportId',
   [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
-  exportController.downloadExport as any
+  exportController.downloadExport as RequestHandler
 );
 
 /**
  * GET /api/export/history
  * Get export history
  */
-router.get('/history', exportController.getExportHistory as any);
+router.get('/history', exportController.getExportHistory as RequestHandler);
 
 /**
  * DELETE /api/export/:exportId
@@ -63,7 +63,7 @@ router.get('/history', exportController.getExportHistory as any);
 router.delete(
   '/:exportId',
   [param('exportId').isString().notEmpty().withMessage('Export ID is required')],
-  exportController.deleteExport as any
+  exportController.deleteExport as RequestHandler
 );
 
 export default router;
