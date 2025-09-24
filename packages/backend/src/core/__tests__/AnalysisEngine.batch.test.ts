@@ -3,7 +3,8 @@
  */
 
 import type { AnalysisOptions } from '@unified-repo-analyzer/shared/src/types/analysis';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, type MockedFunction, test, vi } from 'vitest';
+import { discoverRepository } from '../../utils/repositoryDiscovery.js';
 import { AnalysisEngine } from '../AnalysisEngine.js';
 
 // Mock dependencies
@@ -32,7 +33,7 @@ vi.mock('../tokenAnalyzer', () => ({
 describe('AnalysisEngine - Batch Processing', () => {
   let engine: AnalysisEngine;
   let options: AnalysisOptions;
-  let mockDiscoverRepository: any;
+  let mockDiscoverRepository: MockedFunction<typeof discoverRepository>;
 
   beforeEach(async () => {
     engine = new AnalysisEngine();
@@ -47,7 +48,6 @@ describe('AnalysisEngine - Batch Processing', () => {
     };
 
     // Get the mocked discoverRepository function
-    const { discoverRepository } = await import('../../utils/repositoryDiscovery.js');
     mockDiscoverRepository = vi.mocked(discoverRepository);
   });
 
@@ -353,8 +353,8 @@ describe('AnalysisEngine - Batch Processing', () => {
     const result = await engine.analyzeMultipleRepositoriesWithQueue(
       repoPaths,
       options,
-      2,
-      progressCallback
+      progressCallback,
+      2
     );
 
     expect(result).toBeDefined();

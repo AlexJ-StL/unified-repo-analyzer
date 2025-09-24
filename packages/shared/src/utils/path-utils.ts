@@ -108,10 +108,10 @@ const WINDOWS_RESERVED_NAMES = new Set([
 ]);
 
 // Invalid characters for paths
-const _INVALID_PATH_CHARS = IS_WINDOWS ? /[<>:"|?*\u0000-\u001F]/ : /[\u0000]/;
+const _INVALID_PATH_CHARS = IS_WINDOWS ? /[<>:"|?*]/ : /[\0]/;
 
 // Invalid characters for filenames
-const _INVALID_FILENAME_CHARS = IS_WINDOWS ? /[<>:"|?*\u0000-\u001F]/ : /[\u0000]/;
+const _INVALID_FILENAME_CHARS = IS_WINDOWS ? /[<>:"|?*]/ : /[\0]/;
 
 /**
  * Centralized Path Validation Utility Class
@@ -120,7 +120,6 @@ export class PathValidator {
   private static instance: PathValidator;
   private readonly platform: string;
   private readonly isWindows: boolean;
-  private readonly isUnix: boolean;
 
   constructor() {
     this.platform = PLATFORM;
@@ -242,7 +241,7 @@ export class PathValidator {
 
       // If we get here, validation passed
       result.isValid = result.errors.length === 0;
-    } catch (error) {
+    } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       result.errors.push({
         code: 'VALIDATION_ERROR',
@@ -382,18 +381,6 @@ export class PathValidator {
       });
     }
 
-    // Check for control characters
-    if (/[\u0000-\u001F]/.test(trimmedPath)) {
-      errors.push({
-        code: 'CONTROL_CHARACTERS',
-        message: 'Path contains control characters',
-        suggestions: [
-          'Remove control characters from the path',
-          'Ensure the path comes from a trusted source',
-        ],
-      });
-    }
-
     return {
       isValid: errors.length === 0,
       errors,
@@ -510,7 +497,7 @@ export class PathValidator {
         isFile: stats.isFile(),
         size: stats.size,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         return {
           exists: false,

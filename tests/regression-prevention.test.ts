@@ -54,7 +54,7 @@ describe('Regression Prevention Tests', () => {
     });
 
     it('should detect invalid mocks', () => {
-      const invalidMock = {} as any;
+      const invalidMock = {} as Record<string, unknown>;
 
       expect(() => {
         validateMock(invalidMock, 'invalidMock');
@@ -187,7 +187,7 @@ describe('Regression Prevention Tests', () => {
         { id: 2, name: 'item2' },
       ];
 
-      const validator = (item: any, _index: number) => {
+      const validator = (item: unknown, _index: number) => {
         if (!item.id || !item.name) {
           throw new Error('Item missing required properties');
         }
@@ -353,14 +353,14 @@ describe('Regression Prevention Tests', () => {
         repositories = new Map();
         globalTags = new Set();
 
-        addRepository(_repo: any) {
+        addRepository(_repo: unknown) {
           return 'id';
         }
-        updateRepository(_id: string, _updates: any) {}
+        updateRepository(_id: string, _updates: Record<string, unknown>) {}
         removeRepository(_id: string) {
           return true;
         }
-        searchRepositories(_query: any) {
+        searchRepositories(_query: Record<string, unknown>) {
           return [];
         }
         findSimilarRepositories(_id: string) {

@@ -17,7 +17,7 @@ export interface TestPoolConfig {
  */
 export const getDefaultPoolConfig = (): TestPoolConfig => {
   const isCI = process.env.CI === 'true';
-  const isBun = typeof (globalThis as any).Bun !== 'undefined';
+  const isBun = typeof globalThis.Bun !== 'undefined';
 
   return {
     maxConcurrency: isCI ? (isBun ? 8 : 6) : isBun ? 4 : 3,
@@ -90,48 +90,48 @@ export async function runInParallel<T>(
 /**
  * Test isolation utilities
  */
-export class TestIsolation {
-  private static cleanupTasks: Array<() => Promise<void>> = [];
+export const TestIsolation = {
+  cleanupTasks: [] as Array<() => Promise<void>>,
 
-  static addCleanupTask(task: () => Promise<void>): void {
-    TestIsolation.cleanupTasks.push(task);
-  }
+  addCleanupTask(task: () => Promise<void>): void {
+    this.cleanupTasks.push(task);
+  },
 
-  static async runCleanup(): Promise<void> {
-    const tasks = [...TestIsolation.cleanupTasks];
-    TestIsolation.cleanupTasks.length = 0;
+  async runCleanup(): Promise<void> {
+    const tasks = [...this.cleanupTasks];
+    this.cleanupTasks.length = 0;
 
     await Promise.all(tasks.map((task) => task().catch((_error) => {})));
-  }
+  },
 
-  static reset(): void {
-    TestIsolation.cleanupTasks.length = 0;
-  }
-}
+  reset(): void {
+    this.cleanupTasks.length = 0;
+  },
+};
 
 /**
  * Memory management utilities for tests
  */
-export class TestMemoryManager {
-  private static memoryThreshold = 500 * 1024 * 1024; // 500MB
+export const TestMemoryManager = {
+  memoryThreshold: 500 * 1024 * 1024, // 500MB
 
-  static checkMemoryUsage(): boolean {
+  checkMemoryUsage(): boolean {
     if (process?.memoryUsage) {
       const usage = process.memoryUsage();
-      return usage.heapUsed < TestMemoryManager.memoryThreshold;
+      return usage.heapUsed < this.memoryThreshold;
     }
     return true;
-  }
+  },
 
-  static async forceGarbageCollection(): Promise<void> {
+  async forceGarbageCollection(): Promise<void> {
     if (global?.gc) {
       global.gc();
     }
 
     // Give time for cleanup
     await new Promise((resolve) => setTimeout(resolve, 10));
-  }
-}
+  },
+};
 
 /**
  * Test timeout management

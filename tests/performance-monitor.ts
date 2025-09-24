@@ -160,11 +160,11 @@ export class TestPerformanceMonitor {
 /**
  * Performance monitoring decorator for tests
  */
-export function withPerformanceMonitoring<T extends (...args: any[]) => any>(
+export function withPerformanceMonitoring<TArgs extends unknown[], TReturn>(
   testName: string,
-  testFunction: T
-): T {
-  return ((...args: any[]) => {
+  testFunction: (...args: TArgs) => TReturn
+): (...args: TArgs) => TReturn {
+  return ((...args: TArgs) => {
     const monitor = TestPerformanceMonitor.getInstance();
     monitor.startTest(testName);
 
@@ -190,11 +190,11 @@ export function withPerformanceMonitoring<T extends (...args: any[]) => any>(
 /**
  * Memory usage checker
  */
-export class MemoryUsageChecker {
-  private static warningThreshold = 500 * 1024 * 1024; // 500MB
-  private static criticalThreshold = 1024 * 1024 * 1024; // 1GB
+export const MemoryUsageChecker = {
+  warningThreshold: 500 * 1024 * 1024, // 500MB
+  criticalThreshold: 1024 * 1024 * 1024, // 1GB
 
-  static checkMemoryUsage(): {
+  checkMemoryUsage(): {
     status: 'ok' | 'warning' | 'critical';
     usage: number;
     message: string;
@@ -210,14 +210,14 @@ export class MemoryUsageChecker {
     const usage = process.memoryUsage();
     const heapUsed = usage.heapUsed;
 
-    if (heapUsed > MemoryUsageChecker.criticalThreshold) {
+    if (heapUsed > this.criticalThreshold) {
       return {
         status: 'critical',
         usage: heapUsed,
         message: `Critical memory usage: ${(heapUsed / 1024 / 1024).toFixed(2)}MB`,
       };
     }
-    if (heapUsed > MemoryUsageChecker.warningThreshold) {
+    if (heapUsed > this.warningThreshold) {
       return {
         status: 'warning',
         usage: heapUsed,
@@ -229,41 +229,41 @@ export class MemoryUsageChecker {
       usage: heapUsed,
       message: `Memory usage: ${(heapUsed / 1024 / 1024).toFixed(2)}MB`,
     };
-  }
+  },
 
-  static async forceGarbageCollection(): Promise<void> {
+  async forceGarbageCollection(): Promise<void> {
     if (global?.gc) {
       global.gc();
       // Wait a bit for GC to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-  }
-}
+  },
+};
 
 /**
  * Test timeout utilities
  */
-export class TestTimeoutManager {
-  private static defaultTimeout = 30000; // 30 seconds
-  private static slowTestThreshold = 10000; // 10 seconds
+export const TestTimeoutManager = {
+  defaultTimeout: 30000, // 30 seconds
+  slowTestThreshold: 10000, // 10 seconds
 
-  static createTimeoutPromise(timeoutMs: number, testName: string): Promise<never> {
+  createTimeoutPromise(timeoutMs: number, testName: string): Promise<never> {
     return new Promise((_, reject) => {
       setTimeout(() => {
         reject(new Error(`Test "${testName}" timed out after ${timeoutMs}ms`));
       }, timeoutMs);
     });
-  }
+  },
 
-  static async withTimeout<T>(
+  async withTimeout<T>(
     promise: Promise<T>,
-    timeoutMs: number = TestTimeoutManager.defaultTimeout,
+    timeoutMs: number = this.defaultTimeout,
     testName = 'unknown'
   ): Promise<T> {
-    return Promise.race([promise, TestTimeoutManager.createTimeoutPromise(timeoutMs, testName)]);
-  }
+    return Promise.race([promise, this.createTimeoutPromise(timeoutMs, testName)]);
+  },
 
-  static isSlowTest(duration: number): boolean {
-    return duration > TestTimeoutManager.slowTestThreshold;
-  }
-}
+  isSlowTest(duration: number): boolean {
+    return duration > this.slowTestThreshold;
+  },
+};

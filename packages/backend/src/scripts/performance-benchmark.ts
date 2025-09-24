@@ -289,6 +289,7 @@ class PerformanceBenchmark {
           await this.analysisEngine.analyzeMultipleRepositoriesWithQueue(
             batchPaths,
             defaultOptions,
+            undefined,
             2
           );
         },

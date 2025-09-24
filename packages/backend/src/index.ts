@@ -44,7 +44,7 @@ const io = new Server(httpServer, {
 });
 
 // Make io globally available for controllers
-(global as any).io = io;
+(globalThis as Record<string, unknown>).io = io;
 
 // Import API routes after app initialization to avoid circular dependency
 import apiRoutes from './api/routes/index.js';
@@ -80,10 +80,10 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Logging middleware
-app.use(requestLogger as any);
+app.use(requestLogger as express.RequestHandler);
 
 // Performance monitoring middleware
-app.use(metricsService.requestMiddleware() as any);
+app.use(metricsService.requestMiddleware() as express.RequestHandler);
 
 // Basic route
 app.get('/', (_req, res) => {
@@ -95,22 +95,22 @@ app.get('/', (_req, res) => {
 });
 
 // Health check endpoints
-app.get('/health', serviceContainer.healthService.healthCheckHandler as any);
-app.get('/health/ready', serviceContainer.healthService.readinessHandler as any);
-app.get('/health/live', serviceContainer.healthService.livenessHandler as any);
+app.get('/health', serviceContainer.healthService.healthCheckHandler as express.RequestHandler);
+app.get('/health/ready', serviceContainer.healthService.readinessHandler as express.RequestHandler);
+app.get('/health/live', serviceContainer.healthService.livenessHandler as express.RequestHandler);
 
 // Metrics endpoints
 if (env.ENABLE_METRICS) {
-  app.get('/metrics', metricsService.metricsHandler as any);
-  app.get('/metrics/prometheus', metricsService.prometheusHandler as any);
+  app.get('/metrics', metricsService.metricsHandler as express.RequestHandler);
+  app.get('/metrics/prometheus', metricsService.prometheusHandler as express.RequestHandler);
 }
 
 // API routes
 app.use('/api', apiRoutes);
 
 // Error handling middleware
-app.use(notFound as any);
-app.use(errorHandler as any);
+app.use(notFound as express.RequestHandler);
+app.use(errorHandler as express.ErrorRequestHandler);
 
 // Initialize WebSocket handlers
 initializeWebSocketHandlers(io);

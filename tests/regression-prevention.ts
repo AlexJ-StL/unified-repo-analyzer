@@ -427,22 +427,22 @@ export function validateMemoryUsage(maxMemoryMB: number, operationName: string):
 /**
  * Main regression prevention validator
  */
-export class RegressionPrevention {
+export const RegressionPrevention = {
   /**
    * Runs all regression prevention checks
    */
-  static runAllChecks(): void {
+  runAllChecks(): void {
     validateTestEnvironment();
     validateTestUtilities();
     validateMockingInfrastructure();
 
     console.log('✅ All regression prevention checks passed');
-  }
+  },
 
   /**
    * Validates a specific class API for completeness
    */
-  static validateClassAPI(
+  validateClassAPI(
     classConstructor: unknown,
     requiredMethods: string[],
     requiredProperties: string[] = []
@@ -454,7 +454,7 @@ export class RegressionPrevention {
 
     // Check methods on prototype
     for (const method of requiredMethods) {
-      if (typeof (ctor as any).prototype[method] !== 'function') {
+      if (typeof Object.getPrototypeOf(ctor)[method] !== 'function') {
         throw new Error(`Class is missing required method: ${method}`);
       }
     }
@@ -469,6 +469,6 @@ export class RegressionPrevention {
       }
     }
 
-    console.log(`✅ Class API validation passed for ${(ctor as any).name}`);
-  }
-}
+    console.log(`✅ Class API validation passed for ${ctor.name}`);
+  },
+};

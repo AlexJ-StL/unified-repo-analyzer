@@ -30,6 +30,13 @@ export enum ProviderErrorType {
   CONFIGURATION_ERROR = 'configuration_error',
   UNKNOWN_ERROR = 'unknown_error',
 }
+/**
+ * Model information interface
+ */
+export interface Model {
+  id: string;
+  name: string;
+}
 
 /**
  * Detailed provider error information
@@ -39,7 +46,7 @@ export interface ProviderError {
   message: string;
   code?: string;
   recoverable: boolean;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   timestamp: Date;
 }
 
@@ -399,7 +406,10 @@ export class ProviderRegistry {
         ) {
           throw new Error('401 Unauthorized - Invalid API key');
         }
-        await provider.fetchModels(config.apiKey!);
+        if (!config.apiKey) {
+          throw new Error('API key is required for OpenRouter testing');
+        }
+        await provider.fetchModels(config.apiKey);
       }
 
       // For other providers, we could implement specific health checks
@@ -443,7 +453,7 @@ export class ProviderRegistry {
   private createProviderError(
     error: unknown,
     type: ProviderErrorType,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ): ProviderError {
     const message = error instanceof Error ? error.message : String(error);
 
@@ -771,7 +781,7 @@ export class ProviderRegistry {
    * @returns Promise resolving to array of available models
    * @throws Error if provider doesn't support model fetching or if there's an error
    */
-  public async fetchProviderModels(name: string, apiKey: string): Promise<any[]> {
+  public async fetchProviderModels(name: string, apiKey: string): Promise<Model[]> {
     const provider = this.createProvider(name);
 
     // Check if provider has a fetchModels method

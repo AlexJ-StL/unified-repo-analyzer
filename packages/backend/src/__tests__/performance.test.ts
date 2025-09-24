@@ -327,6 +327,7 @@ describe('Performance Tests', () => {
         const batchResult = await analysisEngine.analyzeMultipleRepositoriesWithQueue(
           repoPaths,
           defaultOptions,
+          undefined,
           2 // concurrency
         );
         const totalTime = performance.now() - startTime;

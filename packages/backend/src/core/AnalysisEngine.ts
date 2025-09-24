@@ -8,6 +8,7 @@ import path from 'node:path';
 import type {
   AnalysisOptions,
   BatchAnalysisResult,
+  FileInfo,
   OutputFormat,
   RepositoryAnalysis,
   SearchQuery,
@@ -481,7 +482,6 @@ export class AnalysisEngine {
   public async analyzeMultipleRepositoriesWithQueue(
     repoPaths: string[],
     options: AnalysisOptions,
-    concurrency = 2,
     progressCallback?: (progress: {
       batchId: string;
       status: {
@@ -493,7 +493,8 @@ export class AnalysisEngine {
         progress: number;
       };
       currentRepository: string[];
-    }) => void
+    }) => void,
+    concurrency = 2
   ): Promise<BatchAnalysisResult> {
     const timer = metricsService.createTimer('batch.analysis.duration', {
       mode: options.mode,
@@ -787,7 +788,7 @@ export class AnalysisEngine {
     let totalTokenCount = 0;
 
     // Process each key file
-    const filePromises = analysis.structure.keyFiles.map(async (fileInfo: any) => {
+    const filePromises = analysis.structure.keyFiles.map(async (fileInfo: FileInfo) => {
       try {
         // Get absolute file path
         const filePath = path.join(analysis.path, fileInfo.path);

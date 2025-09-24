@@ -58,7 +58,7 @@ describe('Batch Analysis API', () => {
     });
     mockAnalysisEngine.analyzeMultipleRepositories.mockResolvedValue([]);
     mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue.mockImplementation(
-      async (paths, _options, _concurrency, progressCallback) => {
+      async (paths, _options, progressCallback, _concurrency) => {
         // Call progress callback a few times to simulate progress
         if (progressCallback) {
           progressCallback({
@@ -259,8 +259,8 @@ describe('Batch Analysis API', () => {
         maxLinesPerFile: 100,
         includeLLMAnalysis: false,
       }),
-      2,
-      expect.any(Function)
+      expect.any(Function),
+      2
     );
   });
 

@@ -3,7 +3,6 @@
  */
 
 import type { Stats } from 'node:fs';
-import fs from 'node:fs/promises';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockManager } from '../../../../../tests/MockManager.js';
@@ -123,7 +122,7 @@ describe('Fixed API Integration Tests', () => {
   let mockAnalysisEngine: InstanceType<typeof MockAnalysisEngine>;
   let mockIndexSystem: InstanceType<typeof MockIndexSystem>;
 
-  const mockStats: Stats = {
+  const _mockStats: Stats = {
     isFile: () => true,
     isDirectory: () => false,
     isBlockDevice: () => false,

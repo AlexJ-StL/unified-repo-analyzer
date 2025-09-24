@@ -16,7 +16,11 @@ interface PerformanceRequest extends Request {
  * Middleware to track request performance metrics
  */
 export function performanceMiddleware() {
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     // Generate unique request ID
     req.requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     req.startTime = performance.now();
@@ -31,11 +35,11 @@ export function performanceMiddleware() {
     // Override res.end to capture response metrics
     const originalEnd = res.end;
     res.end = function (
-      this: Response<unknown, Record<string, string[]>>,
+      this: Response<unknown, Record<string, unknown>>,
       chunk?: unknown,
       encodingParam?: BufferEncoding | (() => void) | undefined,
       cb?: (() => void) | undefined
-    ): Response<unknown, Record<string, string[]>> {
+    ): Response<unknown, Record<string, unknown>> {
       const duration = performance.now() - (req.startTime || 0);
 
       // Record request metrics
@@ -70,10 +74,10 @@ export function performanceMiddleware() {
         // If encodingParam is a function, it's the old signature: (chunk, callback)
         // 'cb' (the third argument) is ignored in this case.
         const originalEndAsCallbackFn = originalEnd as (
-          this: Response<unknown, Record<string, string[]>>,
+          this: Response<unknown, Record<string, unknown>>,
           chunk?: unknown,
           encoding?: (() => void) | undefined
-        ) => Response<unknown, Record<string, string[]>>;
+        ) => Response<unknown, Record<string, unknown>>;
         return originalEndAsCallbackFn.apply(this, [chunk, encodingParam]);
       }
       if (isBufferEncoding(encodingParam)) {
@@ -81,19 +85,19 @@ export function performanceMiddleware() {
         if (typeof cb === 'function') {
           // Signature: (chunk, encoding, cb)
           const originalEndAsEncodingCbFn = originalEnd as (
-            this: Response<unknown, Record<string, string[]>>,
+            this: Response<unknown, Record<string, unknown>>,
             chunk?: unknown,
             encoding?: BufferEncoding,
             callback?: (() => void) | undefined
-          ) => Response<unknown, Record<string, string[]>>;
+          ) => Response<unknown, Record<string, unknown>>;
           return originalEndAsEncodingCbFn.apply(this, [chunk, encodingParam, cb]);
         }
         // Signature: (chunk, encoding)
         const originalEndAsEncodingFn = originalEnd as (
-          this: Response<unknown, Record<string, string[]>>,
+          this: Response<unknown, Record<string, unknown>>,
           chunk?: unknown,
           encoding?: BufferEncoding
-        ) => Response<unknown, Record<string, string[]>>;
+        ) => Response<unknown, Record<string, unknown>>;
         return originalEndAsEncodingFn.apply(this, [chunk, encodingParam]);
       }
       // encodingParam is undefined (and not a function)
@@ -103,20 +107,20 @@ export function performanceMiddleware() {
         // This implies a call like res.end(chunk, undefined, cb)
         // We provide a default encoding.
         const originalEndAsEncodingCbFn = originalEnd as (
-          this: Response<unknown, Record<string, string[]>>,
+          this: Response<unknown, Record<string, unknown>>,
           chunk?: unknown,
           encoding?: BufferEncoding,
           callback?: (() => void) | undefined
-        ) => Response<unknown, Record<string, string[]>>;
+        ) => Response<unknown, Record<string, unknown>>;
         return originalEndAsEncodingCbFn.apply(this, [chunk, defaultEncoding, cb]);
       }
       // This implies a call like res.end(chunk, undefined)
       // We provide a default encoding.
       const originalEndAsEncodingFn = originalEnd as (
-        this: Response<unknown, Record<string, string[]>>,
+        this: Response<unknown, Record<string, unknown>>,
         chunk?: unknown,
         encoding?: BufferEncoding
-      ) => Response<unknown, Record<string, string[]>>;
+      ) => Response<unknown, Record<string, unknown>>;
       return originalEndAsEncodingFn.apply(this, [chunk, defaultEncoding]);
     };
 
@@ -128,7 +132,11 @@ export function performanceMiddleware() {
  * Middleware to add performance headers to responses
  */
 export function performanceHeadersMiddleware() {
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     // Add server timing header
     res.on('finish', () => {
       if (req.startTime) {
@@ -146,7 +154,11 @@ export function performanceHeadersMiddleware() {
  * Middleware to monitor slow requests
  */
 export function slowRequestMiddleware(threshold = 1000) {
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     res.on('finish', () => {
       if (req.startTime) {
         const duration = performance.now() - req.startTime;
@@ -177,7 +189,11 @@ export function slowRequestMiddleware(threshold = 1000) {
  * Middleware to track memory usage per request
  */
 export function memoryTrackingMiddleware() {
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     const initialMemory = process.memoryUsage();
 
     res.on('finish', () => {
@@ -224,7 +240,11 @@ export function adaptiveRateLimitMiddleware() {
   const performanceHistory: number[] = [];
   const maxHistorySize = 100;
 
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     const clientId = req.ip || 'unknown';
     const now = Date.now();
     const windowMs = 60 * 1000; // 1 minute window
@@ -289,7 +309,11 @@ export function adaptiveRateLimitMiddleware() {
  * Middleware to add cache headers based on performance
  */
 export function performanceCacheMiddleware() {
-  return (req: PerformanceRequest, res: Response, next: NextFunction) => {
+  return (
+    req: PerformanceRequest,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => {
     // Set cache headers based on request type and system load
     const isAnalysisRequest = req.path.includes('/api/analyze');
     const isSearchRequest = req.path.includes('/api/search');

@@ -196,7 +196,9 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
 
   {
     let match: RegExpExecArray | null;
-    while ((match = patterns.function.exec(content)) !== null) {
+    while (true) {
+      match = patterns.function.exec(content);
+      if (match === null) break;
       // Find the first non-null capturing group (function name)
       const name = match.slice(1).find((group) => group !== undefined);
 
@@ -222,7 +224,9 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
 
     {
       let match: RegExpExecArray | null;
-      while ((match = patterns.arrowFunction.exec(content)) !== null) {
+      while (true) {
+        match = patterns.arrowFunction.exec(content);
+        if (match === null) break;
         const name = match[1];
 
         if (name && !functionMatches.has(name)) {
@@ -247,7 +251,9 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
 
   {
     let match: RegExpExecArray | null;
-    while ((match = patterns.class.exec(content)) !== null) {
+    while (true) {
+      match = patterns.class.exec(content);
+      if (match === null) break;
       const name = match[1];
 
       if (name) {
@@ -269,7 +275,9 @@ export function analyzeCodeStructure(content: string, language: string): CodeStr
 
   {
     let match: RegExpExecArray | null;
-    while ((match = patterns.import.exec(content)) !== null) {
+    while (true) {
+      match = patterns.import.exec(content);
+      if (match === null) break;
       result.importCount++;
     }
   }

@@ -750,7 +750,6 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
     const batchResult = await analysisEngine.analyzeMultipleRepositoriesWithQueue(
       validPaths, // Use validated and normalized paths
       analysisOptions,
-      concurrency,
       (progress) => {
         // Update progress tracker
         progressTracker.completed = progress.status.completed;
@@ -765,7 +764,8 @@ export const analyzeMultipleRepositories = async (req: Request, res: Response): 
 
         // Update request tracker progress
         analysisRequestTracker.updateRequestProgress(requestId, progress.status.progress);
-      }
+      },
+      concurrency
     );
 
     // Update progress tracker with completion
