@@ -5,7 +5,9 @@ import { ErrorBoundary } from './components/error';
 import { ToastProvider } from './hooks/useToast';
 
 // Lazy load pages for code splitting
-const HomePage = lazy(() => import('./pages/HomePage'));
+// const HomePage = lazy(() => import('./pages/HomePage'));
+import HomePage from './pages/HomePage';
+
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
 const RepositoriesPage = lazy(() => import('./pages/RepositoriesPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));

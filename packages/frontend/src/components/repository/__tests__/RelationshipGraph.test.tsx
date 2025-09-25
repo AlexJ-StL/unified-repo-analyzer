@@ -8,52 +8,52 @@ import type { RelationshipGraph } from '@unified-repo-analyzer/shared/src/types/
 import RelationshipGraphComponent from '../RelationshipGraph';
 
 // Mock D3 to avoid DOM manipulation issues in tests
-jest.mock('d3', () => ({
-  select: jest.fn(() => ({
-    selectAll: jest.fn(() => ({
-      remove: jest.fn(),
+vi.mock('d3', () => ({
+  select: vi.fn(() => ({
+    selectAll: vi.fn(() => ({
+      remove: vi.fn(),
     })),
-    append: jest.fn(() => ({
-      attr: jest.fn().mockReturnThis(),
-      selectAll: jest.fn(() => ({
-        data: jest.fn(() => ({
-          enter: jest.fn(() => ({
-            append: jest.fn(() => ({
-              attr: jest.fn().mockReturnThis(),
-              style: jest.fn().mockReturnThis(),
-              on: jest.fn().mockReturnThis(),
-              call: jest.fn().mockReturnThis(),
-              text: jest.fn().mockReturnThis(),
+    append: vi.fn(() => ({
+      attr: vi.fn().mockReturnThis(),
+      selectAll: vi.fn(() => ({
+        data: vi.fn(() => ({
+          enter: vi.fn(() => ({
+            append: vi.fn(() => ({
+              attr: vi.fn().mockReturnThis(),
+              style: vi.fn().mockReturnThis(),
+              on: vi.fn().mockReturnThis(),
+              call: vi.fn().mockReturnThis(),
+              text: vi.fn().mockReturnThis(),
             })),
           })),
         })),
       })),
     })),
-    call: jest.fn().mockReturnThis(),
+    call: vi.fn().mockReturnThis(),
   })),
-  forceSimulation: jest.fn(() => ({
-    force: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
-    stop: jest.fn(),
+  forceSimulation: vi.fn(() => ({
+    force: vi.fn().mockReturnThis(),
+    on: vi.fn().mockReturnThis(),
+    stop: vi.fn(),
   })),
-  forceLink: jest.fn(() => ({
-    id: jest.fn().mockReturnThis(),
-    distance: jest.fn().mockReturnThis(),
-    strength: jest.fn().mockReturnThis(),
+  forceLink: vi.fn(() => ({
+    id: vi.fn().mockReturnThis(),
+    distance: vi.fn().mockReturnThis(),
+    strength: vi.fn().mockReturnThis(),
   })),
-  forceManyBody: jest.fn(() => ({
-    strength: jest.fn().mockReturnThis(),
+  forceManyBody: vi.fn(() => ({
+    strength: vi.fn().mockReturnThis(),
   })),
-  forceCenter: jest.fn(),
-  forceCollide: jest.fn(() => ({
-    radius: jest.fn().mockReturnThis(),
+  forceCenter: vi.fn(),
+  forceCollide: vi.fn(() => ({
+    radius: vi.fn().mockReturnThis(),
   })),
-  zoom: jest.fn(() => ({
-    scaleExtent: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
+  zoom: vi.fn(() => ({
+    scaleExtent: vi.fn().mockReturnThis(),
+    on: vi.fn().mockReturnThis(),
   })),
-  drag: jest.fn(() => ({
-    on: jest.fn().mockReturnThis(),
+  drag: vi.fn(() => ({
+    on: vi.fn().mockReturnThis(),
   })),
 }));
 
@@ -130,7 +130,7 @@ describe('RelationshipGraphComponent', () => {
   });
 
   it('should call onNodeClick when provided', () => {
-    const mockOnNodeClick = jest.fn();
+    const mockOnNodeClick = vi.fn();
     render(<RelationshipGraphComponent data={mockGraphData} onNodeClick={mockOnNodeClick} />);
 
     // Since D3 is mocked, we can't actually test the click event
@@ -139,7 +139,7 @@ describe('RelationshipGraphComponent', () => {
   });
 
   it('should call onEdgeClick when provided', () => {
-    const mockOnEdgeClick = jest.fn();
+    const mockOnEdgeClick = vi.fn();
     render(<RelationshipGraphComponent data={mockGraphData} onEdgeClick={mockOnEdgeClick} />);
 
     // Since D3 is mocked, we can't actually test the click event

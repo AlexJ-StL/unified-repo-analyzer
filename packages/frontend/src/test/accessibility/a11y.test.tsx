@@ -4,14 +4,17 @@ import { axe, toHaveNoViolations } from 'jest-axe';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
 import App from '../../App';
-import { ToastProvider } from '../../contexts/ToastContext';
+import { ErrorBoundary } from '../../components/error';
+import { ToastProvider } from '../../hooks/useToast';
 
 // Extend Jest matchers
 expect.extend(toHaveNoViolations);
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
-    <ToastProvider>{children}</ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>{children}</ToastProvider>
+    </ErrorBoundary>
   </BrowserRouter>
 );
 

@@ -11,67 +11,72 @@ import ConfigurationManager from '../ConfigurationManager';
 // Mock the settings store
 vi.mock('../../../store/useSettingsStore');
 vi.mock('../../../hooks/useToast', () => ({
-  useToast: () => ({
-    showToast: vi.fn(),
-  }),
+  default: {
+    useToast: () => ({
+      showToast: vi.fn(),
+    }),
+  },
 }));
 
 // Mock all the preference components
-vi.mock('../GeneralPreferences', () => {
-  return function MockGeneralPreferences() {
+vi.mock('../GeneralPreferences', () => ({
+  default: function MockGeneralPreferences() {
     return <div data-testid="general-preferences">General Preferences</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../AnalysisPreferences', () => {
-  return function MockAnalysisPreferences() {
+vi.mock('../AnalysisPreferences', () => ({
+  default: function MockAnalysisPreferences() {
     return <div data-testid="analysis-preferences">Analysis Preferences</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../LLMProviderPreferences', () => {
-  return function MockLLMProviderPreferences() {
+vi.mock('../LLMProviderPreferences', () => ({
+  default: function MockLLMProviderPreferences() {
     return <div data-testid="llm-preferences">LLM Provider Preferences</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../ExportPreferences', () => {
-  return function MockExportPreferences() {
+vi.mock('../ExportPreferences', () => ({
+  default: function MockExportPreferences() {
     return <div data-testid="export-preferences">Export Preferences</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../UIPreferences', () => {
-  return function MockUIPreferences() {
+vi.mock('../UIPreferences', () => ({
+  default: function MockUIPreferences() {
     return <div data-testid="ui-preferences">UI Preferences</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../WorkspaceManager', () => {
-  return function MockWorkspaceManager() {
+vi.mock('../WorkspaceManager', () => ({
+  default: function MockWorkspaceManager() {
     return <div data-testid="workspace-manager">Workspace Manager</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../ProjectManager', () => {
-  return function MockProjectManager() {
+vi.mock('../ProjectManager', () => ({
+  default: function MockProjectManager() {
     return <div data-testid="project-manager">Project Manager</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../ProfileManager', () => {
-  return function MockProfileManager() {
+vi.mock('../ProfileManager', () => ({
+  default: function MockProfileManager() {
     return <div data-testid="profile-manager">Profile Manager</div>;
-  };
-});
+  },
+}));
 
-vi.mock('../ConfigurationImportExport', () => {
-  return function MockConfigurationImportExport() {
+vi.mock('../ConfigurationImportExport', () => ({
+  default: function MockConfigurationImportExport() {
     return <div data-testid="import-export">Import/Export</div>;
-  };
-});
+  },
+}));
 
 const mockUseSettingsStore = useSettingsStore as unknown as ReturnType<typeof vi.fn>;
+
+// Type for the mock store
+type MockStore = typeof mockStore;
 
 describe('ConfigurationManager', () => {
   const mockStore = {
@@ -122,7 +127,7 @@ describe('ConfigurationManager', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseSettingsStore.mockReturnValue(mockStore as any);
+    mockUseSettingsStore.mockReturnValue(mockStore as MockStore);
   });
 
   it('should render configuration tabs', async () => {
@@ -158,7 +163,7 @@ describe('ConfigurationManager', () => {
     mockUseSettingsStore.mockReturnValue({
       ...mockStore,
       isLoading: true,
-    } as any);
+    } as MockStore);
 
     render(<ConfigurationManager />);
 
@@ -192,7 +197,7 @@ describe('ConfigurationManager', () => {
     mockUseSettingsStore.mockReturnValue({
       ...mockStore,
       error: 'Test error',
-    } as any);
+    } as MockStore);
 
     render(<ConfigurationManager />);
 

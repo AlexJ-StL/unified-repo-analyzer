@@ -1,6 +1,5 @@
 import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
 import type React from 'react';
-import ReactMarkdown from 'react-markdown';
 
 interface ExecutiveSummaryProps {
   analysis: RepositoryAnalysis;
@@ -54,7 +53,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ analysis }) => {
       <div>
         <h2 className="text-xl font-semibold text-gray-800 mb-3">Executive Summary</h2>
         <div className="prose max-w-none">
-          <ReactMarkdown>{insights.executiveSummary}</ReactMarkdown>
+          <p>{insights.executiveSummary}</p>
         </div>
       </div>
 

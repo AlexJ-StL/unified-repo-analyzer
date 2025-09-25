@@ -1,8 +1,11 @@
 // @ts-nocheck - Disable TypeScript checking for this setup file
 import '@testing-library/jest-dom/vitest';
+import { EventEmitter } from 'node:events';
 import { cleanup } from '@testing-library/react';
-import { JSDOM } from 'jsdom';
 import { afterEach, vi } from 'vitest';
+
+// Increase EventEmitter max listeners to prevent MaxListenersExceededWarning in tests
+EventEmitter.defaultMaxListeners = 20;
 
 // Export vi for global access
 export { vi };
@@ -12,44 +15,8 @@ if (typeof globalThis.vi === 'undefined') {
   globalThis.vi = vi;
 }
 
-// Setup jsdom environment if not already available
-// Always set up JSDOM for frontend tests to ensure browser APIs are available
-const dom = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>', {
-  url: 'http://localhost:3000',
-  pretendToBeVisual: true,
-  resources: 'usable',
-});
-
-// Make jsdom globals available
-globalThis.window = dom.window as unknown as Window & typeof globalThis;
-globalThis.document = dom.window.document;
-
-// Handle navigator property safely
-try {
-  if (Object.getOwnPropertyDescriptor(globalThis, 'navigator')?.configurable) {
-    globalThis.navigator = dom.window.navigator;
-  } else {
-    // Fallback for read-only navigator
-    Object.defineProperty(globalThis, 'navigator', {
-      value: dom.window.navigator,
-      writable: true,
-      configurable: true,
-    });
-  }
-} catch (_error) {
-  // If we can't set navigator, at least define it properly
-  Object.defineProperty(globalThis, 'navigator', {
-    value: dom.window.navigator,
-    writable: true,
-    configurable: true,
-  });
-}
-
-globalThis.HTMLElement = dom.window.HTMLElement;
-globalThis.HTMLInputElement = dom.window.HTMLInputElement;
-globalThis.HTMLButtonElement = dom.window.HTMLButtonElement;
-globalThis.Element = dom.window.Element;
-globalThis.Node = dom.window.Node;
+// JSDOM is set up by vitest config environment: 'jsdom'
+// No need to create another JSDOM instance
 
 // Cleanup after each test case
 afterEach(() => {

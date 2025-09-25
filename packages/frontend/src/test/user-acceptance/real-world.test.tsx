@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../App';
 import { ToastProvider } from '../../hooks/useToast';
@@ -18,9 +18,9 @@ const mockApiService = apiService as typeof apiService & {
 };
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <BrowserRouter>
+  <MemoryRouter initialEntries={['/']}>
     <ToastProvider>{children}</ToastProvider>
-  </BrowserRouter>
+  </MemoryRouter>
 );
 
 // Real-world test data
@@ -29,11 +29,15 @@ const realWorldRepositories = [
     id: 'react-repo',
     name: 'react-frontend',
     path: '/projects/react-frontend',
+    language: 'TypeScript',
     languages: ['JavaScript', 'TypeScript', 'CSS'],
     frameworks: ['React', 'Webpack', 'Jest'],
+    files: [],
     fileCount: 247,
     directoryCount: 32,
     totalSize: 15728640, // ~15MB
+    createdAt: new Date(),
+    updatedAt: new Date(),
     structure: {
       directories: [
         { name: 'src', path: '/src', fileCount: 156 },
@@ -46,6 +50,18 @@ const realWorldRepositories = [
         { path: '/README.md', language: 'Markdown', importance: 8 },
       ],
       tree: 'react-frontend/\n├── src/\n│   ├── components/\n│   └── utils/\n├── public/\n└── __tests__/',
+    },
+    codeAnalysis: {
+      functionCount: 150,
+      classCount: 20,
+      importCount: 200,
+      complexity: { average: 5, max: 15 },
+      patterns: [],
+    },
+    dependencies: {
+      production: [],
+      development: [],
+      frameworks: [],
     },
     insights: {
       executiveSummary:
@@ -62,16 +78,24 @@ const realWorldRepositories = [
         'Bundle size could be optimized',
       ],
     },
+    metadata: {
+      analysisMode: 'comprehensive',
+      analysisTime: 5000,
+    },
   },
   {
     id: 'node-api',
     name: 'node-backend-api',
     path: '/projects/node-backend-api',
+    language: 'JavaScript',
     languages: ['JavaScript', 'TypeScript'],
     frameworks: ['Express', 'MongoDB', 'Jest'],
+    files: [],
     fileCount: 89,
     directoryCount: 18,
     totalSize: 8388608, // ~8MB
+    createdAt: new Date(),
+    updatedAt: new Date(),
     structure: {
       directories: [
         { name: 'src', path: '/src', fileCount: 67 },
@@ -83,6 +107,18 @@ const realWorldRepositories = [
         { path: '/src/routes/api.js', language: 'JavaScript', importance: 8 },
       ],
       tree: 'node-backend-api/\n├── src/\n│   ├── routes/\n│   ├── models/\n│   └── middleware/\n└── tests/',
+    },
+    codeAnalysis: {
+      functionCount: 80,
+      classCount: 5,
+      importCount: 100,
+      complexity: { average: 4, max: 10 },
+      patterns: [],
+    },
+    dependencies: {
+      production: [],
+      development: [],
+      frameworks: [],
     },
     insights: {
       executiveSummary:
@@ -99,16 +135,24 @@ const realWorldRepositories = [
         'Error handling could be more consistent',
       ],
     },
+    metadata: {
+      analysisMode: 'standard',
+      analysisTime: 3000,
+    },
   },
   {
     id: 'python-ml',
     name: 'python-ml-project',
     path: '/projects/python-ml-project',
+    language: 'Python',
     languages: ['Python'],
     frameworks: ['TensorFlow', 'Pandas', 'Flask'],
+    files: [],
     fileCount: 156,
     directoryCount: 24,
     totalSize: 52428800, // ~50MB
+    createdAt: new Date(),
+    updatedAt: new Date(),
     structure: {
       directories: [
         { name: 'src', path: '/src', fileCount: 89 },
@@ -122,6 +166,18 @@ const realWorldRepositories = [
         { path: '/src/model.py', language: 'Python', importance: 8 },
       ],
       tree: 'python-ml-project/\n├── src/\n├── data/\n├── models/\n└── tests/',
+    },
+    codeAnalysis: {
+      functionCount: 120,
+      classCount: 15,
+      importCount: 180,
+      complexity: { average: 6, max: 20 },
+      patterns: [],
+    },
+    dependencies: {
+      production: [],
+      development: [],
+      frameworks: [],
     },
     insights: {
       executiveSummary:
@@ -137,6 +193,10 @@ const realWorldRepositories = [
         'Large model files not properly managed',
         'Missing data backup and recovery procedures',
       ],
+    },
+    metadata: {
+      analysisMode: 'comprehensive',
+      analysisTime: 8000,
     },
   },
 ];
@@ -191,6 +251,12 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
       );
 
       // Developer wants to analyze their React project
+      const welcomeElement = screen.getByRole('heading', {
+        name: /welcome to unified repository analyzer/i,
+      });
+      expect(welcomeElement).toBeInTheDocument();
+
+      // Click analyze button to show form
       const analyzeButton = screen.getByRole('button', { name: /analyze/i });
       await user.click(analyzeButton);
 
@@ -311,7 +377,7 @@ describe('User Acceptance Tests - Real World Scenarios', () => {
 
       render(
         <TestWrapper>
-          <App />
+          <HomePage />
         </TestWrapper>
       );
 
