@@ -20,15 +20,15 @@ export function createMock<T extends (...args: unknown[]) => unknown>(
 
 /**
  * Mock an entire module with type safety
+ * Note: This function does not use vi.mock due to hoisting issues.
+ * Use MockManager for proper module mocking.
  */
 export function mockModule<T extends Record<string, unknown>>(
-  modulePath: string,
-  mockImplementation: Partial<T>
+  _modulePath: string,
+  _mockImplementation: Partial<T>
 ): void {
-  if (typeof vi.mock === 'function') {
-    vi.mock(modulePath, () => mockImplementation);
-  } else {
-  }
+  // vi.mock cannot be used here due to hoisting - use MockManager instead
+  // This function is kept for backward compatibility but does not perform mocking
 }
 
 /**

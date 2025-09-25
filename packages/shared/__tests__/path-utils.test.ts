@@ -8,15 +8,40 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { pathValidator, SecurityLevel } from '../src/utils/path-utils';
 
+// Type for mocked fs.stat result
+type MockedStats = {
+  isFile: () => boolean;
+  isDirectory: () => boolean;
+  size: number;
+};
+
 // Create mock functions directly
 const statMock = vi.fn();
 const accessMock = vi.fn();
 const existsMock = vi.fn();
 
 // Assign mocks to fs methods
-(fs as any).stat = statMock;
-(fs as any).access = accessMock;
-(fs as any).existsSync = existsMock;
+(
+  fs as unknown as {
+    stat: typeof statMock;
+    access: typeof accessMock;
+    existsSync: typeof existsMock;
+  }
+).stat = statMock;
+(
+  fs as unknown as {
+    stat: typeof statMock;
+    access: typeof accessMock;
+    existsSync: typeof existsMock;
+  }
+).access = accessMock;
+(
+  fs as unknown as {
+    stat: typeof statMock;
+    access: typeof accessMock;
+    existsSync: typeof existsMock;
+  }
+).existsSync = existsMock;
 
 describe('PathValidator', () => {
   let tempDir: string;
@@ -43,7 +68,7 @@ describe('PathValidator', () => {
           isFile: vi.fn().mockReturnValue(true),
           isDirectory: vi.fn().mockReturnValue(false),
           size: 11,
-        } as any;
+        } as MockedStats;
       }
       if (resolvedP === path.resolve(testDir) || resolvedP === path.resolve(tempDir)) {
         console.log(
@@ -53,7 +78,7 @@ describe('PathValidator', () => {
           isFile: vi.fn().mockReturnValue(false),
           isDirectory: vi.fn().mockReturnValue(true),
           size: 0,
-        } as any;
+        } as MockedStats;
       }
       // Check for malicious paths containing 'etc/passwd' or similar patterns
       if (resolvedP.includes('etc') && resolvedP.includes('passwd')) {
@@ -62,11 +87,12 @@ describe('PathValidator', () => {
           isFile: vi.fn().mockReturnValue(true),
           isDirectory: vi.fn().mockReturnValue(false),
           size: 0,
-        } as any;
+        } as MockedStats;
       }
       console.log(`No match found for: ${resolvedP}, throwing ENOENT`);
-      const err = new Error(`ENOENT: no such file or directory, stat '${p}'`);
-      (err as any).code = 'ENOENT';
+      const err = Object.assign(new Error(`ENOENT: no such file or directory, stat '${p}'`), {
+        code: 'ENOENT',
+      });
       throw err;
     });
 
@@ -93,13 +119,13 @@ describe('PathValidator', () => {
     });
 
     it('should reject null path', async () => {
-      const result = await pathValidator.validatePath(null as any);
+      const result = await pathValidator.validatePath(null as unknown as string);
       expect(result.isValid).toBe(false);
       expect(result.errors[0].code).toBe('INVALID_INPUT');
     });
 
     it('should reject undefined path', async () => {
-      const result = await pathValidator.validatePath(undefined as any);
+      const result = await pathValidator.validatePath(undefined as unknown as string);
       expect(result.isValid).toBe(false);
       expect(result.errors[0].code).toBe('INVALID_INPUT');
     });
@@ -134,7 +160,7 @@ describe('PathValidator', () => {
 
   describe('Security Validation', () => {
     it('should detect directory traversal attempts', async () => {
-      const maliciousPath = path.join(testDir, '..', '..', 'etc', 'passwd');
+      const maliciousPath = '../../../etc/passwd';
       const normalizedMalicious = path.resolve(maliciousPath);
       const previousImpl = existsMock.getMockImplementation();
       existsMock.mockImplementation((p: string) => {

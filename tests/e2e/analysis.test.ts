@@ -28,6 +28,20 @@ describe('Repository Analysis E2E Tests', () => {
     await server.stop();
     // Cleanup test repositories
     await Promise.all(testRepos.map((repo) => repo.cleanup()));
+
+    // Log performance statistics
+    console.log('\n=== Performance Statistics ===');
+    const stats = perfMonitor.getAllStats();
+    Object.entries(stats).forEach(([name, stat]) => {
+      if (stat) {
+        console.log(`${name}:`);
+        console.log(`  Count: ${stat.count}`);
+        console.log(`  Average: ${stat.avg}ms`);
+        console.log(`  Min: ${stat.min}ms`);
+        console.log(`  Max: ${stat.max}ms`);
+        console.log(`  P95: ${stat.p95}ms`);
+      }
+    });
   });
 
   beforeEach(() => {
@@ -463,22 +477,6 @@ describe('Repository Analysis E2E Tests', () => {
 
       const duration = endTimer();
       expect(duration).toBeLessThan(30000); // Concurrent processing should be efficient
-    });
-  });
-
-  afterAll(() => {
-    // Log performance statistics
-    console.log('\n=== Performance Statistics ===');
-    const stats = perfMonitor.getAllStats();
-    Object.entries(stats).forEach(([name, stat]) => {
-      if (stat) {
-        console.log(`${name}:`);
-        console.log(`  Count: ${stat.count}`);
-        console.log(`  Average: ${stat.avg}ms`);
-        console.log(`  Min: ${stat.min}ms`);
-        console.log(`  Max: ${stat.max}ms`);
-        console.log(`  P95: ${stat.p95}ms`);
-      }
     });
   });
 });

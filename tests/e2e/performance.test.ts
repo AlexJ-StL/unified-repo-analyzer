@@ -34,6 +34,20 @@ describe('Performance Tests', () => {
         return repo.cleanup();
       })
     );
+
+    // Log performance statistics
+    console.log('\n=== Performance Test Results ===');
+    const stats = perfMonitor.getAllStats();
+    Object.entries(stats).forEach(([name, stat]) => {
+      if (stat) {
+        console.log(`\n${name}:`);
+        console.log(`  Executions: ${stat.count}`);
+        console.log(`  Average: ${Math.round(stat.avg)}ms`);
+        console.log(`  Min: ${stat.min}ms`);
+        console.log(`  Max: ${stat.max}ms`);
+        console.log(`  95th percentile: ${stat.p95}ms`);
+      }
+    });
   });
 
   describe('Large Repository Processing', () => {
@@ -545,22 +559,6 @@ module.exports = Module${i};
       expect(memoryIncrease).toBeLessThan(500 * 1024 * 1024);
 
       console.log(`Memory increase: ${Math.round(memoryIncrease / 1024 / 1024)}MB`);
-    });
-  });
-
-  afterAll(() => {
-    // Log performance statistics
-    console.log('\n=== Performance Test Results ===');
-    const stats = perfMonitor.getAllStats();
-    Object.entries(stats).forEach(([name, stat]) => {
-      if (stat) {
-        console.log(`\n${name}:`);
-        console.log(`  Executions: ${stat.count}`);
-        console.log(`  Average: ${Math.round(stat.avg)}ms`);
-        console.log(`  Min: ${stat.min}ms`);
-        console.log(`  Max: ${stat.max}ms`);
-        console.log(`  95th percentile: ${stat.p95}ms`);
-      }
     });
   });
 });

@@ -9,7 +9,7 @@ import { vi } from 'vitest';
 /**
  * Enhanced mock function with better type inference
  */
-export function createMock<T extends (...args: any[]) => any>(
+export function createMock<T extends (...args: unknown[]) => unknown>(
   implementation?: T
 ): ReturnType<typeof vi.fn> & T {
   const mockFn = vi.fn() as ReturnType<typeof vi.fn> & T;
@@ -22,7 +22,7 @@ export function createMock<T extends (...args: any[]) => any>(
 /**
  * Mock an entire module with type safety
  */
-export function mockModule<T extends Record<string, any>>(
+export function mockModule<T extends Record<string, unknown>>(
   _modulePath: string,
   _mockImplementation: Partial<T>
 ): void {}
@@ -30,14 +30,14 @@ export function mockModule<T extends Record<string, any>>(
 /**
  * Create a partial mock of an object with type safety
  */
-export function createPartialMock<T extends Record<string, any>>(partial: Partial<T>): T {
+export function createPartialMock<T extends Record<string, unknown>>(partial: Partial<T>): T {
   return partial as T;
 }
 
 /**
  * Mock a class constructor with proper typing
  */
-export function mockClass<T extends new (...args: any[]) => any>(
+export function mockClass<T extends new (...args: unknown[]) => unknown>(
   _constructor: T,
   mockImplementation?: Partial<InstanceType<T>>
 ): ReturnType<typeof vi.fn> {
@@ -115,11 +115,11 @@ export function mockRejected(error: Error | string): ReturnType<typeof vi.fn> {
 /**
  * Create a spy on an existing object method
  */
-export function spyOn<T extends Record<string, any>>(
+export function spyOn<T extends Record<string, unknown>>(
   object: T,
   method: keyof T
 ): ReturnType<typeof vi.spyOn> {
-  return vi.spyOn(object, method as any);
+  return vi.spyOn(object, method);
 }
 
 /**

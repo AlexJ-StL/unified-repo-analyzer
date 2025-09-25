@@ -165,24 +165,8 @@ export class PathValidator {
         return result;
       }
 
-      // Check for directory traversal in original input
-      if (options.securityChecks !== false) {
-        const normalizedInput = inputPath.replace(/\//g, '\\');
-        if (/(?<!:)(?<!^)[\\/]\.\.(\\|\/|$)/.test(normalizedInput)) {
-          result.errors.push({
-            code: 'DIRECTORY_TRAVERSAL',
-            message: 'Path contains directory traversal sequences',
-            details:
-              'Detected "../" or "..\\" sequences that could be used for path traversal attacks',
-            suggestions: [
-              'Avoid using "../" in paths',
-              'Use absolute paths when possible',
-              'Validate path input from untrusted sources carefully',
-            ],
-          });
-          return result;
-        }
-      }
+      // Save original path for security checks
+      const originalPath = inputPath;
 
       // Normalize path
       const normalizedPath = this.normalizePath(inputPath, options.basePath);
@@ -190,7 +174,7 @@ export class PathValidator {
 
       // Security checks
       if (options.securityChecks !== false) {
-        const securityValidation = this.validateSecurity(normalizedPath, options);
+        const securityValidation = this.validateSecurity(originalPath, options);
         result.errors.push(...securityValidation.errors);
         result.warnings.push(...securityValidation.warnings);
 
@@ -256,6 +240,16 @@ export class PathValidator {
     }
 
     return result;
+  }
+
+  /**
+   * Synchronous validate method for backward compatibility
+   */
+  public validate(
+    inputPath: string,
+    options?: PathValidationOptions
+  ): Promise<PathValidationResult> {
+    return this.validatePath(inputPath, options);
   }
 
   /**

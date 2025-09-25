@@ -76,10 +76,9 @@ describe('Boolean Logic', () => {
   it('should handle comparisons', () => {
     expect(5 > 3).toBe(true);
     expect(3 < 5).toBe(true);
-    expect(5 >= 5).toBe(true);
-    expect(5 <= 5).toBe(true);
-    expect(5 === 5).toBe(true);
-    expect((5 as any) !== (3 as any)).toBe(true);
+    expect(5 >= 3).toBe(true);
+    expect(3 <= 5).toBe(true);
+    expect(5 !== 3).toBe(true);
   });
 });
 

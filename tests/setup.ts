@@ -228,9 +228,12 @@ export function createMockFunction<T extends (...args: unknown[]) => unknown>(
 
 /**
  * Mock a module with type safety
+ * Note: vi.mock must be called at top level, cannot be used inside functions
  */
-export function mockModule<T>(modulePath: string, factory?: () => T): void {
-  vi.mock(modulePath, factory as unknown);
+export function mockModule<T>(_modulePath: string, factory?: () => T): T | undefined {
+  // vi.mock cannot be called inside functions due to hoisting requirements
+  // Return factory result if provided, otherwise empty object
+  return factory ? factory() : ({} as T);
 }
 
 /**

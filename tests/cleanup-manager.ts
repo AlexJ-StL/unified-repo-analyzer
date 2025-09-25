@@ -226,7 +226,9 @@ async function cleanupDOM(): Promise<void> {
 
     // Clear document head of test-added elements
     const testElements = document.head.querySelectorAll('[data-test]');
-    testElements.forEach((el) => el.remove());
+    testElements.forEach((el) => {
+      el.remove();
+    });
 
     // Clear any event listeners added during tests
     const events = ['click', 'change', 'input', 'submit', 'load', 'resize'];
@@ -251,7 +253,7 @@ async function cleanupDOM(): Promise<void> {
       document.cookie.split(';').forEach((cookie) => {
         const eqPos = cookie.indexOf('=');
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax`;
       });
     }
 
@@ -316,7 +318,7 @@ function cleanupMemory(): void {
 
   globalKeys.forEach((key) => {
     try {
-      delete (global as any)[key];
+      delete (global as typeof global & Record<string, unknown>)[key];
     } catch {
       // Ignore if can't delete
     }

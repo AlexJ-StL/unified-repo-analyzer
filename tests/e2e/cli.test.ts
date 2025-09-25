@@ -22,6 +22,20 @@ describe('CLI End-to-End Tests', () => {
 
   afterAll(async () => {
     await Promise.all(testRepos.map((repo) => repo.cleanup()));
+
+    // Log performance statistics
+    console.log('\n=== CLI Performance Statistics ===');
+    const stats = perfMonitor.getAllStats();
+    Object.entries(stats).forEach(([name, stat]) => {
+      if (stat) {
+        console.log(`${name}:`);
+        console.log(`  Count: ${stat.count}`);
+        console.log(`  Average: ${Math.round(stat.avg)}ms`);
+        console.log(`  Min: ${stat.min}ms`);
+        console.log(`  Max: ${stat.max}ms`);
+        console.log(`  P95: ${stat.p95}ms`);
+      }
+    });
   });
 
   const runCLI = (
@@ -342,22 +356,6 @@ describe('CLI End-to-End Tests', () => {
 
         // Cleanup
         await rm(restrictedDir, { recursive: true, force: true });
-      }
-    });
-  });
-
-  afterAll(() => {
-    // Log performance statistics
-    console.log('\n=== CLI Performance Statistics ===');
-    const stats = perfMonitor.getAllStats();
-    Object.entries(stats).forEach(([name, stat]) => {
-      if (stat) {
-        console.log(`${name}:`);
-        console.log(`  Count: ${stat.count}`);
-        console.log(`  Average: ${Math.round(stat.avg)}ms`);
-        console.log(`  Min: ${stat.min}ms`);
-        console.log(`  Max: ${stat.max}ms`);
-        console.log(`  P95: ${stat.p95}ms`);
       }
     });
   });
