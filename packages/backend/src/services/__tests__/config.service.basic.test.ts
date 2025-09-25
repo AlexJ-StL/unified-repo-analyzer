@@ -22,7 +22,7 @@ vi.mock('../../utils/logger', () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
-const mockFs = fs as any;
+const mockFs = vi.mocked(fs);
 
 describe('ConfigurationService - Basic Tests', () => {
   let configService: ConfigurationService;

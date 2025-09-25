@@ -21,7 +21,7 @@ vi.mock('fs/promises', async () => {
   };
 });
 
-const mockFs = fs as any;
+const mockFs = vi.mocked(fs);
 
 vi.mock('os', async (importOriginal) => {
   const actual = await importOriginal<typeof import('os')>();

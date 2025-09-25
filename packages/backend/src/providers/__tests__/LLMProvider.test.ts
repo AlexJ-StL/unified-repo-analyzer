@@ -58,7 +58,11 @@ describe('LLMProvider', () => {
       const provider = new TestProvider({ apiKey: 'test-key' });
 
       // Access protected method using type assertion
-      const validateMethod = (provider as any).validateAndNormalizeConfig.bind(provider);
+      const validateMethod = (
+        provider as unknown as {
+          validateAndNormalizeConfig: (config: ProviderConfig) => ProviderConfig;
+        }
+      ).validateAndNormalizeConfig.bind(provider);
       const normalizedConfig = validateMethod({ apiKey: 'test-key' });
 
       expect(normalizedConfig).toEqual({
@@ -77,7 +81,11 @@ describe('LLMProvider', () => {
       });
 
       // Access protected method using type assertion
-      const validateMethod = (provider as any).validateAndNormalizeConfig.bind(provider);
+      const validateMethod = (
+        provider as unknown as {
+          validateAndNormalizeConfig: (config: ProviderConfig) => ProviderConfig;
+        }
+      ).validateAndNormalizeConfig.bind(provider);
       const normalizedConfig = validateMethod({
         apiKey: 'test-key',
         model: 'custom-model',

@@ -33,7 +33,7 @@
       "**/test-reports/**",
       "**/logs/**"
     ],
-    "maxSize": 12582912,
+    "maxSize": 52428800,
     "ignoreUnknown": false
   },
   "linter": {

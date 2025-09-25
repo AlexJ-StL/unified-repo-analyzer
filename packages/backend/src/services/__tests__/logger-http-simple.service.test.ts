@@ -1,12 +1,13 @@
+import type { NextFunction, Request, Response } from 'express';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestLogger } from '../logger-http-simple.service.js';
 
 describe('HTTP Request/Response Logging - Simplified', () => {
-  let mockReq: any;
-  let mockRes: any;
-  let mockNext: any;
-  let finishCallback: any;
-  let errorCallback: any;
+  let mockReq: Request;
+  let mockRes: Response;
+  let mockNext: NextFunction;
+  let finishCallback: () => void;
+  let errorCallback: (error: Error) => void;
 
   beforeEach(() => {
     mockReq = {
@@ -38,7 +39,7 @@ describe('HTTP Request/Response Logging - Simplified', () => {
     mockRes = {
       statusCode: 200,
       statusMessage: 'OK',
-      on: vi.fn((event: string, callback: Function) => {
+      on: vi.fn((event: string, callback: (...args: unknown[]) => void) => {
         if (event === 'finish') {
           finishCallback = callback;
         } else if (event === 'error') {

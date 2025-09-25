@@ -44,7 +44,8 @@ describe('ProviderRegistry Model Selection', () => {
 
   beforeEach(() => {
     // Reset the singleton instance
-    (ProviderRegistry as any).instance = undefined;
+    (ProviderRegistry as unknown as { instance: ProviderRegistry | undefined }).instance =
+      undefined;
     registry = ProviderRegistry.getInstance();
 
     // Set up provider configuration

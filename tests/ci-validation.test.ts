@@ -153,7 +153,9 @@ describe('CI/CD Configuration Validation', () => {
 
       if (isBun) {
         // Bun-specific tests
-        expect(typeof (globalThis as any).Bun).toBe('object');
+        const bunGlobal = (globalThis as { Bun?: unknown }).Bun;
+        expect(bunGlobal).toBeDefined();
+        expect(typeof bunGlobal).toBe('object');
         console.log('Running Bun-specific validation');
       } else {
         // Node.js-specific tests

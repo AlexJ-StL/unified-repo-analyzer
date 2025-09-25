@@ -4,7 +4,12 @@
  * Requirements: 4.2, 4.3, 4.4
  */
 
-import type { LLMResponse, ProjectInfo, ProviderConfig } from '@unified-repo-analyzer/shared';
+import type {
+  FileAnalysis,
+  LLMResponse,
+  ProjectInfo,
+  ProviderConfig,
+} from '@unified-repo-analyzer/shared';
 import { type ErrorContext, errorClassifier } from '@unified-repo-analyzer/shared';
 import axios from 'axios';
 import { logger, logPerformance } from '../services/logger.service.js';
@@ -84,7 +89,7 @@ ${projectInfo.directories.map((dir: string) => `- ${dir}`).join('\n')}
 
 # Key Files
 ${projectInfo.fileAnalysis
-  .map((file: any) => {
+  .map((file: FileAnalysis) => {
     return `## ${file.path}
 - Lines: ${file.lineCount}
 - Functions: ${file.functionCount}

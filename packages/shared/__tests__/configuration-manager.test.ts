@@ -6,7 +6,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockFunction, mockManager } from '../../../tests/MockManager';
 import { ConfigurationManager } from '../src/services/ConfigurationManager.js';
-import { DEFAULT_LOGGER_CONFIG, type LoggerConfig } from '../src/types/logging-config.js';
+import {
+  DEFAULT_LOGGER_CONFIG,
+  type LoggerConfig,
+  type LogLevel,
+} from '../src/types/logging-config.js';
 import { ConfigValidator } from '../src/utils/config-validator.js';
 
 describe('ConfigurationManager', () => {
@@ -104,7 +108,7 @@ describe('ConfigurationManager', () => {
 
     it('should reject invalid configuration updates', async () => {
       const result = await configManager.updateConfiguration({
-        level: 'INVALID_LEVEL' as any,
+        level: 'INVALID_LEVEL' as LogLevel,
       });
 
       expect(result.success).toBe(false);
@@ -234,7 +238,7 @@ describe('ConfigurationManager', () => {
     it('should handle configuration update errors gracefully', async () => {
       // Force an error by providing invalid outputs
       const result = await configManager.updateConfiguration({
-        outputs: null as any,
+        outputs: [] as LoggerConfig['outputs'],
       });
 
       expect(result.success).toBe(false);
@@ -245,7 +249,7 @@ describe('ConfigurationManager', () => {
       const originalConfig = configManager.getConfiguration();
 
       await configManager.updateConfiguration({
-        level: 'INVALID' as any,
+        level: 'INVALID' as LogLevel,
       });
 
       const currentConfig = configManager.getConfiguration();

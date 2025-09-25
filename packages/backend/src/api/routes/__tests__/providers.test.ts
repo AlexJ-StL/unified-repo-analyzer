@@ -27,10 +27,10 @@ interface ProvidersResponse {
 interface MockResponse {
   json: MockedFunction<(data: Record<string, unknown>) => MockResponse>;
   status: MockedFunction<(code: number) => MockResponse>;
-  send: MockedFunction<(data: any) => MockResponse>;
+  send: MockedFunction<(data: Record<string, unknown>) => MockResponse>;
   sendStatus: MockedFunction<(code: number) => MockResponse>;
   links: MockedFunction<(links: Record<string, string>) => MockResponse>;
-  jsonp: MockedFunction<(data: any) => MockResponse>;
+  jsonp: MockedFunction<(data: Record<string, unknown>) => MockResponse>;
 }
 
 interface RouterLayer {
@@ -46,10 +46,10 @@ function createMockResponse(): MockResponse {
   const res = {
     json: vi.fn() as MockedFunction<(data: Record<string, unknown>) => MockResponse>,
     status: vi.fn() as MockedFunction<(code: number) => MockResponse>,
-    send: vi.fn() as MockedFunction<(data: any) => MockResponse>,
+    send: vi.fn() as MockedFunction<(data: Record<string, unknown>) => MockResponse>,
     sendStatus: vi.fn() as MockedFunction<(code: number) => MockResponse>,
     links: vi.fn() as MockedFunction<(links: Record<string, string>) => MockResponse>,
-    jsonp: vi.fn() as MockedFunction<(data: any) => MockResponse>,
+    jsonp: vi.fn() as MockedFunction<(data: Record<string, unknown>) => MockResponse>,
   };
   res.status.mockReturnValue(res);
   res.send.mockReturnValue(res);
@@ -100,7 +100,7 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res as any);
+      await handler(req, res as Response);
 
       // Verify the response
       expect(res.json).toHaveBeenCalled();
@@ -118,15 +118,15 @@ describe('providers routes', () => {
       const mockProvider = response.providers.find((p: ProviderInfo) => p.id === 'mock');
 
       expect(claudeProvider).toBeDefined();
-      expect(claudeProvider!.configured).toBe(true);
-      expect(claudeProvider!.model).toBe('claude-3-haiku-20240307');
+      expect(claudeProvider?.configured).toBe(true);
+      expect(claudeProvider?.model).toBe('claude-3-haiku-20240307');
 
       expect(openrouterProvider).toBeDefined();
-      expect(openrouterProvider!.configured).toBe(true);
-      expect(openrouterProvider!.model).toBe('openrouter/test-model');
+      expect(openrouterProvider?.configured).toBe(true);
+      expect(openrouterProvider?.model).toBe('openrouter/test-model');
 
       expect(mockProvider).toBeDefined();
-      expect(mockProvider!.configured).toBe(false);
+      expect(mockProvider?.configured).toBe(false);
     });
 
     test('should handle errors gracefully', async () => {
@@ -140,7 +140,7 @@ describe('providers routes', () => {
       });
 
       // Call the route handler directly
-      await handler(req, res as any);
+      await handler(req, res as Response);
 
       // Verify error response
       expect(res.status).toHaveBeenCalledWith(500);
@@ -158,7 +158,7 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res as any);
+      await handler(req, res as Response);
 
       // Verify OpenRouter is listed
       expect(res.json).toHaveBeenCalled();
@@ -168,8 +168,8 @@ describe('providers routes', () => {
       );
 
       expect(openrouterProvider).toBeDefined();
-      expect(openrouterProvider!.displayName).toBe('OpenRouter');
-      expect(openrouterProvider!.available).toBe(true);
+      expect(openrouterProvider?.displayName).toBe('OpenRouter');
+      expect(openrouterProvider?.available).toBe(true);
     });
 
     test('should meet requirement 7.1 - show status of all configured providers', async () => {
@@ -185,7 +185,7 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res as any);
+      await handler(req, res as Response);
 
       // Verify all providers have status information
       expect(res.json).toHaveBeenCalled();
@@ -205,7 +205,7 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res as any);
+      await handler(req, res as Response);
 
       // Verify capabilities are clearly indicated
       expect(res.json).toHaveBeenCalled();
@@ -218,20 +218,20 @@ describe('providers routes', () => {
       const geminiProvider = response.providers.find((p: ProviderInfo) => p.id === 'gemini');
 
       // Verify OpenRouter capabilities
-      expect(openrouterProvider!.capabilities).toContain('text-generation');
-      expect(openrouterProvider!.capabilities).toContain('code-analysis');
-      expect(openrouterProvider!.capabilities).toContain('model-selection');
+      expect(openrouterProvider?.capabilities).toContain('text-generation');
+      expect(openrouterProvider?.capabilities).toContain('code-analysis');
+      expect(openrouterProvider?.capabilities).toContain('model-selection');
 
       // Verify Claude capabilities
-      expect(claudeProvider!.capabilities).toContain('text-generation');
-      expect(claudeProvider!.capabilities).toContain('code-analysis');
-      expect(claudeProvider!.capabilities).toContain('function-calling');
+      expect(claudeProvider?.capabilities).toContain('text-generation');
+      expect(claudeProvider?.capabilities).toContain('code-analysis');
+      expect(claudeProvider?.capabilities).toContain('function-calling');
 
       // Verify Gemini capabilities (includes image analysis)
-      expect(geminiProvider!.capabilities).toContain('text-generation');
-      expect(geminiProvider!.capabilities).toContain('code-analysis');
-      expect(geminiProvider!.capabilities).toContain('image-analysis');
-      expect(geminiProvider!.capabilities).toContain('function-calling');
+      expect(geminiProvider?.capabilities).toContain('text-generation');
+      expect(geminiProvider?.capabilities).toContain('code-analysis');
+      expect(geminiProvider?.capabilities).toContain('image-analysis');
+      expect(geminiProvider?.capabilities).toContain('function-calling');
     });
   });
 });

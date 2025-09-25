@@ -2,7 +2,12 @@
  * OpenRouter LLM provider implementation
  */
 
-import type { LLMResponse, ProjectInfo, ProviderConfig } from '@unified-repo-analyzer/shared';
+import type {
+  FileAnalysis,
+  LLMResponse,
+  ProjectInfo,
+  ProviderConfig,
+} from '@unified-repo-analyzer/shared';
 import axios from 'axios';
 import { LLMProvider } from './LLMProvider.js';
 
@@ -84,7 +89,7 @@ ${projectInfo.directories.map((dir: string) => `- ${dir}`).join('\n')}
 
 # Key Files
 ${projectInfo.fileAnalysis
-  .map((file: any) => {
+  .map((file: FileAnalysis) => {
     return `## ${file.path}
 - Lines: ${file.lineCount}
 - Functions: ${file.functionCount}

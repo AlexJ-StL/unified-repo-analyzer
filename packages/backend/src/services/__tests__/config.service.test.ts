@@ -223,7 +223,7 @@ describe('ConfigurationService', () => {
         ...DEFAULT_USER_PREFERENCES,
         general: {
           ...DEFAULT_USER_PREFERENCES.general,
-          theme: 'invalid' as any,
+          theme: 'invalid' as never,
         },
       };
 
@@ -257,7 +257,7 @@ describe('ConfigurationService', () => {
         ...DEFAULT_USER_PREFERENCES,
         general: {
           ...DEFAULT_USER_PREFERENCES.general,
-          theme: 'invalid' as any,
+          theme: 'invalid' as never,
         },
       };
 

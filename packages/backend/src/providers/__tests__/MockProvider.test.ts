@@ -25,15 +25,23 @@ describe('MockProvider', () => {
         }
       );
 
-      expect((provider as any).mockResponse).toBe('Custom response');
-      expect((provider as any).mockTokenUsage).toEqual({
+      expect((provider as unknown as { mockResponse: string }).mockResponse).toBe(
+        'Custom response'
+      );
+      expect(
+        (
+          provider as unknown as {
+            mockTokenUsage: { prompt: number; completion: number; total: number };
+          }
+        ).mockTokenUsage
+      ).toEqual({
         prompt: 200,
         completion: 100,
         total: 300,
       });
-      expect((provider as any).delay).toBe(100);
-      expect((provider as any).shouldFail).toBe(true);
-      expect((provider as any).errorMessage).toBe('Custom error');
+      expect((provider as unknown as { delay: number }).delay).toBe(100);
+      expect((provider as unknown as { shouldFail: boolean }).shouldFail).toBe(true);
+      expect((provider as unknown as { errorMessage: string }).errorMessage).toBe('Custom error');
     });
   });
 

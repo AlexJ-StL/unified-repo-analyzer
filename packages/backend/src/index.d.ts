@@ -9,6 +9,6 @@ declare const io: Server<
   import('socket.io').DefaultEventsMap,
   import('socket.io').DefaultEventsMap,
   import('socket.io').DefaultEventsMap,
-  any
+  unknown
 >;
 export { app, httpServer, io, core };

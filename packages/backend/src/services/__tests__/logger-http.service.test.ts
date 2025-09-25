@@ -1,13 +1,14 @@
+import type { NextFunction, Request, Response } from 'express';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockFunction } from '../../../../../tests/MockManager.js';
 import { logger, requestLogger } from '../logger.service.js';
 
 describe('HTTP Request/Response Logging', () => {
-  let mockReq: any;
-  let mockRes: any;
-  let mockNext: any;
-  let finishCallback: any;
-  let errorCallback: any;
+  let mockReq: Request;
+  let mockRes: Response;
+  let mockNext: NextFunction;
+  let finishCallback: (() => void) | undefined;
+  let errorCallback: ((error: Error) => void) | undefined;
 
   beforeEach(() => {
     // Mock the logger methods to track calls
@@ -48,11 +49,11 @@ describe('HTTP Request/Response Logging', () => {
       statusCode: 200,
       on: mockFunction((event: unknown, callback: unknown) => {
         if (event === 'finish') {
-          finishCallback = callback;
+          finishCallback = callback as () => void;
         } else if (event === 'error') {
-          errorCallback = callback;
+          errorCallback = callback as (error: Error) => void;
         }
-      }) as unknown as (event: string, callback: Function) => void,
+      }) as unknown as (event: string, callback: (...args: unknown[]) => void) => void,
       send: mockFunction((body: unknown) => {
         // Simulate the actual send method behavior
         return body;
@@ -99,13 +100,13 @@ describe('HTTP Request/Response Logging', () => {
       expect(logger.info).toHaveBeenCalled();
 
       // Verify that sensitive headers are redacted
-      const callArgs = (logger.info as any).mock.calls.find(
-        (call: any) => call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as unknown as ReturnType<typeof vi.spyOn>).mock.calls.find(
+        (call: unknown) => (call as unknown[])[0] === 'HTTP Request Started'
       );
       if (callArgs) {
-        const requestData = callArgs[1];
-        expect(requestData.headers.authorization).toBe('[REDACTED]');
-        expect(requestData.headers['x-api-key']).toBe('[REDACTED]');
+        const requestData = callArgs[1] as Record<string, unknown>;
+        expect((requestData.headers as Record<string, unknown>).authorization).toBe('[REDACTED]');
+        expect((requestData.headers as Record<string, unknown>)['x-api-key']).toBe('[REDACTED]');
       }
     });
 
@@ -123,13 +124,13 @@ describe('HTTP Request/Response Logging', () => {
       expect(logger.info).toHaveBeenCalled();
 
       // Verify that sensitive query params are redacted
-      const callArgs = (logger.info as any).mock.calls.find(
-        (call: any) => call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as unknown as ReturnType<typeof vi.spyOn>).mock.calls.find(
+        (call: unknown) => (call as unknown[])[0] === 'HTTP Request Started'
       );
       if (callArgs) {
-        const requestData = callArgs[1];
-        expect(requestData.query.password).toBe('[REDACTED]');
-        expect(requestData.query.apikey).toBe('[REDACTED]');
+        const requestData = callArgs[1] as Record<string, unknown>;
+        expect((requestData.query as Record<string, unknown>).password).toBe('[REDACTED]');
+        expect((requestData.query as Record<string, unknown>).apikey).toBe('[REDACTED]');
       }
     });
 
@@ -147,13 +148,13 @@ describe('HTTP Request/Response Logging', () => {
       expect(logger.info).toHaveBeenCalled();
 
       // Verify that sensitive body fields are redacted
-      const callArgs = (logger.info as any).mock.calls.find(
-        (call: any) => call[0] === 'HTTP Request Started'
+      const callArgs = (logger.info as unknown as ReturnType<typeof vi.spyOn>).mock.calls.find(
+        (call: unknown) => (call as unknown[])[0] === 'HTTP Request Started'
       );
       if (callArgs) {
-        const requestData = callArgs[1];
-        expect(requestData.body.password).toBe('[REDACTED]');
-        expect(requestData.body.token).toBe('[REDACTED]');
+        const requestData = callArgs[1] as Record<string, unknown>;
+        expect((requestData.body as Record<string, unknown>).password).toBe('[REDACTED]');
+        expect((requestData.body as Record<string, unknown>).token).toBe('[REDACTED]');
       }
     });
   });

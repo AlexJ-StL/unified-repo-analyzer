@@ -56,5 +56,6 @@
   "npm.packageManager": "bun",
   "npm.scriptRunner": "bun",
   "npm-intellisense.showBuildInLibs": true,
-  "php.executablePath": ""
+  "php.executablePath": "",
+  "compile-hero.disable-compile-files-on-did-save-code": false
 }

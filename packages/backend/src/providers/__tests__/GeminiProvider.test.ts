@@ -9,7 +9,7 @@ import { GeminiProvider } from '../GeminiProvider.js';
 
 // Mock axios
 vi.mock('axios');
-const mockedAxios = axios as any;
+const mockedAxios = vi.mocked(axios);
 
 describe('GeminiProvider', () => {
   beforeEach(() => {
@@ -23,7 +23,9 @@ describe('GeminiProvider', () => {
 
     test('should initialize with default model if not provided', () => {
       const provider = new GeminiProvider({ apiKey: 'test-key' });
-      expect((provider as any).config.model).toBe('gemini-pro');
+      expect((provider as unknown as { config: { model: string } }).config.model).toBe(
+        'gemini-pro'
+      );
     });
 
     test('should use provided model if specified', () => {
@@ -31,7 +33,9 @@ describe('GeminiProvider', () => {
         apiKey: 'test-key',
         model: 'gemini-ultra',
       });
-      expect((provider as any).config.model).toBe('gemini-ultra');
+      expect((provider as unknown as { config: { model: string } }).config.model).toBe(
+        'gemini-ultra'
+      );
     });
   });
 

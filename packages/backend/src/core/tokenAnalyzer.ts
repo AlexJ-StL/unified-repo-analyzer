@@ -9,6 +9,7 @@
  * @param text - Text to count tokens for
  * @returns Approximate token count
  */
+export function countTokens(text: string | null | undefined): number;
 export function countTokens(text: string): number {
   if (!text) return 0;
 

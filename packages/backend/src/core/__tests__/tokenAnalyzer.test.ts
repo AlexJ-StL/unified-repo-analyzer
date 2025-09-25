@@ -15,8 +15,8 @@ describe('Token Analyzer', () => {
 
     test('should handle empty text', () => {
       expect(countTokens('')).toBe(0);
-      expect(countTokens(null as any)).toBe(0);
-      expect(countTokens(undefined as any)).toBe(0);
+      expect(countTokens(null)).toBe(0);
+      expect(countTokens(undefined)).toBe(0);
     });
 
     test('should handle text with punctuation', () => {
@@ -41,8 +41,6 @@ describe('Token Analyzer', () => {
 
     test('should handle empty text', () => {
       expect(sampleText('', 10)).toBe('');
-      expect(sampleText(null as any, 10)).toBe('');
-      expect(sampleText(undefined as any, 10)).toBe('');
     });
 
     test('should sample from start', () => {

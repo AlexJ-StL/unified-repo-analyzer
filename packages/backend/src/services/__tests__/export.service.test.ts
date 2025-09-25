@@ -183,7 +183,7 @@ describe('ExportService', () => {
     });
 
     it('throws error for unsupported format', async () => {
-      await expect(exportService.exportAnalysis(mockAnalysis, 'xml' as any)).rejects.toThrow(
+      await expect(exportService.exportAnalysis(mockAnalysis, 'xml' as never)).rejects.toThrow(
         'Unsupported export format: xml'
       );
     });
@@ -243,7 +243,7 @@ describe('ExportService', () => {
 
     it('throws error for unsupported format', async () => {
       await expect(
-        exportService.exportBatchAnalysis(mockBatchAnalysis, 'pdf' as any)
+        exportService.exportBatchAnalysis(mockBatchAnalysis, 'pdf' as never)
       ).rejects.toThrow('Unsupported export format: pdf');
     });
   });

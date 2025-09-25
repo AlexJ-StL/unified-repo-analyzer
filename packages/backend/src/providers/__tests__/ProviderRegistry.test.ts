@@ -13,7 +13,8 @@ describe('ProviderRegistry - Enhanced Status Tracking', () => {
 
   beforeEach(() => {
     // Reset the singleton instance
-    (ProviderRegistry as any).instance = undefined;
+    (ProviderRegistry as unknown as { instance: ProviderRegistry | undefined }).instance =
+      undefined;
     registry = ProviderRegistry.getInstance();
   });
 
