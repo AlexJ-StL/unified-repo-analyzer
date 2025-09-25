@@ -15,27 +15,32 @@ import { AnalysisEngine } from '../core/AnalysisEngine.js';
 import * as mockedLoggerService from '../services/logger.service.js';
 import { readFileWithErrorHandling, traverseDirectory } from '../utils/fileSystem.js';
 
+// Define mock functions using vi.hoisted to avoid hoisting issues
+const mockLoggerInfo = vi.hoisted(() => vi.fn());
+const mockLoggerWarn = vi.hoisted(() => vi.fn());
+const mockLoggerError = vi.hoisted(() => vi.fn());
+const mockLoggerDebug = vi.hoisted(() => vi.fn());
+
+// Mock request ID storage
+let mockCurrentRequestId = 'test-request-id';
+
 // Mocks are now defined inline in the vi.mock factory function
 
 vi.mock('../services/logger.service', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../services/logger.service')>();
 
-  // Create inline mocks to avoid hoisting issues
-  const mockInfo = vi.fn();
-  const mockWarn = vi.fn();
-  const mockError = vi.fn();
-  const mockDebug = vi.fn();
-
   return {
     ...actual,
     logger: {
       ...actual.logger,
-      info: mockInfo,
-      warn: mockWarn,
-      error: mockError,
-      debug: mockDebug,
-      setRequestId: vi.fn(),
-      getRequestId: vi.fn(() => 'test-request-id'),
+      info: mockLoggerInfo,
+      warn: mockLoggerWarn,
+      error: mockLoggerError,
+      debug: mockLoggerDebug,
+      setRequestId: vi.fn((id: string) => {
+        mockCurrentRequestId = id;
+      }),
+      getRequestId: vi.fn(() => mockCurrentRequestId),
     },
   };
 });
@@ -48,10 +53,10 @@ describe('Logging Integration Tests', () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'logging-test-'));
 
     // Clear any existing logs
-    mockedLoggerService.logger.info.mockClear();
-    mockedLoggerService.logger.warn.mockClear();
-    mockedLoggerService.logger.error.mockClear();
-    mockedLoggerService.logger.debug.mockClear();
+    mockLoggerInfo.mockClear();
+    mockLoggerWarn.mockClear();
+    mockLoggerError.mockClear();
+    mockLoggerDebug.mockClear();
     vi.clearAllMocks();
   });
 
@@ -102,8 +107,8 @@ describe('Logging Integration Tests', () => {
       expect(mockedLoggerService.logger.debug).toHaveBeenCalledWith(
         'Path normalized',
         expect.objectContaining({
-          original: testDir,
-          normalized: expect.any(String),
+          originalPath: testDir,
+          normalizedPath: expect.any(String),
         }),
         'filesystem',
         expect.any(String)
@@ -426,17 +431,19 @@ describe('Logging Integration Tests', () => {
       // Verify error logging occurred
       expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
         'Claude API authentication failed',
-        expect.any(Error),
-        expect.objectContaining({
-          response: expect.objectContaining({
+        {
+          response: {
+            data: { error: 'Invalid API key' },
             status: 401,
-            data: expect.objectContaining({
-              error: 'Invalid API key',
-            }),
-          }),
+          },
+        },
+        expect.objectContaining({
+          duration: expect.any(String),
+          provider: 'claude',
+          statusCode: 401,
         }),
         'claude-provider',
-        expect.any(String)
+        'test-request-id'
       );
 
       expect(mockedLoggerService.logger.error).toHaveBeenCalledWith(
@@ -460,7 +467,7 @@ describe('Logging Integration Tests', () => {
     it('should maintain request correlation across operations', async () => {
       // Set a specific request ID
       const testRequestId = 'test-correlation-123';
-      logger.setRequestId(testRequestId);
+      mockedLoggerService.logger.setRequestId(testRequestId);
 
       // Create test file
       const testFile = path.join(tempDir, 'correlation-test.txt');

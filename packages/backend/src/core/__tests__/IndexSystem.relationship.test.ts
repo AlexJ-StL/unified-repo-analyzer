@@ -46,7 +46,7 @@ describe('IndexSystem Relationship Functionality', () => {
       };
 
       // Access private method through type assertion
-      const similarity = (indexSystem as any).calculateSimilarity(repoA, repoB);
+      const similarity = (indexSystem as IndexSystem).calculateSimilarity(repoA, repoB);
 
       expect(similarity.score).toBeGreaterThan(0.5);
       expect(similarity.type).toBe('complementary');
@@ -81,7 +81,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 65,
       };
 
-      const similarity = (indexSystem as any).calculateSimilarity(repoA, repoB);
+      const similarity = (indexSystem as IndexSystem).calculateSimilarity(repoA, repoB);
 
       expect(similarity.score).toBeGreaterThan(0.8);
       expect(similarity.type).toBe('fork');
@@ -115,7 +115,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 40,
       };
 
-      const similarity = (indexSystem as any).calculateSimilarity(libraryRepo, appRepo);
+      const similarity = (indexSystem as IndexSystem).calculateSimilarity(libraryRepo, appRepo);
 
       expect(similarity.type).toBe('dependency');
       expect(similarity.reason).toContain('javascript');
@@ -148,7 +148,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 30,
       };
 
-      const similarity = (indexSystem as any).calculateSimilarity(repoA, repoB);
+      const similarity = (indexSystem as IndexSystem).calculateSimilarity(repoA, repoB);
 
       expect(similarity.score).toBeLessThan(0.3);
     });
@@ -281,7 +281,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 40,
       };
 
-      const isFrontend = (indexSystem as any).isFrontendRepo(frontendRepo);
+      const isFrontend = (indexSystem as IndexSystem).isFrontendRepo(frontendRepo);
       expect(isFrontend).toBe(true);
     });
 
@@ -299,7 +299,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 50,
       };
 
-      const isBackend = (indexSystem as any).isBackendRepo(backendRepo);
+      const isBackend = (indexSystem as IndexSystem).isBackendRepo(backendRepo);
       expect(isBackend).toBe(true);
     });
 
@@ -317,7 +317,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 35,
       };
 
-      const isMobile = (indexSystem as any).isMobileRepo(mobileRepo);
+      const isMobile = (indexSystem as IndexSystem).isMobileRepo(mobileRepo);
       expect(isMobile).toBe(true);
     });
 
@@ -335,7 +335,7 @@ describe('IndexSystem Relationship Functionality', () => {
         complexity: 70,
       };
 
-      const isLibrary = (indexSystem as any).isLibraryRepo(libraryRepo);
+      const isLibrary = (indexSystem as IndexSystem).isLibraryRepo(libraryRepo);
       expect(isLibrary).toBe(true);
     });
   });

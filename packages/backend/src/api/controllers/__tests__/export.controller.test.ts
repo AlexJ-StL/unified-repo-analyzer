@@ -2,19 +2,16 @@ vi.mock('node:fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:fs')>();
   return {
     ...actual,
-    default: {
-      ...actual,
-      createReadStream: vi.fn(() => {
-        const { Readable } = require('node:stream');
-        const stream = new Readable();
-        stream.push(null);
-        return stream;
-      }),
-      stat: vi.fn(),
-      mkdir: vi.fn(),
-      readdir: vi.fn(),
-      unlink: vi.fn(),
-    },
+    createReadStream: vi.fn(() => {
+      const { Readable } = require('node:stream');
+      const stream = new Readable();
+      stream.push(null);
+      return stream;
+    }),
+    stat: vi.fn(),
+    mkdir: vi.fn(),
+    readdir: vi.fn(),
+    unlink: vi.fn(),
   };
 });
 
@@ -49,20 +46,6 @@ const mockExportService = exportService as unknown as {
 };
 
 // Removed duplicate fs mock - using the one at the top
-// Duplicate fs mock removed - using the one at the top of the file
-// Mock fs
-vi.mock('node:fs', () => ({
-  createReadStream: vi.fn(() => {
-    const { Readable } = require('node:stream');
-    const stream = new Readable();
-    stream.push(null);
-    return stream;
-  }),
-  stat: vi.fn(),
-  mkdir: vi.fn(),
-  readdir: vi.fn(),
-  unlink: vi.fn(),
-}));
 
 // Mock express-validator
 vi.mock('express-validator', () => ({

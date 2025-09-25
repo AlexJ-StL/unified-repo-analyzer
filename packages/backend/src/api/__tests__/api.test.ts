@@ -6,45 +6,12 @@ import fs from 'node:fs/promises';
 import type { Request, Response } from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
-mock.module('node:fs/promises', () => ({
-  stat: mock(() =>
-    Promise.resolve({
-      isFile: () => true,
-      isDirectory: () => false,
-      isBlockDevice: () => false,
-      isCharacterDevice: () => false,
-      isSymbolicLink: () => false,
-      isFIFO: () => false,
-      isSocket: () => false,
-      dev: 0,
-      ino: 0,
-      mode: 0,
-      nlink: 0,
-      uid: 0,
-      gid: 0,
-      rdev: 0,
-      size: 100,
-      blksize: 0,
-      blocks: 0,
-      atimeMs: 0,
-      mtimeMs: 0,
-      ctimeMs: 0,
-      birthtimeMs: 0,
-      atime: new Date(),
-      mtime: new Date(),
-      ctime: new Date(),
-      birthtime: new Date(),
-    })
-  ),
-  writeFile: mock(() => Promise.resolve()),
-  unlink: mock(() => Promise.resolve()),
-}));
-
-mock.module('node:fs', () => ({
-  promises: {
-    stat: mock(() =>
+vi.mock('node:fs/promises', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    stat: vi.fn(() =>
       Promise.resolve({
         isFile: () => true,
         isDirectory: () => false,
@@ -73,32 +40,96 @@ mock.module('node:fs', () => ({
         birthtime: new Date(),
       })
     ),
-  },
-}));
+  };
+});
+
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    promises: {
+      ...actual.promises,
+      stat: vi.fn(() =>
+        Promise.resolve({
+          isFile: () => true,
+          isDirectory: () => false,
+          isBlockDevice: () => false,
+          isCharacterDevice: () => false,
+          isSymbolicLink: () => false,
+          isFIFO: () => false,
+          isSocket: () => false,
+          dev: 0,
+          ino: 0,
+          mode: 0,
+          nlink: 0,
+          uid: 0,
+          gid: 0,
+          rdev: 0,
+          size: 100,
+          blksize: 0,
+          blocks: 0,
+          atimeMs: 0,
+          mtimeMs: 0,
+          ctimeMs: 0,
+          birthtimeMs: 0,
+          atime: new Date(),
+          mtime: new Date(),
+          ctime: new Date(),
+          birthtime: new Date(),
+        })
+      ),
+    },
+  };
+});
 
 import { pathHandler } from '../../services/path-handler.service.js';
 
-mock.module('../../services/logger.service', () => ({
+vi.mock('../../services/logger.service', () => ({
   default: {
-    debug: mock(),
-    info: mock(),
-    warn: mock(),
-    error: mock(),
-    setRequestId: mock(),
-    getRequestId: mock(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    setRequestId: vi.fn(),
+    getRequestId: vi.fn(),
   },
   logger: {
-    debug: mock(),
-    info: mock(),
-    warn: mock(),
-    error: mock(),
-    setRequestId: mock(),
-    getRequestId: mock(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    setRequestId: vi.fn(),
+    getRequestId: vi.fn(),
   },
-  logAnalysis: mock(),
-  logPerformance: mock(),
-  requestLogger: mock(),
+  logAnalysis: vi.fn(),
+  logPerformance: vi.fn(),
+  requestLogger: vi.fn((_req, _res, next) => next()),
 }));
+
+// Moved mockHealthService definition before the vi.mock call
+const mockHealthService = vi.hoisted(() => ({
+  healthCheckHandler: vi.fn(async (_req: Request, res: Response) => {
+    res.status(200).json({ status: 'healthy' });
+  }),
+  readinessHandler: vi.fn(async (_req: Request, res: Response) => {
+    res.status(200).json({ status: 'ready' });
+  }),
+  livenessHandler: vi.fn(async (_req: Request, res: Response) => {
+    res.status(200).json({ status: 'alive' });
+  }),
+}));
+
+vi.mock('../../services/health.service', async () => {
+  const actual = await vi.importActual('../../services/health.service');
+  return {
+    ...actual,
+    HealthService: class MockHealthService {
+      healthCheckHandler = mockHealthService.healthCheckHandler;
+      readinessHandler = mockHealthService.readinessHandler;
+      livenessHandler = mockHealthService.livenessHandler;
+    },
+  };
+});
 
 // Removed redundant logger mock - async mock at lines 12-35 covers it
 
@@ -107,8 +138,8 @@ mock.module('../../services/logger.service', () => ({
 import { app } from '../../index.js';
 
 // Create mock instances for top-level mocking
-const mockAnalysisEngine = {
-  analyzeRepository: mock(() =>
+const mockAnalysisEngine = vi.hoisted(() => ({
+  analyzeRepository: vi.fn(() =>
     Promise.resolve({
       id: '123',
       path: '/test/repo',
@@ -156,7 +187,7 @@ const mockAnalysisEngine = {
       },
     })
   ),
-  analyzeMultipleRepositoriesWithQueue: mock(() =>
+  analyzeMultipleRepositoriesWithQueue: vi.fn(() =>
     Promise.resolve({
       id: 'default-batch-id',
       repositories: [],
@@ -164,7 +195,7 @@ const mockAnalysisEngine = {
       analysisTime: 0,
     })
   ),
-  analyzeMultipleRepositories: mock(() =>
+  analyzeMultipleRepositories: vi.fn(() =>
     Promise.resolve({
       id: 'default-batch-id',
       repositories: [],
@@ -172,39 +203,27 @@ const mockAnalysisEngine = {
       analysisTime: 0,
     })
   ),
-  generateSynopsis: mock(() => Promise.resolve('')),
-  updateIndex: mock(() => Promise.resolve()),
-  searchRepositories: mock(() => Promise.resolve([])),
-  findSimilarRepositories: mock(() => Promise.resolve([])),
-};
+  generateSynopsis: vi.fn(() => Promise.resolve('')),
+  updateIndex: vi.fn(() => Promise.resolve()),
+  searchRepositories: vi.fn(() => Promise.resolve([])),
+  findSimilarRepositories: vi.fn(() => Promise.resolve([])),
+}));
 
-const mockIndexSystem = {
-  addRepository: mock(() => Promise.resolve()),
-  updateRepository: mock(() => Promise.resolve()),
-  findSimilarRepositories: mock(() => Promise.resolve([])),
-  suggestCombinations: mock(() => Promise.resolve([])),
-  getIndex: mock(() => ({
+const mockIndexSystem = vi.hoisted(() => ({
+  addRepository: vi.fn(() => Promise.resolve()),
+  updateRepository: vi.fn(() => Promise.resolve()),
+  findSimilarRepositories: vi.fn(() => Promise.resolve([])),
+  suggestCombinations: vi.fn(() => Promise.resolve([])),
+  getIndex: vi.fn(() => ({
     repositories: [],
     relationships: [],
     tags: [],
     lastUpdated: new Date(),
   })),
-};
+}));
 
-const mockHealthService = {
-  healthCheckHandler: mock((_req: Request, res: Response) => {
-    res.status(200).json({ status: 'healthy' });
-  }),
-  readinessHandler: mock((_req: Request, res: Response) => {
-    res.status(200).json({ status: 'ready' });
-  }),
-  livenessHandler: mock((_req: Request, res: Response) => {
-    res.status(200).json({ status: 'alive' });
-  }),
-};
-
-const mockPathHandler = {
-  validatePath: mock(() =>
+const mockPathHandler = vi.hoisted(() => ({
+  validatePath: vi.fn(() =>
     Promise.resolve({
       isValid: true,
       normalizedPath: '/test/nonexistent-repo',
@@ -219,31 +238,31 @@ const mockPathHandler = {
       },
     })
   ),
-};
+}));
 
-const mockMetricsService = {
-  requestMiddleware: mock(() => (_req: Request, _res: Response, next: () => void) => next()),
-  metricsHandler: mock((_req: Request, res: Response) => {
+const mockMetricsService = vi.hoisted(() => ({
+  requestMiddleware: vi.fn(() => (_req: Request, _res: Response, next: () => void) => next()),
+  metricsHandler: vi.fn((_req: Request, res: Response) => {
     res.status(200).json({ metrics: {} });
   }),
-  prometheusHandler: mock((_req: Request, res: Response) => {
+  prometheusHandler: vi.fn((_req: Request, res: Response) => {
     res.status(200).send('# Prometheus metrics\n');
   }),
-};
+}));
 
-const mockServiceContainer = {
-  initialize: mock(() => Promise.resolve()),
+const mockServiceContainer = vi.hoisted(() => ({
+  initialize: vi.fn(() => Promise.resolve()),
   healthService: mockHealthService,
   logger: {
-    info: mock(),
-    error: mock(),
-    warn: mock(),
-    debug: mock(),
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
   },
-};
+}));
 
 // Mock modules using Bun's mocking system
-mock.module('../../core/AnalysisEngine', () => ({
+vi.mock('../../core/AnalysisEngine', () => ({
   AnalysisEngine: class MockAnalysisEngine {
     analyzeRepository = mockAnalysisEngine.analyzeRepository;
     analyzeMultipleRepositoriesWithQueue = mockAnalysisEngine.analyzeMultipleRepositoriesWithQueue;
@@ -255,7 +274,7 @@ mock.module('../../core/AnalysisEngine', () => ({
   },
 }));
 
-mock.module('../../core/IndexSystem', () => ({
+vi.mock('../../core/IndexSystem', () => ({
   IndexSystem: class MockIndexSystem {
     addRepository = mockIndexSystem.addRepository;
     updateRepository = mockIndexSystem.updateRepository;
@@ -265,24 +284,15 @@ mock.module('../../core/IndexSystem', () => ({
   },
 }));
 
-mock.module('../../services/health.service', () => ({
-  HealthService: class MockHealthService {
-    healthCheckHandler = mockHealthService.healthCheckHandler;
-    readinessHandler = mockHealthService.readinessHandler;
-    livenessHandler = mockHealthService.livenessHandler;
-  },
-  healthService: mockHealthService,
-}));
-
-mock.module('../../services/path-handler.service', () => ({
+vi.mock('../../services/path-handler.service', () => ({
   pathHandler: mockPathHandler,
 }));
 
-mock.module('../../services/metrics.service', () => ({
+vi.mock('../../services/metrics.service', () => ({
   metricsService: mockMetricsService,
 }));
 
-mock.module('../../container/ServiceContainer', () => ({
+vi.mock('../../container/ServiceContainer', () => ({
   serviceContainer: mockServiceContainer,
 }));
 
@@ -384,9 +394,10 @@ describe('API Integration Tests', () => {
 
   describe('Health Check', () => {
     it('should return status ok', async () => {
-      // Mock fs.writeFile to succeed for health check
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-      vi.mocked(fs.unlink).mockResolvedValue(undefined);
+      // Mock fs operations to succeed for health check
+      vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined);
+      vi.spyOn(fs, 'writeFile').mockResolvedValue(undefined);
+      vi.spyOn(fs, 'unlink').mockResolvedValue(undefined);
 
       const response = await request(app).get('/health');
       expect(response.status).toBe(200);

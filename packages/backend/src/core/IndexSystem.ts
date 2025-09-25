@@ -437,10 +437,11 @@ export class IndexSystem {
 
     // Filter by date range if specified
     if (query.dateRange?.start && query.dateRange?.end) {
+      const startDate = query.dateRange.start;
+      const endDate = query.dateRange.end;
       results = results.filter(
         (result) =>
-          result.repository.lastAnalyzed >= query.dateRange?.start! &&
-          result.repository.lastAnalyzed <= query.dateRange?.end!
+          result.repository.lastAnalyzed >= startDate && result.repository.lastAnalyzed <= endDate
       );
     }
 

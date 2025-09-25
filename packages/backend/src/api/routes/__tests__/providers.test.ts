@@ -19,9 +19,18 @@ interface ProviderInfo {
   capabilities: string[];
 }
 
+interface ProvidersResponse {
+  providers: ProviderInfo[];
+  defaultProvider: string;
+}
+
 interface MockResponse {
   json: MockedFunction<(data: Record<string, unknown>) => MockResponse>;
   status: MockedFunction<(code: number) => MockResponse>;
+  send: MockedFunction<(data: any) => MockResponse>;
+  sendStatus: MockedFunction<(code: number) => MockResponse>;
+  links: MockedFunction<(links: Record<string, string>) => MockResponse>;
+  jsonp: MockedFunction<(data: any) => MockResponse>;
 }
 
 interface RouterLayer {
@@ -37,8 +46,16 @@ function createMockResponse(): MockResponse {
   const res = {
     json: vi.fn() as MockedFunction<(data: Record<string, unknown>) => MockResponse>,
     status: vi.fn() as MockedFunction<(code: number) => MockResponse>,
+    send: vi.fn() as MockedFunction<(data: any) => MockResponse>,
+    sendStatus: vi.fn() as MockedFunction<(code: number) => MockResponse>,
+    links: vi.fn() as MockedFunction<(links: Record<string, string>) => MockResponse>,
+    jsonp: vi.fn() as MockedFunction<(data: any) => MockResponse>,
   };
   res.status.mockReturnValue(res);
+  res.send.mockReturnValue(res);
+  res.sendStatus.mockReturnValue(res);
+  res.links.mockReturnValue(res);
+  res.jsonp.mockReturnValue(res);
   return res;
 }
 
@@ -59,7 +76,9 @@ describe('providers routes', () => {
     // Reset the registry before each test
     ProviderRegistry.getInstance().reset();
     // Get the handler for each test
-    handler = getProvidersHandler();
+    const h = getProvidersHandler();
+    if (!h) throw new Error('Handler not found');
+    handler = h;
   });
 
   test('simple test to verify structure', () => {
@@ -81,11 +100,11 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res);
+      await handler(req, res as any);
 
       // Verify the response
       expect(res.json).toHaveBeenCalled();
-      const response = res.json.mock.calls[0][0];
+      const response = res.json.mock.calls[0][0] as unknown as ProvidersResponse;
 
       expect(response).toHaveProperty('providers');
       expect(response).toHaveProperty('defaultProvider');
@@ -99,15 +118,15 @@ describe('providers routes', () => {
       const mockProvider = response.providers.find((p: ProviderInfo) => p.id === 'mock');
 
       expect(claudeProvider).toBeDefined();
-      expect(claudeProvider.configured).toBe(true);
-      expect(claudeProvider.model).toBe('claude-3-haiku-20240307');
+      expect(claudeProvider!.configured).toBe(true);
+      expect(claudeProvider!.model).toBe('claude-3-haiku-20240307');
 
       expect(openrouterProvider).toBeDefined();
-      expect(openrouterProvider.configured).toBe(true);
-      expect(openrouterProvider.model).toBe('openrouter/test-model');
+      expect(openrouterProvider!.configured).toBe(true);
+      expect(openrouterProvider!.model).toBe('openrouter/test-model');
 
       expect(mockProvider).toBeDefined();
-      expect(mockProvider.configured).toBe(false);
+      expect(mockProvider!.configured).toBe(false);
     });
 
     test('should handle errors gracefully', async () => {
@@ -121,7 +140,7 @@ describe('providers routes', () => {
       });
 
       // Call the route handler directly
-      await handler(req, res);
+      await handler(req, res as any);
 
       // Verify error response
       expect(res.status).toHaveBeenCalledWith(500);
@@ -139,18 +158,18 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res);
+      await handler(req, res as any);
 
       // Verify OpenRouter is listed
       expect(res.json).toHaveBeenCalled();
-      const response = res.json.mock.calls[0][0];
+      const response = res.json.mock.calls[0][0] as unknown as ProvidersResponse;
       const openrouterProvider = response.providers.find(
         (p: ProviderInfo) => p.id === 'openrouter'
       );
 
       expect(openrouterProvider).toBeDefined();
-      expect(openrouterProvider.displayName).toBe('OpenRouter');
-      expect(openrouterProvider.available).toBe(true);
+      expect(openrouterProvider!.displayName).toBe('OpenRouter');
+      expect(openrouterProvider!.available).toBe(true);
     });
 
     test('should meet requirement 7.1 - show status of all configured providers', async () => {
@@ -166,11 +185,11 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res);
+      await handler(req, res as any);
 
       // Verify all providers have status information
       expect(res.json).toHaveBeenCalled();
-      const response = res.json.mock.calls[0][0];
+      const response = res.json.mock.calls[0][0] as unknown as ProvidersResponse;
 
       response.providers.forEach((provider: ProviderInfo) => {
         expect(provider).toHaveProperty('status');
@@ -186,11 +205,11 @@ describe('providers routes', () => {
       const res = createMockResponse();
 
       // Call the route handler directly
-      await handler(req, res);
+      await handler(req, res as any);
 
       // Verify capabilities are clearly indicated
       expect(res.json).toHaveBeenCalled();
-      const response = res.json.mock.calls[0][0];
+      const response = res.json.mock.calls[0][0] as unknown as ProvidersResponse;
 
       const openrouterProvider = response.providers.find(
         (p: ProviderInfo) => p.id === 'openrouter'
@@ -199,20 +218,20 @@ describe('providers routes', () => {
       const geminiProvider = response.providers.find((p: ProviderInfo) => p.id === 'gemini');
 
       // Verify OpenRouter capabilities
-      expect(openrouterProvider.capabilities).toContain('text-generation');
-      expect(openrouterProvider.capabilities).toContain('code-analysis');
-      expect(openrouterProvider.capabilities).toContain('model-selection');
+      expect(openrouterProvider!.capabilities).toContain('text-generation');
+      expect(openrouterProvider!.capabilities).toContain('code-analysis');
+      expect(openrouterProvider!.capabilities).toContain('model-selection');
 
       // Verify Claude capabilities
-      expect(claudeProvider.capabilities).toContain('text-generation');
-      expect(claudeProvider.capabilities).toContain('code-analysis');
-      expect(claudeProvider.capabilities).toContain('function-calling');
+      expect(claudeProvider!.capabilities).toContain('text-generation');
+      expect(claudeProvider!.capabilities).toContain('code-analysis');
+      expect(claudeProvider!.capabilities).toContain('function-calling');
 
       // Verify Gemini capabilities (includes image analysis)
-      expect(geminiProvider.capabilities).toContain('text-generation');
-      expect(geminiProvider.capabilities).toContain('code-analysis');
-      expect(geminiProvider.capabilities).toContain('image-analysis');
-      expect(geminiProvider.capabilities).toContain('function-calling');
+      expect(geminiProvider!.capabilities).toContain('text-generation');
+      expect(geminiProvider!.capabilities).toContain('code-analysis');
+      expect(geminiProvider!.capabilities).toContain('image-analysis');
+      expect(geminiProvider!.capabilities).toContain('function-calling');
     });
   });
 });

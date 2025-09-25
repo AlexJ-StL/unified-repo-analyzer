@@ -172,9 +172,9 @@ describe('Analysis Engine', () => {
 
     test('should handle errors in individual repositories', async () => {
       // Get the mock function and reset it
-      const { discoverRepository: mockDiscoverRepository } = (await import(
+      const { discoverRepository: mockDiscoverRepository } = await import(
         '../../utils/repositoryDiscovery'
-      )) as any;
+      );
 
       // Reset the mock and set up different behaviors
       mockDiscoverRepository.mockClear();
@@ -318,7 +318,7 @@ describe('Analysis Engine', () => {
         includeTree: true,
       });
 
-      await expect(engine.generateSynopsis(analysis, 'pdf' as any)).rejects.toThrow(
+      await expect(engine.generateSynopsis(analysis, 'pdf' as OutputFormat)).rejects.toThrow(
         'Unsupported output format: pdf'
       );
     });

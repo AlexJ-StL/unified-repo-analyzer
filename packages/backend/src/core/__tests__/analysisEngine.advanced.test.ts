@@ -22,7 +22,11 @@ vi.mock('../../services/deduplication.service', () => ({
     deduplicateAnalysis: vi
       .fn()
       .mockImplementation(
-        async (_repoPath: string, _options: any, executor: () => Promise<any>) => await executor()
+        async (
+          _repoPath: string,
+          _options: AnalysisOptions,
+          executor: () => Promise<RepositoryAnalysis>
+        ) => await executor()
       ),
   },
 }));
@@ -333,7 +337,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         }
       `;
 
-      (mockReadFile as any).mockResolvedValue(vulnerableContent);
+      mockReadFile.mockResolvedValue(vulnerableContent);
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -360,7 +364,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         mode: 'quick',
       };
 
-      (mockReadFile as any).mockResolvedValue('const simpleCode = "hello world";');
+      mockReadFile.mockResolvedValue('const simpleCode = "hello world";');
 
       const result = await engine.analyzeRepository('/test/repo', quickOptions);
 
@@ -376,7 +380,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         mode: 'standard',
       };
 
-      (mockReadFile as any).mockResolvedValue('const simpleCode = "hello world";');
+      mockReadFile.mockResolvedValue('const simpleCode = "hello world";');
 
       const result = await engine.analyzeRepository('/test/repo', standardOptions);
 
@@ -395,7 +399,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         eval(userInput);
       `;
 
-      (mockReadFile as any).mockResolvedValue(criticalSecurityContent);
+      mockReadFile.mockResolvedValue(criticalSecurityContent);
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -420,7 +424,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         });
       `;
 
-      (mockReadFile as any).mockResolvedValue(reactExpressContent);
+      mockReadFile.mockResolvedValue(reactExpressContent);
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -445,7 +449,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         const duplicatedCode = "this appears many times";
       `;
 
-      (mockReadFile as any).mockResolvedValue(poorQualityContent);
+      mockReadFile.mockResolvedValue(poorQualityContent);
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -486,7 +490,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         }
       `;
 
-      (mockReadFile as any).mockResolvedValue(complexContent);
+      mockReadFile.mockResolvedValue(complexContent);
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -562,8 +566,8 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         },
       };
 
-      (mockDiscoverRepository as any).mockResolvedValue(mvcDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue('class User { constructor() {} }');
+      mockDiscoverRepository.mockResolvedValue(mvcDiscoveryResult);
+      mockReadFile.mockResolvedValue('class User { constructor() {} }');
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -630,8 +634,8 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         },
       };
 
-      (mockDiscoverRepository as any).mockResolvedValue(largeDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue('function simpleFunction() { return true; }');
+      mockDiscoverRepository.mockResolvedValue(largeDiscoveryResult);
+      mockReadFile.mockResolvedValue('function simpleFunction() { return true; }');
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -646,7 +650,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
 
   describe('Performance and Error Handling', () => {
     it('should handle file read errors gracefully', async () => {
-      (mockReadFile as any).mockRejectedValue(new Error('Permission denied'));
+      mockReadFile.mockRejectedValue(new Error('Permission denied'));
 
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
 
@@ -656,7 +660,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
     });
 
     it('should handle malformed JSON in package.json', async () => {
-      (mockReadFile as any).mockImplementation((filePath: string) => {
+      mockReadFile.mockImplementation((filePath: string) => {
         if (filePath.includes('package.json')) {
           return Promise.resolve('{ invalid json }');
         }
@@ -734,8 +738,8 @@ describe('AnalysisEngine Advanced Features Integration', () => {
         },
       };
 
-      (mockDiscoverRepository as any).mockResolvedValue(largeDiscoveryResult);
-      (mockReadFile as any).mockResolvedValue('function test() { return true; }');
+      mockDiscoverRepository.mockResolvedValue(largeDiscoveryResult);
+      mockReadFile.mockResolvedValue('function test() { return true; }');
 
       const startTime = Date.now();
       const result = await engine.analyzeRepository('/test/repo', mockAnalysisOptions);
@@ -752,7 +756,7 @@ describe('AnalysisEngine Advanced Features Integration', () => {
     it('should perform advanced analysis on multiple repositories', async () => {
       const repoPaths = ['/test/repo1', '/test/repo2'];
 
-      (mockReadFile as any).mockResolvedValue(`
+      mockReadFile.mockResolvedValue(`
         const password = "hardcoded123";
         function complexFunction() {
           if (a && b || c) {

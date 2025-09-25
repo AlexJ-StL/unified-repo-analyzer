@@ -543,8 +543,8 @@ describe('IndexSystem Comprehensive Tests', () => {
     it('should handle null/undefined values in repository data', async () => {
       const analysis = {
         ...createMockAnalysis('null-test'),
-        languages: null as any,
-        frameworks: undefined as any,
+        languages: null as string[] | null,
+        frameworks: undefined as string[] | undefined,
       };
 
       await indexSystem.addRepository(analysis);

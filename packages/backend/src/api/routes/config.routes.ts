@@ -61,9 +61,15 @@ router.patch(
   '/preferences/:section',
   param('section').isIn(['general', 'analysis', 'llmProvider', 'export', 'ui']),
   async (req, res) => {
-    const { section } = req.params!;
+    const { section } = req.params;
+    if (!section) {
+      return res.status(400).json({ error: 'Section parameter is required' });
+    }
     try {
-      const preferences = await configurationService.updatePreferences(section as any, req.body);
+      const preferences = await configurationService.updatePreferences(
+        section as keyof UserPreferences,
+        req.body
+      );
 
       // Update provider configurations in the registry if LLM provider settings changed
       if (section === 'llmProvider') {
