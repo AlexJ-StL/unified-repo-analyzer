@@ -786,7 +786,7 @@ export class ProviderRegistry {
 
     // Check if provider has a fetchModels method
     if (provider instanceof OpenRouterProvider) {
-      return await provider.fetchModels(apiKey);
+      return (await provider.fetchModels(apiKey)) as Model[];
     }
 
     throw new Error(`Provider '${name}' does not support model fetching`);

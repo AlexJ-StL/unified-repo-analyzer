@@ -1,3 +1,23 @@
+import { vi } from 'vitest';
+
+// Mock the logger service before importing PathHandler
+vi.mock('../services/logger.service', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../services/logger.service')>();
+  return {
+    ...actual,
+    Logger: vi.fn().mockImplementation(() => ({
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      setRequestId: vi.fn(),
+      getRequestId: vi.fn(),
+      updateConfig: vi.fn(),
+      getConfig: vi.fn(),
+    })),
+  };
+});
+
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -41,6 +61,8 @@ describe('Logging System Integration Tests', () => {
       includeStackTrace: true,
       redactSensitiveData: true,
     });
+
+    // The mock is already set up in the vi.mock call above
 
     pathHandler = new PathHandler();
 

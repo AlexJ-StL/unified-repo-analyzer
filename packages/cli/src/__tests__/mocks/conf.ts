@@ -1,36 +1,35 @@
 /**
- * Typed Jest-like mock for a Conf-style key-value store used in tests.
+ * Typed Vitest mock for a Conf-style key-value store used in tests.
  * Methods are jest.fn when available; otherwise they are no-ops.
  */
 export interface ConfLike {
-  get: (key: string) => unknown;
-  set: (key: string, value: unknown) => void;
+  get: (key: string) => string | number | boolean | null;
+  set: (key: string, value: string | number | boolean | null) => void;
   has: (key: string) => boolean;
   delete: (key: string) => void;
   clear: () => void;
 }
 
 // Fallback to global jest if present
-const j: any = (globalThis as any).jest;
 
-const identity = <T extends (...args: any[]) => any>(fn: T): T => {
-  return typeof j?.fn === 'function' ? (j.fn(fn) as unknown as T) : fn;
+const withVitest = <T extends (...args: never[]) => unknown>(fn: T): T => {
+  return vi.fn(fn) as unknown as T;
 };
 
 const createInstance = (): ConfLike => {
   return {
-    get: identity((_: string) => undefined),
-    set: identity((_: string, __: unknown) => {}),
-    has: identity((_: string) => false),
-    delete: identity((_: string) => {}),
-    clear: identity(() => {}),
+    get: withVitest((_: string) => null),
+    set: withVitest((_: string, __: unknown) => {}),
+    has: withVitest((_: string) => false),
+    delete: withVitest((_: string) => {}),
+    clear: withVitest(() => {}),
   };
 };
 
-// CommonJS default export compatibility for Jest module mocking.
+// CommonJS default export compatibility for Vitest module mocking.
 // In JS tests, this is used as a constructor-like function: Conf()
 const factory = () => createInstance();
 
-const defaultExport = typeof j?.fn === 'function' ? j.fn(factory) : (factory as unknown);
+const defaultExport = vi.fn(factory);
 
 export default defaultExport as unknown as () => ConfLike;

@@ -285,7 +285,7 @@ describe('Complete Analysis Workflow', () => {
 
 ## Custom Matchers
 
-The test suite includes custom Jest/Vitest matchers:
+The test suite includes custom Vitest matchers:
 
 ```typescript
 // Test repository analysis structure

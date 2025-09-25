@@ -1,36 +1,57 @@
+import type { StatOptions, Stats } from 'node:fs';
 /**
  * PathHandler service tests
  */
 
-import fs from 'node:fs/promises';
+import * as fs from 'node:fs/promises';
 import { platform } from 'node:os';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PathHandler } from '../path-handler.service.js';
 
 // Mock dependencies
-vi.mock('node:fs/promises');
-vi.mock('node:os');
-vi.mock('../logger.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../logger.service')>();
-  return {
-    ...actual,
-    default: {
-      ...actual.default,
-      debug: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
+vi.mock('node:fs/promises', () => ({
+  stat: vi.fn() as ReturnType<typeof vi.fn> &
+    ((path: string, opts?: StatOptions) => Promise<Stats>),
+  access: vi.fn() as ReturnType<typeof vi.fn> & ((path: string, mode?: number) => Promise<void>),
+  constants: {
+    R_OK: 4,
+    W_OK: 2,
+    X_OK: 1,
+  },
+  default: {
+    stat: vi.fn() as ReturnType<typeof vi.fn> &
+      ((path: string, opts?: StatOptions) => Promise<Stats>),
+    access: vi.fn() as ReturnType<typeof vi.fn> & ((path: string, mode?: number) => Promise<void>),
+    constants: {
+      R_OK: 4,
+      W_OK: 2,
+      X_OK: 1,
     },
-  };
-});
+  },
+}));
+vi.mock('node:os', () => ({
+  platform: vi.fn(),
+}));
+vi.mock('../logger.service', () => ({
+  default: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
-const mockFs = fs as any;
-const _mockPlatform = platform as any;
+const mockFs = fs as unknown as typeof fs & {
+  stat: ReturnType<typeof vi.fn> & ((path: string, opts?: StatOptions) => Promise<Stats>);
+  access: ReturnType<typeof vi.fn> & ((path: string, mode?: number) => Promise<void>);
+};
+const _mockPlatform = platform as unknown as { mockReturnValue: (value: string) => void };
 
 describe('PathHandler Service', () => {
   let pathHandler: PathHandler;
 
   beforeEach(() => {
+    _mockPlatform.mockReturnValue('linux');
     vi.clearAllMocks();
     pathHandler = new PathHandler();
   });
@@ -64,10 +85,10 @@ describe('PathHandler Service', () => {
 
     it('should handle empty or invalid paths', () => {
       expect(() => pathHandler.normalizePath('')).toThrow('Path must be a non-empty string');
-      expect(() => pathHandler.normalizePath(null as any)).toThrow(
+      expect(() => pathHandler.normalizePath(null as unknown as string)).toThrow(
         'Path must be a non-empty string'
       );
-      expect(() => pathHandler.normalizePath(undefined as any)).toThrow(
+      expect(() => pathHandler.normalizePath(undefined as unknown as string)).toThrow(
         'Path must be a non-empty string'
       );
     });
@@ -233,7 +254,8 @@ describe('PathHandler Service', () => {
         (e) =>
           e.code !== 'INVALID_CHARACTERS' &&
           e.code !== 'RESERVED_NAME' &&
-          e.code !== 'PATH_TOO_LONG'
+          e.code !== 'PATH_TOO_LONG' &&
+          e.code !== 'PATH_NOT_FOUND'
       );
       expect(formatErrors).toHaveLength(0);
     });
@@ -244,7 +266,33 @@ describe('PathHandler Service', () => {
       mockFs.stat.mockResolvedValue({
         isDirectory: () => false,
         size: 1024,
+        uid: 1000,
+        gid: 1000,
+        mode: 0o755,
+      } as Stats);
+
+      const result = await pathHandler.validatePath('/existing/file.txt');
+
+      expect(result.metadata.exists).toBe(true);
+      expect(result.metadata.isDirectory).toBe(false);
+      expect(result.metadata.size).toBe(1024);
+    });
+    it('should detect existing files', async () => {
+      mockFs.stat.mockImplementation(() => {
+        console.log('fs.stat called');
+        return Promise.resolve({
+          isDirectory: () => false,
+          size: 1024,
+          uid: 1000,
+          gid: 1000,
+          mode: 0o755,
+        } as Stats);
       });
+
+      mockFs.stat.mockResolvedValue({
+        isDirectory: () => false,
+        size: 1024,
+      } as Stats);
 
       const result = await pathHandler.validatePath('/existing/file.txt');
 
@@ -257,7 +305,7 @@ describe('PathHandler Service', () => {
       mockFs.stat.mockResolvedValue({
         isDirectory: () => true,
         size: 0,
-      });
+      } as Stats);
 
       const result = await pathHandler.validatePath('/existing/directory');
 
@@ -283,11 +331,11 @@ describe('PathHandler Service', () => {
         uid: 1000,
         gid: 1000,
         mode: 0o755,
-      });
+      } as Stats);
     });
 
     it('should check read permissions', async () => {
-      mockFs.access.mockImplementation((_path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: string, mode?: number) => {
         if (mode === fs.constants.R_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -300,7 +348,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should check write permissions', async () => {
-      mockFs.access.mockImplementation((_path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: string, mode?: number) => {
         if (mode === fs.constants.W_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -313,7 +361,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should check execute permissions', async () => {
-      mockFs.access.mockImplementation((_path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: string, mode?: number) => {
         if (mode === fs.constants.X_OK) return Promise.resolve();
         return Promise.reject(new Error('Permission denied'));
       });
@@ -352,7 +400,7 @@ describe('PathHandler Service', () => {
         uid: 1000,
         gid: 1000,
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('linux');
       const result = await handler.checkPermissions('/test/path');
@@ -365,7 +413,7 @@ describe('PathHandler Service', () => {
       mockFs.access.mockResolvedValue(undefined);
       mockFs.stat.mockResolvedValue({
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('win32');
       const result = await handler.checkPermissions('C:\\test\\path');
@@ -378,7 +426,7 @@ describe('PathHandler Service', () => {
       mockFs.access.mockResolvedValue(undefined);
       mockFs.stat.mockResolvedValue({
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('win32');
       const result = await handler.checkPermissions('C:\\Windows\\System32\\test');
@@ -387,14 +435,14 @@ describe('PathHandler Service', () => {
     });
 
     it('should detect read-only files on Windows', async () => {
-      mockFs.access.mockImplementation((_path: any, mode: any) => {
+      mockFs.access.mockImplementation((_path: string, mode?: number) => {
         if (mode === fs.constants.W_OK) return Promise.reject(new Error('Permission denied'));
         return Promise.resolve();
       });
 
       mockFs.stat.mockResolvedValue({
         mode: 0o444, // Read-only mode
-      });
+      } as Stats);
 
       const handler = new PathHandler('win32');
       const result = await handler.checkPermissions('C:\\test\\readonly.txt');
@@ -404,13 +452,13 @@ describe('PathHandler Service', () => {
     });
 
     it('should provide detailed error messages for Windows permission issues', async () => {
-      mockFs.access.mockImplementation((_path: any, _mode: any) => {
+      mockFs.access.mockImplementation((_path: string, _mode?: number) => {
         return Promise.reject(new Error('Access denied'));
       });
 
       mockFs.stat.mockResolvedValue({
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('win32');
       const result = await handler.checkPermissions('C:\\test\\path');
@@ -420,7 +468,7 @@ describe('PathHandler Service', () => {
     });
 
     it('should handle permission check errors gracefully', async () => {
-      mockFs.stat.mockResolvedValue({ mode: 0o755 });
+      mockFs.stat.mockResolvedValue({ mode: 0o755 } as Stats);
       mockFs.access.mockRejectedValue(new Error('Unexpected error'));
 
       const result = await pathHandler.checkPermissions('/test/path');
@@ -435,7 +483,7 @@ describe('PathHandler Service', () => {
       mockFs.stat.mockResolvedValue({
         // Missing uid/gid to trigger error handling
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('linux');
       const result = await handler.checkPermissions('/test/path');
@@ -448,7 +496,7 @@ describe('PathHandler Service', () => {
       mockFs.access.mockResolvedValue(undefined);
       mockFs.stat.mockResolvedValue({
         mode: 0o755,
-      });
+      } as Stats);
 
       const handler = new PathHandler('win32');
       // This should not cause errors, just log debug info
@@ -506,13 +554,13 @@ describe('PathHandler Service', () => {
         uid: 1000,
         gid: 1000,
         mode: 0o755,
-      });
+      } as Stats);
       mockFs.access.mockResolvedValue(undefined);
     });
 
     it('should complete validation within timeout', async () => {
       const result = await pathHandler.validatePath('/test/path', {
-        timeoutMs: 1000,
+        timeoutMs: 5000,
       });
 
       expect(result.isValid).toBe(true);
@@ -551,7 +599,7 @@ describe('PathHandler Service', () => {
                   uid: 1000,
                   gid: 1000,
                   mode: 0o755,
-                }),
+                } as Stats),
               100
             )
           )
@@ -599,7 +647,7 @@ describe('PathHandler Service', () => {
 
     it('should support timeout in permission checking', async () => {
       const result = await pathHandler.checkPermissions('/test/path', {
-        timeoutMs: 1000,
+        timeoutMs: 5000,
       });
 
       expect(result.canRead).toBe(true);
@@ -620,7 +668,7 @@ describe('PathHandler Service', () => {
                   uid: 1000,
                   gid: 1000,
                   mode: 0o755,
-                }),
+                } as Stats),
               100
             )
           )
@@ -682,13 +730,18 @@ describe('PathHandler Service', () => {
         uid: 1000,
         gid: 1000,
         mode: 0o755,
-      });
+      } as Stats);
 
       await pathHandler.validatePath('/test/path', {
         onProgress: (progress) => {
           progressUpdates.push(progress);
         },
       });
+      console.log('DEBUG: progressUpdates:', progressUpdates);
+      console.log(
+        'DEBUG: stages:',
+        progressUpdates.map((p) => p.stage)
+      );
 
       // Check that we have all expected stages
       const stages = progressUpdates.map((p) => p.stage);

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-23T04:24:12.152Z",
+  "timestamp": "2025-09-25T09:59:48.734Z",
   "summary": {
     "passed": 24,
     "warnings": 1,
@@ -74,8 +74,7 @@
     {
       "name": "Dependency Lock File",
       "status": "pass",
-      "message": "Lock file found: bun.lock",
-      "suggestions": ["Consider upgrading to bun.lockb format for better performance"]
+      "message": "Lock file found: bun.lockb (preferred format)"
     },
     {
       "name": "TypeScript Compilation",
@@ -131,7 +130,7 @@
     {
       "name": "Dependencies Size",
       "status": "pass",
-      "message": "Reasonable number of dependencies (694 packages)"
+      "message": "Reasonable number of dependencies (698 packages)"
     }
   ],
   "recoveryActions": [],

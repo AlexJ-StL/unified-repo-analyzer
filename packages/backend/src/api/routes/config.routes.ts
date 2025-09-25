@@ -4,6 +4,7 @@
 
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
+
 import { configurationService } from '../../services/config.service';
 import { updateProviderConfigurations } from '../../services/provider-initialization.service';
 import { logger } from '../../utils/logger.js';
@@ -61,13 +62,13 @@ router.patch(
   '/preferences/:section',
   param('section').isIn(['general', 'analysis', 'llmProvider', 'export', 'ui']),
   async (req, res) => {
-    const { section } = req.params;
+    const { section } = req.params || {};
     if (!section) {
       return res.status(400).json({ error: 'Section parameter is required' });
     }
     try {
       const preferences = await configurationService.updatePreferences(
-        section as keyof UserPreferences,
+        section as 'general' | 'analysis' | 'llmProvider' | 'export' | 'ui',
         req.body
       );
 

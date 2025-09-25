@@ -538,6 +538,7 @@ export class PathHandler {
 
       this.checkCancellation(signal);
 
+      console.log('DEBUG: About to check permissions', { exists: existsResult.exists });
       // Stage 4: Permission check (80%)
       if (existsResult.exists) {
         onProgress?.({
@@ -1230,6 +1231,55 @@ export class PathHandler {
       }
     }
 
+    // Log validation results
+    logger.debug('PathHandler: validatePathFormat completed', {
+      inputPath: inputPath,
+      isValid: errors.length === 0,
+      errorCount: errors.length,
+      warningCount: warnings.length,
+      errorCodes: errors.map((e) => e.code),
+      warningCodes: warnings.map((w) => w.code),
+      validationSummary: errors.length === 0 ? 'PASSED' : 'FAILED',
+    });
+
+    // Log validation results and normalization gap analysis
+    logger.debug('PathHandler: validatePathFormat completed', {
+      inputPath: inputPath,
+      isValid: errors.length === 0,
+      errorCount: errors.length,
+      warningCount: warnings.length,
+      errorCodes: errors.map((e) => e.code),
+      warningCodes: warnings.map((w) => w.code),
+      validationSummary: errors.length === 0 ? 'PASSED' : 'FAILED',
+    });
+
+    // Log normalization gap analysis
+    try {
+      const normalizedPath = this.normalizePath(inputPath);
+      logger.debug('PathHandler: Normalization gap analysis', {
+        rawInputPath: inputPath,
+        normalizedPath: normalizedPath,
+        validationVsNormalization: {
+          pathChanged: inputPath !== normalizedPath,
+          lengthChanged: inputPath.length !== normalizedPath.length,
+          separatorsChanged:
+            (inputPath.includes('/') && !normalizedPath.includes('/')) ||
+            (inputPath.includes('\\') && !normalizedPath.includes('\\')),
+          driveLetterCaseChanged:
+            this.hasDriveLetter(inputPath) &&
+            this.hasDriveLetter(normalizedPath) &&
+            inputPath.charAt(0) !== normalizedPath.charAt(0),
+          potentialValidationGap: inputPath !== normalizedPath ? 'YES' : 'NO',
+        },
+      });
+    } catch (error) {
+      logger.debug('PathHandler: Normalization gap analysis failed', {
+        inputPath: inputPath,
+        error: error instanceof Error ? error.message : String(error),
+        normalizationGap: 'ERROR_DURING_ANALYSIS',
+      });
+    }
+
     return { isValid: errors.length === 0, errors, warnings };
   }
 
@@ -1240,11 +1290,13 @@ export class PathHandler {
     pathToCheck: string,
     signal?: AbortSignal
   ): Promise<{ exists: boolean; isDirectory: boolean; size?: number }> {
+    console.log('DEBUG: checkPathExists called with', { pathToCheck });
     try {
       // Check for cancellation before starting the operation
       this.checkCancellation(signal);
 
       const stats = await fs.stat(pathToCheck);
+      console.log('DEBUG: fs.stat succeeded', { exists: true, isDirectory: stats.isDirectory() });
 
       // Check for cancellation after the operation completes
       this.checkCancellation(signal);

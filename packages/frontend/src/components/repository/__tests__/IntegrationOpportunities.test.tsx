@@ -4,12 +4,12 @@
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-/* biome-ignore lint/suspicious/noExplicitAny: Test file requires any for mocking */
+
 /**
  * Test runner note:
- * - This file uses Vitest. If your runner is Jest, replace the top import with:
- *     import { describe, it, expect, jest } from "@jest/globals";
- *   and change vi.fn() to jest.fn().
+ * - This file uses Vitest for testing.
+ 
+ 
  */
 import '@testing-library/jest-dom';
 import type { IntegrationOpportunity } from '@unified-repo-analyzer/shared/src/types/analysis';

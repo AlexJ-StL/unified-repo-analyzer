@@ -1,5 +1,5 @@
 /**
- * Typed Jest mock for a minimal Ora-like spinner API used by tests.
+ * Typed Vitest mock for a minimal Ora-like spinner API used by tests.
  * Methods are chainable (return this) and `text` is a mutable string.
  */
 export interface OraLike {
@@ -12,7 +12,6 @@ export interface OraLike {
 
 // Using any for jest in case @types/jest aren't available in this package scope.
 // TODO: If Jest types are available, replace `any` with proper jest.Mock type.
-const j: any = (globalThis as any).jest;
 
 const self: OraLike = {
   start: () => self,
@@ -23,17 +22,16 @@ const self: OraLike = {
 };
 
 // Wrap in jest.fn() when available to preserve call tracking in tests.
-const withJestIfAvailable = <T extends (...args: any[]) => any>(fn: T): T => {
-  return typeof j?.fn === 'function' ? (j.fn(fn) as unknown as T) : fn;
-};
+const withVitest = <T extends (...args: unknown[]) => unknown>(fn: T): T =>
+  vi.fn(fn) as unknown as T;
 
 const factory = () => {
   // Return a shallow proxy with chainable methods possibly wrapped by jest.fn
   return {
-    start: withJestIfAvailable(self.start),
-    succeed: withJestIfAvailable(self.succeed),
-    fail: withJestIfAvailable(self.fail),
-    stop: withJestIfAvailable(self.stop),
+    start: withVitest(self.start),
+    succeed: withVitest(self.succeed),
+    fail: withVitest(self.fail),
+    stop: withVitest(self.stop),
     get text() {
       return self.text;
     },
@@ -43,8 +41,5 @@ const factory = () => {
   } as OraLike;
 };
 
-// CommonJS default export compatibility for Jest module mocking.
-export default (typeof j?.fn === 'function' ? j.fn(factory) : (factory as unknown)) as unknown as {
-  // When used as a function call in tests: ora()
-  (): OraLike;
-};
+// CommonJS default export compatibility for Vitest module mocking.
+export default vi.fn(factory) as unknown as () => OraLike;

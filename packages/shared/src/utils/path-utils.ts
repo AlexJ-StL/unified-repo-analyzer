@@ -75,7 +75,7 @@ const PLATFORM = platform();
 const IS_WINDOWS = PLATFORM === 'win32';
 const IS_MACOS = PLATFORM === 'darwin';
 const IS_LINUX = PLATFORM === 'linux';
-const IS_UNIX = IS_MACOS || IS_LINUX;
+const _IS_UNIX = IS_MACOS || IS_LINUX;
 
 // Path length limits
 const MAX_PATH_LENGTH = IS_WINDOWS ? 260 : 4096;
@@ -124,7 +124,6 @@ export class PathValidator {
   constructor() {
     this.platform = PLATFORM;
     this.isWindows = IS_WINDOWS;
-    this.isUnix = IS_UNIX;
   }
 
   /**
