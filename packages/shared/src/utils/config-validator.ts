@@ -11,16 +11,16 @@ import type {
   LogOutputType,
 } from '../types/logging-config.js';
 
-export class ConfigValidator {
-  private static readonly VALID_LOG_LEVELS: LogLevel[] = ['DEBUG', 'INFO', 'WARN', 'ERROR'];
-  private static readonly VALID_LOG_FORMATS: LogFormat[] = ['JSON', 'TEXT'];
-  private static readonly VALID_OUTPUT_TYPES: LogOutputType[] = ['console', 'file', 'external'];
-  private static readonly VALID_EXTERNAL_TYPES = ['webhook', 'syslog', 'elasticsearch', 'custom'];
+export const ConfigValidator = {
+  VALID_LOG_LEVELS: ['DEBUG', 'INFO', 'WARN', 'ERROR'] as LogLevel[],
+  VALID_LOG_FORMATS: ['JSON', 'TEXT'] as LogFormat[],
+  VALID_OUTPUT_TYPES: ['console', 'file', 'external'] as LogOutputType[],
+  VALID_EXTERNAL_TYPES: ['webhook', 'syslog', 'elasticsearch', 'custom'],
 
   /**
    * Validate complete logger configuration
    */
-  public static validateLoggerConfig(config: unknown): ConfigValidationResult {
+  validateLoggerConfig(config: unknown): ConfigValidationResult {
     const result: ConfigValidationResult = {
       isValid: true,
       errors: [],
@@ -51,12 +51,12 @@ export class ConfigValidator {
 
     result.isValid = result.errors.length === 0;
     return result;
-  }
+  },
 
   /**
    * Validate log level
    */
-  private static validateLogLevel(level: unknown, result: ConfigValidationResult): void {
+  validateLogLevel(level: unknown, result: ConfigValidationResult): void {
     if (level === undefined) {
       result.errors.push({
         field: 'level',
@@ -82,12 +82,12 @@ export class ConfigValidator {
         code: 'INVALID_LOG_LEVEL',
       });
     }
-  }
+  },
 
   /**
    * Validate log format
    */
-  private static validateLogFormat(format: unknown, result: ConfigValidationResult): void {
+  validateLogFormat(format: unknown, result: ConfigValidationResult): void {
     if (format === undefined) {
       result.errors.push({
         field: 'format',
@@ -113,12 +113,12 @@ export class ConfigValidator {
         code: 'INVALID_LOG_FORMAT',
       });
     }
-  }
+  },
 
   /**
    * Validate boolean field
    */
-  private static validateBooleanField(
+  validateBooleanField(
     config: Record<string, unknown>,
     fieldName: string,
     result: ConfigValidationResult,
@@ -144,12 +144,12 @@ export class ConfigValidator {
         code: 'INVALID_BOOLEAN_TYPE',
       });
     }
-  }
+  },
 
   /**
    * Validate string field
    */
-  private static validateStringField(
+  validateStringField(
     config: Record<string, unknown>,
     fieldName: string,
     result: ConfigValidationResult,
@@ -181,12 +181,12 @@ export class ConfigValidator {
         suggestion: `Provide a meaningful value for ${fieldName}`,
       });
     }
-  }
+  },
 
   /**
    * Validate outputs array
    */
-  private static validateOutputs(outputs: unknown, result: ConfigValidationResult): void {
+  validateOutputs(outputs: unknown, result: ConfigValidationResult): void {
     if (outputs === undefined) {
       result.errors.push({
         field: 'outputs',
@@ -234,16 +234,12 @@ export class ConfigValidator {
     (outputs as unknown[]).forEach((output, index) => {
       ConfigValidator.validateOutput(output, index, result);
     });
-  }
+  },
 
   /**
    * Validate individual output configuration
    */
-  private static validateOutput(
-    output: unknown,
-    index: number,
-    result: ConfigValidationResult
-  ): void {
+  validateOutput(output: unknown, index: number, result: ConfigValidationResult): void {
     const fieldPrefix = `outputs[${index}]`;
 
     if (!output || typeof output !== 'object') {
@@ -306,12 +302,12 @@ export class ConfigValidator {
         code: 'MISSING_OUTPUT_CONFIG',
       });
     }
-  }
+  },
 
   /**
    * Validate console output configuration
    */
-  private static validateConsoleConfig(
+  validateConsoleConfig(
     config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
@@ -354,16 +350,12 @@ export class ConfigValidator {
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }
-  }
+  },
 
   /**
    * Validate file output configuration
    */
-  private static validateFileConfig(
-    config: unknown,
-    fieldPrefix: string,
-    result: ConfigValidationResult
-  ): void {
+  validateFileConfig(config: unknown, fieldPrefix: string, result: ConfigValidationResult): void {
     if (typeof config !== 'object' || config === null) {
       result.errors.push({
         field: `${fieldPrefix}.config`,
@@ -453,12 +445,12 @@ export class ConfigValidator {
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }
-  }
+  },
 
   /**
    * Validate external output configuration
    */
-  private static validateExternalConfig(
+  validateExternalConfig(
     config: unknown,
     fieldPrefix: string,
     result: ConfigValidationResult
@@ -551,12 +543,12 @@ export class ConfigValidator {
         code: 'INVALID_OUTPUT_LEVEL',
       });
     }
-  }
+  },
 
   /**
    * Parse file size string to bytes
    */
-  private static parseFileSize(sizeStr: string): number {
+  parseFileSize(sizeStr: string): number {
     const match = sizeStr.match(/^(\d+(?:\.\d+)?)\s*([A-Z]{1,2})$/i);
     if (!match) {
       throw new Error(
@@ -584,5 +576,5 @@ export class ConfigValidator {
     }
 
     return num * units[unit];
-  }
-}
+  },
+};

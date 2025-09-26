@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import websocketService from '../websocket';
 
 // --- Mocks ---
-const eventHandlers: { [key: string]: (...args: any[]) => void } = {};
+const eventHandlers: { [key: string]: (...args: unknown[]) => void } = {};
 const mockSocket = {
   on: vi.fn((event, handler) => {
     eventHandlers[event] = handler;
@@ -33,7 +33,7 @@ vi.mock('../../store/useAnalysisStore', () => ({
 }));
 
 // Helper to trigger events
-const triggerSocketEvent = (event: string, ...args: any[]) => {
+const triggerSocketEvent = (event: string, ...args: unknown[]) => {
   if (eventHandlers[event]) {
     act(() => {
       eventHandlers[event](...args);
@@ -60,14 +60,14 @@ describe('WebSocketService', () => {
   test('should connect to WebSocket server', () => {
     websocketService.connect();
     expect(vi.mocked(mockSocket.on)).toHaveBeenCalledWith('connect', expect.any(Function));
-    expect((websocketService as any).socket).not.toBeNull();
+    expect((websocketService as unknown as { socket: unknown }).socket).not.toBeNull();
   });
 
   test('should disconnect from WebSocket server', () => {
     websocketService.connect();
     websocketService.disconnect();
     expect(mockSocket.disconnect).toHaveBeenCalled();
-    expect((websocketService as any).socket).toBeNull();
+    expect((websocketService as unknown as { socket: unknown }).socket).toBeNull();
   });
 
   test('should subscribe to analysis progress', () => {
@@ -79,14 +79,14 @@ describe('WebSocketService', () => {
   test('should handle connect event', () => {
     websocketService.connect();
     triggerSocketEvent('connect');
-    expect((websocketService as any).connected).toBe(true);
+    expect((websocketService as unknown as { connected: boolean }).connected).toBe(true);
     expect(mockSetProgress).toHaveBeenCalledWith({ log: 'WebSocket connected' });
   });
 
   test('should handle disconnect event', () => {
     websocketService.connect();
     triggerSocketEvent('disconnect', 'test-reason');
-    expect((websocketService as any).connected).toBe(false);
+    expect((websocketService as unknown as { connected: boolean }).connected).toBe(false);
     expect(mockSetProgress).toHaveBeenCalledWith({ log: 'WebSocket disconnected: test-reason' });
   });
 

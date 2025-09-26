@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import PathInput from '../components/common/PathInput';
 import MainLayout from '../components/layout/MainLayout';
 import { useProviders } from '../hooks/useProviders';
@@ -8,15 +8,19 @@ import { useSettingsStore } from '../store/useSettingsStore';
 const SettingsPage = () => {
   const { preferences, updatePreferences, loadPreferences } = useSettingsStore();
   const { showToast } = useToast();
-  const {
-    providers,
-    loading: providersLoading,
-    error: providersError,
-    refreshProviders,
-  } = useProviders();
+  const { providers, error: providersError, refreshProviders } = useProviders();
   const [cacheDirectory, setCacheDirectory] = useState('~/.repo-analyzer/cache');
   const [_isCacheDirectoryValid, setIsCacheDirectoryValid] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Generate unique IDs for form elements
+  const analysisModeId = useId();
+  const exportFormatId = useId();
+  const autoIndexId = useId();
+  const defaultProviderId = useId();
+  const apiKeyId = useId();
+  const maxTokensId = useId();
+  const ignorePatternsId = useId();
 
   // Load preferences and fetch providers when component mounts
   useEffect(() => {
@@ -109,7 +113,7 @@ const SettingsPage = () => {
                   Default Analysis Mode
                 </label>
                 <select
-                  id="default-analysis-mode"
+                  id={analysisModeId}
                   name="default-analysis-mode"
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 >
@@ -127,7 +131,7 @@ const SettingsPage = () => {
                   Default Export Format
                 </label>
                 <select
-                  id="default-export-format"
+                  id={exportFormatId}
                   name="default-export-format"
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 >
@@ -139,7 +143,7 @@ const SettingsPage = () => {
 
               <div className="flex items-center">
                 <input
-                  id="auto-index"
+                  id={autoIndexId}
                   name="auto-index"
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -162,7 +166,7 @@ const SettingsPage = () => {
                   Default Provider
                 </label>
                 <select
-                  id="default-provider"
+                  id={defaultProviderId}
                   name="default-provider"
                   value={localPreferences.defaultProvider}
                   onChange={(e) =>
@@ -190,7 +194,7 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="password"
-                  id="api-key"
+                  id={apiKeyId}
                   name="api-key"
                   value={localPreferences.apiKey}
                   onChange={(e) =>
@@ -210,7 +214,7 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="number"
-                  id="max-tokens"
+                  id={maxTokensId}
                   name="max-tokens"
                   value={localPreferences.maxTokens}
                   onChange={(e) =>
@@ -237,7 +241,7 @@ const SettingsPage = () => {
                   Ignore Patterns
                 </label>
                 <textarea
-                  id="ignore-patterns"
+                  id={ignorePatternsId}
                   name="ignore-patterns"
                   rows={3}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -281,6 +285,7 @@ const SettingsPage = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                   >
+                    <title>Saving...</title>
                     <circle
                       className="opacity-25"
                       cx="12"

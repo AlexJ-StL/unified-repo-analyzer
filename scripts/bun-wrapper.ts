@@ -53,5 +53,8 @@ async function main() {
 }
 
 if (import.meta.main) {
-  main().catch(console.error);
+  main().catch((err) => {
+    process.stderr.write(`Error: ${err.message}\n`);
+    process.exit(1);
+  });
 }

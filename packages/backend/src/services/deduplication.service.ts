@@ -17,8 +17,8 @@ interface PendingRequest<T> {
  * Service for deduplicating concurrent identical requests
  */
 export class DeduplicationService {
-  private pendingAnalysis = new Map<string, PendingRequest<any>>();
-  private pendingBatch = new Map<string, PendingRequest<any>>();
+  private pendingAnalysis = new Map<string, PendingRequest<unknown>>();
+  private pendingBatch = new Map<string, PendingRequest<unknown>>();
   private readonly cleanupInterval: NodeJS.Timeout;
   private readonly maxAge: number;
 
@@ -74,7 +74,7 @@ export class DeduplicationService {
         `Deduplicating analysis request for: ${repoPath} (${existing.requestCount + 1} total requests)`
       );
       existing.requestCount++;
-      return existing.promise;
+      return existing.promise as Promise<T>;
     }
 
     // Create new request
@@ -111,7 +111,7 @@ export class DeduplicationService {
         `Deduplicating batch analysis request for ${repoPaths.length} repositories (${existing.requestCount + 1} total requests)`
       );
       existing.requestCount++;
-      return existing.promise;
+      return existing.promise as Promise<T>;
     }
 
     // Create new request

@@ -35,7 +35,7 @@ const RelationshipsPage: React.FC = () => {
     }
   }, [searchParams]);
 
-  // Define before useEffect to avoid \"used before declaration\" and stabilize identity
+  // Define before useEffect to avoid "used before declaration" and stabilize identity
   const loadRelationshipData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -108,6 +108,7 @@ const RelationshipsPage: React.FC = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
+              <title>No data available</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -155,12 +156,14 @@ const RelationshipsPage: React.FC = () => {
               >
                 {repoId}
                 <button
+                  type="button"
                   onClick={() =>
                     handleRepositorySelection(selectedRepositories.filter((id) => id !== repoId))
                   }
                   className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:text-blue-600"
                 >
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <title>Remove</title>
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -178,6 +181,7 @@ const RelationshipsPage: React.FC = () => {
         <div className="border-b border-gray-200 mb-6">
           <nav className="-mb-px flex space-x-8">
             <button
+              type="button"
               onClick={() => setActiveTab('graph')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'graph'
@@ -188,6 +192,7 @@ const RelationshipsPage: React.FC = () => {
               Relationship Graph
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('insights')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'insights'
@@ -198,6 +203,7 @@ const RelationshipsPage: React.FC = () => {
               Insights & Analytics
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('opportunities')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'opportunities'
@@ -228,6 +234,7 @@ const RelationshipsPage: React.FC = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                <title>Error</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -239,6 +246,7 @@ const RelationshipsPage: React.FC = () => {
                 <h3 className="text-sm font-medium">Error loading relationship data</h3>
                 <p className="text-sm mt-1">{error}</p>
                 <button
+                  type="button"
                   onClick={loadRelationshipData}
                   className="text-sm underline mt-2 hover:text-red-800"
                 >

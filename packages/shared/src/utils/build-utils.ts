@@ -254,7 +254,7 @@ export class BuildExecutor {
           resolve({
             success: false,
             exitCode: null,
-            duration: config.timeout!,
+            duration: config.timeout,
             error: `Command timed out after ${config.timeout}ms`,
           });
         }, config.timeout);

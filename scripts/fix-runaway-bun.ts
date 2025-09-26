@@ -281,7 +281,7 @@ async function main() {
 }
 
 if (import.meta.main) {
-  main().catch(console.error);
+  main().catch((err: unknown) => { process.stderr.write("Error: " + (err as Error).message + "\\n"); process.exit(1); });
 }`;
 
     await writeFile('scripts/bun-wrapper.ts', wrapperScript);
@@ -390,7 +390,10 @@ async function main() {
 }
 
 if (import.meta.main) {
-  main().catch(console.error);
+  main().catch((err: unknown) => {
+    process.stderr.write(`Error: ${(err as Error).message}\\n`);
+    process.exit(1);
+  });
 }
 
 export { BunProcessManager };

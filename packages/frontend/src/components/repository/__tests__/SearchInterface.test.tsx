@@ -25,7 +25,9 @@ vi.mock('../SearchFilters', () => ({
 vi.mock('../SavedSearches', () => ({
   default: ({ onSelectSearch }: { onSelectSearch: (query: string) => void }) => (
     <div data-testid="saved-searches">
-      <button onClick={() => onSelectSearch('test query')}>Select Search</button>
+      <button type="button" onClick={() => onSelectSearch('test query')}>
+        Select Search
+      </button>
     </div>
   ),
 }));
@@ -44,7 +46,9 @@ vi.mock('../Pagination', () => ({
       <span>
         Page {currentPage} of {totalPages}
       </span>
-      <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
+      <button type="button" onClick={() => onPageChange(currentPage + 1)}>
+        Next
+      </button>
     </div>
   ),
 }));
@@ -56,7 +60,15 @@ vi.mock('../RepositoryCard', () => ({
     onSelect,
     onView,
   }: {
-    repository: any;
+    repository: {
+      id: string;
+      name: string;
+      path: string;
+      languages: string[];
+      frameworks: string[];
+      lastAnalyzed: string;
+      size: number;
+    };
     isSelected: boolean;
     onSelect: () => void;
     onView: () => void;
@@ -69,7 +81,7 @@ vi.mock('../RepositoryCard', () => ({
         onChange={onSelect}
         data-testid={`select-${repository.id}`}
       />
-      <button onClick={onView} data-testid={`view-${repository.id}`}>
+      <button type="button" onClick={onView} data-testid={`view-${repository.id}`}>
         View
       </button>
     </div>
@@ -119,8 +131,8 @@ describe('SearchInterface', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRepositoryStore as any).mockReturnValue(mockStoreState);
-    (apiService.searchRepositories as any).mockResolvedValue({
+    (useRepositoryStore as ReturnType<typeof vi.fn>).mockReturnValue(mockStoreState);
+    (apiService.searchRepositories as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: {
         repositories: mockRepositories,
         total: mockRepositories.length,
@@ -195,7 +207,7 @@ describe('SearchInterface', () => {
   });
 
   it('handles pagination correctly', async () => {
-    (apiService.searchRepositories as any).mockResolvedValue({
+    (apiService.searchRepositories as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: {
         repositories: mockRepositories,
         total: 30, // 3 pages with 10 items per page
@@ -222,7 +234,7 @@ describe('SearchInterface', () => {
   });
 
   it('displays loading state correctly', async () => {
-    (useRepositoryStore as any).mockReturnValue({
+    (useRepositoryStore as ReturnType<typeof vi.fn>).mockReturnValue({
       ...mockStoreState,
       isLoading: true,
     });
@@ -233,7 +245,7 @@ describe('SearchInterface', () => {
   });
 
   it('displays error state correctly', async () => {
-    (useRepositoryStore as any).mockReturnValue({
+    (useRepositoryStore as ReturnType<typeof vi.fn>).mockReturnValue({
       ...mockStoreState,
       error: 'Failed to load repositories',
     });
@@ -244,7 +256,7 @@ describe('SearchInterface', () => {
   });
 
   it('displays empty state correctly', async () => {
-    (useRepositoryStore as any).mockReturnValue({
+    (useRepositoryStore as ReturnType<typeof vi.fn>).mockReturnValue({
       ...mockStoreState,
       repositories: [],
     });

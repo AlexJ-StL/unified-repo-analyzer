@@ -13,7 +13,7 @@ import logger from './logger.service.js';
 export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
   // Generate unique request ID
   const requestId = uuidv4();
-  (req as any).requestId = requestId;
+  (req as { requestId?: string }).requestId = requestId;
 
   // Log request
   logger.info('HTTP Request', {
@@ -64,5 +64,5 @@ export const generateRequestId = (): string => {
  * Get request ID from request object
  */
 export const getRequestId = (req: Request): string | undefined => {
-  return (req as any).requestId;
+  return (req as { requestId?: string }).requestId;
 };

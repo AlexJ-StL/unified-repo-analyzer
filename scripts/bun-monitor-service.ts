@@ -45,5 +45,8 @@ async function startService() {
 }
 
 if (import.meta.main) {
-  startService().catch(console.error);
+  startService().catch((err) => {
+    process.stderr.write(`Error starting service: ${err.message}\n`);
+    process.exit(1);
+  });
 }

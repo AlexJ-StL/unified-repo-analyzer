@@ -14,7 +14,9 @@ const mockFs = {
 };
 
 const mockUtil = {
-  promisify: mockManager.mockFunction((fn: Function) => fn),
+  promisify: mockManager.mockFunction(() => Promise.resolve(undefined)) as (
+    fn: (callback: (err: unknown, value: unknown) => void) => void
+  ) => Promise<unknown>,
 };
 
 // Register mocks with MockManager
@@ -55,6 +57,7 @@ const mockAnalysis: RepositoryAnalysis = {
 │   └── components/
 └── package.json`,
   },
+  files: [],
   codeAnalysis: {
     functionCount: 12,
     classCount: 5,
@@ -97,7 +100,7 @@ const mockAnalysis: RepositoryAnalysis = {
   metadata: {
     analysisMode: 'comprehensive',
     llmProvider: 'claude',
-    processingTime: 5000,
+    analysisTime: 5000,
     tokenUsage: {
       prompt: 1000,
       completion: 500,

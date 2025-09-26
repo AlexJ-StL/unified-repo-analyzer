@@ -1,27 +1,69 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import type { AxiosResponse } from 'axios';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { apiService } from '../../services/api';
+import { type AnalysisRequest, type AnalysisRequestStats, apiService } from '../../services/api';
 import { useAnalysisRequests } from '../useAnalysisRequests';
 
 // Mock the entire apiService module
 vi.mock('../../services/api');
 
 describe('useAnalysisRequests', () => {
-  const mockRequests = [
-    { id: '1', path: '/test/path1', status: 'completed', progress: 100 },
-    { id: '2', path: '/test/path2', status: 'processing', progress: 50 },
+  const mockRequests: AnalysisRequest[] = [
+    {
+      id: '1',
+      path: '/test/path1',
+      options: {},
+      status: 'completed',
+      progress: 100,
+      startTime: '2023-01-01T00:00:00Z',
+    },
+    {
+      id: '2',
+      path: '/test/path2',
+      options: {},
+      status: 'processing',
+      progress: 50,
+      startTime: '2023-01-01T00:00:00Z',
+    },
   ];
 
-  const mockStats = {
+  const mockStats: AnalysisRequestStats = {
     total: 2,
+    queued: 0,
     processing: 1,
     completed: 1,
+    failed: 0,
+    cancelled: 0,
+    averageProcessingTime: 0,
   };
 
   beforeEach(() => {
-    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue({ data: mockRequests } as any);
-    vi.mocked(apiService.getAnalysisRequestStats).mockResolvedValue({ data: mockStats } as any);
-    vi.mocked(apiService.getAnalysisRequest).mockResolvedValue({ data: mockRequests[0] } as any);
+    const mockResponse: AxiosResponse<AnalysisRequest[]> = {
+      data: mockRequests,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    };
+    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue(mockResponse);
+
+    const mockStatsResponse: AxiosResponse<AnalysisRequestStats> = {
+      data: mockStats,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    };
+    vi.mocked(apiService.getAnalysisRequestStats).mockResolvedValue(mockStatsResponse);
+
+    const mockSingleResponse: AxiosResponse<AnalysisRequest> = {
+      data: mockRequests[0],
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    };
+    vi.mocked(apiService.getAnalysisRequest).mockResolvedValue(mockSingleResponse);
   });
 
   afterEach(() => {
@@ -60,11 +102,25 @@ describe('useAnalysisRequests', () => {
     // Wait for initial fetch
     await waitFor(() => expect(result.current.requests).toEqual(mockRequests));
 
-    const newMockRequests = [
+    const newMockRequests: AnalysisRequest[] = [
       ...mockRequests,
-      { id: '3', path: '/test/path3', status: 'queued', progress: 0 },
+      {
+        id: '3',
+        path: '/test/path3',
+        options: {},
+        status: 'queued',
+        progress: 0,
+        startTime: '2023-01-01T00:00:00Z',
+      },
     ];
-    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue({ data: newMockRequests } as any);
+    const newMockResponse: AxiosResponse<AnalysisRequest[]> = {
+      data: newMockRequests,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    };
+    vi.mocked(apiService.getAnalysisRequests).mockResolvedValue(newMockResponse);
 
     // Refresh requests
     await act(async () => {
@@ -78,11 +134,12 @@ describe('useAnalysisRequests', () => {
   test('should fetch a specific request', async () => {
     const { result } = renderHook(() => useAnalysisRequests());
 
-    let request: any;
+    let request: AnalysisRequest | null;
     await act(async () => {
       request = await result.current.getRequest('1');
     });
 
+    expect(request).not.toBeNull();
     expect(request).toEqual(mockRequests[0]);
     expect(apiService.getAnalysisRequest).toHaveBeenCalledWith('1');
   });

@@ -24,10 +24,10 @@ export declare function useApi<T = unknown>(
   apiFunc: ApiFunction,
   options?: UseApiOptions
 ): UseApiReturn<T>;
-export declare const useAnalyzeRepository: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useAnalyzeBatch: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useGetRepositories: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useSearchRepositories: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useGetAnalysis: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useExportAnalysis: (options?: UseApiOptions) => UseApiReturn<any>;
-export declare const useCancelAnalysis: (options?: UseApiOptions) => UseApiReturn<any>;
+export declare const useAnalyzeRepository: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useAnalyzeBatch: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useGetRepositories: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useSearchRepositories: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useGetAnalysis: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useExportAnalysis: (options?: UseApiOptions) => UseApiReturn<unknown>;
+export declare const useCancelAnalysis: (options?: UseApiOptions) => UseApiReturn<unknown>;

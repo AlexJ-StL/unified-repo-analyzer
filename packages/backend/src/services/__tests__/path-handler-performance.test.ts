@@ -1,3 +1,4 @@
+import type fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PathHandler } from '../path-handler.service.js';
@@ -42,7 +43,7 @@ describe('PathHandler Performance', () => {
     mockStat.mockResolvedValue({
       isDirectory: () => true,
       size: 1024,
-    } as any);
+    } as fsSync.Stats);
 
     mockAccess.mockResolvedValue(undefined);
 
@@ -117,7 +118,7 @@ describe('PathHandler Performance', () => {
                 resolve({
                   isDirectory: () => true,
                   size: 1024,
-                } as any),
+                } as fsSync.Stats),
               100
             )
           ) // 100ms delay
@@ -339,7 +340,7 @@ describe('PathHandler Performance', () => {
                 resolve({
                   isDirectory: () => true,
                   size: 1024,
-                } as any),
+                } as fsSync.Stats),
               200
             )
           ) // Much slower

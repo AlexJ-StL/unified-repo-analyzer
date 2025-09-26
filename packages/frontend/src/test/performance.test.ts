@@ -253,7 +253,7 @@ describe('Frontend Performance Tests', () => {
         default: () => 'Lazy Component',
       });
 
-      (global as any).import = mockImport;
+      (global as { import?: typeof mockImport }).import = mockImport;
 
       const startTime = performance.now();
 

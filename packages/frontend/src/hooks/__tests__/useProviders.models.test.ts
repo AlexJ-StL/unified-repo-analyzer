@@ -3,22 +3,47 @@
  */
 
 import { renderHook } from '@testing-library/react';
+import type { AxiosResponse } from 'axios';
 import { vi } from 'vitest';
 import { apiService } from '../../services/api';
-import { useProviders } from '../useProviders';
+import { type OpenRouterModel, useProviders } from '../useProviders';
 
-// Mock the API service
 vi.mock('../../services/api');
-const mockedApiService = apiService as any;
+const mockedApiService = vi.mocked(apiService);
 
-// Mock the useApi hook
 vi.mock('../useApi', () => ({
-  useApi: (apiFunction: any, _options: any) => ({
+  useApi: (
+    apiFunction: (...args: unknown[]) => Promise<AxiosResponse<unknown>>,
+    _options: unknown | undefined
+  ) => ({
     execute: vi.fn().mockImplementation((...args) => apiFunction(...args)),
     isLoading: false,
     error: null,
   }),
 }));
+
+interface ProviderModelsResponseData {
+  provider: string;
+  models: unknown[];
+}
+
+interface ValidationResponseData {
+  provider: string;
+  modelId: string;
+  valid: boolean;
+  model?: unknown;
+  error?: string | undefined;
+}
+
+interface RecommendationsResponseData {
+  provider: string;
+  modelId: string;
+  recommendations: unknown;
+}
+
+type ProviderModelsResponse = AxiosResponse<ProviderModelsResponseData>;
+type ValidationResponse = AxiosResponse<ValidationResponseData>;
+type RecommendationsResponse = AxiosResponse<RecommendationsResponseData>;
 
 describe('useProviders Model Selection', () => {
   beforeEach(() => {
@@ -27,7 +52,7 @@ describe('useProviders Model Selection', () => {
 
   describe('fetchProviderModels', () => {
     it('should fetch models for OpenRouter provider', async () => {
-      const mockModels = [
+      const mockModels: OpenRouterModel[] = [
         {
           id: 'openai/gpt-4',
           name: 'GPT-4',
@@ -51,7 +76,7 @@ describe('useProviders Model Selection', () => {
           provider: 'openrouter',
           models: mockModels,
         },
-      } as any);
+      } as ProviderModelsResponse);
 
       const { result } = renderHook(() => useProviders());
 
@@ -72,7 +97,9 @@ describe('useProviders Model Selection', () => {
     });
 
     it('should return empty array when response is null', async () => {
-      mockedApiService.getProviderModels.mockResolvedValueOnce(null as any);
+      mockedApiService.getProviderModels.mockResolvedValueOnce(
+        null as unknown as ProviderModelsResponse | null
+      );
 
       const { result } = renderHook(() => useProviders());
 
@@ -84,7 +111,7 @@ describe('useProviders Model Selection', () => {
 
   describe('validateProviderModel', () => {
     it('should validate model successfully', async () => {
-      const mockValidation = {
+      const mockValidation: ValidationResponseData = {
         provider: 'openrouter',
         modelId: 'openai/gpt-4',
         valid: true,
@@ -97,7 +124,7 @@ describe('useProviders Model Selection', () => {
 
       mockedApiService.validateProviderModel.mockResolvedValueOnce({
         data: mockValidation,
-      } as any);
+      } as ValidationResponse);
 
       const { result } = renderHook(() => useProviders());
 
@@ -115,7 +142,7 @@ describe('useProviders Model Selection', () => {
     });
 
     it('should handle validation failure', async () => {
-      const mockValidation = {
+      const mockValidation: ValidationResponseData = {
         provider: 'openrouter',
         modelId: 'invalid/model',
         valid: false,
@@ -124,7 +151,7 @@ describe('useProviders Model Selection', () => {
 
       mockedApiService.validateProviderModel.mockResolvedValueOnce({
         data: mockValidation,
-      } as any);
+      } as ValidationResponse);
 
       const { result } = renderHook(() => useProviders());
 
@@ -149,7 +176,9 @@ describe('useProviders Model Selection', () => {
     });
 
     it('should handle null response', async () => {
-      mockedApiService.validateProviderModel.mockResolvedValueOnce(null as any);
+      mockedApiService.validateProviderModel.mockResolvedValueOnce(
+        null as unknown as ValidationResponse | null
+      );
 
       const { result } = renderHook(() => useProviders());
 
@@ -169,13 +198,15 @@ describe('useProviders Model Selection', () => {
         temperature: 0.7,
       };
 
+      const mockResponseData: RecommendationsResponseData = {
+        provider: 'openrouter',
+        modelId: 'openai/gpt-4',
+        recommendations: mockRecommendations,
+      };
+
       mockedApiService.getModelRecommendations.mockResolvedValueOnce({
-        data: {
-          provider: 'openrouter',
-          modelId: 'openai/gpt-4',
-          recommendations: mockRecommendations,
-        },
-      } as any);
+        data: mockResponseData,
+      } as RecommendationsResponse);
 
       const { result } = renderHook(() => useProviders());
 
@@ -205,7 +236,9 @@ describe('useProviders Model Selection', () => {
     });
 
     it('should return empty object when response is null', async () => {
-      mockedApiService.getModelRecommendations.mockResolvedValueOnce(null as any);
+      mockedApiService.getModelRecommendations.mockResolvedValueOnce(
+        null as unknown as RecommendationsResponse | null
+      );
 
       const { result } = renderHook(() => useProviders());
 

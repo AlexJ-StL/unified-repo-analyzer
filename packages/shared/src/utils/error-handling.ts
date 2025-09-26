@@ -63,8 +63,8 @@ export interface DependencyErrorContext {
 /**
  * Enhanced logger with color-coded output
  */
-export class EnhancedLogger {
-  private static colors = {
+export const EnhancedLogger = {
+  colors: {
     reset: '\x1b[0m',
     bright: '\x1b[1m',
     red: '\x1b[31m',
@@ -72,287 +72,239 @@ export class EnhancedLogger {
     yellow: '\x1b[33m',
     blue: '\x1b[34m',
     cyan: '\x1b[36m',
-  };
+  },
 
-  static logError(error: EnhancedError): void {
+  logError(error: EnhancedError): void {
+    console.log(`\n${this.colors.red}${this.colors.bright}${error.title}${this.colors.reset}`);
+    console.log(`${this.colors.red}ID: ${error.id}${this.colors.reset}`);
     console.log(
-      `\n${EnhancedLogger.colors.red}${EnhancedLogger.colors.bright}${error.title}${EnhancedLogger.colors.reset}`
+      `${this.colors.red}Category: ${error.category} | Severity: ${error.severity}${this.colors.reset}`
     );
-    console.log(`${EnhancedLogger.colors.red}ID: ${error.id}${EnhancedLogger.colors.reset}`);
-    console.log(
-      `${EnhancedLogger.colors.red}Category: ${error.category} | Severity: ${error.severity}${EnhancedLogger.colors.reset}`
-    );
-    console.log(
-      `${EnhancedLogger.colors.red}Time: ${error.timestamp.toISOString()}${EnhancedLogger.colors.reset}`
-    );
+    console.log(`${this.colors.red}Time: ${error.timestamp.toISOString()}${this.colors.reset}`);
 
     if (error.file) {
       console.log(
-        `${EnhancedLogger.colors.red}File: ${error.file}:${error.line}:${error.column}${EnhancedLogger.colors.reset}`
+        `${this.colors.red}File: ${error.file}:${error.line}:${error.column}${this.colors.reset}`
       );
     }
 
-    console.log(`\n${EnhancedLogger.colors.red}Message:${EnhancedLogger.colors.reset}`);
+    console.log(`\n${this.colors.red}Message:${this.colors.reset}`);
     console.log(error.message);
 
     if (error.suggestions.length > 0) {
       console.log(
-        `\n${EnhancedLogger.colors.yellow}${EnhancedLogger.colors.bright}💡 Suggested Actions:${EnhancedLogger.colors.reset}`
+        `\n${this.colors.yellow}${this.colors.bright}💡 Suggested Actions:${this.colors.reset}`
       );
       error.suggestions.forEach((suggestion, index) => {
-        console.log(
-          `${EnhancedLogger.colors.yellow}${index + 1}. ${suggestion.action}${EnhancedLogger.colors.reset}`
-        );
+        console.log(`${this.colors.yellow}${index + 1}. ${suggestion.action}${this.colors.reset}`);
         console.log(`   ${suggestion.description}`);
         if (suggestion.command) {
-          console.log(
-            `   ${EnhancedLogger.colors.cyan}Command: ${suggestion.command}${EnhancedLogger.colors.reset}`
-          );
+          console.log(`   ${this.colors.cyan}Command: ${suggestion.command}${this.colors.reset}`);
         }
         if (suggestion.automated) {
-          console.log(
-            `   ${EnhancedLogger.colors.green}✓ Can be automated${EnhancedLogger.colors.reset}`
-          );
+          console.log(`   ${this.colors.green}✓ Can be automated${this.colors.reset}`);
         }
         console.log();
       });
     }
 
-    console.log(`${EnhancedLogger.colors.red}${'─'.repeat(80)}${EnhancedLogger.colors.reset}\n`);
-  }
+    console.log(`${this.colors.red}${'─'.repeat(80)}${this.colors.reset}\n`);
+  },
 
-  static logSuccess(message: string): void {
-    console.log(
-      `${EnhancedLogger.colors.green}${EnhancedLogger.colors.bright}✅ ${message}${EnhancedLogger.colors.reset}`
-    );
-  }
+  logSuccess(message: string): void {
+    console.log(`${this.colors.green}${this.colors.bright}✅ ${message}${this.colors.reset}`);
+  },
 
-  static logWarning(message: string): void {
-    console.log(
-      `${EnhancedLogger.colors.yellow}${EnhancedLogger.colors.bright}⚠️  ${message}${EnhancedLogger.colors.reset}`
-    );
-  }
+  logWarning(message: string): void {
+    console.log(`${this.colors.yellow}${this.colors.bright}⚠️  ${message}${this.colors.reset}`);
+  },
 
-  static logInfo(message: string): void {
-    console.log(
-      `${EnhancedLogger.colors.blue}${EnhancedLogger.colors.bright}ℹ️  ${message}${EnhancedLogger.colors.reset}`
-    );
-  }
+  logInfo(message: string): void {
+    console.log(`${this.colors.blue}${this.colors.bright}ℹ️  ${message}${this.colors.reset}`);
+  },
 
-  static logDebug(message: string): void {
+  logDebug(message: string): void {
     if (process.env.DEBUG) {
-      console.log(`${EnhancedLogger.colors.cyan}🐛 ${message}${EnhancedLogger.colors.reset}`);
+      console.log(`${this.colors.cyan}🐛 ${message}${this.colors.reset}`);
     }
-  }
-}
+  },
+};
 
 /**
  * Error handler utility class
  */
-export class ErrorHandler {
-  private static instance: ErrorHandler;
-  private errorLog: EnhancedError[] = [];
+let errorLog: EnhancedError[] = [];
 
-  private constructor() {}
+const generateErrorId = (): string => {
+  return `ERR_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
 
-  static getInstance(): ErrorHandler {
-    if (!ErrorHandler.instance) {
-      ErrorHandler.instance = new ErrorHandler();
-    }
-    return ErrorHandler.instance;
+const internalLogError = (error: EnhancedError): void => {
+  errorLog.push(error);
+
+  // Keep only last 100 errors to prevent memory issues
+  if (errorLog.length > 100) {
+    errorLog = errorLog.slice(-100);
   }
+};
 
-  /**
-   * Handle build errors with context and suggestions
-   */
-  handleBuildError(error: Error, context?: BuildErrorContext): EnhancedError {
-    const enhancedError: EnhancedError = {
-      id: this.generateErrorId(),
-      category: ErrorCategory.ANALYSIS,
-      severity: ErrorSeverity.HIGH,
-      title: 'Build Process Failed',
-      message: error.message,
-      suggestions: this.generateBuildSuggestions(error),
-      timestamp: new Date(),
-      context: context as unknown as Record<string, unknown>,
-    };
+const generateBuildSuggestions = (error: Error): ErrorSuggestion[] => {
+  const suggestions: ErrorSuggestion[] = [];
 
-    this.logError(enhancedError);
-    return enhancedError;
-  }
-
-  /**
-   * Handle TypeScript compilation errors
-   */
-  handleTypeScriptError(error: Error, context: TypeScriptErrorContext): EnhancedError {
-    const enhancedError: EnhancedError = {
-      id: this.generateErrorId(),
-      category: ErrorCategory.ANALYSIS,
-      severity: ErrorSeverity.HIGH,
-      title: 'TypeScript Compilation Error',
-      message: error.message,
-      suggestions: this.generateTypeScriptSuggestions(error),
-      timestamp: new Date(),
-      file: context.file,
-      line: context.line,
-      column: context.column,
-      context: context as unknown as Record<string, unknown>,
-    };
-
-    this.logError(enhancedError);
-    return enhancedError;
-  }
-
-  /**
-   * Handle dependency-related errors
-   */
-  handleDependencyError(error: Error, context?: DependencyErrorContext): EnhancedError {
-    const enhancedError: EnhancedError = {
-      id: this.generateErrorId(),
-      category: ErrorCategory.CONFIGURATION,
-      severity: ErrorSeverity.MEDIUM,
-      title: 'Dependency Resolution Failed',
-      message: error.message,
-      suggestions: this.generateDependencySuggestions(error),
-      timestamp: new Date(),
-      context: context as unknown as Record<string, unknown>,
-    };
-
-    this.logError(enhancedError);
-    return enhancedError;
-  }
-
-  /**
-   * Generate build-specific suggestions
-   */
-  private generateBuildSuggestions(error: Error): ErrorSuggestion[] {
-    const suggestions: ErrorSuggestion[] = [];
-
-    if (error.message.includes('tsc') && error.message.includes('not found')) {
-      suggestions.push({
-        action: 'Install TypeScript compiler',
-        command: 'bun add -D typescript',
-        description: 'TypeScript compiler is missing from dependencies',
-        automated: true,
-      });
-    }
-
-    if (error.message.includes('node_modules')) {
-      suggestions.push({
-        action: 'Clean and reinstall dependencies',
-        command: 'rm -rf node_modules && bun install',
-        description: 'Dependencies may be corrupted or missing',
-        automated: true,
-      });
-    }
-
+  if (error.message.includes('tsc') && error.message.includes('not found')) {
     suggestions.push({
-      action: 'Check build logs for detailed error information',
-      description: 'Review the complete error output for specific issues',
-      automated: false,
-    });
-
-    return suggestions;
-  }
-
-  /**
-   * Generate TypeScript-specific suggestions
-   */
-  private generateTypeScriptSuggestions(error: Error): ErrorSuggestion[] {
-    const suggestions: ErrorSuggestion[] = [];
-
-    if (error.message.includes('Cannot find name')) {
-      suggestions.push({
-        action: 'Import missing type or module',
-        description: 'Add the required import statement at the top of the file',
-        automated: false,
-      });
-    }
-
-    if (error.message.includes('Type') && error.message.includes('not assignable')) {
-      suggestions.push({
-        action: 'Fix type mismatch',
-        description: 'Ensure the assigned value matches the expected type',
-        automated: false,
-      });
-    }
-
-    suggestions.push({
-      action: 'Review TypeScript configuration',
-      description: 'Check tsconfig.json for proper type checking settings',
-      automated: false,
-    });
-
-    return suggestions;
-  }
-
-  /**
-   * Generate dependency-specific suggestions
-   */
-  private generateDependencySuggestions(error: Error): ErrorSuggestion[] {
-    const suggestions: ErrorSuggestion[] = [];
-
-    if (error.message.includes('ERESOLVE')) {
-      suggestions.push({
-        action: 'Force dependency resolution',
-        command: 'bun install --force',
-        description: 'Force install to resolve dependency conflicts',
-        automated: true,
-      });
-    }
-
-    suggestions.push({
-      action: 'Clear package manager cache',
-      command: 'bun pm cache rm',
-      description: 'Clear cached packages that might be corrupted',
+      action: 'Install TypeScript compiler',
+      command: 'bun add -D typescript',
+      description: 'TypeScript compiler is missing from dependencies',
       automated: true,
     });
-
-    return suggestions;
   }
 
-  /**
-   * Generate unique error ID
-   */
-  private generateErrorId(): string {
-    return `ERR_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  if (error.message.includes('node_modules')) {
+    suggestions.push({
+      action: 'Clean and reinstall dependencies',
+      command: 'rm -rf node_modules && bun install',
+      description: 'Dependencies may be corrupted or missing',
+      automated: true,
+    });
   }
 
-  /**
-   * Log error to internal storage
-   */
-  private logError(error: EnhancedError): void {
-    this.errorLog.push(error);
+  suggestions.push({
+    action: 'Check build logs for detailed error information',
+    description: 'Review the complete error output for specific issues',
+    automated: false,
+  });
 
-    // Keep only last 100 errors to prevent memory issues
-    if (this.errorLog.length > 100) {
-      this.errorLog = this.errorLog.slice(-100);
-    }
+  return suggestions;
+};
+
+const generateTypeScriptSuggestions = (error: Error): ErrorSuggestion[] => {
+  const suggestions: ErrorSuggestion[] = [];
+
+  if (error.message.includes('Cannot find name')) {
+    suggestions.push({
+      action: 'Import missing type or module',
+      description: 'Add the required import statement at the top of the file',
+      automated: false,
+    });
   }
 
-  /**
-   * Get all logged errors
-   */
-  getErrorLog(): EnhancedError[] {
-    return [...this.errorLog];
+  if (error.message.includes('Type') && error.message.includes('not assignable')) {
+    suggestions.push({
+      action: 'Fix type mismatch',
+      description: 'Ensure the assigned value matches the expected type',
+      automated: false,
+    });
   }
 
-  /**
-   * Clear error log
-   */
-  clearErrorLog(): void {
-    this.errorLog = [];
+  suggestions.push({
+    action: 'Review TypeScript configuration',
+    description: 'Check tsconfig.json for proper type checking settings',
+    automated: false,
+  });
+
+  return suggestions;
+};
+
+const generateDependencySuggestions = (error: Error): ErrorSuggestion[] => {
+  const suggestions: ErrorSuggestion[] = [];
+
+  if (error.message.includes('ERESOLVE')) {
+    suggestions.push({
+      action: 'Force dependency resolution',
+      command: 'bun install --force',
+      description: 'Force install to resolve dependency conflicts',
+      automated: true,
+    });
   }
-}
+
+  suggestions.push({
+    action: 'Clear package manager cache',
+    command: 'bun pm cache rm',
+    description: 'Clear cached packages that might be corrupted',
+    automated: true,
+  });
+
+  return suggestions;
+};
+
+const handleBuildError = (error: Error, context?: BuildErrorContext): EnhancedError => {
+  const enhancedError: EnhancedError = {
+    id: generateErrorId(),
+    category: ErrorCategory.ANALYSIS,
+    severity: ErrorSeverity.HIGH,
+    title: 'Build Process Failed',
+    message: error.message,
+    suggestions: generateBuildSuggestions(error),
+    timestamp: new Date(),
+    context: context as unknown as Record<string, unknown>,
+  };
+
+  internalLogError(enhancedError);
+  return enhancedError;
+};
+
+const handleTypeScriptError = (error: Error, context: TypeScriptErrorContext): EnhancedError => {
+  const enhancedError: EnhancedError = {
+    id: generateErrorId(),
+    category: ErrorCategory.ANALYSIS,
+    severity: ErrorSeverity.HIGH,
+    title: 'TypeScript Compilation Error',
+    message: error.message,
+    suggestions: generateTypeScriptSuggestions(error),
+    timestamp: new Date(),
+    file: context.file,
+    line: context.line,
+    column: context.column,
+    context: context as unknown as Record<string, unknown>,
+  };
+
+  internalLogError(enhancedError);
+  return enhancedError;
+};
+
+const handleDependencyError = (error: Error, context?: DependencyErrorContext): EnhancedError => {
+  const enhancedError: EnhancedError = {
+    id: generateErrorId(),
+    category: ErrorCategory.CONFIGURATION,
+    severity: ErrorSeverity.MEDIUM,
+    title: 'Dependency Resolution Failed',
+    message: error.message,
+    suggestions: generateDependencySuggestions(error),
+    timestamp: new Date(),
+    context: context as unknown as Record<string, unknown>,
+  };
+
+  internalLogError(enhancedError);
+  return enhancedError;
+};
+
+const getErrorLogFunc = (): EnhancedError[] => {
+  return [...errorLog];
+};
+
+const clearErrorLogFunc = (): void => {
+  errorLog = [];
+};
+
+export const ErrorHandler = {
+  getInstance: () => ({
+    handleBuildError,
+    handleTypeScriptError,
+    handleDependencyError,
+    getErrorLog: getErrorLogFunc,
+    clearErrorLog: clearErrorLogFunc,
+  }),
+};
+
 /**
- 
-* Error analysis utilities
+ * Error analysis utilities
  */
-export class ErrorAnalyzer {
+export const ErrorAnalyzer = {
   /**
    * Analyze dependency issues from package.json
    */
-  static analyzeDependencyIssues(packageJsonPath: string): Array<{
+  analyzeDependencyIssues(packageJsonPath: string): Array<{
     package?: string;
     missingPeers?: string[];
     versionConflicts?: string[];
@@ -386,12 +338,12 @@ export class ErrorAnalyzer {
     } catch (_error) {
       return [];
     }
-  }
+  },
 
   /**
    * Parse TypeScript errors from compiler output
    */
-  static parseTypeScriptErrors(stderr: string): Array<{
+  parseTypeScriptErrors(stderr: string): Array<{
     file: string;
     line: number;
     column: number;
@@ -410,7 +362,9 @@ export class ErrorAnalyzer {
     const errorRegex = /(.+?)\((\d+),(\d+)\):\s*error\s+(TS\d+):\s*(.+)/g;
     let match: RegExpExecArray | null;
 
-    while ((match = errorRegex.exec(stderr)) !== null) {
+    while (true) {
+      match = errorRegex.exec(stderr);
+      if (match === null) break;
       errors.push({
         file: match[1],
         line: Number.parseInt(match[2], 10),
@@ -421,12 +375,12 @@ export class ErrorAnalyzer {
     }
 
     return errors;
-  }
+  },
 
   /**
    * Analyze build performance issues
    */
-  static analyzeBuildPerformance(
+  analyzeBuildPerformance(
     buildTime: number,
     packageCount: number
   ): {
@@ -452,5 +406,5 @@ export class ErrorAnalyzer {
     }
 
     return { isSlowBuild, suggestions };
-  }
-}
+  },
+};

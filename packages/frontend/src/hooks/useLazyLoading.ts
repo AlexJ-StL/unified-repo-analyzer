@@ -233,7 +233,7 @@ export function usePaginatedData<T>(
     async (page: number) => {
       // Check cache first
       if (cache.has(page)) {
-        return cache.get(page)!;
+        return cache.get(page) ?? [];
       }
 
       setLoading(true);

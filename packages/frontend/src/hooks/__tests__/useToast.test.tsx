@@ -8,11 +8,21 @@ const TestComponent = () => {
 
   return (
     <div>
-      <button onClick={() => showSuccess('Success!', 'Operation completed')}>Show Success</button>
-      <button onClick={() => showError('Error!', 'Something went wrong')}>Show Error</button>
-      <button onClick={() => showWarning('Warning!', 'Be careful')}>Show Warning</button>
-      <button onClick={() => showInfo('Info!', 'Just so you know')}>Show Info</button>
-      <button onClick={clearAllToasts}>Clear All</button>
+      <button type="button" onClick={() => showSuccess('Success!', 'Operation completed')}>
+        Show Success
+      </button>
+      <button type="button" onClick={() => showError('Error!', 'Something went wrong')}>
+        Show Error
+      </button>
+      <button type="button" onClick={() => showWarning('Warning!', 'Be careful')}>
+        Show Warning
+      </button>
+      <button type="button" onClick={() => showInfo('Info!', 'Just so you know')}>
+        Show Info
+      </button>
+      <button type="button" onClick={clearAllToasts}>
+        Clear All
+      </button>
     </div>
   );
 };
@@ -164,7 +174,11 @@ describe('useToast', () => {
         });
       };
 
-      return <button onClick={handleShowError}>Show Error with Action</button>;
+      return (
+        <button type="button" onClick={handleShowError}>
+          Show Error with Action
+        </button>
+      );
     };
 
     render(

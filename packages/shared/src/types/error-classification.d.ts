@@ -133,7 +133,7 @@ export interface ErrorContext {
   duration?: number;
   startTime?: string;
   endTime?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 /**
  * Actionable suggestion interface

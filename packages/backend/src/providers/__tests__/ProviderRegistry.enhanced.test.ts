@@ -2,7 +2,6 @@
  * Enhanced tests for ProviderRegistry
  */
 
-import type { ProviderConfig } from '@unified-repo-analyzer/shared/src/types/provider';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ProviderErrorType, ProviderRegistry } from '../ProviderRegistry.js';
 

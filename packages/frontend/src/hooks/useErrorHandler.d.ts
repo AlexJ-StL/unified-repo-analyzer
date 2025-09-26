@@ -3,12 +3,13 @@ interface UseErrorHandlerOptions {
   logError?: boolean;
   onError?: (error: unknown) => void;
 }
+
 export declare const useErrorHandler: (options?: UseErrorHandlerOptions) => {
-  handleError: (error: unknown, context?: string) => any;
+  handleError: (error: unknown, context?: string) => void;
   handleAsyncError: <T>(
     operation: () => Promise<T>,
     context?: string,
     onSuccess?: (result: T) => void
   ) => Promise<T | null>;
-  createErrorHandler: (context?: string) => (error: unknown) => any;
+  createErrorHandler: (context?: string) => (error: unknown) => void;
 };

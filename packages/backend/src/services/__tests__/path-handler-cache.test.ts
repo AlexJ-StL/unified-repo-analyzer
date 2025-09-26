@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PathHandler } from '../path-handler.service.js';
@@ -28,6 +29,34 @@ vi.mock('node:fs/promises', () => ({
     X_OK: 1,
   },
 }));
+
+const createMockStats = (isDir = true, size = 1024): Stats => ({
+  dev: 123456,
+  ino: 123456,
+  mode: 0o666,
+  nlink: 1,
+  uid: 1000,
+  gid: 1000,
+  rdev: 0,
+  size,
+  blksize: 4096,
+  blocks: 0,
+  atimeMs: Date.now(),
+  mtimeMs: Date.now(),
+  ctimeMs: Date.now(),
+  birthtimeMs: Date.now(),
+  atime: new Date(),
+  mtime: new Date(),
+  ctime: new Date(),
+  birthtime: new Date(),
+  isDirectory: () => isDir,
+  isFile: () => !isDir,
+  isBlockDevice: () => false,
+  isCharacterDevice: () => false,
+  isSymbolicLink: () => false,
+  isFIFO: () => false,
+  isSocket: () => false,
+});
 
 describe('PathHandler Caching', () => {
   let pathHandler: PathHandler;
@@ -76,10 +105,7 @@ describe('PathHandler Caching', () => {
   describe('Cache Operations', () => {
     beforeEach(() => {
       // Mock successful file system operations
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
+      mockStat.mockResolvedValue(createMockStats(true, 1024) as Stats);
 
       mockAccess.mockResolvedValue(undefined);
     });
@@ -147,10 +173,7 @@ describe('PathHandler Caching', () => {
 
   describe('Cache Invalidation', () => {
     beforeEach(() => {
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
+      mockStat.mockResolvedValue(createMockStats(true, 1024) as Stats);
 
       mockAccess.mockResolvedValue(undefined);
     });
@@ -203,10 +226,7 @@ describe('PathHandler Caching', () => {
 
   describe('Cache Performance Monitoring', () => {
     beforeEach(() => {
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
+      mockStat.mockResolvedValue(createMockStats(true, 1024) as Stats);
 
       mockAccess.mockResolvedValue(undefined);
     });
@@ -237,14 +257,7 @@ describe('PathHandler Caching', () => {
       mockStat.mockImplementation(
         () =>
           new Promise((resolve) =>
-            setTimeout(
-              () =>
-                resolve({
-                  isDirectory: () => true,
-                  size: 1024,
-                } as any),
-              10
-            )
+            setTimeout(() => resolve(createMockStats(true, 1024) as Stats), 10)
           )
       );
 
@@ -262,10 +275,7 @@ describe('PathHandler Caching', () => {
 
   describe('Cache Warm-up', () => {
     beforeEach(() => {
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
+      mockStat.mockResolvedValue(createMockStats(true, 1024) as Stats);
 
       mockAccess.mockResolvedValue(undefined);
     });
@@ -304,14 +314,13 @@ describe('PathHandler Caching', () => {
   });
 
   describe('Cache Memory Management', () => {
-    it('should estimate memory usage', async () => {
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
+    beforeEach(() => {
+      mockStat.mockResolvedValue(createMockStats(true, 1024) as Stats);
 
       mockAccess.mockResolvedValue(undefined);
+    });
 
+    it('should estimate memory usage', async () => {
       await pathHandler.validatePath('C:\\Users\\Test');
 
       const stats = pathHandler.getCacheStats();
@@ -324,13 +333,6 @@ describe('PathHandler Caching', () => {
         enabled: true,
         maxEntries: 2,
       });
-
-      mockStat.mockResolvedValue({
-        isDirectory: () => true,
-        size: 1024,
-      } as any);
-
-      mockAccess.mockResolvedValue(undefined);
 
       // Add more entries than max size
       await smallCacheHandler.validatePath('C:\\Users\\Test1');
