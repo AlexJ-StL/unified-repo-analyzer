@@ -14,10 +14,25 @@ import {
 } from '@heroicons/react/24/outline';
 import type { ProviderConfiguration } from '@unified-repo-analyzer/shared';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useProviders } from '../../hooks/useProviders';
 import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
+
+interface ProviderModel {
+  id: string;
+  name: string;
+  context_length?: number;
+  pricing?: {
+    prompt?: number;
+    completion?: number;
+  };
+}
+
+interface ModelRecommendations {
+  maxTokens?: number;
+  temperature?: number;
+}
 
 const LLMProviderPreferences: React.FC = () => {
   const { preferences, updatePreferenceSection, loadPreferences } = useSettingsStore();
@@ -38,7 +53,7 @@ const LLMProviderPreferences: React.FC = () => {
     Record<string, 'idle' | 'testing' | 'success' | 'error'>
   >({});
   const [testingMessages, setTestingMessages] = useState<Record<string, string>>({});
-  const [providerModels, setProviderModels] = useState<Record<string, any[]>>({});
+  const [providerModels, setProviderModels] = useState<Record<string, ProviderModel[]>>({});
   const [modelValidation, setModelValidation] = useState<
     Record<
       string,
@@ -49,6 +64,7 @@ const LLMProviderPreferences: React.FC = () => {
       }
     >
   >({});
+  const defaultProviderId = useId();
 
   // Load preferences and fetch backend providers when component mounts
   useEffect(() => {
@@ -56,7 +72,7 @@ const LLMProviderPreferences: React.FC = () => {
     refreshProviders();
   }, [loadPreferences, refreshProviders]);
 
-  const handleUpdate = async (updates: any) => {
+  const handleUpdate = async (updates: Record<string, unknown>) => {
     try {
       await updatePreferenceSection('llmProvider', updates);
       showToast({ type: 'success', title: 'LLM provider preferences updated' });
@@ -179,16 +195,16 @@ const LLMProviderPreferences: React.FC = () => {
         try {
           const recommendations = await getModelRecommendations(providerId, modelId);
           if (
-            (recommendations && (recommendations as any).maxTokens) ||
-            (recommendations as any).temperature !== undefined
+            (recommendations && 'maxTokens' in recommendations) ||
+            'temperature' in recommendations
           ) {
             updateProvider(providerId, {
               maxTokens:
-                (recommendations as any).maxTokens ||
+                (recommendations as ModelRecommendations).maxTokens ||
                 preferences.llmProvider.providers[providerId]?.maxTokens,
               temperature:
-                (recommendations as any).temperature !== undefined
-                  ? (recommendations as any).temperature
+                (recommendations as ModelRecommendations).temperature !== undefined
+                  ? (recommendations as ModelRecommendations).temperature
                   : preferences.llmProvider.providers[providerId]?.temperature,
             });
           }
@@ -248,10 +264,14 @@ const LLMProviderPreferences: React.FC = () => {
 
       {/* Default Provider */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label
+          htmlFor={defaultProviderId}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
           Default Provider
         </label>
         <select
+          id={defaultProviderId}
           value={preferences.llmProvider.defaultProvider}
           onChange={(e) => handleUpdate({ defaultProvider: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -343,6 +363,7 @@ const LLMProviderPreferences: React.FC = () => {
                 {/* Only allow removal of custom providers, not built-in ones */}
                 {backendProvider && !backendProvider.available && (
                   <button
+                    type="button"
                     onClick={() => removeProvider(providerId)}
                     className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                     title="Remove custom provider"
@@ -355,6 +376,7 @@ const LLMProviderPreferences: React.FC = () => {
               {/* Provider Testing */}
               <div className="mb-4">
                 <button
+                  type="button"
                   onClick={() => testProviderConnection(providerId)}
                   disabled={testingStatus[providerId] === 'testing' || !provider.apiKey}
                   className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-md ${
@@ -393,11 +415,15 @@ const LLMProviderPreferences: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* API Key */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label
+                    htmlFor={`${providerId}-api-key`}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     API Key
                   </label>
                   <div className="relative">
                     <input
+                      id={`${providerId}-api-key`}
                       type={showApiKeys[providerId] ? 'text' : 'password'}
                       value={provider.apiKey || ''}
                       onChange={(e) => updateProvider(providerId, { apiKey: e.target.value })}
@@ -421,11 +447,15 @@ const LLMProviderPreferences: React.FC = () => {
                 {/* Model Selection (OpenRouter specific) */}
                 {hasModelSelection && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label
+                      htmlFor={`${providerId}-model`}
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
                       Model
                     </label>
                     <div className="flex space-x-2">
                       <select
+                        id={`${providerId}-model`}
                         value={provider.model || ''}
                         onChange={(e) => {
                           updateProvider(providerId, {
@@ -439,7 +469,7 @@ const LLMProviderPreferences: React.FC = () => {
                         className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                       >
                         <option value="">Auto-select model</option>
-                        {providerModels[providerId]?.map((model: any) => (
+                        {providerModels[providerId]?.map((model) => (
                           <option key={model.id} value={model.id}>
                             {model.name}
                             {model.pricing &&
@@ -448,6 +478,7 @@ const LLMProviderPreferences: React.FC = () => {
                         ))}
                       </select>
                       <button
+                        type="button"
                         onClick={() => fetchModelsForProvider(providerId)}
                         disabled={providersLoading}
                         className="px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50"
@@ -518,7 +549,7 @@ const LLMProviderPreferences: React.FC = () => {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                              {providerModels[providerId].map((model: any) => (
+                              {providerModels[providerId].map((model) => (
                                 <tr key={model.id}>
                                   <td className="px-2 py-1 whitespace-nowrap text-xs text-gray-900 dark:text-white">
                                     {model.name}
@@ -544,10 +575,14 @@ const LLMProviderPreferences: React.FC = () => {
                 {/* Standard Model Input (for non-OpenRouter providers) */}
                 {!hasModelSelection && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label
+                      htmlFor={`${providerId}-model-input`}
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
                       Model
                     </label>
                     <input
+                      id={`${providerId}-model-input`}
                       type="text"
                       value={provider.model || ''}
                       onChange={(e) => updateProvider(providerId, { model: e.target.value })}
@@ -559,10 +594,14 @@ const LLMProviderPreferences: React.FC = () => {
 
                 {/* Max Tokens */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label
+                    htmlFor={`${providerId}-max-tokens`}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     Max Tokens
                   </label>
                   <input
+                    id={`${providerId}-max-tokens`}
                     type="number"
                     value={provider.maxTokens}
                     onChange={(e) =>
@@ -578,10 +617,14 @@ const LLMProviderPreferences: React.FC = () => {
 
                 {/* Temperature */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label
+                    htmlFor={`${providerId}-temperature`}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     Temperature
                   </label>
                   <input
+                    id={`${providerId}-temperature`}
                     type="number"
                     value={provider.temperature}
                     onChange={(e) =>
@@ -598,10 +641,14 @@ const LLMProviderPreferences: React.FC = () => {
 
                 {/* Custom Endpoint */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label
+                    htmlFor={`${providerId}-endpoint`}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     Custom Endpoint (optional)
                   </label>
                   <input
+                    id={`${providerId}-endpoint`}
                     type="url"
                     value={provider.customEndpoint || ''}
                     onChange={(e) =>
@@ -629,6 +676,7 @@ const LLMProviderPreferences: React.FC = () => {
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             />
             <button
+              type="button"
               onClick={addProvider}
               disabled={!newProviderName.trim()}
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"

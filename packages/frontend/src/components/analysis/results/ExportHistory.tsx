@@ -20,6 +20,17 @@ interface ExportHistoryItem {
   type: 'single' | 'batch';
 }
 
+interface StoredExportHistoryItem {
+  id: string;
+  format: OutputFormat;
+  filename: string;
+  timestamp: string;
+  downloadUrl: string;
+  size?: number;
+  analysisName?: string;
+  type: 'single' | 'batch';
+}
+
 interface ExportHistoryProps {
   className?: string;
 }
@@ -29,13 +40,13 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
-  // Define before useEffect to avoid \"used before declaration\" and stabilize identity
+  // Define before useEffect to avoid "used before declaration" and stabilize identity
   const loadExportHistory = useCallback(() => {
     try {
       const stored = localStorage.getItem('exportHistory');
       if (stored) {
-        const parsed = JSON.parse(stored);
-        const historyItems = parsed.map((item: any) => ({
+        const parsed: StoredExportHistoryItem[] = JSON.parse(stored);
+        const historyItems = parsed.map((item) => ({
           ...item,
           timestamp: new Date(item.timestamp),
         }));
@@ -181,6 +192,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
           <div className="flex space-x-2">
             {selectedItems.size > 0 && (
               <button
+                type="button"
                 onClick={handleDeleteSelected}
                 className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
@@ -190,6 +202,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
             )}
 
             <button
+              type="button"
               onClick={handleSelectAll}
               className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
@@ -197,6 +210,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
             </button>
 
             <button
+              type="button"
               onClick={handleClearAll}
               className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
@@ -217,6 +231,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
                 <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
+                    aria-label={`Select ${item.filename}`}
                     checked={selectedItems.has(item.id)}
                     onChange={() => handleSelectItem(item.id)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -247,6 +262,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
 
                 <div className="flex items-center space-x-2">
                   <button
+                    type="button"
                     onClick={() => handleDownload(item)}
                     className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
@@ -255,6 +271,7 @@ const ExportHistory: React.FC<ExportHistoryProps> = ({ className = '' }) => {
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => handleDeleteItem(item.id)}
                     className="inline-flex items-center p-1 border border-transparent rounded-md text-red-400 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >

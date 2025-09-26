@@ -33,6 +33,20 @@ interface AnalysisMetrics {
   repositoriesProcessed: number;
 }
 
+interface MetricsSummary {
+  system: SystemMetrics;
+  requests: RequestMetrics;
+  analysis: AnalysisMetrics;
+  custom: Record<
+    string,
+    {
+      current: number;
+      count: number;
+      average: number;
+    }
+  >;
+}
+
 class MetricsService {
   private metrics: Map<string, Metric[]> = new Map();
   private requestMetrics: RequestMetrics = {
@@ -99,7 +113,10 @@ class MetricsService {
       this.metrics.set(name, []);
     }
 
-    const metrics = this.metrics.get(name)!;
+    const metrics = this.metrics.get(name);
+    if (!metrics) {
+      return;
+    }
     metrics.push(metric);
 
     // Keep only last 1000 metrics per type to prevent memory leaks
@@ -204,11 +221,11 @@ class MetricsService {
     this.recordMetric('active_connections', this.activeConnections);
   }
 
-  getStats(): Record<string, any> {
+  getStats(): MetricsSummary {
     return this.getMetrics();
   }
 
-  exportMetrics(): Record<string, any> {
+  exportMetrics(): MetricsSummary {
     return this.getMetrics();
   }
 
@@ -299,7 +316,7 @@ class MetricsService {
     return analysisMetrics;
   }
 
-  getMetrics(): Record<string, any> {
+  getMetrics(): MetricsSummary {
     const systemMetrics: SystemMetrics = {
       memoryUsage: process.memoryUsage(),
       cpuUsage: process.cpuUsage(),

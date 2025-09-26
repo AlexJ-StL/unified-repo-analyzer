@@ -13,10 +13,12 @@ vi.mock('../../core/IndexSystem');
 
 describe('RelationshipService', () => {
   let relationshipService: RelationshipService;
-  let mockIndexSystem: any;
+  let mockIndexSystem: IndexSystem & { getIndex: { mockReturnValue: (value: unknown) => void } };
 
   beforeEach(() => {
-    mockIndexSystem = new IndexSystem() as any;
+    mockIndexSystem = new IndexSystem() as IndexSystem & {
+      getIndex: { mockReturnValue: (value: unknown) => void };
+    };
     relationshipService = new RelationshipService(mockIndexSystem);
   });
 

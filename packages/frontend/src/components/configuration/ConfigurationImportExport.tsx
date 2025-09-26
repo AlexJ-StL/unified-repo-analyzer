@@ -93,6 +93,7 @@ const ConfigurationImportExport: React.FC = () => {
           Download your current configuration as a JSON file
         </p>
         <button
+          type="button"
           onClick={handleExport}
           disabled={isExporting}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
@@ -119,6 +120,7 @@ const ConfigurationImportExport: React.FC = () => {
         />
         <div className="mt-4 flex space-x-3">
           <button
+            type="button"
             onClick={handleImport}
             disabled={isImporting || !importData.trim()}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
@@ -127,6 +129,7 @@ const ConfigurationImportExport: React.FC = () => {
             {isImporting ? 'Importing...' : 'Import Configuration'}
           </button>
           <button
+            type="button"
             onClick={() => setImportData('')}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500"
           >
@@ -142,6 +145,7 @@ const ConfigurationImportExport: React.FC = () => {
           Create a backup of your current configuration for safekeeping
         </p>
         <button
+          type="button"
           onClick={handleCreateBackup}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700"
         >

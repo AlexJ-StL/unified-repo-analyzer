@@ -5,6 +5,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { EnhancedLogger } from './packages/shared/src/utils/error-handling.js';
 import { pathValidator, SecurityLevel } from './packages/shared/src/utils/path-utils.js';
 
 async function testPathUtils() {
@@ -72,4 +73,4 @@ async function testPathUtils() {
 }
 
 // Run the test
-testPathUtils().catch(console.error);
+testPathUtils().catch((error) => EnhancedLogger.logError(error));

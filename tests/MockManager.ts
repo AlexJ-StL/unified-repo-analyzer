@@ -6,7 +6,7 @@
 import { vi } from 'vitest';
 
 // Type definitions for our mock system
-export interface MockedFunction<T extends (...args: any[]) => any> extends Function {
+export interface MockedFunction<T extends (...args: unknown[]) => unknown> {
   (...args: Parameters<T>): ReturnType<T>;
   mock: {
     calls: Parameters<T>[][];
@@ -96,7 +96,7 @@ export class MockManager {
   /**
    * Create a type-safe mock function
    */
-  public mockFunction<T extends (...args: any[]) => any>(fn?: T): MockedFunction<T> {
+  public mockFunction<T extends (...args: unknown[]) => unknown>(fn?: T): MockedFunction<T> {
     if (typeof vi !== 'undefined' && vi && typeof vi.fn === 'function') {
       const mockFn = vi.fn<T>() as MockedFunction<T>;
       if (fn) {
