@@ -8,7 +8,10 @@ import { performanceService } from '../services/performance.service';
 /**
  * Hook for debouncing function calls
  */
-export function useDebounce<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+export function useDebounce<T extends (...args: unknown[]) => unknown>(
+  callback: T,
+  delay: number
+): T {
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const debouncedCallback = useCallback(
@@ -38,7 +41,10 @@ export function useDebounce<T extends (...args: any[]) => any>(callback: T, dela
 /**
  * Hook for throttling function calls
  */
-export function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
+  callback: T,
+  delay: number
+): T {
   const lastCallRef = useRef<number>(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -112,13 +118,13 @@ export function useMemoWithInvalidation<T>(
     };
 
     return value;
-  }, deps);
+  }, [deps, factory, invalidateAfter]);
 }
 
 /**
  * Hook for measuring component render performance
  */
-export function useRenderPerformance(componentName: string, props?: Record<string, any>) {
+export function useRenderPerformance(componentName: string, props?: Record<string, unknown>) {
   const renderStartRef = useRef<number>();
 
   useEffect(() => {

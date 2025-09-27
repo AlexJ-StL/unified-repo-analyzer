@@ -40,7 +40,7 @@ export async function validateRepositoryPath(repoPath: string): Promise<string> 
       throw new CLIError(`Directory is not readable: ${repoPath}`, ErrorType.FILESYSTEM);
     }
 
-    return validationResult.normalizedPath!;
+    return validationResult.normalizedPath ?? '';
   } catch (error) {
     if (error instanceof CLIError) {
       throw error;

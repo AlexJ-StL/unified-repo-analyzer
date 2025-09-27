@@ -551,12 +551,14 @@ class DeploymentVerifier {
       };
 
       const req = (urlObj.protocol === 'https:' ? https : http).request(options, (res) => {
-        let responseBody = '';
-        res.on('data', (chunk) => (responseBody += chunk));
+        let data = '';
+        res.on('data', (chunk) => {
+          data = data + chunk;
+        });
         res.on('end', () => {
           resolve({
             statusCode: res.statusCode || 0,
-            body: responseBody,
+            body: data,
           });
         });
       });

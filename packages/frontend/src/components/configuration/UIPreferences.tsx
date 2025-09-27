@@ -3,6 +3,7 @@
  */
 
 import type React from 'react';
+import { useId } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
 
@@ -10,7 +11,16 @@ const UIPreferences: React.FC = () => {
   const { preferences, updatePreferenceSection } = useSettingsStore();
   const { showToast } = useToast();
 
-  const handleUpdate = async (updates: any) => {
+  const defaultViewId = useId();
+  const itemsPerPageId = useId();
+  const compactModeId = useId();
+  const showAdvancedId = useId();
+  const enableAnimationsId = useId();
+  const highContrastId = useId();
+  const reduceMotionId = useId();
+  const fontSizeId = useId();
+
+  const handleUpdate = async (updates: Record<string, unknown>) => {
     try {
       await updatePreferenceSection('ui', updates);
       showToast({ type: 'success', title: 'UI preferences updated' });
@@ -31,10 +41,14 @@ const UIPreferences: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Default View */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={defaultViewId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Default View
           </label>
           <select
+            id={defaultViewId}
             value={preferences.ui.defaultView}
             onChange={(e) => handleUpdate({ defaultView: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -49,10 +63,14 @@ const UIPreferences: React.FC = () => {
 
         {/* Items per Page */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={itemsPerPageId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Items per Page
           </label>
           <select
+            id={itemsPerPageId}
             value={preferences.ui.itemsPerPage}
             onChange={(e) => handleUpdate({ itemsPerPage: Number.parseInt(e.target.value, 10) })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -72,14 +90,14 @@ const UIPreferences: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center">
           <input
-            id="compact-mode"
+            id={compactModeId}
             type="checkbox"
             checked={preferences.ui.compactMode}
             onChange={(e) => handleUpdate({ compactMode: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="compact-mode"
+            htmlFor={compactModeId}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Compact mode (reduced spacing and smaller elements)
@@ -88,14 +106,14 @@ const UIPreferences: React.FC = () => {
 
         <div className="flex items-center">
           <input
-            id="show-advanced"
+            id={showAdvancedId}
             type="checkbox"
             checked={preferences.ui.showAdvancedOptions}
             onChange={(e) => handleUpdate({ showAdvancedOptions: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="show-advanced"
+            htmlFor={showAdvancedId}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Show advanced options by default
@@ -104,14 +122,14 @@ const UIPreferences: React.FC = () => {
 
         <div className="flex items-center">
           <input
-            id="enable-animations"
+            id={enableAnimationsId}
             type="checkbox"
             checked={preferences.ui.enableAnimations}
             onChange={(e) => handleUpdate({ enableAnimations: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="enable-animations"
+            htmlFor={enableAnimationsId}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Enable animations and transitions
@@ -199,12 +217,12 @@ const UIPreferences: React.FC = () => {
         <div className="space-y-3">
           <div className="flex items-center">
             <input
-              id="high-contrast"
+              id={highContrastId}
               type="checkbox"
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label
-              htmlFor="high-contrast"
+              htmlFor={highContrastId}
               className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
             >
               High contrast mode
@@ -213,12 +231,12 @@ const UIPreferences: React.FC = () => {
 
           <div className="flex items-center">
             <input
-              id="reduce-motion"
+              id={reduceMotionId}
               type="checkbox"
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label
-              htmlFor="reduce-motion"
+              htmlFor={reduceMotionId}
               className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
             >
               Reduce motion (respects system preference)
@@ -226,10 +244,16 @@ const UIPreferences: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor={fontSizeId}
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Font Size
             </label>
-            <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+            <select
+              id={fontSizeId}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+            >
               <option value="small">Small</option>
               <option value="medium">Medium</option>
               <option value="large">Large</option>

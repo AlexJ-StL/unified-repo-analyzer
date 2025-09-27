@@ -136,7 +136,7 @@ class PathValidationService {
         clearTimeout(timeoutId);
         clearInterval(progressInterval);
 
-        if (axios.isCancel(error) || (error as any).name === 'AbortError') {
+        if (axios.isCancel(error) || (error instanceof Error && error.name === 'AbortError')) {
           return {
             isValid: false,
             errors: [

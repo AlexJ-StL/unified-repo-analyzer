@@ -29,6 +29,7 @@ const RelationshipInsightsComponent: React.FC<RelationshipInsightsProps> = ({ in
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                <title>Dependencies icon</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -53,6 +54,7 @@ const RelationshipInsightsComponent: React.FC<RelationshipInsightsProps> = ({ in
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                <title>Collaborators icon</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -77,6 +79,7 @@ const RelationshipInsightsComponent: React.FC<RelationshipInsightsProps> = ({ in
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                <title>Complexity icon</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -101,6 +104,7 @@ const RelationshipInsightsComponent: React.FC<RelationshipInsightsProps> = ({ in
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                <title>Security icon</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

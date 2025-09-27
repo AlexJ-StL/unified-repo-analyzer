@@ -3,6 +3,7 @@
  */
 
 import type { UserPreferences } from '@unified-repo-analyzer/shared';
+import type { Request, Response } from 'express';
 
 // Logger interface
 export interface ILogger {
@@ -25,7 +26,6 @@ export interface ILogger {
     requestId?: string
   ): void;
   error(
-    message: string,
     error?: Error,
     metadata?: Record<string, unknown>,
     component?: string,
@@ -45,9 +45,9 @@ export interface IConfigService {
 
 // Health service interface
 export interface IHealthService {
-  healthCheckHandler: (req: any, res: any) => Promise<void>;
-  readinessHandler: (req: any, res: any) => Promise<void>;
-  livenessHandler: (req: any, res: any) => Promise<void>;
+  healthCheckHandler: (req: Request, res: Response) => Promise<void>;
+  readinessHandler: (req: Request, res: Response) => Promise<void>;
+  livenessHandler: (req: Request, res: Response) => Promise<void>;
   getHealthStatus(): {
     status: 'healthy' | 'unhealthy' | 'degraded';
     timestamp: Date;

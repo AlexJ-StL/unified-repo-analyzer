@@ -31,7 +31,9 @@ export const useRetry = (options: RetryOptions = {}) => {
     lastError: null,
   });
 
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const sleep = useCallback(async (ms: number) => {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }, []);
 
   const executeWithRetry = useCallback(
     async <T>(operation: () => Promise<T>, customOptions?: Partial<RetryOptions>): Promise<T> => {

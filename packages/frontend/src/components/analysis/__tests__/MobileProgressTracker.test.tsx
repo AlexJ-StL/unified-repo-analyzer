@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import type { AxiosResponse } from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiService } from '../../../services/api';
 import websocketService from '../../../services/websocket';
@@ -21,14 +22,16 @@ describe('MobileProgressTracker Component', () => {
         totalSteps: 100,
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     vi.mocked(websocketService.connect).mockImplementation(() => {});
     vi.mocked(websocketService.isConnected).mockReturnValue(true);
     vi.mocked(websocketService.subscribeToAnalysis).mockImplementation(() => {});
     vi.mocked(websocketService.unsubscribeFromAnalysis).mockImplementation(() => {});
 
-    vi.mocked(apiService.cancelAnalysis).mockResolvedValue({} as any);
+    vi.mocked(apiService.cancelAnalysis).mockResolvedValue({
+      data: { success: true },
+    } as AxiosResponse<{ success: boolean }>);
   });
 
   afterEach(() => {
@@ -52,7 +55,7 @@ describe('MobileProgressTracker Component', () => {
         totalSteps: 100,
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     render(<MobileProgressTracker />);
 
@@ -70,7 +73,7 @@ describe('MobileProgressTracker Component', () => {
         totalSteps: 100,
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     render(<MobileProgressTracker />);
 
@@ -87,7 +90,7 @@ describe('MobileProgressTracker Component', () => {
         error: 'Something went wrong',
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     render(<MobileProgressTracker />);
 
@@ -118,7 +121,7 @@ describe('MobileProgressTracker Component', () => {
         totalSteps: 100,
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     render(<MobileProgressTracker analysisId="test-analysis-123" />);
 
@@ -140,7 +143,7 @@ describe('MobileProgressTracker Component', () => {
         log: 'Processing file: main.js',
       },
       setProgress: vi.fn(),
-    } as any);
+    } as unknown);
 
     render(<MobileProgressTracker />);
 

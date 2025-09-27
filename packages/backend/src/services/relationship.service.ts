@@ -20,8 +20,8 @@ export interface GraphNode {
   complexity: number;
   languages: string[];
   frameworks: string[];
-  x?: number;
-  y?: number;
+  x: number;
+  y: number;
 }
 
 export interface GraphEdge {
@@ -97,6 +97,8 @@ export class RelationshipService {
       complexity: repo.complexity,
       languages: repo.languages,
       frameworks: repo.frameworks,
+      x: 0,
+      y: 0,
     }));
 
     // Generate edges from relationships
@@ -402,18 +404,18 @@ export class RelationshipService {
           const nodeA = nodes[i];
           const nodeB = nodes[j];
 
-          const dx = nodeB.x! - nodeA.x!;
-          const dy = nodeB.y! - nodeA.y!;
+          const dx = nodeB.x - nodeA.x;
+          const dy = nodeB.y - nodeA.y;
           const distance = Math.sqrt(dx * dx + dy * dy) || 1;
 
           const repulsionForce = 1000 / (distance * distance);
           const fx = (dx / distance) * repulsionForce;
           const fy = (dy / distance) * repulsionForce;
 
-          nodeA.x! -= fx;
-          nodeA.y! -= fy;
-          nodeB.x! += fx;
-          nodeB.y! += fy;
+          nodeA.x -= fx;
+          nodeA.y -= fy;
+          nodeB.x += fx;
+          nodeB.y += fy;
         }
       }
 
@@ -423,25 +425,25 @@ export class RelationshipService {
         const targetNode = nodes.find((n) => n.id === edge.target);
 
         if (sourceNode && targetNode) {
-          const dx = targetNode.x! - sourceNode.x!;
-          const dy = targetNode.y! - sourceNode.y!;
+          const dx = targetNode.x - sourceNode.x;
+          const dy = targetNode.y - sourceNode.y;
           const distance = Math.sqrt(dx * dx + dy * dy) || 1;
 
           const attractionForce = distance * 0.01 * edge.strength;
           const fx = (dx / distance) * attractionForce;
           const fy = (dy / distance) * attractionForce;
 
-          sourceNode.x! += fx;
-          sourceNode.y! += fy;
-          targetNode.x! -= fx;
-          targetNode.y! -= fy;
+          sourceNode.x += fx;
+          sourceNode.y += fy;
+          targetNode.x -= fx;
+          targetNode.y -= fy;
         }
       });
 
       // Keep nodes within bounds
       nodes.forEach((node) => {
-        node.x = Math.max(50, Math.min(width - 50, node.x!));
-        node.y = Math.max(50, Math.min(height - 50, node.y!));
+        node.x = Math.max(50, Math.min(width - 50, node.x));
+        node.y = Math.max(50, Math.min(height - 50, node.y));
       });
     }
 
@@ -785,8 +787,8 @@ export class RelationshipService {
         )
       ) {
         patternCount.set(
-          'MVC (Model-View-Controller)',
-          (patternCount.get('MVC (Model-View-Controller)') || 0) + 1
+          'MVC (Model-View Controller)',
+          (patternCount.get('MVC (Model-View Controller)') || 0) + 1
         );
       }
     });

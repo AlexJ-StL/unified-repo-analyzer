@@ -568,9 +568,9 @@ class FeatureRolloutManager {
     const config: Record<string, string> = {};
 
     content.split('\n').forEach((line) => {
-      line = line.trim();
-      if (line && !line.startsWith('#')) {
-        const [key, ...valueParts] = line.split('=');
+      const trimmedLine = line.trim();
+      if (trimmedLine && !trimmedLine.startsWith('#')) {
+        const [key, ...valueParts] = trimmedLine.split('=');
         if (key && valueParts.length > 0) {
           config[key.trim()] = valueParts.join('=').trim();
         }

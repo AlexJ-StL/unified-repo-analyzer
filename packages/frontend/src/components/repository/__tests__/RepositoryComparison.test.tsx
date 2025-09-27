@@ -1,4 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import type { RepositoryAnalysis } from '@unified-repo-analyzer/shared';
+import type { AxiosResponse } from 'axios';
 import { vi } from 'vitest';
 import { apiService } from '../../../services/api';
 import RepositoryComparison from '../RepositoryComparison';
@@ -74,16 +76,16 @@ describe('RepositoryComparison', () => {
     vi.clearAllMocks();
 
     // Mock API responses
-    (apiService.getAnalysis as any).mockImplementation((id) => {
+    vi.mocked(apiService.getAnalysis).mockImplementation((id) => {
       const repo = mockRepositories.find((r) => r.id === id);
-      return Promise.resolve({ data: repo });
+      return Promise.resolve({ data: repo } as unknown as AxiosResponse<RepositoryAnalysis>);
     });
 
-    (apiService.searchRepositories as any).mockResolvedValue({
+    vi.mocked(apiService.searchRepositories).mockResolvedValue({
       data: {
         comparison: mockComparisonData,
       },
-    });
+    } as unknown as AxiosResponse<{ repositories: RepositoryAnalysis[]; total: number }>);
   });
 
   it('renders loading state initially', async () => {
@@ -123,7 +125,9 @@ describe('RepositoryComparison', () => {
 
   it('handles API errors correctly', async () => {
     // Mock API error
-    (apiService.getAnalysis as any).mockRejectedValue(new Error('Failed to fetch repository data'));
+    vi.mocked(apiService.getAnalysis).mockRejectedValue(
+      new Error('Failed to fetch repository data')
+    );
 
     render(<RepositoryComparison repositoryIds={['1', '2']} onClose={() => {}} />);
 

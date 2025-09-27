@@ -5,7 +5,7 @@
 import { FolderIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import type { WorkspaceConfiguration } from '@unified-repo-analyzer/shared';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import PathInput from '../common/PathInput';
@@ -21,6 +21,7 @@ const WorkspaceManager: React.FC = () => {
     path: '',
   });
   const [isPathValid, setIsPathValid] = useState(true);
+  const workspaceNameId = useId();
 
   useEffect(() => {
     loadWorkspaces();
@@ -126,6 +127,7 @@ const WorkspaceManager: React.FC = () => {
           </p>
         </div>
         <button
+          type="button"
           onClick={() => setIsCreating(true)}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
@@ -142,10 +144,14 @@ const WorkspaceManager: React.FC = () => {
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor={workspaceNameId}
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Name *
               </label>
               <input
+                id={workspaceNameId}
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -167,13 +173,18 @@ const WorkspaceManager: React.FC = () => {
           </div>
           <div className="flex justify-end space-x-3 mt-4">
             <button
+              type="button"
               onClick={cancelEdit}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500"
             >
               Cancel
             </button>
             <button
-              onClick={isCreating ? handleCreate : () => handleUpdate(editingId!)}
+              type="button"
+              onClick={() => {
+                if (isCreating) handleCreate();
+                else if (editingId) handleUpdate(editingId);
+              }}
               className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               {isCreating ? 'Create' : 'Update'}
@@ -216,12 +227,14 @@ const WorkspaceManager: React.FC = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
+                    type="button"
                     onClick={() => startEdit(workspace)}
                     className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                   >
                     <PencilIcon className="h-4 w-4" />
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleDelete(workspace.id, workspace.name)}
                     className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
                   >

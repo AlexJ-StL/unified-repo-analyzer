@@ -244,7 +244,7 @@ export class ErrorFormatter {
   /**
    * Format error for logging
    */
-  public formatForLogging(error: ClassifiedError): Record<string, any> {
+  public formatForLogging(error: ClassifiedError): Record<string, unknown> {
     return {
       errorId: error.id,
       code: error.code,
@@ -364,7 +364,7 @@ export class ErrorFormatter {
 
     sensitiveKeys.forEach((key) => {
       if (sanitized[key as keyof ErrorContext]) {
-        sanitized[key as keyof ErrorContext] = '[REDACTED]' as any;
+        (sanitized as Record<string, unknown>)[key] = '[REDACTED]';
       }
     });
 

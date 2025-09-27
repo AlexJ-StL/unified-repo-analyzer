@@ -29,8 +29,8 @@ interface UseApiReturn<T> extends UseApiState<T> {
   retry: () => Promise<T | null>;
 }
 
-type ApiFunction<T = any> = (...args: any[]) => Promise<{ data: T }>;
-export function useApi<T = any, F extends ApiFunction<T> = ApiFunction<T>>(
+type ApiFunction<T = unknown> = (...args: unknown[]) => Promise<{ data: T }>;
+export function useApi<T = unknown, F extends ApiFunction<T> = ApiFunction<T>>(
   apiFunc: F,
   options: UseApiOptions = {}
 ): UseApiReturn<T> {

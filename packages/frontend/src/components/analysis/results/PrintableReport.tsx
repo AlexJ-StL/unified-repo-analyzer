@@ -245,7 +245,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <h3>Production Dependencies</h3>
               {analysis.dependencies.production.length > 0 ? (
                 <ul className="print-list">
-                  {analysis.dependencies.production.map((dep: any, _index) => (
+                  {analysis.dependencies.production.map((dep: unknown, _index) => (
                     <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>
@@ -259,7 +259,7 @@ const PrintableReport: React.FC<PrintableReportProps> = ({
               <h3>Development Dependencies</h3>
               {analysis.dependencies.development.length > 0 ? (
                 <ul className="print-list">
-                  {analysis.dependencies.development.map((dep: any, _index) => (
+                  {analysis.dependencies.development.map((dep: unknown, _index) => (
                     <li key={`${dep.name}-${dep.version}`}>
                       {dep.name}@{dep.version}
                     </li>

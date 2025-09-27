@@ -7,7 +7,9 @@ export default function Component11() {
     <div>
       <h1>Component 11</h1>
       <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button type="button" onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
     </div>
   );
 }

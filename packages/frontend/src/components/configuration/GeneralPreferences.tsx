@@ -3,14 +3,16 @@
  */
 
 import type React from 'react';
+import { useId } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
 
 const GeneralPreferences: React.FC = () => {
   const { preferences, updatePreferenceSection } = useSettingsStore();
   const { showToast } = useToast();
+  const baseId = useId();
 
-  const handleUpdate = async (updates: any) => {
+  const handleUpdate = async (updates: Record<string, unknown>) => {
     try {
       await updatePreferenceSection('general', updates);
       showToast({ type: 'success', title: 'General preferences updated' });
@@ -33,10 +35,14 @@ const GeneralPreferences: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Default Workspace */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={`${baseId}-default-workspace`}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Default Workspace
           </label>
           <input
+            id={`${baseId}-default-workspace`}
             type="text"
             value={preferences.general.defaultWorkspace || ''}
             onChange={(e) => handleUpdate({ defaultWorkspace: e.target.value })}
@@ -50,10 +56,14 @@ const GeneralPreferences: React.FC = () => {
 
         {/* Theme */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={`${baseId}-theme`}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Theme
           </label>
           <select
+            id={`${baseId}-theme`}
             value={preferences.general.theme}
             onChange={(e) => handleUpdate({ theme: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -66,10 +76,14 @@ const GeneralPreferences: React.FC = () => {
 
         {/* Language */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={`${baseId}-language`}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Language
           </label>
           <select
+            id={`${baseId}-language`}
             value={preferences.general.language}
             onChange={(e) => handleUpdate({ language: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -88,14 +102,14 @@ const GeneralPreferences: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center">
           <input
-            id="auto-save"
+            id={`${baseId}-auto-save`}
             type="checkbox"
             checked={preferences.general.autoSave}
             onChange={(e) => handleUpdate({ autoSave: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="auto-save"
+            htmlFor={`${baseId}-auto-save`}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Auto-save preferences
@@ -104,14 +118,14 @@ const GeneralPreferences: React.FC = () => {
 
         <div className="flex items-center">
           <input
-            id="auto-index"
+            id={`${baseId}-auto-index`}
             type="checkbox"
             checked={preferences.general.autoIndex}
             onChange={(e) => handleUpdate({ autoIndex: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="auto-index"
+            htmlFor={`${baseId}-auto-index`}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Automatically index analyzed repositories
@@ -120,14 +134,14 @@ const GeneralPreferences: React.FC = () => {
 
         <div className="flex items-center">
           <input
-            id="notifications"
+            id={`${baseId}-notifications`}
             type="checkbox"
             checked={preferences.general.enableNotifications}
             onChange={(e) => handleUpdate({ enableNotifications: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="notifications"
+            htmlFor={`${baseId}-notifications`}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Enable notifications

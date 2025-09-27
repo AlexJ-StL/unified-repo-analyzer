@@ -136,7 +136,7 @@ program
         // Handle nested properties
         if (key.includes('.')) {
           const [parent, child] = key.split('.');
-          const parentObj = config.get(parent) as Record<string, any>;
+          const parentObj = config.get(parent) as Record<string, unknown>;
           config.set(parent, { ...parentObj, [child]: value });
         } else {
           config.set(key, value);
@@ -147,7 +147,7 @@ program
         config.clear();
         console.log(chalk.green('Configuration reset to defaults'));
       } else if (options.profile) {
-        const profiles = (config.get('profiles') as Record<string, any>) || {};
+        const profiles = (config.get('profiles') as Record<string, unknown>) || {};
         const profileName = options.profile;
 
         if (!profiles[profileName]) {
@@ -158,7 +158,7 @@ program
         console.log(chalk.green(`Activated profile: ${profileName}`));
       } else if (options.createProfile) {
         const profileName = options.createProfile;
-        const profiles = (config.get('profiles') as Record<string, any>) || {};
+        const profiles = (config.get('profiles') as Record<string, unknown>) || {};
 
         if (profiles[profileName]) {
           return;
@@ -199,7 +199,7 @@ program
   .option('--import <path>', 'Import profile from file')
   .action((options) => {
     try {
-      const profiles = (config.get('profiles') as Record<string, any>) || {};
+      const profiles = (config.get('profiles') as Record<string, unknown>) || {};
       const activeProfile = config.get('activeProfile') as string;
 
       if (options.list) {

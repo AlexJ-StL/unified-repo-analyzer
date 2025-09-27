@@ -174,8 +174,8 @@ export class TaskQueue<T, R> extends EventEmitter {
 
     // Process tasks up to concurrency limit
     while (this.pendingTasks.length > 0 && this.runningTasks.size < this.options.concurrency) {
-      const taskId = this.pendingTasks.shift()!;
-      const task = this.tasks.get(taskId)!;
+      const taskId = this.pendingTasks.shift() as string;
+      const task = this.tasks.get(taskId) as Task<T, R>;
 
       // Mark task as running
       task.status = TaskStatus.RUNNING;

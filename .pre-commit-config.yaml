@@ -5,11 +5,11 @@ repos:
         name: Run Biome lint
         entry: bunx biome check --reporter summary
         language: system
-        files: \.(js|ts|jsx|tsx|json)$
+        files: \.(js|ts|jsx|tsx|json|jsonc)$
         pass_filenames: true
       - id: biome-format
         name: Run Biome format
         entry: bunx biome format --write
         language: system
-        files: \.(js|ts|jsx|tsx|json)$
+        files: \.(js|ts|jsx|tsx|json|jsonc)$
         pass_filenames: true

@@ -69,7 +69,9 @@ class ConfigMigrator {
       }
 
       console.log(`📁 Found ${configFiles.length} configuration file(s):`);
-      configFiles.forEach((file) => console.log(`   - ${file}`));
+      configFiles.forEach((file) => {
+        console.log(`   - ${file}`);
+      });
       console.log();
 
       // Ask for confirmation
@@ -154,21 +156,29 @@ class ConfigMigrator {
 
         if (result.changes.length > 0) {
           console.log(`      ✅ Applied ${result.changes.length} change(s)`);
-          result.changes.forEach((change) => console.log(`         - ${change}`));
+          result.changes.forEach((change) => {
+            console.log(`         - ${change}`);
+          });
         }
 
         if (result.warnings.length > 0) {
           console.log(`      ⚠️  ${result.warnings.length} warning(s)`);
-          result.warnings.forEach((warning) => console.log(`         - ${warning}`));
+          result.warnings.forEach((warning) => {
+            console.log(`         - ${warning}`);
+          });
         }
 
         if (result.errors.length > 0) {
           console.log(`      ❌ ${result.errors.length} error(s)`);
-          result.errors.forEach((error) => console.log(`         - ${error}`));
+          result.errors.forEach((error) => {
+            console.log(`         - ${error}`);
+          });
         }
       } else {
         console.log('      ❌ Migration failed');
-        result.errors.forEach((error) => console.log(`         - ${error}`));
+        result.errors.forEach((error) => {
+          console.log(`         - ${error}`);
+        });
       }
     }
 
@@ -195,9 +205,9 @@ class ConfigMigrator {
     const config: Record<string, string> = {};
 
     content.split('\n').forEach((line) => {
-      line = line.trim();
-      if (line && !line.startsWith('#')) {
-        const [key, ...valueParts] = line.split('=');
+      const trimmedLine = line.trim();
+      if (trimmedLine && !trimmedLine.startsWith('#')) {
+        const [key, ...valueParts] = trimmedLine.split('=');
         if (key && valueParts.length > 0) {
           config[key.trim()] = valueParts.join('=').trim();
         }

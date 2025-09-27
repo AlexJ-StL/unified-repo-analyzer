@@ -133,8 +133,8 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
             <div className="mt-3">
               <h4 className={`text-sm font-medium ${colors.text}`}>Suggestions:</h4>
               <ul className={`mt-1 text-sm ${colors.text} list-disc list-inside space-y-1`}>
-                {displayMessage.suggestions.map((suggestion, index) => (
-                  <li key={`suggestion-${index}`}>{suggestion}</li>
+                {displayMessage.suggestions.map((suggestion, _index) => (
+                  <li key={suggestion}>{suggestion}</li>
                 ))}
               </ul>
             </div>
@@ -157,9 +157,11 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                   <ul
                     className={`text-xs ${colors.text} list-disc list-inside space-y-1 opacity-75`}
                   >
-                    {errorMessageService.getPlatformSpecificSuggestions().tips.map((tip, index) => (
-                      <li key={`tip-${index}`}>{tip}</li>
-                    ))}
+                    {errorMessageService
+                      .getPlatformSpecificSuggestions()
+                      .tips.map((tip, _index) => (
+                        <li key={tip}>{tip}</li>
+                      ))}
                   </ul>
                 </div>
               )}
@@ -238,6 +240,7 @@ const EnhancedErrorDisplay: React.FC<EnhancedErrorDisplayProps> = ({
                 title="Retry"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <title>Retry icon</title>
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

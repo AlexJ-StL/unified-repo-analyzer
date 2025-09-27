@@ -131,7 +131,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ analysis }) => {
           .drag<SVGGElement, Node>()
           .on('start', dragstarted)
           .on('drag', dragged)
-          .on('end', dragended) as any
+          .on('end', dragended) as d3.DragBehavior<SVGGElement, Node, Node>
       );
 
     // Add circles to nodes

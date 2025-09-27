@@ -74,6 +74,7 @@ const GracefulDegradation: React.FC<GracefulDegradationProps> = ({
           {onRetry && (
             <div className="mt-3">
               <button
+                type="button"
                 onClick={onRetry}
                 className="text-sm font-medium text-yellow-800 underline hover:no-underline"
               >

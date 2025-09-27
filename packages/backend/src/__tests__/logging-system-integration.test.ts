@@ -1,20 +1,18 @@
 import { vi } from 'vitest';
 
 // Mock the logger service before importing PathHandler
-vi.mock('../services/logger.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../services/logger.service')>();
+vi.mock('../services/logger.service', () => {
   return {
-    ...actual,
-    Logger: vi.fn().mockImplementation(() => ({
-      debug: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      setRequestId: vi.fn(),
-      getRequestId: vi.fn(),
-      updateConfig: vi.fn(),
-      getConfig: vi.fn(),
-    })),
+    Logger: class MockLogger {
+      debug = vi.fn();
+      info = vi.fn();
+      warn = vi.fn();
+      error = vi.fn();
+      setRequestId = vi.fn();
+      getRequestId = vi.fn();
+      updateConfig = vi.fn();
+      getConfig = vi.fn();
+    },
   };
 });
 

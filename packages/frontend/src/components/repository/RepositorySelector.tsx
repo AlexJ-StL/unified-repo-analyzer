@@ -105,7 +105,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
             setCurrentPath(e.target.value);
             setError(null);
           }}
-          onValidationChange={(isValid: boolean, result: any) => {
+          onValidationChange={(isValid: boolean, result: PathValidationResult) => {
             setIsPathValid(isValid);
             setPathValidationResult(result || null);
           }}
@@ -132,6 +132,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
           <div className="flex flex-wrap gap-2">
             {recentRepositories.map((repo, _index) => (
               <button
+                type="button"
                 key={`repo-${repo}`}
                 className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200"
                 onClick={() => handleRecentRepositoryClick(repo)}
@@ -157,6 +158,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
+              <title>Parent directory</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -178,6 +180,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
                 fill="none"
                 viewBox="0 0 24 24"
               >
+                <title>Loading...</title>
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -214,6 +217,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
+                        <title>Clear search</title>
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -229,6 +233,7 @@ const RepositorySelector: React.FC<RepositorySelectorProps> = ({ onSelect, class
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
+                        <title>File</title>
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"

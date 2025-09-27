@@ -440,7 +440,7 @@ describe('ConfigValidator', () => {
         { input: '2.5 MB', expected: 2.5 * 1024 * 1024 },
       ];
 
-      testCases.forEach(({ input, expected }) => {
+      testCases.forEach(({ input }) => {
         // Test through validation since parseFileSize is private
         const config = {
           level: 'INFO',

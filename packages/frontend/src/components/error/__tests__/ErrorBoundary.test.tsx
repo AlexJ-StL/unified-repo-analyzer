@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 import ErrorBoundary from '../ErrorBoundary';
 
 // Mock component that throws an error
@@ -24,7 +24,7 @@ const TestComponent = () => {
 };
 
 describe('ErrorBoundary', () => {
-  let consoleError: any;
+  let consoleError: MockInstance;
 
   beforeEach(() => {
     // Mock console.error to avoid noise in tests

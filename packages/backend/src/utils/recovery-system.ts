@@ -94,7 +94,7 @@ export class RecoverySystem extends EventEmitter {
 
     const startTime = Date.now();
     const attempts = 0;
-    let lastError: EnhancedError;
+    let lastError: EnhancedError | undefined;
 
     try {
       switch (config.strategy) {
@@ -150,7 +150,7 @@ export class RecoverySystem extends EventEmitter {
     const maxRetries = config.maxRetries || 3;
     const retryDelay = config.retryDelay || 1000;
     const startTime = Date.now();
-    let lastError: EnhancedError;
+    let lastError: EnhancedError | undefined;
 
     let attemptCount = 1;
     for (; attemptCount <= maxRetries; attemptCount++) {
@@ -188,7 +188,8 @@ export class RecoverySystem extends EventEmitter {
     const currentFailures = this.recoveryAttempts.get(operationName) || 0;
     this.recoveryAttempts.set(operationName, currentFailures + 1);
 
-    throw lastError!;
+    if (lastError) throw lastError;
+    throw new Error('No error occurred during retry attempts');
   }
 
   /**
@@ -478,7 +479,7 @@ export class RecoverySystem extends EventEmitter {
         lastFailureTime: 0,
       });
     }
-    return this.circuitBreakers.get(operationName)!;
+    return this.circuitBreakers.get(operationName) as CircuitBreakerState;
   }
 
   /**
@@ -556,7 +557,7 @@ export function withRecovery(config: RecoveryConfig) {
         throw result.error;
       }
 
-      return result.result!;
+      return result.result as T;
     };
 
     return descriptor;

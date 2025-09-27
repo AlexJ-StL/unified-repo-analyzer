@@ -15,8 +15,12 @@ const SearchFilters: React.FC = () => {
     const frameworks = new Set<string>();
 
     repositories.forEach((repo) => {
-      repo.languages.forEach((lang) => languages.add(lang));
-      repo.frameworks.forEach((framework) => frameworks.add(framework));
+      repo.languages.forEach((lang) => {
+        languages.add(lang);
+      });
+      repo.frameworks.forEach((framework) => {
+        frameworks.add(framework);
+      });
     });
 
     setAvailableLanguages(Array.from(languages).sort());
@@ -44,7 +48,11 @@ const SearchFilters: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium text-gray-900">Filters</h3>
         {(filters.languages.length > 0 || filters.frameworks.length > 0) && (
-          <button onClick={clearFilters} className="text-sm text-blue-600 hover:text-blue-800">
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-sm text-blue-600 hover:text-blue-800"
+          >
             Clear all
           </button>
         )}

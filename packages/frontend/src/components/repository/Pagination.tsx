@@ -57,6 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       {/* Previous button */}
       <div className="flex w-0 flex-1">
         <button
+          type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium ${
@@ -84,11 +85,11 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
 
       {/* Page numbers */}
       <div className="hidden md:flex">
-        {getPageNumbers().map((page, index) => {
+        {getPageNumbers().map((page, _index) => {
           if (page === 'ellipsis-start' || page === 'ellipsis-end') {
             return (
               <span
-                key={`ellipsis-${index}`}
+                key={page}
                 className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500"
               >
                 ...
@@ -99,6 +100,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
           const pageNum = page as number;
           return (
             <button
+              type="button"
               key={pageNum}
               onClick={() => onPageChange(pageNum)}
               className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
@@ -121,6 +123,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       {/* Next button */}
       <div className="flex w-0 flex-1 justify-end">
         <button
+          type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           className={`inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium ${

@@ -41,9 +41,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -84,9 +84,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -124,9 +124,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -154,9 +154,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -184,9 +184,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -215,9 +215,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }
@@ -246,9 +246,9 @@ export class ApiClient {
       });
 
       if (response.statusCode >= 400) {
-        const body = (await response.body.json()) as any;
+        const body = (await response.body.json()) as unknown;
         throw new CLIError(
-          body.message || `API error: ${response.statusCode}`,
+          (body as { message?: string }).message || `API error: ${response.statusCode}`,
           response.statusCode === 401 ? ErrorType.AUTHENTICATION : ErrorType.NETWORK
         );
       }

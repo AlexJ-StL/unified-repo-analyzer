@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { apiService, handleApiError } from '../../services/api';
 import { useRepositoryStore } from '../../store/useRepositoryStore';
 import Pagination from './Pagination';
@@ -34,6 +34,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
   const [sortField, setSortField] = useState<string>('lastAnalyzed');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const itemsPerPage = 10;
+  const sortSelectId = useId();
 
   // Fetch repositories based on search query, filters, sorting and pagination
   useEffect(() => {
@@ -62,7 +63,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         setRepositories(convertedRepositories);
         setTotalPages(Math.ceil(response.data.total / itemsPerPage));
         setLoading(false);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(handleApiError(err));
         setLoading(false);
       }
@@ -124,6 +125,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => handleSearch('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
@@ -133,6 +135,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
+                <title>Clear search</title>
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -143,6 +146,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           )}
         </div>
         <button
+          type="button"
           disabled={selectedRepositories.length < 2}
           onClick={handleCompare}
           className={`px-4 py-2 rounded-md text-sm font-medium ${
@@ -167,8 +171,11 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         <div className="md:w-3/4">
           {/* Sort options */}
           <div className="flex justify-end mb-4">
-            <label className="text-sm text-gray-600 mr-2 self-center">Sort by:</label>
+            <label htmlFor={sortSelectId} className="text-sm text-gray-600 mr-2 self-center">
+              Sort by:
+            </label>
             <select
+              id={sortSelectId}
               value={sortField}
               onChange={(e) => handleSort(e.target.value)}
               className="rounded-md border border-gray-300 shadow-sm px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -179,6 +186,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
               <option value="complexity">Complexity</option>
             </select>
             <button
+              type="button"
               onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
               className="ml-2 p-1 rounded-md hover:bg-gray-100"
             >
@@ -189,6 +197,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
+                  <title>Ascending sort</title>
                   <path
                     fillRule="evenodd"
                     d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
@@ -202,6 +211,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
+                  <title>Descending sort</title>
                   <path
                     fillRule="evenodd"
                     d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z"

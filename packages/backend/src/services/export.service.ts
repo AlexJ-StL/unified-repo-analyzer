@@ -518,7 +518,7 @@ ${analysis.insights.potentialIssues.map((issue: string) => `- ${issue}`).join('\
 `;
 
     // Add summary for each repository
-    repositories.forEach((repo: any, index: number) => {
+    repositories.forEach((repo: RepositoryAnalysis, index: number) => {
       markdown += `### ${index + 1}. ${repo.name}
 
 - **Path:** ${repo.path}
@@ -568,7 +568,7 @@ ${batchResult.combinedInsights.integrationOpportunities.map((item: string) => `-
     // Generate repository cards HTML
     const repoCardsHtml = repositories
       .map(
-        (repo: any, index: number) => `
+        (repo: RepositoryAnalysis, index: number) => `
         <div class="repo-card">
           <h3>${index + 1}. ${repo.name}</h3>
         <div class="repo-details">

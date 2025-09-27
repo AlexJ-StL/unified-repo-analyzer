@@ -23,7 +23,10 @@ const ProjectManager: React.FC = () => {
             Manage individual projects with custom analysis settings
           </p>
         </div>
-        <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+        <button
+          type="button"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+        >
           <PlusIcon className="h-4 w-4 mr-2" />
           New Project
         </button>
@@ -51,10 +54,10 @@ const ProjectManager: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button className="p-2 text-gray-400 hover:text-gray-600">
+                  <button type="button" className="p-2 text-gray-400 hover:text-gray-600">
                     <PencilIcon className="h-4 w-4" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-red-600">
+                  <button type="button" className="p-2 text-gray-400 hover:text-red-600">
                     <TrashIcon className="h-4 w-4" />
                   </button>
                 </div>

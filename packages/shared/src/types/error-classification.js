@@ -7,6 +7,7 @@
  * Error categories for comprehensive classification
  */
 export var ErrorCategory;
+if (!ErrorCategory) ErrorCategory = {};
 ((ErrorCategory) => {
   // Path-related errors
   ErrorCategory.PATH_VALIDATION = 'PATH_VALIDATION';
@@ -38,21 +39,23 @@ export var ErrorCategory;
   ErrorCategory.DEPENDENCY = 'DEPENDENCY';
   ErrorCategory.TYPESCRIPT = 'TYPESCRIPT';
   ErrorCategory.RUNTIME = 'RUNTIME';
-})(ErrorCategory || (ErrorCategory = {}));
+})(ErrorCategory);
 /**
  * Error severity levels with detailed descriptions
  */
 export var ErrorSeverity;
+if (!ErrorSeverity) ErrorSeverity = {};
 ((ErrorSeverity) => {
   ErrorSeverity.LOW = 'LOW';
   ErrorSeverity.MEDIUM = 'MEDIUM';
   ErrorSeverity.HIGH = 'HIGH';
   ErrorSeverity.CRITICAL = 'CRITICAL';
-})(ErrorSeverity || (ErrorSeverity = {}));
+})(ErrorSeverity);
 /**
  * Error codes for specific error types
  */
 export var ErrorCode;
+if (!ErrorCode) ErrorCode = {};
 ((ErrorCode) => {
   // Path validation errors
   ErrorCode.PATH_NOT_FOUND = 'PATH_NOT_FOUND';
@@ -128,5 +131,5 @@ export var ErrorCode;
   // Generic errors
   ErrorCode.UNKNOWN_ERROR = 'UNKNOWN_ERROR';
   ErrorCode.INTERNAL_ERROR = 'INTERNAL_ERROR';
-})(ErrorCode || (ErrorCode = {}));
+})(ErrorCode);
 //# sourceMappingURL=error-classification.js.map

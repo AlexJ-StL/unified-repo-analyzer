@@ -2,8 +2,9 @@
  * Analysis preferences component
  */
 
-import type { AnalysisMode } from '@unified-repo-analyzer/shared';
+import type { AnalysisMode, UserPreferences } from '@unified-repo-analyzer/shared';
 import type React from 'react';
+import { useId } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { useSettingsStore } from '../../store/useSettingsStore';
 
@@ -11,9 +12,18 @@ const AnalysisPreferences: React.FC = () => {
   const { preferences, presets, updatePreferenceSection } = useSettingsStore();
   const { showToast } = useToast();
 
-  const handleUpdate = async (updates: any) => {
+  const maxFilesId = useId();
+  const maxLinesId = useId();
+  const maxFileSizeId = useId();
+  const cacheTtlId = useId();
+  const cacheDirectoryId = useId();
+  const includeLlmId = useId();
+  const includeTreeId = useId();
+  const ignorePatternsId = useId();
+
+  const handleUpdate = async (updates: unknown) => {
     try {
-      await updatePreferenceSection('analysis', updates);
+      await updatePreferenceSection('analysis', updates as Partial<UserPreferences['analysis']>);
       showToast({ type: 'success', title: 'Analysis preferences updated' });
     } catch {
       showToast({ type: 'error', title: 'Failed to update preferences' });
@@ -51,12 +61,13 @@ const AnalysisPreferences: React.FC = () => {
 
       {/* Analysis Mode Presets */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        <div className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
           Analysis Mode Presets
-        </label>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {presets.map((preset) => (
-            <div
+            <button
+              type="button"
               key={preset.name}
               className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                 preferences.analysis.defaultMode === preset.name
@@ -64,6 +75,12 @@ const AnalysisPreferences: React.FC = () => {
                   : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
               }`}
               onClick={() => applyPreset(preset.name)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  applyPreset(preset.name);
+                }
+              }}
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-medium text-gray-900 dark:text-white">{preset.displayName}</h4>
@@ -77,7 +94,7 @@ const AnalysisPreferences: React.FC = () => {
               <p className="text-xs text-gray-500 dark:text-gray-500">
                 Est. time: {preset.estimatedTime}
               </p>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -85,10 +102,14 @@ const AnalysisPreferences: React.FC = () => {
       {/* Custom Settings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={maxFilesId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Max Files to Analyze
           </label>
           <input
+            id={maxFilesId}
             type="number"
             value={preferences.analysis.maxFiles}
             onChange={(e) => handleUpdate({ maxFiles: Number.parseInt(e.target.value, 10) })}
@@ -99,10 +120,14 @@ const AnalysisPreferences: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={maxLinesId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Max Lines per File
           </label>
           <input
+            id={maxLinesId}
             type="number"
             value={preferences.analysis.maxLinesPerFile}
             onChange={(e) => handleUpdate({ maxLinesPerFile: Number.parseInt(e.target.value, 10) })}
@@ -113,10 +138,14 @@ const AnalysisPreferences: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={maxFileSizeId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Max File Size (MB)
           </label>
           <input
+            id={maxFileSizeId}
             type="number"
             value={Math.round(preferences.analysis.maxFileSize / (1024 * 1024))}
             onChange={(e) =>
@@ -131,10 +160,14 @@ const AnalysisPreferences: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={cacheTtlId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Cache TTL (hours)
           </label>
           <input
+            id={cacheTtlId}
             type="number"
             value={preferences.analysis.cacheTTL}
             onChange={(e) => handleUpdate({ cacheTTL: Number.parseInt(e.target.value, 10) })}
@@ -145,10 +178,14 @@ const AnalysisPreferences: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor={cacheDirectoryId}
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Cache Directory
           </label>
           <input
+            id={cacheDirectoryId}
             type="text"
             value={preferences.analysis.cacheDirectory}
             onChange={(e) => handleUpdate({ cacheDirectory: e.target.value })}
@@ -161,14 +198,14 @@ const AnalysisPreferences: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center">
           <input
-            id="include-llm"
+            id={includeLlmId}
             type="checkbox"
             checked={preferences.analysis.includeLLMAnalysis}
             onChange={(e) => handleUpdate({ includeLLMAnalysis: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="include-llm"
+            htmlFor={includeLlmId}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Include LLM analysis (generates insights and summaries)
@@ -177,14 +214,14 @@ const AnalysisPreferences: React.FC = () => {
 
         <div className="flex items-center">
           <input
-            id="include-tree"
+            id={includeTreeId}
             type="checkbox"
             checked={preferences.analysis.includeTree}
             onChange={(e) => handleUpdate({ includeTree: e.target.checked })}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label
-            htmlFor="include-tree"
+            htmlFor={includeTreeId}
             className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             Include directory tree in analysis
@@ -194,10 +231,14 @@ const AnalysisPreferences: React.FC = () => {
 
       {/* Ignore Patterns */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label
+          htmlFor={ignorePatternsId}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
           Ignore Patterns
         </label>
         <textarea
+          id={ignorePatternsId}
           value={preferences.analysis.ignorePatterns.join('\n')}
           onChange={(e) => handleIgnorePatternsChange(e.target.value)}
           rows={8}

@@ -49,7 +49,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
   // Listen for log updates from the store
   useEffect(() => {
     if (progress.log && !logs.includes(progress.log)) {
-      setLogs((prev) => [...prev, progress.log!]);
+      setLogs((prev) => [...prev, progress.log ?? '']);
     }
   }, [progress.log, logs.includes]); // Remove logs from dependencies to avoid infinite loop
 
@@ -115,6 +115,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
                   fill="currentColor"
                   aria-label="Success"
                 >
+                  <title>Success icon</title>
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -141,6 +142,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
                   fill="currentColor"
                   aria-label="Error"
                 >
+                  <title>Error icon</title>
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -194,6 +196,7 @@ const MobileProgressTracker: React.FC<MobileProgressTrackerProps> = ({
               viewBox="0 0 20 20"
               aria-label={showLogs ? 'Hide logs' : 'Show logs'}
             >
+              <title>Toggle logs</title>
               <path
                 fillRule="evenodd"
                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"

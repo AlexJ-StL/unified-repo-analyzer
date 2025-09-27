@@ -150,7 +150,8 @@ class TestExecutionOptimizer {
       const importRegex = /import\s+.*?\s+from\s+['"]([^'"]+)['"]/g;
       let match: RegExpExecArray | null;
 
-      while ((match = importRegex.exec(content)) !== null) {
+      match = importRegex.exec(content);
+      while (match !== null) {
         const importPath = match[1];
 
         // Skip node_modules imports
@@ -163,6 +164,7 @@ class TestExecutionOptimizer {
         if (resolvedPath) {
           dependencies.push(resolvedPath);
         }
+        match = importRegex.exec(content);
       }
 
       return dependencies;
@@ -359,7 +361,9 @@ class TestExecutionOptimizer {
         const packageTests = await glob(`packages/${packageName}/**/*.test.{ts,tsx,js,jsx}`, {
           cwd: this.projectRoot,
         });
-        packageTests.forEach((test) => affectedTests.add(test));
+        packageTests.forEach((test) => {
+          affectedTests.add(test);
+        });
       }
     }
 
@@ -461,7 +465,9 @@ class TestExecutionOptimizer {
     // Collect all dependencies
     const allDependencies = new Set<string>();
     testFiles.forEach((test) => {
-      test.dependencies.forEach((dep) => allDependencies.add(dep));
+      test.dependencies.forEach((dep) => {
+        allDependencies.add(dep);
+      });
     });
 
     return {

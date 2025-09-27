@@ -36,10 +36,14 @@ const mockPerformance = {
     return [];
   },
   clearMarks: () => {
-    Object.keys(performanceMarks).forEach((key) => delete performanceMarks[key]);
+    Object.keys(performanceMarks).forEach((key) => {
+      delete performanceMarks[key];
+    });
   },
   clearMeasures: () => {
-    Object.keys(performanceMeasures).forEach((key) => delete performanceMeasures[key]);
+    Object.keys(performanceMeasures).forEach((key) => {
+      delete performanceMeasures[key];
+    });
   },
 };
 
@@ -52,8 +56,12 @@ Object.defineProperty(global, 'performance', {
 describe('Performance Benchmarks', () => {
   beforeEach(() => {
     // Clear performance tracking objects
-    Object.keys(performanceMarks).forEach((key) => delete performanceMarks[key]);
-    Object.keys(performanceMeasures).forEach((key) => delete performanceMeasures[key]);
+    Object.keys(performanceMarks).forEach((key) => {
+      delete performanceMarks[key];
+    });
+    Object.keys(performanceMeasures).forEach((key) => {
+      delete performanceMeasures[key];
+    });
     vi.clearAllMocks();
   });
 

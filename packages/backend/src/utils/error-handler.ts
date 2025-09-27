@@ -404,7 +404,7 @@ export async function withRetry<T>(
   baseDelay = 1000,
   maxDelay = 10000
 ): Promise<T> {
-  let lastError: Error;
+  let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -432,7 +432,8 @@ export async function withRetry<T>(
     }
   }
 
-  throw lastError!;
+  if (lastError) throw lastError;
+  throw new Error('No error to rethrow');
 }
 
 /**

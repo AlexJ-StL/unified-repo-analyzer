@@ -188,7 +188,7 @@ export interface ErrorContext {
   endTime?: string;
 
   // Additional metadata
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

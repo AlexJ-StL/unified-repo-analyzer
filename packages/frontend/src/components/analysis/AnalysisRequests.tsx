@@ -54,6 +54,7 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({ className = '' }) =
       <div className={`p-4 bg-red-50 border border-red-200 rounded ${className}`}>
         <div className="text-red-800">Error: {error}</div>
         <button
+          type="button"
           onClick={() => {
             refreshRequests();
             refreshStats();
@@ -84,6 +85,7 @@ const AnalysisRequests: React.FC<AnalysisRequestsProps> = ({ className = '' }) =
             <option value="cancelled">Cancelled</option>
           </select>
           <button
+            type="button"
             onClick={() => {
               refreshRequests();
               refreshStats();

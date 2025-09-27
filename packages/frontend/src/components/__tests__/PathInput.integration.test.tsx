@@ -20,7 +20,11 @@ import PathInput from '../common/PathInput';
 const mockPathValidationService = {
   validatePath:
     mockFunction<
-      (path: string, options?: any, onProgress?: any) => Promise<PathValidationResult>
+      (
+        path: string,
+        options?: Record<string, unknown>,
+        onProgress?: (progress: number) => void
+      ) => Promise<PathValidationResult>
     >(),
   getPathFormatHints: mockFunction(() => ({
     platform: 'Windows',
@@ -184,7 +188,7 @@ describe('PathInput Integration Tests', () => {
       const user = userEvent.setup();
 
       // Mock slow validation
-      let resolveValidation: (value: any) => void = () => {};
+      let resolveValidation: (value: unknown) => void = () => {};
       const validationPromise = new Promise((resolve) => {
         resolveValidation = resolve;
       });
@@ -515,7 +519,7 @@ describe('PathInput Integration Tests', () => {
       expect(input).toHaveClass('border-gray-300');
 
       // Mock validation in progress
-      let resolveValidation: (value: any) => void = () => {};
+      let resolveValidation: (value: unknown) => void = () => {};
       const validationPromise = new Promise((resolve) => {
         resolveValidation = resolve;
       });

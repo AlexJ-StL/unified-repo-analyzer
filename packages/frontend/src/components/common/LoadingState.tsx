@@ -57,6 +57,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
             fill="none"
             viewBox="0 0 24 24"
           >
+            <title>Loading spinner</title>
             <circle
               className="opacity-25"
               cx="12"
@@ -78,6 +79,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
               className={`absolute inset-0 ${sizeClasses.spinner} transform -rotate-90`}
               viewBox="0 0 24 24"
             >
+              <title>Progress indicator</title>
               <circle
                 cx="12"
                 cy="12"

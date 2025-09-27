@@ -85,17 +85,26 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
 
   const renderTreeNode = (node: TreeNode, depth = 0) => {
     const isExpanded = expandedNodes.has(node.path);
+    const handleClick = () => {
+      if (node.isDirectory) {
+        toggleNode(node.path);
+      } else if (node.fileInfo) {
+        selectFile(node.fileInfo);
+      }
+    };
 
     return (
       <div key={node.path} className="select-none">
-        <div
+        <button
+          type="button"
           className={`flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer ${
             selectedFile && selectedFile.path === node.path ? 'bg-blue-100' : ''
           }`}
           style={{ paddingLeft: `${depth * 16 + 8}px` }}
-          onClick={() =>
-            node.isDirectory ? toggleNode(node.path) : node.fileInfo && selectFile(node.fileInfo)
-          }
+          onClick={handleClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleClick();
+          }}
         >
           {node.isDirectory ? (
             <svg
@@ -104,6 +113,7 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
+              <title>Expand directory</title>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           ) : (
@@ -113,6 +123,7 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
+              <title>File icon</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -125,7 +136,7 @@ const FileTreeViewer: React.FC<FileTreeViewerProps> = ({ analysis }) => {
           {node.fileInfo && (
             <span className="ml-2 text-xs text-gray-500">({node.fileInfo.language})</span>
           )}
-        </div>
+        </button>
 
         {node.isDirectory && isExpanded && (
           <div>

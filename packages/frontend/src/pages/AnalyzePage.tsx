@@ -15,7 +15,7 @@ import websocketService from '../services/websocket';
 import { useAnalysisStore } from '../store/useAnalysisStore';
 
 const AnalyzePage = () => {
-  const { repositoryPath, options, progress, setProgress, setResults } = useAnalysisStore();
+  const { repositoryPath, options, progress, setProgress } = useAnalysisStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pathError, setPathError] = useState<PathErrorResponse | null>(null);
@@ -23,7 +23,9 @@ const AnalyzePage = () => {
   const [analysisId, setAnalysisId] = useState<string | undefined>();
 
   // Type guard to ensure analysis results are valid
-  const isValidAnalysisResult = (results: any): results is RepositoryAnalysis => {
+  const isValidAnalysisResult = (
+    results: RepositoryAnalysis | null
+  ): results is RepositoryAnalysis => {
     return (
       results !== null &&
       results !== undefined &&
@@ -223,6 +225,7 @@ const AnalyzePage = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                     >
+                      <title>Submitting...</title>
                       <circle
                         className="opacity-25"
                         cx="12"

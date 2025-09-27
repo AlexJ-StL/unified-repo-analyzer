@@ -10,7 +10,7 @@ interface CLIConfigSchema {
   defaultOptions: Partial<AnalysisOptions>;
   outputDir: string;
   userPreferences: UserPreferences;
-  profiles?: Record<string, any>;
+  profiles?: Record<string, unknown>;
   activeProfile?: string;
 }
 
@@ -32,6 +32,7 @@ const config = new Conf<CLIConfigSchema>({
     userPreferences: DEFAULT_USER_PREFERENCES,
   },
 });
+export default config;
 
 /**
  * Get effective analysis options from user preferences
@@ -73,5 +74,3 @@ export function getUserPreferences(): UserPreferences {
 export function resetPreferences(): void {
   config.set('userPreferences', DEFAULT_USER_PREFERENCES);
 }
-
-export default config;
